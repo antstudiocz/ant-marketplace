@@ -25,6 +25,56 @@ Extract:
 - **project_path** (e.g., `group/project` or `group/subgroup/project`)
 - **mr_number** (e.g., `123`)
 
+## Step 1.5: Find Local Repository and Checkout Branch (CRITICAL)
+
+**Before doing anything else**, you MUST:
+
+1. **Fetch MR details to get the source branch:**
+```bash
+glab api "projects/{URL_ENCODED_PROJECT}/merge_requests/{MR_NUMBER}" --hostname {HOSTNAME} | jq '{source_branch: .source_branch, target_branch: .target_branch}'
+```
+
+2. **Find the local repository** by matching git remote URL:
+```bash
+# Search common locations for matching git remote
+for dir in ~/Sites/*/ ~/Sites/*/*/; do
+  if [ -d "$dir/.git" ]; then
+    remote=$(git -C "$dir" remote get-url origin 2>/dev/null)
+    if echo "$remote" | grep -q "{project_path}"; then
+      echo "$dir"
+      break
+    fi
+  fi
+done
+```
+
+3. **Change to the repository directory** and checkout the branch:
+```bash
+cd {FOUND_REPO_PATH}
+git fetch origin
+git checkout {source_branch}
+git pull origin {source_branch}
+```
+
+4. **Verify** you are on the correct branch:
+```bash
+git branch --show-current
+```
+
+**If repository not found:** Ask user for the path using `AskUserQuestion`:
+```
+"Nenašel jsem lokální repozitář pro {project_path}. Kde je umístěn?"
+
+Options:
+- ~/Sites/{project_name}
+- ~/Sites/discomp/{project_name}
+- Other (user provides path)
+```
+
+**IMPORTANT:** All subsequent file operations (reading, editing) must happen in this repository directory!
+
+---
+
 ## Step 2: Fetch MR Threads
 
 Use glab CLI to fetch all notes:
@@ -152,12 +202,13 @@ If user chooses to implement, proceed with the plan execution.
 
 ## Critical Rules
 
-1. **ALWAYS use subagents** for code validation - don't guess without reading the actual code
-2. **NEVER skip the user selection step** - user must approve what gets implemented
-3. **Summarize clearly** - reviewer comments can be verbose, distill to actionable items
-4. **Respect resolved threads** - only show open/unresolved items
-5. **Handle general comments** - not all feedback is tied to specific lines
-6. **Use Czech** for all user-facing output (unless user writes in English)
+1. **ALWAYS find and checkout the correct branch FIRST** - before validating any code, you must be in the correct repository on the correct branch
+2. **ALWAYS use subagents** for code validation - don't guess without reading the actual code
+3. **NEVER skip the user selection step** - user must approve what gets implemented
+4. **Summarize clearly** - reviewer comments can be verbose, distill to actionable items
+5. **Respect resolved threads** - only show open/unresolved items
+6. **Handle general comments** - not all feedback is tied to specific lines
+7. **Use Czech** for all user-facing output (unless user writes in English)
 
 ## Error Handling
 
