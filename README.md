@@ -33,7 +33,7 @@ After adding the marketplace:
 Skills auto-update when Claude Code starts, or manually:
 
 ```bash
-/marketplace update
+/plugin update
 ```
 
 ## Contributing
