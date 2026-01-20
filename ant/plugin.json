@@ -1,0 +1,13 @@
+{
+  "name": "ant",
+  "description": "(ant) skills for Claude Code - full-service digital agency tools",
+  "version": "1.0.0",
+  "author": {
+    "name": "LeMatosDeFuk",
+    "email": ""
+  },
+  "homepage": "https://antstudio.cz",
+  "repository": "https://github.com/LeMatosDeFuk/lematodefuk-marketplace",
+  "license": "MIT",
+  "keywords": ["skills", "google-docs", "asana", "gitlab", "mr-feedback"]
+}

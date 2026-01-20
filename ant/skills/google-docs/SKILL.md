@@ -1,5 +1,5 @@
 ---
-name: ant:google-docs
+name: google-docs
 description: Read and extract content from Google Docs. Use when user provides a Google Docs URL (docs.google.com/document/...) and wants to read, analyze, or work with its content.
 ---
 

@@ -6,27 +6,13 @@
   },
   "metadata": {
     "description": "(ant) skills for Claude Code",
-    "version": "3.3.0"
+    "version": "4.0.0"
   },
   "plugins": [
     {
-      "name": "ant:google-docs",
-      "source": "./skills/ant:google-docs",
-      "description": "Read and extract content from Google Docs including text and images",
-      "version": "1.0.0",
-      "strict": true
-    },
-    {
-      "name": "ant:asana-task-analyzer",
-      "source": "./skills/ant:asana-task-analyzer",
-      "description": "Analyze Asana tasks for implementers - extracts requirements, flags unclear items",
-      "version": "1.0.0",
-      "strict": true
-    },
-    {
-      "name": "ant:handle-mr-feedback",
-      "source": "./skills/ant:handle-mr-feedback",
-      "description": "Handle GitLab MR review feedback - analyze, select, plan implementation",
+      "name": "ant",
+      "source": "./ant",
+      "description": "(ant) skills - Google Docs, Asana tasks, GitLab MR feedback",
       "version": "1.0.0",
       "strict": true
     }

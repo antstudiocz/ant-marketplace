@@ -1,5 +1,5 @@
 ---
-name: ant:handle-mr-feedback
+name: handle-mr-feedback
 description: Analyze GitLab MR review comments, validate them against code using subagents, and create an implementation plan for selected items. Use when user provides a GitLab MR URL and wants to handle reviewer feedback systematically.
 ---
 
