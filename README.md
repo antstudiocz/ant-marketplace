@@ -2,9 +2,7 @@
   <img src="logo.svg" alt="(ant)" width="200">
 </p>
 
-# (ant) Marketplace
-
-(ant) skills for Claude Code.
+<h3 align="center">Skills for Claude Code</h3>
 
 ## Installation
 
