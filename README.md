@@ -1,4 +1,8 @@
-# Ant Marketplace
+<p align="center">
+  <img src="logo.svg" alt="Ant Studio" width="200">
+</p>
+
+# (ant) Marketplace
 
 Ant Studio skills for Claude Code.
 
