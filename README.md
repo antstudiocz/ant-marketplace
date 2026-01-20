@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="logo.svg" alt="Ant Studio" width="200">
+  <img src="logo.svg" alt="(ant)" width="200">
 </p>
 
 # (ant) Marketplace
 
-Ant Studio skills for Claude Code.
+(ant) skills for Claude Code.
 
 ## Installation
 
