@@ -14,6 +14,7 @@ Claude Code skills marketplace with auto-update support.
 |-------|-------------|
 | **google-docs** | Read and extract content from Google Docs including text and images |
 | **asana-task-analyzer** | Analyze Asana tasks for implementers - extracts requirements, flags unclear items |
+| **handle-mr-feedback** | Analyze GitLab MR review comments, validate against code, create implementation plan |
 
 ## Install a Skill
 
@@ -22,7 +23,18 @@ After adding the marketplace:
 ```bash
 /install google-docs
 /install asana-task-analyzer
+/install handle-mr-feedback
 ```
+
+## View Installed Skills
+
+To see your installed marketplaces and skills:
+
+```bash
+/marketplace list
+```
+
+Or in the UI: `/marketplace add` → press **Tab** to switch to **"Marketplaces"** or **"Installed"** tab.
 
 ## Update Skills
 
