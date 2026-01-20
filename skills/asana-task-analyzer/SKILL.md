@@ -1,7 +1,9 @@
 ---
+user-invocable: true
 name: asana-task-analyzer
 description: Analyze Asana task requirements for implementers. Use when user provides an Asana task URL and wants to understand what needs to be done. Extracts task details, comments, and attachments to provide clear implementation guidance.
 ---
+user-invocable: true
 
 # Asana Task Analyzer
 
@@ -55,30 +57,35 @@ mcp__asana__asana_get_attachments_for_object(
 **Status:** {completed ? "Done" : "Open"}
 
 ---
+user-invocable: true
 
 ## 🎯 Co se po tobě chce
 
 {Clear, actionable description of what needs to be implemented}
 
 ---
+user-invocable: true
 
 ## 📝 Detailní požadavky
 
 {Bullet points of specific requirements extracted from description and comments}
 
 ---
+user-invocable: true
 
 ## 💬 Důležité z komentářů
 
 {Key information from comments that affects implementation}
 
 ---
+user-invocable: true
 
 ## 📎 Přílohy
 
 {List attachments with links - these may contain mockups/specs!}
 
 ---
+user-invocable: true
 
 ## ⚠️ NEJASNOSTI A DOMNĚNKY
 
@@ -91,6 +98,7 @@ mcp__asana__asana_get_attachments_for_object(
 If nothing is unclear, state: "Zadání je jasné, žádné domněnky."}
 
 ---
+user-invocable: true
 
 ## ✅ Akční kroky
 
