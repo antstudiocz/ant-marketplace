@@ -35,15 +35,30 @@ glab api "projects/{URL_ENCODED_PROJECT}/merge_requests/{MR_NUMBER}" --hostname 
 ```
 
 2. **Find the local repository** by matching git remote URL:
+
+**First, check current working directory:**
+```bash
+# Check if current directory is the matching repo
+remote=$(git remote get-url origin 2>/dev/null)
+if echo "$remote" | grep -q "{project_path}"; then
+  echo "Found: $(pwd)"
+fi
+```
+
+**If not found, search common developer locations:**
 ```bash
 # Search common locations for matching git remote
-for dir in ~/Sites/*/ ~/Sites/*/*/; do
-  if [ -d "$dir/.git" ]; then
-    remote=$(git -C "$dir" remote get-url origin 2>/dev/null)
-    if echo "$remote" | grep -q "{project_path}"; then
-      echo "$dir"
-      break
-    fi
+for base in ~/Sites ~/projects ~/code ~/repos ~/dev ~/workspace ~/src ~; do
+  if [ -d "$base" ]; then
+    for dir in "$base"/*/ "$base"/*/*/; do
+      if [ -d "$dir/.git" ]; then
+        remote=$(git -C "$dir" remote get-url origin 2>/dev/null)
+        if echo "$remote" | grep -q "{project_path}"; then
+          echo "$dir"
+          break 2
+        fi
+      fi
+    done
   fi
 done
 ```
@@ -66,8 +81,7 @@ git branch --show-current
 "Nenašel jsem lokální repozitář pro {project_path}. Kde je umístěn?"
 
 Options:
-- ~/Sites/{project_name}
-- ~/Sites/discomp/{project_name}
+- [Current working directory if it's a git repo]
 - Other (user provides path)
 ```
 
