@@ -47,12 +47,12 @@
 
 ## Made with <img src="heart.svg" height="18" alt="love"> by (ant)
 
-*Z (WTF) nápadů rodíme (WOW) výsledky.*
+*From (WTF) ideas we create (WOW) results.*
 
-Jsme full-service digitální agentura ze západu Čech. Už více než 25 let tvoříme projekty, které posouvají hranice. Máme přes 50 expertů a jedno know-how: **dělat věci jinak**.
+We are a full-service digital agency from Western Czechia. For over 25 years we've been creating projects that push boundaries. We have 50+ experts and one know-how: **doing things differently**.
 
-![25+ let](https://img.shields.io/badge/25+-let-5bffc4?style=flat-square)
-![50+ expertů](https://img.shields.io/badge/50+-expertů-5bffc4?style=flat-square)
-![Plzeň, CZ](https://img.shields.io/badge/Plzeň-CZ-5bffc4?style=flat-square)
+![25+ years](https://img.shields.io/badge/25+-years-5bffc4?style=flat-square)
+![50+ experts](https://img.shields.io/badge/50+-experts-5bffc4?style=flat-square)
+![Pilsen, CZ](https://img.shields.io/badge/Pilsen-CZ-5bffc4?style=flat-square)
 
 </div>
