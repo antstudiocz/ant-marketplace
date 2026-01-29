@@ -27,6 +27,7 @@
 | `/ant:frontend-responsive` | Implement responsive layouts and breakpoints |
 | `/ant:frontend-semantic-html` | Guide proper use of semantic HTML elements |
 | `/ant:frontend-typescript` | Define types, interfaces, and handle null values |
+| `/ant:frontend-code-separation` | Separate types and data from components into dedicated files |
 
 ## Update
 
