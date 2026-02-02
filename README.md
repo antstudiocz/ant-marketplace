@@ -28,6 +28,7 @@
 | `/ant:frontend-semantic-html` | Guide proper use of semantic HTML elements |
 | `/ant:frontend-typescript` | Define types, interfaces, and handle null values |
 | `/ant:frontend-code-separation` | Separate types and data from components into dedicated files |
+| `/ant:skeleton-loading-states` | Build skeleton loading components with zero layout shift |
 | `/ant:laravel-caching` | Laravel 12+ caching expert — cache method selection, invalidation, full cache stack |
 | `/ant:laravel-performance` | Laravel 12+ performance optimization — N+1 detection, query optimization, job tuning |
 | `/ant:laravel-architecture` | Laravel 12+ architecture — Actions pattern, DTOs, thin controllers, separation of concerns |
