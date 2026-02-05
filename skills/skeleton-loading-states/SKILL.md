@@ -12,6 +12,32 @@ description: Build skeleton loading components with zero layout shift - mirrors 
 
 Mirror the actual component's DOM structure and CSS classes. Let the browser compute heights from line-height, padding, and border - never hardcode pixel heights for text elements.
 
+### CRITICAL: Never use `<div className='h-*'>` for text placeholders
+
+The #1 source of layout shift is replacing text elements with fixed-height `<div>` blocks:
+
+```tsx
+// BAD — hardcoded height, always wrong
+<div className='h-6 w-40 animate-pulse rounded bg-zinc-200' />   // guessing heading height
+<div className='h-4 w-24 animate-pulse rounded bg-zinc-200' />   // guessing text-sm height
+
+// GOOD — same element + classes, browser computes correct height
+<h2 className='text-lg font-semibold'><TextSkeleton className='w-40' /></h2>
+<p className='text-sm'><TextSkeleton className='w-24' /></p>
+```
+
+Why this matters: `text-sm` has `line-height: 20px` but `h-4` = 16px. `text-lg` has `line-height: 28px` but `h-6` = 24px. These 4px errors accumulate across sections.
+
+### CRITICAL: Check UI component base styles before writing skeleton
+
+Before using `rounded-md` or other classes for buttons/inputs, **read the actual UI component** (e.g., `Button.tsx`, `Input.tsx`) to verify its base CSS classes. Common mistakes:
+- Button uses `rounded-full` but skeleton uses `rounded-md`
+- Input uses custom padding but skeleton guesses different padding
+
+### CRITICAL: Copy exact spacing from the component
+
+Don't approximate spacing. If the real component uses `mt-1` between two `<p>` elements, don't use `space-y-2` in the skeleton. Copy the exact margin/gap classes from the source JSX.
+
 ## TextSkeleton Pattern
 
 Create an `inline-block` skeleton for text content inside semantic elements. The `inline-block` display makes it participate in line-height calculation of the parent element.
@@ -77,10 +103,12 @@ Use a `<div>` with the same flex/padding classes + the dropdown icon:
 
 ### Buttons (submit, CTA)
 
-Buttons typically have fixed height from padding. Use `<Skeleton>` with explicit height:
+Buttons have fixed height from padding. Use `<Skeleton>` with explicit height matching the button size variant. **Always check the Button component's base styles** for the correct `rounded-*` class:
 
 ```tsx
-<Skeleton className='h-[38px] w-16 rounded-md' />
+// FIRST: Read Button.tsx to find base classes (e.g., rounded-full vs rounded-md)
+// THEN: Match the height to the button's size variant (h-9 for sm, h-10 for default)
+<Skeleton className='h-10 w-16 rounded-full' />
 ```
 
 ### Tables
@@ -187,6 +215,7 @@ The JSX source code IS the DOM structure. No browser automation is needed to und
 
 - Use a **single Explore subagent** to find the page route file, the main component, and any existing skeleton
 - Read the component's JSX — this gives you the exact DOM structure, CSS classes, grid layouts, and element hierarchy
+- **Read UI component base styles** (Button.tsx, Input.tsx, etc.) to know the correct `rounded-*`, padding, and height classes
 - If user provides a screenshot, use it to confirm visual layout — but the source code is the primary reference
 
 ### Step 2: Build the skeleton
@@ -254,10 +283,12 @@ Browser tools are only useful for optional **visual verification** after the ske
 ## Checklist
 
 - [ ] Component source code read (NOT browser DOM capture)
-- [ ] All text elements use same HTML tag + CSS classes as actual component
+- [ ] UI component base styles checked (Button.tsx, Input.tsx — for `rounded-*`, padding, height)
+- [ ] All text elements use **same HTML tag + CSS classes** as actual component (NOT `<div className='h-*'>`)
 - [ ] `TextSkeleton` uses `inline-block` (not block)
 - [ ] Inputs replaced by `<div>` with identical padding/border/text-size classes
 - [ ] Labels use same `display` as actual (inline vs block)
+- [ ] Spacing copied exactly from source (`mt-1`, `mt-4`, etc. — not approximated with `space-y-*`)
 - [ ] Dynamic field counts use a reasonable default (e.g. 4 fields for conditional lists)
 - [ ] Skeleton wired as `loading.tsx` or `<Suspense fallback>`
 - [ ] TypeScript check passes
