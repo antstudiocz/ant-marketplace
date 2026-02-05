@@ -38,9 +38,13 @@ Before using `rounded-md` or other classes for buttons/inputs, **read the actual
 
 Don't approximate spacing. If the real component uses `mt-1` between two `<p>` elements, don't use `space-y-2` in the skeleton. Copy the exact margin/gap classes from the source JSX.
 
-## TextSkeleton Pattern
+## Two Skeleton Approaches: Text vs. Atomic Elements
 
-Create an `inline-block` skeleton for text content inside semantic elements. The `inline-block` display makes it participate in line-height calculation of the parent element.
+There are exactly **two patterns** for skeleton placeholders. Using the wrong one is the #1 source of visual mismatch.
+
+### 1. TextSkeleton — for text content (h1-h6, p, dt, dd, label, span)
+
+Use `inline-block` skeleton **inside the same semantic element** with the same CSS classes. The parent element's `line-height` computes the correct height automatically.
 
 ```tsx
 function TextSkeleton({ className }: { className?: string }) {
@@ -50,7 +54,7 @@ function TextSkeleton({ className }: { className?: string }) {
 
 Why `inline-block`: A regular `<Skeleton>` renders as `display: block` (`<div>`). Inside a `<label>` or `<dt>`, a block child makes the parent ignore its own line-height. `inline-block` preserves the parent's line-height behavior, matching the real text rendering.
 
-### Recommended TextSkeleton Widths
+#### Recommended TextSkeleton Widths
 
 | Content type | Width | Example |
 | --- | --- | --- |
@@ -58,6 +62,22 @@ Why `inline-block`: A regular `<Skeleton>` renders as `display: block` (`<div>`)
 | Medium text | `w-28` – `w-40` | Name, email, title |
 | Long text | `w-48` – `w-64` | Description, address |
 | Full width | `w-full` | Paragraphs, notes |
+
+### 2. Atomic Skeleton — for badges, tags, buttons, avatars, icons
+
+Use a **single self-contained pulse block** with exact dimensions. Do NOT nest a TextSkeleton inside these — the outer wrapper has no visible background, so the inner bar "floats in nothing".
+
+```tsx
+// BAD — invisible wrapper, inner bar floats
+<span className='rounded-full px-3 py-1 text-sm font-medium'>        // ← no bg = invisible
+  <span className='h-3.5 w-12 animate-pulse bg-zinc-200' />          // ← orphaned bar
+</span>
+
+// GOOD — single block with measured dimensions
+<div className='h-7 w-[70px] animate-pulse rounded-full bg-zinc-200' />
+```
+
+**Rule of thumb**: If the element is a **visual unit with its own background/border** (badge, tag, button, avatar), use a single pulse block. If it's **text inside a container** (heading, paragraph, label), use TextSkeleton inside the same semantic element.
 
 ## Element Mapping Rules
 
@@ -152,10 +172,16 @@ Use `<Skeleton>` with matching size and border-radius:
 <Skeleton className='h-32 w-full rounded-md' />
 ```
 
-### Badges / Tags
+### Badges / Tags (atomic — NOT TextSkeleton)
+
+Badges and tags are atomic visual elements with their own background. Use a single pulse block with measured dimensions. **Never nest a TextSkeleton inside a badge wrapper** — the wrapper has no visible background in skeleton mode.
 
 ```tsx
-<Skeleton className='h-5 w-16 rounded-full' />
+// Badge — measure real height/width from browser
+<div className='h-7 w-[70px] animate-pulse rounded-full bg-zinc-200' />
+
+// Tag — measure real tag dimensions
+<div className='h-5 w-[52px] animate-pulse rounded-md bg-zinc-200' />
 ```
 
 ### Tabs
@@ -284,8 +310,8 @@ Browser tools are only useful for optional **visual verification** after the ske
 
 - [ ] Component source code read (NOT browser DOM capture)
 - [ ] UI component base styles checked (Button.tsx, Input.tsx — for `rounded-*`, padding, height)
-- [ ] All text elements use **same HTML tag + CSS classes** as actual component (NOT `<div className='h-*'>`)
-- [ ] `TextSkeleton` uses `inline-block` (not block)
+- [ ] **Text elements** use same HTML tag + CSS classes with TextSkeleton inside (NOT `<div className='h-*'>`)
+- [ ] **Atomic elements** (badges, tags, buttons) use single pulse blocks with measured dimensions (NOT nested TextSkeleton)
 - [ ] Inputs replaced by `<div>` with identical padding/border/text-size classes
 - [ ] Labels use same `display` as actual (inline vs block)
 - [ ] Spacing copied exactly from source (`mt-1`, `mt-4`, etc. — not approximated with `space-y-*`)
