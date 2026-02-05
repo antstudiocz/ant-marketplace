@@ -181,13 +181,32 @@ export default function CustomerDetail() {
 
 ## Workflow
 
-1. Read the actual component's JSX
-2. Copy wrapper structure (card divs, grids, spacing classes)
-3. Replace text content with `<TextSkeleton className='w-XX' />`
-4. Replace inputs with `<div>` using same padding/border classes
-5. Replace selects with `<div>` + dropdown icon
-6. Keep real icons where they provide visual context (MapPin, ChevronUpDown)
-7. Wire up as `loading.tsx` or Suspense fallback
+### Step 1: Find and read the source component
+
+The JSX source code IS the DOM structure. No browser automation is needed to understand the page layout.
+
+- Use a **single Explore subagent** to find the page route file, the main component, and any existing skeleton
+- Read the component's JSX — this gives you the exact DOM structure, CSS classes, grid layouts, and element hierarchy
+- If user provides a screenshot, use it to confirm visual layout — but the source code is the primary reference
+
+### Step 2: Build the skeleton
+
+1. Copy wrapper structure (card divs, grids, spacing classes)
+2. Replace text content with `<TextSkeleton className='w-XX' />`
+3. Replace inputs with `<div>` using same padding/border classes
+4. Replace selects with `<div>` + dropdown icon
+5. Keep real icons where they provide visual context (MapPin, ChevronUpDown)
+
+### Step 3: Verify
+
+- Run **TypeScript check** (`tsc --noEmit`) — sufficient for pure Tailwind skeleton components
+- Wire up as `loading.tsx` or Suspense fallback
+
+### What NOT to do
+
+- **Do NOT use browser automation** (Claude in Chrome, Playwright) to analyze page layout — the source code already contains everything
+- **Do NOT launch multiple subagents** — one Explore agent to find files is enough
+- **Do NOT capture the page DOM via browser tools** — reading the component JSX is faster and more accurate
 
 ## Debug: Overlay Comparison
 
@@ -214,29 +233,31 @@ const actual = document.querySelector('.relative.z-0 .space-y-6').offsetHeight;
 console.log('diff:', skel - actual); // target: 0
 ```
 
-## Debug with Claude in Chrome Extension
+## Debug with Claude in Chrome Extension (optional — only for visual verification)
 
-If the `mcp__claude-in-chrome__*` tools are available, use them for visual verification:
+**Do NOT use browser automation to analyze the page layout. Read the component source code instead — it's faster and more accurate.**
 
-1. **Navigate** to the page with `mcp__claude-in-chrome__navigate`
-2. **Temporarily modify the page component** to render both skeleton and actual content in the overlay layout (see above)
-3. **Take a screenshot** with `mcp__claude-in-chrome__computer` (action: `screenshot`) to visually compare alignment
-4. **Measure heights** with `mcp__claude-in-chrome__javascript_tool`:
+Browser tools are only useful for optional **visual verification** after the skeleton is already built:
+
+1. **Temporarily modify the page component** to render both skeleton and actual content in the overlay layout (see above)
+2. **Take a screenshot** with `mcp__claude-in-chrome__computer` (action: `screenshot`) to visually compare alignment
+3. **Measure heights** with `mcp__claude-in-chrome__javascript_tool`:
    ```js
    const skel = document.querySelector('.outline')?.offsetHeight ?? 0;
    const actual = document.querySelector('.relative.z-0')?.children[0]?.offsetHeight ?? 0;
    return { skeleton: skel, actual, diff: skel - actual };
    ```
-5. Iterate until diff is < 5px, then **restore the page component** to its original state
+4. Iterate until diff is < 5px, then **restore the page component** to its original state
 
 **Important**: The Chrome screenshot tool waits for full page load, so you cannot capture Suspense fallback states directly. Always use the overlay approach instead of adding `setTimeout` delays to simulate loading.
 
 ## Checklist
 
+- [ ] Component source code read (NOT browser DOM capture)
 - [ ] All text elements use same HTML tag + CSS classes as actual component
 - [ ] `TextSkeleton` uses `inline-block` (not block)
 - [ ] Inputs replaced by `<div>` with identical padding/border/text-size classes
 - [ ] Labels use same `display` as actual (inline vs block)
 - [ ] Dynamic field counts use a reasonable default (e.g. 4 fields for conditional lists)
 - [ ] Skeleton wired as `loading.tsx` or `<Suspense fallback>`
-- [ ] Debug overlay shows diff < 5px
+- [ ] TypeScript check passes
