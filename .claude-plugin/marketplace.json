@@ -32,7 +32,11 @@
         "./skills/laravel-performance",
         "./skills/laravel-architecture",
         "./skills/skeleton-loading-states",
-        "./skills/merge-conflicts"
+        "./skills/merge-conflicts",
+        "./skills/next-best-practices",
+        "./skills/react-best-practices",
+        "./skills/nextjs-ppr",
+        "./skills/composition-patterns"
       ]
     }
   ]
