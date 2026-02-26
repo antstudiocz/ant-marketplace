@@ -1,7 +1,7 @@
 {
   "name": "ant",
   "description": "(ant) skills for Claude Code - Google Docs, Asana tasks, GitLab MR feedback, execute plans, frontend, skeleton loading states, Laravel caching, Laravel performance, Laravel architecture, merge conflicts",
-  "version": "7.3.4",
+  "version": "7.4.0",
   "author": {
     "name": "(ant)",
     "description": "full-service digitální agentura"
