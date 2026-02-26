@@ -32,6 +32,7 @@
 | `/ant:laravel-caching` | Laravel 12+ caching expert — cache method selection, invalidation, full cache stack |
 | `/ant:laravel-performance` | Laravel 12+ performance optimization — N+1 detection, query optimization, job tuning |
 | `/ant:laravel-architecture` | Laravel 12+ architecture — Actions pattern, DTOs, thin controllers, separation of concerns |
+| `/ant:merge-conflicts` | Intelligently resolve git merge conflicts with deep contextual analysis |
 
 ## Update
 
