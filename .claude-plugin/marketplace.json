@@ -11,7 +11,7 @@
   "plugins": [
     {
       "name": "ant",
-      "description": "(ant) skills - Google Docs, Asana tasks, GitLab MR feedback, execute plans, frontend, skeleton loading states, Laravel caching, Laravel performance, Laravel architecture",
+      "description": "(ant) skills - Google Docs, Asana tasks, GitLab MR feedback, execute plans, frontend, skeleton loading states, Laravel caching, Laravel performance, Laravel architecture, merge conflicts",
       "source": "./",
       "strict": true,
       "skills": [
@@ -31,7 +31,8 @@
         "./skills/laravel-caching",
         "./skills/laravel-performance",
         "./skills/laravel-architecture",
-        "./skills/skeleton-loading-states"
+        "./skills/skeleton-loading-states",
+        "./skills/merge-conflicts"
       ]
     }
   ]
