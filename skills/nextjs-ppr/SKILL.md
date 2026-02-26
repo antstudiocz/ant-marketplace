@@ -1,5 +1,6 @@
 ---
 name: nextjs-ppr
+user-invocable: true
 description: Use when implementing Partial Prerendering or caching in a Next.js 16 project — routes with mixed static, cached, and dynamic data dependencies
 ---
 
