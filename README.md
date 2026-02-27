@@ -33,6 +33,7 @@
 | `/ant:laravel-performance` | Laravel 12+ performance optimization — N+1 detection, query optimization, job tuning |
 | `/ant:laravel-architecture` | Laravel 12+ architecture — Actions pattern, DTOs, thin controllers, separation of concerns |
 | `/ant:merge-conflicts` | Intelligently resolve git merge conflicts with deep contextual analysis |
+| `/ant:create-mr` | Create a GitLab MR with Conventional Commits title and structured description |
 
 ## Update
 

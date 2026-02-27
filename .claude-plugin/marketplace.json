@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "(ant) skills for Claude Code",
-    "version": "7.5.1"
+    "version": "7.6.0"
   },
   "plugins": [
     {
@@ -36,7 +36,8 @@
         "./skills/next-best-practices",
         "./skills/react-best-practices",
         "./skills/nextjs-ppr",
-        "./skills/composition-patterns"
+        "./skills/composition-patterns",
+        "./skills/create-mr"
       ]
     }
   ]
