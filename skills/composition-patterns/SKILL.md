@@ -60,9 +60,9 @@ Reference these guidelines when:
 
 ### 4. React 19 APIs (MEDIUM)
 
-> **⚠️ React 19+ only.** Skip this section if using React 18 or earlier.
+> **⚠️ React 19+ only.** For full React 19 coverage (useOptimistic, useActionState, useFormStatus, use(), Form Actions, ref as prop) use the dedicated `ant:react-19` skill.
 
-- `react19-no-forwardref` - Don't use `forwardRef`; use `use()` instead of `useContext()`
+- `react19-no-forwardref` - Pass `ref` directly as a prop; no need for `forwardRef` wrapper
 
 ## How to Use
 
