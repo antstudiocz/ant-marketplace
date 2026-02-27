@@ -21,7 +21,7 @@ If the user passed arguments alongside the command (e.g. `/ant:create-mr Udělej
 
 Examples of what extra instructions can affect:
 - **Multiple repos** → run the full flow for each repo sequentially
-- **Draft MR** → always create as draft without asking
+- **Ready / bez draft** → skip Draft flag and create MR as ready for review
 - **Target branch** → use the specified branch instead of auto-detected one
 - **Skip description** → create MR with minimal description
 - **Specific reviewers** → assign the mentioned people
@@ -135,7 +135,7 @@ Present the proposed MR and ask for confirmation using `AskUserQuestion`:
 
 Title: feat(auth): add Google OAuth login [ANT-42]
 Target: main
-Draft: No
+Draft: Yes (výchozí)
 
 --- Description preview ---
 ## What
@@ -143,8 +143,8 @@ Added Google OAuth as a second login option...
 ...
 
 Options:
-- Vytvořit MR (doporučeno)
-- Vytvořit jako Draft
+- Vytvořit jako Draft (doporučeno)
+- Vytvořit rovnou (bez Draft)
 - Upravit title
 - Upravit popis
 - Zrušit
@@ -154,13 +154,15 @@ If user chooses to edit title or description, ask them for the new value directl
 
 ## Step 6: Create the MR
 
+MR se vždy vytváří jako **Draft** — je to výchozí chování. Flag `--draft` se přidá automaticky, pokud uživatel explicitně nezvolí "bez Draft" nebo nepředal instrukci jako `bez draft` / `ready`.
+
 ```bash
 glab mr create \
   --title "{title}" \
   --description "{description}" \
   --target-branch {target_branch} \
   --assignee @me \
-  [--draft]
+  --draft
 ```
 
 After creation, print the MR URL so the user can open it directly.
