@@ -10,13 +10,59 @@ description: Use when implementing Partial Prerendering or caching in a Next.js 
 
 Classify every data dependency before touching code. Apply one of three patterns. Wrap dynamic slots in `<Suspense>`. Verify with `next build`.
 
+**404 contract comes first:** PPR composition must never replace real not-found semantics. Missing content still belongs in the normal page or loader flow and must resolve via `notFound()`, not via a 404-looking component that returns HTTP `200`.
+
 **Required config (Next.js 16):**
+
 ```ts
 // next.config.ts
-const nextConfig: NextConfig = { cacheComponents: true }
+const nextConfig: NextConfig = { cacheComponents: true };
 ```
 
 > ⚠️ `experimental: { ppr: true }` is the **deprecated Next.js 15** approach. Do NOT use it.
+
+---
+
+## Route Contract Before PPR
+
+Before optimizing streaming or caching, make sure the route contract is correct:
+
+- Parse the route normally.
+- Load the real content through the authoritative loader.
+- If the content is missing, invalid, unpublished, inaccessible, or the locale variant does not exist, call `notFound()`.
+- Use `error.tsx` or `global-error.tsx` for operational failures, not `notFound()`.
+
+**Why this matters:** If a route renders a branded fallback inside `page.tsx` with status `200`, teams later have to retrofit routing, metadata, SEO, tests, and cache behavior across many files. Real `404` handling is part of the route architecture, not later polish.
+
+**Do NOT do this:**
+
+```tsx
+// Bad: Looks like a 404, but returns 200 because the page rendered normally
+export default async function ProductPage({ params }) {
+  const product = await getProduct((await params).id);
+
+  if (!product) {
+    return <NotFoundLikePage />;
+  }
+
+  return <ProductView product={product} />;
+}
+```
+
+```tsx
+// Good: Missing content becomes a real 404 response
+import { notFound } from "next/navigation";
+
+export default async function ProductPage({ params }) {
+  const product = await getProduct((await params).id);
+
+  if (!product) {
+    notFound();
+  }
+
+  return <ProductView product={product} />;
+}
+```
 
 ---
 
@@ -24,11 +70,11 @@ const nextConfig: NextConfig = { cacheComponents: true }
 
 Before writing any code, list every data source/API the route touches and assign a category:
 
-| Category | Definition | Examples |
-|---|---|---|
-| **Static** | Never changes without redeployment | Nav links, footer content, i18n messages |
-| **Cached** | Changes over time, same for all users | Products, categories, prices, banners, brands |
-| **Dynamic** | Unique per-request or per-user | `cookies()`, `headers()`, `searchParams`, cart, auth state |
+| Category    | Definition                            | Examples                                                   |
+| ----------- | ------------------------------------- | ---------------------------------------------------------- |
+| **Static**  | Never changes without redeployment    | Nav links, footer content, i18n messages                   |
+| **Cached**  | Changes over time, same for all users | Products, categories, prices, banners, brands              |
+| **Dynamic** | Unique per-request or per-user        | `cookies()`, `headers()`, `searchParams`, cart, auth state |
 
 **Rule:** If a function calls `cookies()`, `headers()`, or reads `searchParams` — it is Dynamic. No exceptions.
 
@@ -37,9 +83,11 @@ Before writing any code, list every data source/API the route touches and assign
 ## Step 2: Apply pattern per category
 
 ### Static
+
 No annotation needed. Next.js prerenders automatically.
 
 ### Cached
+
 Add `'use cache'` directive + `cacheTag()` + `cacheLife()`:
 
 ```ts
@@ -59,13 +107,15 @@ export async function fetchProducts(params) {
 > Do NOT rely on React `cache()` alone — it deduplicates within one render, not across requests.
 
 **Granular tags for precise invalidation:**
+
 ```ts
-cacheTag('products')            // invalidates all products
-cacheTag(`product:${id}`)       // invalidates one product
-cacheTag('products:featured')   // invalidates a subset
+cacheTag("products"); // invalidates all products
+cacheTag(`product:${id}`); // invalidates one product
+cacheTag("products:featured"); // invalidates a subset
 ```
 
 ### Dynamic
+
 No annotation needed — but MUST be inside `<Suspense>` when the route has Static/Cached content.
 
 ---
@@ -73,29 +123,27 @@ No annotation needed — but MUST be inside `<Suspense>` when the route has Stat
 ## Step 3: Compose the page
 
 ```tsx
-import { Suspense } from 'react'
+import { Suspense } from "react";
 
 export default async function Page({ searchParams }) {
   // Static — renders in the prerendered shell, no await needed here
   return (
     <>
-      <StaticNav />                           {/* Static — in shell */}
-
+      <StaticNav /> {/* Static — in shell */}
       <Suspense fallback={<p>Loading... IMPLEMENT SKELETON</p>}>
-        <ProductList />                       {/* Cached — streams in */}
+        <ProductList /> {/* Cached — streams in */}
       </Suspense>
-
       <Suspense fallback={<p>Loading... IMPLEMENT SKELETON</p>}>
-        <RecentlyViewed />                    {/* Dynamic (cookies) — streams in */}
+        <RecentlyViewed /> {/* Dynamic (cookies) — streams in */}
       </Suspense>
-
-      <StaticFooter />                        {/* Static — in shell */}
+      <StaticFooter /> {/* Static — in shell */}
     </>
-  )
+  );
 }
 ```
 
 **Granularity rules:**
+
 - Each independent Cached/Dynamic slot gets its **own** `<Suspense>` **directly in the page** — not nested inside a shared wrapper component
 - Never group unrelated slots into one `<Suspense>` — it serializes streaming and defeats PPR
 - Cached components can share a boundary only if they logically always load together
@@ -108,20 +156,20 @@ export default async function Page({ searchParams }) {
 
 ```ts
 // src/app/api/revalidate/route.ts
-import { revalidateTag } from 'next/cache'
-import { NextRequest } from 'next/server'
+import { revalidateTag } from "next/cache";
+import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const secret = req.nextUrl.searchParams.get('secret')
+  const secret = req.nextUrl.searchParams.get("secret");
   if (secret !== process.env.REVALIDATION_SECRET) {
-    return Response.json({ error: 'Unauthorized' }, { status: 401 })
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const tag = req.nextUrl.searchParams.get('tag')
-  if (!tag) return Response.json({ error: 'Missing tag' }, { status: 400 })
+  const tag = req.nextUrl.searchParams.get("tag");
+  if (!tag) return Response.json({ error: "Missing tag" }, { status: 400 });
 
-  revalidateTag(tag)
-  return Response.json({ revalidated: true, tag })
+  revalidateTag(tag);
+  return Response.json({ revalidated: true, tag });
 }
 ```
 
@@ -133,13 +181,16 @@ Backend calls: `POST /api/revalidate?tag=product:123&secret=XXX`
 
 Run `next build` and check the route symbol:
 
-| Symbol | Meaning | Expected for |
-|---|---|---|
-| `○` | Static | Fully static routes |
-| `◐` | PPR | Routes with mixed Static + Cached/Dynamic |
-| `λ` | Dynamic | Fully dynamic routes (all cookies/auth) |
+| Symbol | Meaning | Expected for                              |
+| ------ | ------- | ----------------------------------------- |
+| `○`    | Static  | Fully static routes                       |
+| `◐`    | PPR     | Routes with mixed Static + Cached/Dynamic |
+| `λ`    | Dynamic | Fully dynamic routes (all cookies/auth)   |
 
 **Checklist before finishing:**
+
+- [ ] Missing content calls `notFound()` from the real loader path
+- [ ] No branded fallback UI is returned from a normal page with HTTP `200`
 - [ ] Every `'use cache'` function has `cacheTag()`
 - [ ] Every Dynamic slot is inside its own `<Suspense>`
 - [ ] `cacheComponents: true` in `next.config.ts` (not `experimental.ppr`)
@@ -179,24 +230,24 @@ When a cached component needs multiple independent data sources, fetch them in p
 ```ts
 // ❌ Sequential — unnecessarily slow
 async function ProductPage({ id }: { id: string }) {
-  'use cache'
-  const product = await fetchProduct(id)
-  const related = await fetchRelated(id)
-  const reviews = await fetchReviews(id)
+  "use cache";
+  const product = await fetchProduct(id);
+  const related = await fetchRelated(id);
+  const reviews = await fetchReviews(id);
   // ...
 }
 
 // ✅ Parallel — all three fire at once
 async function ProductPage({ id }: { id: string }) {
-  'use cache'
-  cacheTag(`product:${id}`)
-  cacheLife('hours')
+  "use cache";
+  cacheTag(`product:${id}`);
+  cacheLife("hours");
 
   const [product, related, reviews] = await Promise.all([
     fetchProduct(id),
     fetchRelated(id),
     fetchReviews(id),
-  ])
+  ]);
   // ...
 }
 ```
@@ -212,18 +263,18 @@ Rule: if fetches don't depend on each other's results, use `Promise.all`.
 ```ts
 // ✅ Cache the data fetch, not generateMetadata
 async function getProduct(id: string) {
-  'use cache'
-  cacheTag(`product:${id}`)
-  cacheLife('hours')
-  return fetchProductFromApi(id)
+  "use cache";
+  cacheTag(`product:${id}`);
+  cacheLife("hours");
+  return fetchProductFromApi(id);
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
-  const product = await getProduct(params.id)
+  const product = await getProduct(params.id);
   return {
     title: product.name,
     description: product.description,
-  }
+  };
 }
 ```
 
@@ -236,10 +287,10 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 
 Layouts are **always treated as static** by Next.js PPR unless they explicitly call dynamic functions (`cookies()`, `headers()`, `searchParams`). PPR applies at the **page level**, not the layout level.
 
-| Where | PPR applies? |
-|---|---|
-| `layout.tsx` | No — layouts are always static |
-| `page.tsx` | Yes — PPR boundary is here |
+| Where                                | PPR applies?                             |
+| ------------------------------------ | ---------------------------------------- |
+| `layout.tsx`                         | No — layouts are always static           |
+| `page.tsx`                           | Yes — PPR boundary is here               |
 | Shared components rendered by layout | Only if called from a page Suspense slot |
 
 **Consequence:** If your layout calls `cookies()` or `headers()`, it opts the **entire route** into dynamic rendering — PPR cannot help. Move dynamic reads to the page level and isolate them in `<Suspense>`.
@@ -247,13 +298,13 @@ Layouts are **always treated as static** by Next.js PPR unless they explicitly c
 ```tsx
 // ❌ Dynamic read in layout — kills PPR for all child pages
 export default async function Layout({ children }) {
-  const theme = cookies().get('theme')  // opts entire route into dynamic
-  return <div data-theme={theme}>{children}</div>
+  const theme = cookies().get("theme"); // opts entire route into dynamic
+  return <div data-theme={theme}>{children}</div>;
 }
 
 // ✅ Move cookie read to a client component or Suspense slot in the page
 export default function Layout({ children }) {
-  return <div>{children}</div>  // static shell
+  return <div>{children}</div>; // static shell
 }
 ```
 
@@ -261,12 +312,12 @@ export default function Layout({ children }) {
 
 ## Common mistakes
 
-| Mistake | Fix |
-|---|---|
-| `experimental: { ppr: true }` | Use `cacheComponents: true` (top-level) |
-| `next: { revalidate: N }` on fetch | Use `'use cache'` + `cacheLife()` |
-| React `cache()` as the caching strategy | `cache()` deduplicates per-render only; add `'use cache'` for cross-request caching |
-| One `<Suspense>` wrapping the whole page | Each independent slot = own `<Suspense>` at page level |
+| Mistake                                                           | Fix                                                                                         |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `experimental: { ppr: true }`                                     | Use `cacheComponents: true` (top-level)                                                     |
+| `next: { revalidate: N }` on fetch                                | Use `'use cache'` + `cacheLife()`                                                           |
+| React `cache()` as the caching strategy                           | `cache()` deduplicates per-render only; add `'use cache'` for cross-request caching         |
+| One `<Suspense>` wrapping the whole page                          | Each independent slot = own `<Suspense>` at page level                                      |
 | `PageContent` wrapper with multiple slots inside one `<Suspense>` | Extract each slot as its own async component with its own `<Suspense>` directly in the page |
-| No `cacheTag()` | Always add tags — you will need invalidation |
-| Dynamic component outside `<Suspense>` | Entire route falls back to SSR |
+| No `cacheTag()`                                                   | Always add tags — you will need invalidation                                                |
+| Dynamic component outside `<Suspense>`                            | Entire route falls back to SSR                                                              |
