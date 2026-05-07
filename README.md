@@ -44,7 +44,7 @@ For the full implementation orchestrator hierarchy, Codex must allow spawned age
 max_depth = 2
 ```
 
-Add this to your Codex config, then restart Codex or open a new session. Without this setting, the orchestrator can still run in a flattened mode, but the implementation lead cannot spawn slice workers or reviewers itself.
+Add this to your Codex config at `~/.codex/config.toml`, then restart Codex or open a new session. Without this setting, the orchestrator can still run in a flattened mode, but the implementation lead cannot spawn slice workers or reviewers itself.
 
 ## Available Skills
 
