@@ -159,9 +159,12 @@ Use a local ignored directory:
     decisions.md
     findings.md
     handoff.md
+    implementation-plan.md
 ```
 
 Before creating files, ensure `.ant/orchestrator/` is ignored without changing tracked repo policy unless the user asks. Prefer `.git/info/exclude`; if that is unavailable, ask before editing `.gitignore`.
+
+All markdown artifacts created by the orchestration flow must stay under `.ant/orchestrator/`. The default plan artifact path is `.ant/orchestrator/<YYYY-MM-DD-short-purpose>/implementation-plan.md`. Do not create root-level `implementation-plan.md`, `plan.md`, or ad hoc planning markdown unless the user explicitly asks for a tracked repository document.
 
 Write only durable context needed to resume:
 
@@ -171,7 +174,7 @@ Write only durable context needed to resume:
 - repo facts from scouts;
 - legacy/debt findings and approved path;
 - architecture boundaries and contract decisions;
-- implementation-plan path and next recommended action;
+- `.ant/orchestrator/<run>/implementation-plan.md` path and next recommended action;
 - implementation lead checkpoints, verification evidence, remaining risks, and blockers.
 
 Do not write:
@@ -503,7 +506,7 @@ Frontend and backend slice workers may run in parallel against the agreed contra
 
 ## Planning Artifact
 
-After the user approves the direction, spawn a `plan-writer` to create or update an implementation plan markdown artifact, normally `implementation-plan.md` unless the repo has a more specific planning location.
+After the user approves the direction, spawn a `plan-writer` to create or update `.ant/orchestrator/<YYYY-MM-DD-short-purpose>/implementation-plan.md`. If persistence was not active yet, create the `.ant/orchestrator/<run>/` folder first and make the plan the first artifact in that run folder. Use a different location only when the user explicitly asks for a tracked repository document.
 
 The plan must be a practical checklist, not a vague essay. It should include:
 
@@ -533,13 +536,13 @@ Allowed root-orchestrator actions:
 - create or switch to a purpose-named branch/worktree when explicitly requested;
 - create a merge request after verified implementation when explicitly requested;
 - update the conversation tracker;
-- install the approved plan artifact if that artifact is the explicit planning output.
+- create or update the approved plan artifact under `.ant/orchestrator/<run>/`.
 
 Forbidden root-orchestrator actions:
 
 - implementing feature/fix code directly;
 - self-assigning backend/frontend/test slices;
-- mutating app state beyond explicit branch/worktree, merge request, or plan-artifact setup;
+- mutating app state beyond explicit branch/worktree, merge request, or `.ant/orchestrator/` plan-artifact setup;
 - silently continuing without delegation when this skill is active.
 
 Only implement directly if the user explicitly overrides the role boundary after being told delegation is unavailable, or if a tiny coordination edit is required to complete already delegated output. Record the deviation.
@@ -692,7 +695,7 @@ Scout findings:
 Constraints:
 <repo/user constraints>
 
-Create or update `implementation-plan.md` with a checklist-style plan covering delivery context, definition of done, architecture boundaries, legacy/debt decisions, contract-first details, concurrency plan, implementation checklist, validation checklist, reviewer focus, risks, assumptions, and open questions. If any blocking question remains, return `Needs clarification` instead of inventing an answer.
+Create or update `.ant/orchestrator/<YYYY-MM-DD-short-purpose>/implementation-plan.md` with a checklist-style plan covering delivery context, definition of done, architecture boundaries, legacy/debt decisions, contract-first details, concurrency plan, implementation checklist, validation checklist, reviewer focus, risks, assumptions, and open questions. If any blocking question remains, return `Needs clarification` instead of inventing an answer.
 
 Also update the orchestration checkpoint files when persistence is active: add approved decisions to `decisions.md`, plan path and implementation strategy to `state.md`, and the next action to `handoff.md`.
 ```
@@ -713,7 +716,7 @@ Original goal:
 <goal>
 
 Approved implementation plan:
-<implementation-plan.md content or path>
+<.ant/orchestrator/<run>/implementation-plan.md content or path>
 
 Delivery context:
 <current branch/worktree, target branch, dirty state summary, approved branch/worktree setup, MR preference>

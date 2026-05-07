@@ -222,7 +222,7 @@ Original goal:
 <goal>
 
 Approved plan:
-<implementation-plan.md path or excerpt>
+<.ant/orchestrator/<run>/implementation-plan.md path or excerpt>
 
 Orchestration state:
 <path to .ant/orchestrator/... when provided>
@@ -264,7 +264,7 @@ Original goal:
 <original goal>
 
 Approved plan:
-<implementation-plan.md path or summary>
+<.ant/orchestrator/<run>/implementation-plan.md path or summary>
 
 Implementation strategy:
 <direct or slice workers>
