@@ -28,6 +28,8 @@ bunx codex-marketplace add antstudiocz/ant-marketplace/plugins/ant --plugin
 | `/ant:google-docs` | Read and extract content from Google Docs |
 | `/ant:asana-task` | Analyze Asana tasks for implementers |
 
+See [docs/skills.md](docs/skills.md) for a short explanation of how each skill works.
+
 ## Update
 
 Claude Code:
