@@ -1,0 +1,42 @@
+{
+  "name": "ant",
+  "version": "8.0.0",
+  "description": "(ant) dual Claude Code and Codex skills: implementation orchestration, Google Docs, Asana task analysis, GitLab MR feedback, execution planning, frontend, Laravel, React, Next.js, merge conflicts, and more.",
+  "author": {
+    "name": "(ant)",
+    "description": "full-service digital agency"
+  },
+  "homepage": "https://antstudio.cz",
+  "repository": "https://github.com/antstudiocz/ant-marketplace",
+  "license": "MIT",
+  "keywords": [
+    "ant",
+    "skills",
+    "codex",
+    "claude",
+    "implementation",
+    "orchestration",
+    "frontend",
+    "laravel",
+    "react",
+    "nextjs"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "(ant)",
+    "shortDescription": "Shared (ant) skills for Codex and Claude Code.",
+    "longDescription": "(ant) skills for implementation orchestration, codebase analysis, planning, frontend quality, Laravel architecture, React/Next.js practices, GitLab workflows, merge conflicts, and related development workflows.",
+    "developerName": "(ant)",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Use the relevant (ant) skill for this task.",
+      "For implementation work, use implementation-orchestrator from brainstorming through verification.",
+      "Answer in my language."
+    ],
+    "brandColor": "#5BFFC4"
+  }
+}

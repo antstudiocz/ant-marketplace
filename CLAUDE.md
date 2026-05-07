@@ -4,17 +4,24 @@
 
 ```
 .claude-plugin/
-  marketplace.json    # Marketplace config with skills list
-  plugin.json         # Plugin metadata with version
-commands/             # Command files (aliases for skills)
-skills/               # Skill folders with SKILL.md files
+  marketplace.json    # Claude marketplace config
+.agents/plugins/
+  marketplace.json    # Codex marketplace metadata
+plugins/ant/
+  .claude-plugin/
+    plugin.json       # Claude plugin metadata with version
+  .codex-plugin/
+    plugin.json       # Codex plugin metadata with matching version
+  commands/           # Claude command files (aliases for skills)
+  skills/             # Shared Claude/Codex skill folders
+assets/               # Shared README and branding assets
 ```
 
 ## Adding a New Skill
 
 1. **Create skill folder and SKILL.md:**
    ```
-   skills/my-skill/SKILL.md
+   plugins/ant/skills/my-skill/SKILL.md
    ```
 
 2. **SKILL.md format:**
@@ -34,7 +41,7 @@ skills/               # Skill folders with SKILL.md files
    ```json
    "skills": [
      "./skills/google-docs",
-     "./skills/my-skill"  // Add here
+     "./skills/my-skill"  // Add here, relative to plugins/ant
    ]
    ```
 
@@ -48,7 +55,7 @@ Commands are optional aliases that reference skills. The skill itself is what ma
 
 1. **Create command file:**
    ```
-   commands/my-command.md
+   plugins/ant/commands/my-command.md
    ```
 
 2. **Command format:**
@@ -62,8 +69,9 @@ Commands are optional aliases that reference skills. The skill itself is what ma
 
 ## Releasing a New Version
 
-**Both files must have matching versions:**
-- `.claude-plugin/plugin.json` → `"version": "X.Y.Z"`
+**All manifests must have matching versions:**
+- `plugins/ant/.claude-plugin/plugin.json` → `"version": "X.Y.Z"`
+- `plugins/ant/.codex-plugin/plugin.json` → `"version": "X.Y.Z"`
 - `.claude-plugin/marketplace.json` → `"version": "X.Y.Z"`
 
 **Version bumping:**
@@ -73,11 +81,12 @@ Commands are optional aliases that reference skills. The skill itself is what ma
 
 **Release process:**
 
-1. **Update BOTH version files to the same version:**
-   - `.claude-plugin/plugin.json` → change `"version": "X.Y.Z"`
+1. **Update all version files to the same version:**
+   - `plugins/ant/.claude-plugin/plugin.json` → change `"version": "X.Y.Z"`
+   - `plugins/ant/.codex-plugin/plugin.json` → change `"version": "X.Y.Z"`
    - `.claude-plugin/marketplace.json` → change `"version": "X.Y.Z"` (in metadata section)
 
-   ⚠️ **CRITICAL: Both versions MUST match, otherwise plugin won't work correctly!**
+   ⚠️ **CRITICAL: All versions MUST match, otherwise plugin won't work correctly!**
 
 2. **Commit, push and create release:**
    ```bash
@@ -87,14 +96,17 @@ Commands are optional aliases that reference skills. The skill itself is what ma
    - Description of changes"
    ```
 
-**Users update with:**
+**Users update with Claude Code:**
 ```
 /plugin update ant
 ```
 
+**Users update with Codex:**
+Rerun the Codex install command for `antstudiocz/ant-marketplace/plugins/ant`.
+
 ## Testing Locally
 
-After making changes, users need to run `/plugin update ant` to get the latest version from the GitHub release.
+After making changes, Claude Code users need to run `/plugin update ant` to get the latest version from the GitHub release. Codex users should rerun the plugin install command for the `plugins/ant` path.
 
 ## Skill Best Practices
 

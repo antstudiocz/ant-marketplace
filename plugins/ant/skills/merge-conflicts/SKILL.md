@@ -6,6 +6,10 @@ description: Intelligently resolve git merge conflicts through deep contextual a
 
 # Merge Conflicts
 
+## Platform Compatibility
+
+When the instructions mention `AskUserQuestion`, use the native question UI if available; otherwise ask directly in chat. When they mention the `Task tool`, use the host's subagent/delegation capability if available; otherwise perform the same analysis locally. The analysis requirements stay the same across Claude Code and Codex.
+
 ## Purpose
 
 Intelligently resolve git merge conflicts by:
@@ -27,7 +31,7 @@ Parse the user's command for arguments:
 - `/merge-conflicts` (no args) → **Local mode** — resolve conflicts in current working directory
 - `/merge-conflicts <GitLab MR URL>` → **Remote mode** — resolve conflicts from MR
 
-If no arguments and no conflicts detected, also check if skill was triggered automatically (Claude detected conflicts during other work) → **Local mode**.
+If no arguments and no conflicts detected, also check if the skill was triggered automatically during other work → **Local mode**.
 
 ### Language Detection
 
@@ -62,7 +66,7 @@ Extract `source_branch` and `target_branch`.
 **Find local repository:**
 1. Check if current directory has a git remote matching `{project_path}`
 2. If not, search user's home directory for matching repos
-3. If not found, ask user for path using `AskUserQuestion`
+3. If not found, ask user for path
 
 **Checkout and create conflicts locally:**
 ```bash
@@ -86,7 +90,7 @@ For all conflicted files:
 3. Filter out binary files — report them separately as needing manual resolution
 
 **If 20+ conflicted files:**
-Use `AskUserQuestion`:
+Ask the user:
 - Question: "{count} conflicted files detected. Analyze all or select a subset?"
 - Options:
   - "All files"
@@ -102,7 +106,7 @@ Conflict inventory:
 
 ## Step 3: Parallel Deep Analysis
 
-For **each conflicted file**, spawn a subagent using the Task tool (subagent_type: Explore):
+For **each conflicted file**, spawn a subagent when available:
 
 ### Subagent Prompt Template
 
@@ -192,7 +196,7 @@ For each conflict block classified as `complex`, present to the user:
 **Reasoning:** {recommended_resolution}
 ```
 
-Use `AskUserQuestion` for each complex conflict:
+Ask the user for each complex conflict:
 - Question: "How to resolve this conflict?"
 - Options:
   - "Accept proposed resolution"
@@ -253,7 +257,7 @@ After ALL conflicts are resolved:
 ## Critical Rules
 
 1. **NEVER blindly accept one side** — always analyze both sides' intent and propose intelligent merge
-2. **ALWAYS use subagents** for analysis — never guess without reading actual code and dependencies
+2. **Use subagents when available** for analysis; otherwise do the same analysis locally. Never guess without reading actual code and dependencies.
 3. **ALWAYS present complex conflicts** to user — never auto-resolve anything that changes behavior
 4. **Verify zero remaining markers** — no conflict markers may remain in any file after resolution
 5. **Auto-detect language** — communicate in the user's language
@@ -275,5 +279,5 @@ After ALL conflicts are resolved:
 
 - **git** — conflict detection and resolution
 - **glab CLI** — GitLab MR integration (optional, only for remote flow)
-- **Task tool (Explore subagents)** — parallel deep analysis
-- **AskUserQuestion** — user interaction for complex conflicts and options
+- **Subagents, when available** — parallel deep analysis
+- **Native question UI or chat** — user interaction for complex conflicts and options

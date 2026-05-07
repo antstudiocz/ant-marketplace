@@ -6,12 +6,16 @@ description: Read and extract content from Google Docs. Use when user provides a
 
 # Reading Google Docs
 
+## Platform Compatibility
+
+Use the native choice/question UI when the host provides one. If not available, ask the same question directly in chat with the listed options. When the instructions mention a `Read` tool, use the host's normal file/image reading capability.
+
 ## Step 1: Ask User What They Need
 
-**ALWAYS ask the user first using AskUserQuestion tool:**
+**ALWAYS ask the user first:**
 
 ```
-AskUserQuestion with options:
+Ask with options:
 - "Scan & summarize" - Get overview of entire document
 - "Extract specific section" - Find and read a section WITH its images
 - "Full document" - Load complete document content
@@ -44,7 +48,7 @@ curl -sL "https://docs.google.com/document/d/{DOC_ID}/export?format=html" -o /tm
 
 ### Extract specific section (WITH images)
 1. Find section in markdown: `grep -n "section name" /tmp/google-doc.md`
-2. Read section content with Read tool
+2. Read section content with the available file reader
 3. **Check for image references** in that section: `![][imageN]`
 4. **Extract those specific images** from HTML and analyze them
 5. Provide text + image analysis together
@@ -78,7 +82,7 @@ done
 ls /tmp/image*.png 2>/dev/null | wc -l
 ```
 
-View images with Read tool - **Claude can see and analyze images**:
+View images with the available file/image reader:
 ```
 Read(file_path: "/tmp/image1.png")
 ```
@@ -110,4 +114,4 @@ User: "Dej mi info o sekci Objednávky"
 - Works only with publicly shared documents
 - **ALWAYS download both md and html** - images are only in HTML
 - Image numbers in markdown correspond to order in HTML
-- Claude can view and analyze PNG/JPG images via Read tool
+- The host model can usually view and analyze PNG/JPG images when given the image file path.

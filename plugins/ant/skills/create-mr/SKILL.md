@@ -8,6 +8,10 @@ description: Create a GitLab Merge Request with proper Conventional Commits titl
 
 **Announce at start:** "Analyzuji větev a připravuji Merge Request..."
 
+## Platform Compatibility
+
+When the instructions mention a structured confirmation, use the native question UI if available; otherwise ask directly in chat with the listed options.
+
 ## Purpose
 
 Analyze the current branch and create a properly structured GitLab MR with:
@@ -128,7 +132,7 @@ Populate each section:
 
 ## Step 5: Confirm with User
 
-Present the proposed MR and ask for confirmation using `AskUserQuestion`:
+Present the proposed MR and ask for confirmation:
 
 ```
 "Připravený MR:"

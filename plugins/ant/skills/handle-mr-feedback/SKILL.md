@@ -6,6 +6,10 @@ description: Analyze GitLab MR review comments, validate them against code using
 
 # Handle MR Feedback
 
+## Platform Compatibility
+
+When the instructions mention `AskUserQuestion`, use the native question UI if available; otherwise ask directly in chat. When they mention the `Task tool`, use the host's subagent/delegation capability if available; otherwise perform the same validation locally. When `superpowers:writing-plans` is unavailable, use `ant:implementation-orchestrator` to produce the implementation plan and approval flow.
+
 ## Purpose
 
 Systematically process GitLab MR review comments:
@@ -43,7 +47,7 @@ Extract:
    - `git pull origin {source_branch}`
    - Verify with `git branch --show-current`
 
-**If repository not found:** Ask user for the path using `AskUserQuestion`
+**If repository not found:** Ask user for the path.
 
 **IMPORTANT:** All subsequent file operations (reading, editing) must happen in this repository directory!
 
@@ -70,7 +74,7 @@ Ignore:
 
 ## Step 3: Validate Each Thread
 
-For EACH thread, spawn a **subagent** (Task tool with Explore) to:
+For EACH thread, spawn a **subagent** when available to:
 
 1. Read the referenced file and surrounding context
 2. Analyze if the feedback is valid:
@@ -130,7 +134,7 @@ Create a markdown table with all findings:
 
 ## Step 5: User Selection (CHECKPOINT)
 
-Use `AskUserQuestion` with multiselect to let user choose:
+Ask the user to choose the review items to implement. Use multiselect if the host supports it:
 
 ```
 "Které položky z review chceš zapracovat?"
@@ -146,7 +150,7 @@ If user selects nothing or cancels, end the skill gracefully.
 
 ## Step 6: Create Implementation Plan
 
-For selected items, invoke the `/superpowers:writing-plans` skill:
+For selected items, create an implementation plan. In Claude Code, invoke `/superpowers:writing-plans` if available. Otherwise, use `ant:implementation-orchestrator` planning:
 
 ```
 Call Skill tool with:
@@ -177,7 +181,7 @@ If user chooses to implement, proceed with the plan execution.
 ## Critical Rules
 
 1. **ALWAYS find and checkout the correct branch FIRST** - before validating any code, you must be in the correct repository on the correct branch
-2. **ALWAYS use subagents** for code validation - don't guess without reading the actual code
+2. **Use subagents when available** for code validation; otherwise do the same validation locally. Never guess without reading the actual code.
 3. **NEVER skip the user selection step** - user must approve what gets implemented
 4. **Summarize clearly** - reviewer comments can be verbose, distill to actionable items
 5. **Respect resolved threads** - only show open/unresolved items
@@ -210,4 +214,4 @@ Claude:
 
 - **glab CLI**: Must be installed and authenticated for the target GitLab instance
 - **Git**: For accessing the codebase
-- **/superpowers:writing-plans**: For creating implementation plans
+- **/superpowers:writing-plans** or **ant:implementation-orchestrator**: For creating implementation plans
