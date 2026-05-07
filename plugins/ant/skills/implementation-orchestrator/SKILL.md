@@ -42,18 +42,22 @@ The implementation lead is a child of the root orchestrator. It owns the impleme
 4. **Scout when needed** - use read-only codebase analysis when architecture, feasibility, debt, or contracts are unknown.
 5. **Post-scout clarification** - after scout findings, separate repo facts from user decisions and ask the user before turning unresolved decisions into a recommendation.
 6. **Challenge and recommend** - do not blindly agree; present better options with tradeoffs when evidence supports them.
-7. **Direction approval** - get user approval for the conceptual path before detailed planning.
-8. **Plan artifact** - create or update `implementation-plan.md` through the plan writer role.
-9. **Implementation approval** - summarize the plan conceptually and wait for approval.
-10. **Implementation lead** - delegate implementation before editing app code.
-11. **Slice work when useful** - backend/frontend/data/test slices may run in parallel against explicit contracts.
-12. **Integration, review, verification, delivery** - implementation is done only after integrated checks, review/fix loop, evidence, and any approved merge request handoff.
+7. **Next-action approval** - every user-facing phase response says what the orchestrator wants to do next and waits when moving to planning or implementation.
+8. **Rollout strategy approval** - for medium+ refactors, migrations, data-model, reporting, or cross-stack work, present one-time/phased/minimal strategy options before detailed planning.
+9. **Direction approval** - get user approval for the conceptual path before detailed planning.
+10. **Plan artifact** - create or update `implementation-plan.md` through the plan writer role.
+11. **Implementation approval** - summarize the plan conceptually and wait for approval.
+12. **Implementation lead** - delegate implementation before editing app code.
+13. **Slice work when useful** - backend/frontend/data/test slices may run in parallel against explicit contracts.
+14. **Integration, review, verification, delivery** - implementation is done only after integrated checks, review/fix loop, evidence, and any approved merge request handoff.
 
 ## Mandatory Gates
 
 - **Assumption gate:** classify uncertainty as blocking, repo-discoverable, or safe.
+- **Next-action contract gate:** every user-facing response must state the proposed next action, what user reply is needed, and what `pokračuj` would authorize; never treat a vague continue as approval for unstated implementation work.
 - **Context persistence gate:** for medium+ work, keep concise local ignored checkpoint files for decisions, findings, current phase, and handoff; never store secrets, raw logs, or noisy transcripts.
 - **Post-scout clarification gate:** codebase facts cannot silently become product decisions; after scouting, ask the user about unresolved behavior, scope, rollout, data, validation, or architecture choices before issuing a final direction.
+- **Rollout strategy gate:** for broad or risky work, ask whether to proceed as one-time refactor, phased rollout, or compatibility-first minimal change before writing the final plan.
 - **Git/delivery gate:** record current branch, dirty state, target branch, branch/worktree decision, and merge request preference; never create/switch branches, worktrees, or MRs without explicit approval.
 - **Legacy/debt gate:** never silently copy bad architecture, legacy flow, duplicate paths, stale abstractions, or half-migrated behavior.
 - **Architecture boundary gate:** verify module ownership, layer responsibility, file placement, import boundaries, shared utilities, and test placement.
@@ -68,7 +72,8 @@ Before delegating or making a lifecycle decision:
 
 - Read `references/lifecycle.md` for the complete protocol.
 - Read only the role reference needed for the next delegation.
-- Include the relevant role instructions in the subagent prompt. Do not tell subagents to use a separate public skill for scout/reviewer/etc.; those roles are internal references.
+- Include the relevant role instructions in the subagent prompt. Do not tell subagents to use a separate public skill for planner/scout/reviewer/etc.; those roles are internal references, not invocable skills.
+- Never prompt a child with fake skill names such as `ant-implementation-orchestrator:planner`, `ant-implementation-orchestrator:scout`, or `ant-implementation-orchestrator:reviewer`. If the host cannot load references for a child, paste the needed role instructions or a concise role brief into the child prompt.
 
 ## Completion Criteria
 

@@ -35,14 +35,79 @@ If native nested delegation is unavailable, keep the same logical flow but flatt
 4. Codebase scouting when facts from the repo are needed.
 5. Post-scout clarification when scout findings expose user decisions.
 6. Architecture, debt, and feasibility challenge.
-7. Direction approval from the user.
-8. Implementation plan artifact.
-9. Concise user-facing plan summary and implementation approval.
-10. Implementation lead delegation.
-11. Optional parallel slice work under the implementation lead.
-12. Integration, targeted checks, review, fix loop, and final evidence.
+7. Next-action approval before phase transitions.
+8. Rollout strategy approval for medium+ risky work.
+9. Direction approval from the user.
+10. Implementation plan artifact.
+11. Concise user-facing plan summary and implementation approval.
+12. Implementation lead delegation.
+13. Optional parallel slice work under the implementation lead.
+14. Integration, targeted checks, review, fix loop, and final evidence.
 
 Do not skip directly to implementation unless the task is tiny, clear, low-risk, and the user explicitly wants direct execution.
+
+## User-Facing Next Action Contract
+
+Every root-orchestrator response that is not a final completion report must end with a short next-action contract. The goal is that the user can safely answer `pokračuj`, `nepokračuj`, or answer the listed questions without the agent guessing what was approved.
+
+Use this shape:
+
+```text
+Navrhovaný další krok:
+<one concrete action only>
+
+Potřebuji od tebe:
+<"Řekni `pokračuj`", "Odpověz na otázky", "Vyber variantu", or "Potvrď implementaci">
+
+Když řekneš `pokračuj`, udělám pouze:
+<exact scope authorized by continue>
+```
+
+Rules:
+
+- `Pokračuj` authorizes only the next action explicitly stated in the previous assistant message.
+- `Pokračuj` never authorizes implementation unless the previous assistant message explicitly said the next action is starting implementation and asked for implementation approval.
+- `Pokračuj` after brainstorming means continue brainstorming, scout, or prepare a direction, not write code.
+- `Pokračuj` after direction approval means create or refine the plan artifact, not implement.
+- `Pokračuj` after plan summary may start implementation only if the message clearly said "Next I will start implementation and change code" and the user confirmed.
+- If there are blocking questions, ask them and stop. Do not spawn plan writer, implementation lead, or write code while waiting.
+- If the next action is broad, split it into a single bounded next action and say what will remain for later.
+
+For user-facing updates during long work, keep the same contract but use a status form:
+
+```text
+Status:
+- Done:
+- Now:
+- Next:
+- Blockers:
+
+Navrhovaný další krok:
+...
+```
+
+## Internal Role Invocation Rule
+
+Planner, scout, plan-writer, implementation lead, slice worker, and reviewer are internal roles, not public skills. Do not ask a child agent to use `ant-implementation-orchestrator:planner`, `ant-implementation-orchestrator:scout`, `ant-implementation-orchestrator:reviewer`, or similar names. Those skills do not exist.
+
+When delegating, include the needed role instructions in the prompt:
+
+- read the relevant reference yourself and paste the needed constraints into the child prompt; or
+- use the prompt templates in this lifecycle file; or
+- if the host supports passing local reference content, attach the reference content directly.
+
+Invalid child prompt:
+
+```text
+Use skill ant-implementation-orchestrator:planner if available.
+```
+
+Valid child prompt:
+
+```text
+You are acting as the planning facilitator for the (ant) implementation lifecycle.
+Use these role rules: clarify intent, identify repo-discoverable questions, return Needs clarification / Scout needed / Direction ready, do not edit files.
+```
 
 ## Git Context And Delivery Setup Gate
 
@@ -283,6 +348,31 @@ My working direction is <tentative path>, but I need these decisions before I ca
 ```
 
 Do not treat codebase structure as proof of desired product behavior. Existing code can answer "how it works today"; it cannot answer "how the user wants it to work next."
+
+## Rollout Strategy Gate
+
+Before writing the final plan for `Medium`, `High`, or `Critical` work that touches data model, reporting semantics, imports/providers, permissions, public API, migrations, cross-stack contracts, or broad refactors, present strategy options and ask the user to choose or approve the recommendation.
+
+Offer only the options that actually fit the situation. Default shape:
+
+1. `One-time refactor`: implement the full target architecture in one branch.
+   - Benefit: cleanest final state and fewer temporary compatibility layers.
+   - Cost: larger branch, higher review risk, more conflicts, harder rollback.
+2. `Phased rollout`: split into foundation, integration/provider, UI/reporting, cleanup phases.
+   - Benefit: lower risk, easier review and validation, faster usable increments.
+   - Cost: temporary compatibility code and more coordination.
+3. `Compatibility-first minimal change`: prepare the smallest safe change while preserving legacy behavior.
+   - Benefit: fastest and lowest immediate blast radius.
+   - Cost: may preserve debt and require a planned follow-up.
+
+The orchestrator should recommend one option with evidence and ask for approval before plan writing:
+
+```text
+Doporučuji phased rollout, protože <evidence/risk>.
+Mám pokračovat touto strategií, nebo chceš one-time refactor / minimal compatibility change?
+```
+
+Do not silently choose the strategy for the user. A scout can inform this choice, but final strategy is a user decision when it changes scope, delivery time, risk, or compatibility.
 
 ## Model Tier Routing
 
@@ -584,6 +674,9 @@ Use the plan writer role instructions from `references/plan-writer-role.md`.
 
 You are writing the implementation plan artifact for this approved direction. Do not implement app code.
 
+Internal role note:
+You are not invoking a separate skill named `ant-implementation-orchestrator:plan-writer`; these instructions are your role brief.
+
 Original goal:
 <goal>
 
@@ -612,6 +705,9 @@ When the user approves implementation, spawn an implementation lead before editi
 Use the implementation lead role instructions from `references/implementation-lead-role.md`.
 
 You are the implementation lead for this approved plan. You are a child of the root orchestrator and own the implementation phase end-to-end.
+
+Internal role note:
+You are not invoking a separate skill named `ant-implementation-orchestrator:implementation-lead`; these instructions are your role brief.
 
 Original goal:
 <goal>

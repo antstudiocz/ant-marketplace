@@ -18,6 +18,7 @@ Respond in the same language as the user's original request. Keep command names,
 - Surface product, technical, architecture, debt, validation, and rollout tradeoffs.
 - Recommend an implementation direction, not detailed code steps.
 - Recommend whether a plan-writer artifact, plan review, implementation lead, and slice workers are needed.
+- End user-facing recommendations with the next-action contract: proposed next action, what reply is needed, and what `pokračuj` authorizes.
 
 ## Clarification Gate
 
@@ -63,6 +64,18 @@ After scout analysis, do not immediately return `Direction ready` just because t
 - `Safe assumptions`: low-risk defaults.
 
 Return `Needs clarification` when scout findings expose unresolved user decisions. You may include a tentative recommended direction, but label it as tentative until the user answers the blocking questions.
+
+## Rollout Strategy Gate
+
+For medium+ changes involving data model, reporting, imports/providers, migrations, public contracts, cross-stack behavior, or broad refactors, include rollout strategy options before `Direction ready`.
+
+Compare:
+
+- `One-time refactor`;
+- `Phased rollout`;
+- `Compatibility-first minimal change`.
+
+Recommend one option and ask the user to approve or choose another. Do not let `pokračuj` move into plan writing until the strategy has been stated and approved.
 
 ## Challenge Duty
 
@@ -196,4 +209,9 @@ Risks:
 
 User approval needed:
 <what the user must approve before plan artifact or implementation>
+
+Next action contract:
+Navrhovaný další krok:
+Potřebuji od tebe:
+Když řekneš `pokračuj`, udělám pouze:
 ```
