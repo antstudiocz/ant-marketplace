@@ -6,27 +6,45 @@
 
 ## Claude Code Installation
 
+Inside Claude Code:
+
 ```
 /plugin marketplace add antstudiocz/ant-marketplace
 /plugin install ant@ant-marketplace
+/reload-plugins
+```
+
+Or from a terminal:
+
+```bash
+claude plugin marketplace add antstudiocz/ant-marketplace --scope user
+claude plugin install ant@ant-marketplace --scope user
 ```
 
 ## Codex Installation
 
+Global install:
+
 ```bash
-bunx codex-marketplace add antstudiocz/ant-marketplace/plugins/ant --plugin
+bunx codex-marketplace add antstudiocz/ant-marketplace/plugins/ant --plugin --global
+```
+
+Project install:
+
+```bash
+bunx codex-marketplace add antstudiocz/ant-marketplace/plugins/ant --plugin --project
 ```
 
 ## Available Skills
 
-| Command | Description |
-|---------|-------------|
-| `/ant:implementation-orchestrator` | Guide implementation from brainstorming to verified delivery |
-| `/ant:frontend-best-practices` | React, Next.js, TypeScript, accessibility, forms, performance, responsive UI, i18n, skeletons, and composition |
-| `/ant:laravel-best-practices` | Laravel 12+ architecture, caching, performance, Eloquent, queues, and backend review |
-| `/ant:delivery-workflows` | GitLab MRs, review feedback, merge conflicts, and implementation plan handoff |
-| `/ant:google-docs` | Read and extract content from Google Docs |
-| `/ant:asana-task` | Analyze Asana tasks for implementers |
+| Claude Code Command | Codex Skill | Description |
+|---------------------|-------------|-------------|
+| `/ant:implementation-orchestrator` | `$implementation-orchestrator` | Guide implementation from brainstorming to verified delivery |
+| `/ant:frontend-best-practices` | `$frontend-best-practices` | React, Next.js, TypeScript, accessibility, forms, performance, responsive UI, i18n, skeletons, and composition |
+| `/ant:laravel-best-practices` | `$laravel-best-practices` | Laravel 12+ architecture, caching, performance, Eloquent, queues, and backend review |
+| `/ant:delivery-workflows` | `$delivery-workflows` | GitLab MRs, review feedback, merge conflicts, and implementation plan handoff |
+| `/ant:google-docs` | `$google-docs` | Read and extract content from Google Docs |
+| `/ant:asana-task` | `$asana-task-analyzer` | Analyze Asana tasks for implementers |
 
 See [docs/skills.md](docs/skills.md) for a short explanation of how each skill works.
 
@@ -34,11 +52,19 @@ See [docs/skills.md](docs/skills.md) for a short explanation of how each skill w
 
 Claude Code:
 
-```bash
-/plugin update ant
+```
+/plugin marketplace update ant-marketplace
+/plugin update ant@ant-marketplace
+/reload-plugins
 ```
 
-Codex: rerun the install command for the plugin path.
+Or from a terminal:
+
+```bash
+claude plugin update ant@ant-marketplace
+```
+
+Codex: rerun the same `codex-marketplace add` command with the same scope (`--global` or `--project`). Restart Codex or open a new session so the updated skills are loaded.
 
 ## Contributing
 
