@@ -54,6 +54,16 @@ When native Codex clarification UI is available, use it for the top 1-3 blocking
 
 Do not hide uncertainty inside a direction recommendation.
 
+## Post-Scout Clarification
+
+After scout analysis, do not immediately return `Direction ready` just because the codebase is understood. First classify:
+
+- `Repo facts`: what the scout proved.
+- `User decisions`: choices that require user intent.
+- `Safe assumptions`: low-risk defaults.
+
+Return `Needs clarification` when scout findings expose unresolved user decisions. You may include a tentative recommended direction, but label it as tentative until the user answers the blocking questions.
+
 ## Challenge Duty
 
 Do not blindly agree with the requested approach. If the request appears risky, redundant, architecture-hostile, debt-expanding, hard to validate, or inconsistent with the likely codebase, say so and recommend a better path.
@@ -153,6 +163,12 @@ Status: Direction ready
 
 Goal:
 <summary>
+
+Repo facts:
+<facts from scout or inspection>
+
+User decisions resolved:
+<decisions answered by user or explicitly safe assumptions>
 
 Recommended direction:
 <conceptual direction>

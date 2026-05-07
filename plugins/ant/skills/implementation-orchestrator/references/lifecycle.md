@@ -32,13 +32,14 @@ If native nested delegation is unavailable, keep the same logical flow but flatt
 1. Git context and delivery setup.
 2. Intake and brainstorming.
 3. Codebase scouting when facts from the repo are needed.
-4. Architecture, debt, and feasibility challenge.
-5. Direction approval from the user.
-6. Implementation plan artifact.
-7. Concise user-facing plan summary and implementation approval.
-8. Implementation lead delegation.
-9. Optional parallel slice work under the implementation lead.
-10. Integration, targeted checks, review, fix loop, and final evidence.
+4. Post-scout clarification when scout findings expose user decisions.
+5. Architecture, debt, and feasibility challenge.
+6. Direction approval from the user.
+7. Implementation plan artifact.
+8. Concise user-facing plan summary and implementation approval.
+9. Implementation lead delegation.
+10. Optional parallel slice work under the implementation lead.
+11. Integration, targeted checks, review, fix loop, and final evidence.
 
 Do not skip directly to implementation unless the task is tiny, clear, low-risk, and the user explicitly wants direct execution.
 
@@ -118,9 +119,32 @@ Use scout agents for:
 
 Scout outputs should include current behavior, relevant files/subsystems, architecture boundaries, debt findings, options, recommendation, risks, and follow-up questions.
 
+## Post-Scout Clarification Gate
+
+After any scout returns, the root orchestrator must stop and classify the result before giving a final recommendation:
+
+- `Repo facts`: what the scout proved from code, config, docs, tests, or data contracts.
+- `User decisions`: choices the repo cannot answer, such as product behavior, default UX, rollout, data migration policy, fallback behavior, reporting semantics, permissions, scope, validation standard, or architecture/debt appetite.
+- `Safe assumptions`: low-risk defaults that are conventional, reversible, and explicitly stated.
+- `Preliminary direction`: a tentative recommendation based on facts and assumptions.
+
+If any `User decisions` remain, ask the user 1-3 high-impact questions before presenting a final direction or plan. Each question must include a recommended/default answer, why it is recommended, and what changes if the user chooses differently.
+
+The orchestrator may briefly summarize scout facts and a tentative direction, but it must label it as tentative:
+
+```text
+Scout found: <repo facts>.
+My working direction is <tentative path>, but I need these decisions before I can recommend it as the implementation direction:
+1. <question with recommended/default answer and tradeoff>
+```
+
+Do not treat codebase structure as proof of desired product behavior. Existing code can answer "how it works today"; it cannot answer "how the user wants it to work next."
+
 ## Model Tier Routing
 
 Use the cheapest model tier that can safely answer the delegated question when the host supports model selection. Do not spend frontier-model budget on bounded read-only scans or mechanical work, but never let model cost override correctness.
+
+The root orchestrator owns model-tier selection for direct child agents. The implementation lead owns model-tier selection for its children within root guidance. For user phrases like "Explore Codebase", "scan the codebase", "find the current flow", or "inspect repo patterns", default to `Fast scout/mechanical` unless the question is broad, risky, or architecture-critical.
 
 Use `Fast scout/mechanical` for:
 
@@ -403,6 +427,8 @@ Known constraints:
 <constraints>
 
 Return current behavior, relevant files/subsystems, architecture boundaries, legacy/debt findings, implementation options, recommendation, risks, and blocking questions. Keep the output compressed and evidence-based.
+
+Also identify which findings are repo facts and which remaining decisions must be asked of the user. Do not turn product, rollout, default behavior, data migration, reporting, or validation policy into assumptions.
 ```
 
 ## Plan Writer Prompt

@@ -39,17 +39,19 @@ The implementation lead is a child of the root orchestrator. It owns the impleme
 1. **Git context and delivery setup** - inspect branch, dirty state, likely target branch, branch/worktree need, and merge request preference before planning implementation work.
 2. **Intake and brainstorming** - ask the fewest high-impact questions needed. Do not invent user intent.
 3. **Scout when needed** - use read-only codebase analysis when architecture, feasibility, debt, or contracts are unknown.
-4. **Challenge and recommend** - do not blindly agree; present better options with tradeoffs when evidence supports them.
-5. **Direction approval** - get user approval for the conceptual path before detailed planning.
-6. **Plan artifact** - create or update `implementation-plan.md` through the plan writer role.
-7. **Implementation approval** - summarize the plan conceptually and wait for approval.
-8. **Implementation lead** - delegate implementation before editing app code.
-9. **Slice work when useful** - backend/frontend/data/test slices may run in parallel against explicit contracts.
-10. **Integration, review, verification, delivery** - implementation is done only after integrated checks, review/fix loop, evidence, and any approved merge request handoff.
+4. **Post-scout clarification** - after scout findings, separate repo facts from user decisions and ask the user before turning unresolved decisions into a recommendation.
+5. **Challenge and recommend** - do not blindly agree; present better options with tradeoffs when evidence supports them.
+6. **Direction approval** - get user approval for the conceptual path before detailed planning.
+7. **Plan artifact** - create or update `implementation-plan.md` through the plan writer role.
+8. **Implementation approval** - summarize the plan conceptually and wait for approval.
+9. **Implementation lead** - delegate implementation before editing app code.
+10. **Slice work when useful** - backend/frontend/data/test slices may run in parallel against explicit contracts.
+11. **Integration, review, verification, delivery** - implementation is done only after integrated checks, review/fix loop, evidence, and any approved merge request handoff.
 
 ## Mandatory Gates
 
 - **Assumption gate:** classify uncertainty as blocking, repo-discoverable, or safe.
+- **Post-scout clarification gate:** codebase facts cannot silently become product decisions; after scouting, ask the user about unresolved behavior, scope, rollout, data, validation, or architecture choices before issuing a final direction.
 - **Git/delivery gate:** record current branch, dirty state, target branch, branch/worktree decision, and merge request preference; never create/switch branches, worktrees, or MRs without explicit approval.
 - **Legacy/debt gate:** never silently copy bad architecture, legacy flow, duplicate paths, stale abstractions, or half-migrated behavior.
 - **Architecture boundary gate:** verify module ownership, layer responsibility, file placement, import boundaries, shared utilities, and test placement.
