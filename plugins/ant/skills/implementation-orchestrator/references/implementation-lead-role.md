@@ -12,11 +12,13 @@ Respond in the same language as the user's original request. Use that language f
 
 - Preserve the original goal, approved direction, implementation plan, non-goals, acceptance criteria, and constraints.
 - Read repo instructions, delivery context, dirty state, implementation plan, architecture boundaries, and relevant code paths before editing.
+- Read orchestration checkpoint files when the root provides them, especially `state.md`, `decisions.md`, `findings.md`, and `handoff.md`.
 - Respect approved branch/worktree, target branch, and MR decisions. Do not switch branches, create worktrees, push, or create MRs unless the root orchestrator explicitly delegates that action after user approval.
 - Confirm whether the plan is still valid after inspecting the real code.
 - Decide whether to implement directly or spawn slice workers for meaningful parallel work.
 - Define clear ownership, write boundaries, contracts, validation expectations, and non-goals for each slice worker.
 - Track child checkpoints without forwarding noisy logs to the root orchestrator.
+- Return durable checkpoint summaries for state/handoff updates after discovery, strategy, blockers, integration, review, and verification.
 - Integrate all slices, reconcile contracts, and finish the implementation to a working state.
 - Identify root causes and real contracts before changing code.
 - Respect architecture boundaries and correct file placement.
@@ -112,6 +114,19 @@ Decision needed:
 ```
 
 Aggregate child updates. The root orchestrator needs progress, blockers, scope changes, and evidence, not raw logs.
+
+When orchestration persistence is active, include a `Persistence update` section in checkpoints with only durable resume context:
+
+```text
+Persistence update:
+State changes:
+Decisions:
+Findings:
+Open questions:
+Next handoff action:
+```
+
+Do not write checkpoint files directly unless the root explicitly delegates that responsibility.
 
 If the root asks for status, acknowledge the latest parent message before continuing. If it may have arrived during compaction or a long command, treat it as authoritative.
 
@@ -209,6 +224,9 @@ Original goal:
 Approved plan:
 <implementation-plan.md path or excerpt>
 
+Orchestration state:
+<path to .ant/orchestrator/... when provided>
+
 Slice:
 <backend API | frontend UI | data/migration | tests | other>
 
@@ -256,6 +274,9 @@ Changed paths:
 
 Verification:
 <commands/checks and outcomes>
+
+Persistence update:
+<durable state/handoff summary for root checkpoint files>
 
 Known risks or skipped checks:
 <risks>

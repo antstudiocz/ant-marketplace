@@ -9,6 +9,7 @@ End-to-end implementation flow for features, fixes, refactors, migrations, audit
 How it works:
 
 - starts with git/delivery setup: current branch, target branch, dirty state, branch/worktree choice, and MR preference;
+- for medium+ work, keeps concise local ignored orchestration checkpoints so a later session can resume;
 - clarifies the goal with the user and asks blocking questions instead of inventing intent;
 - delegates read-only scouting when codebase facts are needed;
 - after scouting, asks the user about unresolved product, data, rollout, validation, or architecture decisions before finalizing direction;

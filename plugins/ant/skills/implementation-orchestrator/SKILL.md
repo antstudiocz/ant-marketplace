@@ -37,20 +37,22 @@ The implementation lead is a child of the root orchestrator. It owns the impleme
 ## Required Flow
 
 1. **Git context and delivery setup** - inspect branch, dirty state, likely target branch, branch/worktree need, and merge request preference before planning implementation work.
-2. **Intake and brainstorming** - ask the fewest high-impact questions needed. Do not invent user intent.
-3. **Scout when needed** - use read-only codebase analysis when architecture, feasibility, debt, or contracts are unknown.
-4. **Post-scout clarification** - after scout findings, separate repo facts from user decisions and ask the user before turning unresolved decisions into a recommendation.
-5. **Challenge and recommend** - do not blindly agree; present better options with tradeoffs when evidence supports them.
-6. **Direction approval** - get user approval for the conceptual path before detailed planning.
-7. **Plan artifact** - create or update `implementation-plan.md` through the plan writer role.
-8. **Implementation approval** - summarize the plan conceptually and wait for approval.
-9. **Implementation lead** - delegate implementation before editing app code.
-10. **Slice work when useful** - backend/frontend/data/test slices may run in parallel against explicit contracts.
-11. **Integration, review, verification, delivery** - implementation is done only after integrated checks, review/fix loop, evidence, and any approved merge request handoff.
+2. **Context checkpoint setup** - for medium+ work, create a local ignored orchestration state folder so decisions, findings, and handoff survive context reset.
+3. **Intake and brainstorming** - ask the fewest high-impact questions needed. Do not invent user intent.
+4. **Scout when needed** - use read-only codebase analysis when architecture, feasibility, debt, or contracts are unknown.
+5. **Post-scout clarification** - after scout findings, separate repo facts from user decisions and ask the user before turning unresolved decisions into a recommendation.
+6. **Challenge and recommend** - do not blindly agree; present better options with tradeoffs when evidence supports them.
+7. **Direction approval** - get user approval for the conceptual path before detailed planning.
+8. **Plan artifact** - create or update `implementation-plan.md` through the plan writer role.
+9. **Implementation approval** - summarize the plan conceptually and wait for approval.
+10. **Implementation lead** - delegate implementation before editing app code.
+11. **Slice work when useful** - backend/frontend/data/test slices may run in parallel against explicit contracts.
+12. **Integration, review, verification, delivery** - implementation is done only after integrated checks, review/fix loop, evidence, and any approved merge request handoff.
 
 ## Mandatory Gates
 
 - **Assumption gate:** classify uncertainty as blocking, repo-discoverable, or safe.
+- **Context persistence gate:** for medium+ work, keep concise local ignored checkpoint files for decisions, findings, current phase, and handoff; never store secrets, raw logs, or noisy transcripts.
 - **Post-scout clarification gate:** codebase facts cannot silently become product decisions; after scouting, ask the user about unresolved behavior, scope, rollout, data, validation, or architecture choices before issuing a final direction.
 - **Git/delivery gate:** record current branch, dirty state, target branch, branch/worktree decision, and merge request preference; never create/switch branches, worktrees, or MRs without explicit approval.
 - **Legacy/debt gate:** never silently copy bad architecture, legacy flow, duplicate paths, stale abstractions, or half-migrated behavior.
@@ -73,6 +75,7 @@ Before delegating or making a lifecycle decision:
 The work is not complete until:
 
 - user-approved direction and implementation plan exist;
+- context checkpoint files were updated for medium+ work, or persistence was explicitly skipped as unnecessary;
 - git/delivery context and branch/worktree/MR decisions are recorded or explicitly declined;
 - implementation was delegated to an implementation lead;
 - architecture/debt/contract decisions were handled explicitly;
