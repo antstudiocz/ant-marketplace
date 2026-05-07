@@ -11,6 +11,7 @@ How it works:
 - starts with git/delivery setup: current branch, target branch, dirty state, branch/worktree choice, and MR preference;
 - clarifies the goal with the user and asks blocking questions instead of inventing intent;
 - delegates read-only scouting when codebase facts are needed;
+- uses cheaper/faster model tiers for bounded scouts and mechanical helper tasks when the host supports it;
 - challenges weak approaches with code evidence and asks for direction approval;
 - creates an `implementation-plan.md` checklist through a plan writer;
 - delegates implementation to an implementation lead, which may use slice workers for parallel backend/frontend/data/test work;
@@ -46,12 +47,12 @@ Use it for Laravel implementation, refactoring, performance work, caching work, 
 
 ## `delivery-workflows`
 
-Git/GitLab delivery workflows for creating merge requests, handling MR feedback, resolving merge conflicts, and routing existing implementation plans.
+Git/GitLab delivery workflows for creating merge requests and resolving merge conflicts with repository context.
 
 How it works:
 
 - inspects branch and dirty state before mutating git state;
-- loads the matching reference for MR creation, MR feedback, conflict resolution, or plan execution;
+- loads the matching reference for MR creation or conflict resolution;
 - preserves unrelated user changes;
 - uses the repository's expected delivery tool, such as `glab` for GitLab;
 - validates changes before push/MR handoff.
@@ -66,7 +67,7 @@ How it works:
 
 - accepts Google Docs document URLs;
 - extracts document text and relevant structure;
-- routes the extracted content into the current task, for example requirements analysis or plan execution;
+- routes the extracted content into the current task, for example requirements analysis or implementation context;
 - uses native connector/file access when available and falls back to the host's available document-reading flow.
 
 Use it when the user provides a Google Docs URL and wants to read, analyze, or work from that content.

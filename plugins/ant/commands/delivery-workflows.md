@@ -1,5 +1,5 @@
 ---
-description: "Delivery workflows - GitLab MRs, review feedback, merge conflicts, and implementation plan handoff"
+description: "Delivery workflows - GitLab MR creation and merge conflict resolution"
 ---
 
 Invoke the `ant:delivery-workflows` skill and follow it exactly as presented to you.

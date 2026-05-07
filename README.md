@@ -42,7 +42,7 @@ bunx codex-marketplace add antstudiocz/ant-marketplace/plugins/ant --plugin --pr
 | `/ant:implementation-orchestrator` | `$implementation-orchestrator` | Guide implementation from brainstorming to verified delivery |
 | `/ant:frontend-best-practices` | `$frontend-best-practices` | React, Next.js, TypeScript, accessibility, forms, performance, responsive UI, i18n, skeletons, and composition |
 | `/ant:laravel-best-practices` | `$laravel-best-practices` | Laravel 12+ architecture, caching, performance, Eloquent, queues, and backend review |
-| `/ant:delivery-workflows` | `$delivery-workflows` | GitLab MRs, review feedback, merge conflicts, and implementation plan handoff |
+| `/ant:delivery-workflows` | `$delivery-workflows` | GitLab MR creation, merge conflicts, and delivery hygiene |
 | `/ant:google-docs` | `$google-docs` | Read and extract content from Google Docs |
 | `/ant:asana-task` | `$asana-task-analyzer` | Analyze Asana tasks for implementers |
 

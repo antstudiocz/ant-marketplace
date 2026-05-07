@@ -27,6 +27,18 @@ Respond in the same language as the user's original request. Use that language f
 - Fix actionable reviewer findings.
 - Return concise final evidence to the root orchestrator.
 
+## Model Tier Selection
+
+Use fast/cheap model tiers only for bounded helper work when the host supports model selection:
+
+- Codex: `gpt-5.4-mini` for simple read-only scans or mechanical checks.
+- Claude Code: Haiku for the same class of simple subtask.
+- Other hosts: the nearest cheap reliable model tier.
+
+Keep the implementation lead itself on the default/current strong model. Use the default/strong model for behavior-changing code, architecture decisions, contract decisions, migrations, permissions, cache behavior, review, root-cause debugging, and final evidence.
+
+If a fast-tier scout or helper reports uncertainty, broad blast radius, conflicting patterns, or risk, escalate that decision to the implementation lead/root orchestrator instead of letting the fast-tier output decide.
+
 ## Strategy Selection
 
 Default to implementing the complete workstream yourself when:
@@ -211,6 +223,9 @@ Shared contract:
 
 Validation expected:
 <checks>
+
+Model tier:
+<Fast scout/mechanical only for bounded helper work; otherwise default/strong model>
 
 Language:
 Respond in the same language as the original user request.

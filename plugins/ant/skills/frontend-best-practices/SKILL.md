@@ -1,7 +1,7 @@
 ---
 user-invocable: true
 name: frontend-best-practices
-description: Use for React, Next.js, TypeScript, and frontend UI work: components, forms, accessibility, i18n, responsive layouts, semantic HTML, performance, skeleton loading states, React 19 APIs, composition patterns, and Next.js/PPR architecture.
+description: "Use for React, Next.js, TypeScript, and frontend UI work: components, forms, accessibility, i18n, responsive layouts, semantic HTML, performance, skeleton loading states, React 19 APIs, composition patterns, and Next.js/PPR architecture."
 ---
 
 # Frontend Best Practices
