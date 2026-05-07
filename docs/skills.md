@@ -11,8 +11,10 @@ How it works:
 - starts with git/delivery setup: current branch, target branch, dirty state, branch/worktree choice, and MR preference;
 - for medium+ work, keeps concise local ignored orchestration checkpoints so a later session can resume;
 - clarifies the goal with the user and asks blocking questions instead of inventing intent;
+- ends user-facing phase responses with the proposed next action and what `pokračuj` would authorize;
 - delegates read-only scouting when codebase facts are needed;
 - after scouting, asks the user about unresolved product, data, rollout, validation, or architecture decisions before finalizing direction;
+- asks for one-time refactor vs phased rollout vs minimal compatibility strategy on broad or risky work;
 - uses cheaper/faster model tiers for bounded scouts and mechanical helper tasks when the host supports it;
 - challenges weak approaches with code evidence and asks for direction approval;
 - creates an `implementation-plan.md` checklist through a plan writer;

@@ -35,6 +35,17 @@ Project install:
 bunx codex-marketplace add antstudiocz/ant-marketplace/plugins/ant --plugin --project
 ```
 
+### Codex Subagent Depth
+
+For the full implementation orchestrator hierarchy, Codex must allow spawned agents to spawn child agents:
+
+```toml
+[agents]
+max_depth = 2
+```
+
+Add this to your Codex config, then restart Codex or open a new session. Without this setting, the orchestrator can still run in a flattened mode, but the implementation lead cannot spawn slice workers or reviewers itself.
+
 ## Available Skills
 
 | Claude Code Command | Codex Skill | Description |
