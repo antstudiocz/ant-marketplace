@@ -196,7 +196,7 @@ Architecture boundaries:
 <expected ownership>
 
 Plan-writer brief:
-<what the plan writer should turn into implementation-plan.md>
+<what the plan writer should turn into .ant/orchestrator/<run>/implementation-plan.md>
 
 Implementation strategy:
 <direct implementation lead or implementation lead plus slice workers>

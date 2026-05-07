@@ -38,7 +38,7 @@ Do not ask about details discoverable from the repo. Inspect read-only context o
 
 ## Plan Artifact Requirements
 
-Normally create or update `implementation-plan.md` unless the parent provides another path. The plan must include:
+Normally create or update `.ant/orchestrator/<run>/implementation-plan.md` unless the parent provides another path. The parent must only provide another path when the user explicitly requested a tracked repository document. The plan must include:
 
 - goal;
 - non-goals;

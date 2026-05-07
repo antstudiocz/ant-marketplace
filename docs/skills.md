@@ -17,7 +17,7 @@ How it works:
 - asks for one-time refactor vs phased rollout vs minimal compatibility strategy on broad or risky work;
 - uses cheaper/faster model tiers for bounded scouts and mechanical helper tasks when the host supports it;
 - challenges weak approaches with code evidence and asks for direction approval;
-- creates an `implementation-plan.md` checklist through a plan writer;
+- creates an `.ant/orchestrator/<run>/implementation-plan.md` checklist through a plan writer;
 - delegates implementation to an implementation lead, which may use slice workers for parallel backend/frontend/data/test work;
 - finishes with integration, targeted validation, review/fix loops, and final evidence.
 

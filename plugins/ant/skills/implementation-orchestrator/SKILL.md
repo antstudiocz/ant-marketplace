@@ -13,7 +13,7 @@ This is the only public orchestration skill. Internal roles live in `references/
 - `references/lifecycle.md` - full lifecycle, hierarchy, git/delivery setup, gates, liveness, and completion criteria.
 - `references/planner-role.md` - clarification and direction-setting support.
 - `references/scout-role.md` - read-only codebase analysis role.
-- `references/plan-writer-role.md` - `implementation-plan.md` checklist role.
+- `references/plan-writer-role.md` - `.ant/orchestrator/<run>/implementation-plan.md` checklist role.
 - `references/implementation-lead-role.md` - implementation sub-orchestrator role.
 - `references/slice-worker-role.md` - bounded backend/frontend/data/test slice worker role.
 - `references/reviewer-role.md` - plan and integrated implementation reviewer role.
@@ -45,7 +45,7 @@ The implementation lead is a child of the root orchestrator. It owns the impleme
 7. **Next-action approval** - every user-facing phase response says what the orchestrator wants to do next and waits when moving to planning or implementation.
 8. **Rollout strategy approval** - for medium+ refactors, migrations, data-model, reporting, or cross-stack work, present one-time/phased/minimal strategy options before detailed planning.
 9. **Direction approval** - get user approval for the conceptual path before detailed planning.
-10. **Plan artifact** - create or update `implementation-plan.md` through the plan writer role.
+10. **Plan artifact** - create or update `.ant/orchestrator/<run>/implementation-plan.md` through the plan writer role.
 11. **Implementation approval** - summarize the plan conceptually and wait for approval.
 12. **Implementation lead** - delegate implementation before editing app code.
 13. **Slice work when useful** - backend/frontend/data/test slices may run in parallel against explicit contracts.
@@ -56,6 +56,7 @@ The implementation lead is a child of the root orchestrator. It owns the impleme
 - **Assumption gate:** classify uncertainty as blocking, repo-discoverable, or safe.
 - **Next-action contract gate:** every user-facing response must state the proposed next action, what user reply is needed, and what `pokračuj` would authorize; never treat a vague continue as approval for unstated implementation work.
 - **Context persistence gate:** for medium+ work, keep concise local ignored checkpoint files for decisions, findings, current phase, and handoff; never store secrets, raw logs, or noisy transcripts.
+- **Orchestration artifact location gate:** all markdown artifacts created by this orchestration flow belong under `.ant/orchestrator/`; never create root-level `implementation-plan.md` or ad hoc planning markdown unless the user explicitly asks for a tracked repository document.
 - **Post-scout clarification gate:** codebase facts cannot silently become product decisions; after scouting, ask the user about unresolved behavior, scope, rollout, data, validation, or architecture choices before issuing a final direction.
 - **Rollout strategy gate:** for broad or risky work, ask whether to proceed as one-time refactor, phased rollout, or compatibility-first minimal change before writing the final plan.
 - **Git/delivery gate:** record current branch, dirty state, target branch, branch/worktree decision, and merge request preference; never create/switch branches, worktrees, or MRs without explicit approval.
@@ -79,7 +80,7 @@ Before delegating or making a lifecycle decision:
 
 The work is not complete until:
 
-- user-approved direction and implementation plan exist;
+- user-approved direction and implementation plan exist under `.ant/orchestrator/`, unless the user explicitly requested a tracked repo document;
 - context checkpoint files were updated for medium+ work, or persistence was explicitly skipped as unnecessary;
 - git/delivery context and branch/worktree/MR decisions are recorded or explicitly declined;
 - implementation was delegated to an implementation lead;
