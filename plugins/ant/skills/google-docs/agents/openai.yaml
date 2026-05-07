@@ -1,0 +1,4 @@
+interface:
+  display_name: "(ant) Google Docs"
+  short_description: "Read Google Docs into actionable task context"
+  default_prompt: "Use $google-docs to read this Google Doc and extract the relevant content for the current task; answer in my language."
