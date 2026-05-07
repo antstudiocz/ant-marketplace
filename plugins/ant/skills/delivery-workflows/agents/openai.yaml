@@ -1,0 +1,4 @@
+interface:
+  display_name: "(ant) Delivery Workflows"
+  short_description: "GitLab MRs, feedback, conflicts, and plan handoff"
+  default_prompt: "Use $delivery-workflows for this delivery task. Load the matching reference and answer in my language."
