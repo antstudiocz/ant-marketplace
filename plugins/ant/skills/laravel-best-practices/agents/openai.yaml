@@ -1,0 +1,4 @@
+interface:
+  display_name: "(ant) Laravel Best Practices"
+  short_description: "Laravel architecture, caching, and performance guidance"
+  default_prompt: "Use $laravel-best-practices for this Laravel task. Load only the relevant references and answer in my language."

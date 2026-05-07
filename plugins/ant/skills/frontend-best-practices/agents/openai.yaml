@@ -1,0 +1,4 @@
+interface:
+  display_name: "(ant) Frontend Best Practices"
+  short_description: "React, Next.js, TypeScript, and UI quality guidance"
+  default_prompt: "Use $frontend-best-practices for this frontend task. Load only the relevant references and answer in my language."

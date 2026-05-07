@@ -11,35 +11,16 @@
   "plugins": [
     {
       "name": "ant",
-      "description": "(ant) skills - implementation orchestration, Google Docs, Asana tasks, GitLab MR feedback, execute plans, frontend, skeleton loading states, Laravel caching, Laravel performance, Laravel architecture, merge conflicts",
+      "description": "(ant) skills - implementation orchestration, frontend best practices, Laravel best practices, delivery workflows, Google Docs, and Asana tasks",
       "source": "./plugins/ant",
       "strict": true,
       "skills": [
         "./skills/implementation-orchestrator",
+        "./skills/frontend-best-practices",
+        "./skills/laravel-best-practices",
+        "./skills/delivery-workflows",
         "./skills/google-docs",
-        "./skills/asana-task-analyzer",
-        "./skills/handle-mr-feedback",
-        "./skills/execute-plan",
-        "./skills/frontend-accessibility",
-        "./skills/frontend-components",
-        "./skills/frontend-forms",
-        "./skills/frontend-i18n",
-        "./skills/frontend-performance",
-        "./skills/frontend-responsive",
-        "./skills/frontend-semantic-html",
-        "./skills/frontend-typescript",
-        "./skills/frontend-code-separation",
-        "./skills/laravel-caching",
-        "./skills/laravel-performance",
-        "./skills/laravel-architecture",
-        "./skills/skeleton-loading-states",
-        "./skills/merge-conflicts",
-        "./skills/next-best-practices",
-        "./skills/react-best-practices",
-        "./skills/nextjs-ppr",
-        "./skills/composition-patterns",
-        "./skills/create-mr",
-        "./skills/react-19"
+        "./skills/asana-task-analyzer"
       ]
     }
   ]
