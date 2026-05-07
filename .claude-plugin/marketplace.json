@@ -6,12 +6,12 @@
   },
   "metadata": {
     "description": "(ant) skills for Claude Code and Codex",
-    "version": "8.0.1"
+    "version": "8.0.2"
   },
   "plugins": [
     {
       "name": "ant",
-      "description": "(ant) skills - implementation orchestration, frontend best practices, Laravel best practices, delivery workflows, Google Docs, and Asana tasks",
+      "description": "(ant) skills - implementation orchestration, frontend best practices, Laravel best practices, GitLab delivery workflows, Google Docs, and Asana tasks",
       "source": "./plugins/ant",
       "strict": true,
       "skills": [

@@ -53,6 +53,7 @@ The implementation lead is a child of the root orchestrator. It owns the impleme
 - **Git/delivery gate:** record current branch, dirty state, target branch, branch/worktree decision, and merge request preference; never create/switch branches, worktrees, or MRs without explicit approval.
 - **Legacy/debt gate:** never silently copy bad architecture, legacy flow, duplicate paths, stale abstractions, or half-migrated behavior.
 - **Architecture boundary gate:** verify module ownership, layer responsibility, file placement, import boundaries, shared utilities, and test placement.
+- **Model tier gate:** use cheaper/faster model tiers for bounded read-only or mechanical subtask agents when the host supports model selection; escalate to the default/strong model for ambiguity, architecture, implementation, and review.
 - **Definition of done gate:** define observable behavior, acceptance criteria, contracts, edge cases, security/permission boundaries, non-goals, validation, and evidence.
 - **Contract-first gate:** for cross-stack work, define request/response shape, errors, permissions, cache behavior, time handling, UI states, and fixtures before parallel implementation.
 - **Push-first status gate:** child agents push phase checkpoints to their parent; parent polling is a recovery tool, not the default.

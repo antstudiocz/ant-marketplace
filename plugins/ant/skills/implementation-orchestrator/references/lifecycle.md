@@ -118,6 +118,48 @@ Use scout agents for:
 
 Scout outputs should include current behavior, relevant files/subsystems, architecture boundaries, debt findings, options, recommendation, risks, and follow-up questions.
 
+## Model Tier Routing
+
+Use the cheapest model tier that can safely answer the delegated question when the host supports model selection. Do not spend frontier-model budget on bounded read-only scans or mechanical work, but never let model cost override correctness.
+
+Use `Fast scout/mechanical` for:
+
+- bounded codebase scans with explicit questions and no edits;
+- file/path discovery, ownership mapping, import/reference searches, and test-pattern lookup;
+- mechanical documentation or metadata checks;
+- simple non-mutating verification summaries.
+
+Recommended provider examples:
+
+- Codex: `gpt-5.4-mini` when available.
+- Claude Code: Haiku when available.
+- Other hosts: the cheapest/fastest reliable model tier exposed by that host.
+
+Use the default/current strong model for:
+
+- root orchestration, user-facing synthesis, and product/architecture recommendations;
+- plan writing and plan review;
+- implementation lead work;
+- slice work that changes behavior, public contracts, data, security, permissions, cache, or migrations;
+- reviewer roles and final evidence review.
+
+Use the strongest practical model tier for:
+
+- ambiguous architecture decisions;
+- critical/security/billing/tenant/data-loss work;
+- broad refactors or multi-system contract design;
+- root-cause debugging where cheaper scouts disagree or cannot explain evidence.
+
+Escalate from a fast model to the default/strong model when the scout reports `Needs clarification`, `Blocked`, broad blast radius, conflicting patterns, security/data risk, unclear architecture ownership, or low confidence. Fast-tier outputs are evidence for the parent; they are not final decisions.
+
+When spawning a subagent, include the model tier in the prompt:
+
+```text
+Model tier: Fast scout/mechanical | Default implementation | Strong architecture/review
+Provider hint: Codex gpt-5.4-mini / Claude Code Haiku for Fast scout when available; otherwise use the host's nearest cheap reliable tier.
+Escalate if the task is broader or riskier than the tier allows.
+```
+
 ## Challenge And Recommendation Duty
 
 The orchestrator must not blindly agree with the user. If codebase evidence, architecture constraints, operational risk, or long-term maintenance cost show that the requested approach is weak, say so directly and recommend a better path.
@@ -346,6 +388,8 @@ Use the scout role instructions from `references/scout-role.md`.
 
 You are a read-only codebase scout for this (ant) implementation lifecycle. Do not edit files or run mutating commands.
 
+Model tier: Fast scout/mechanical when available for this provider (Codex: gpt-5.4-mini; Claude Code: Haiku). Escalate in your response if the question needs a stronger model.
+
 Original user goal:
 <goal>
 
@@ -407,13 +451,14 @@ Delivery context:
 <current branch/worktree, target branch, dirty state summary, approved branch/worktree setup, MR preference>
 
 Root orchestrator guidance:
-<risk class, suggested concurrency, boundaries, validation expectations>
+<risk class, model tier guidance, suggested concurrency, boundaries, validation expectations>
 
 Language:
 Respond in the same language as the original user request.
 
 Responsibilities:
 - Confirm the implementation strategy after reading the real code.
+- Use fast/cheap model tiers only for bounded read-only scouts or simple mechanical slice checks when the host supports model selection; use the default/strong model for implementation, architecture decisions, review, and final evidence.
 - Decide whether to implement yourself or spawn slice workers according to the plan.
 - If you spawn slice workers, define owned files/subsystems, contract boundaries, validation expectations, and non-goals.
 - Aggregate child checkpoints; do not forward noisy logs.
