@@ -1,20 +1,27 @@
 <p align="center">
-  <img src="logo.svg" alt="(ant)" width="200">
+  <img src="assets/logo.svg" alt="(ant)" width="200">
 </p>
 
-<h3 align="center">Skills for Claude Code</h3>
+<h3 align="center">Skills for Claude Code and Codex</h3>
 
-## Installation
+## Claude Code Installation
 
 ```
 /plugin marketplace add antstudiocz/ant-marketplace
 /plugin install ant@ant-marketplace
 ```
 
+## Codex Installation
+
+```bash
+npx codex-marketplace add antstudiocz/ant-marketplace/plugins/ant --plugin
+```
+
 ## Available Skills
 
 | Command | Description |
 |---------|-------------|
+| `/ant:implementation-orchestrator` | Guide implementation from brainstorming to verified delivery |
 | `/ant:google-docs` | Read and extract content from Google Docs |
 | `/ant:asana-task-analyzer` | Analyze Asana tasks for implementers |
 | `/ant:handle-mr-feedback` | Handle GitLab MR review feedback |
@@ -38,20 +45,24 @@
 
 ## Update
 
+Claude Code:
+
 ```bash
 /plugin update ant
 ```
 
+Codex: rerun the install command for the plugin path.
+
 ## Contributing
 
-1. Create a folder in `skills/your-skill-name/` with a `SKILL.md` file
+1. Create a folder in `plugins/ant/skills/your-skill-name/` with a `SKILL.md` file
 2. Open a PR
 
 ---
 
 <div align="center">
 
-## Made with <img src="heart.svg" height="18" alt="love"> by (ant)
+## Made with <img src="assets/heart.svg" height="18" alt="love"> by (ant)
 
 *From (WTF) ideas we create (WOW) results.*
 

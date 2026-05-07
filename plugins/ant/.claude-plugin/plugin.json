@@ -1,0 +1,12 @@
+{
+  "name": "ant",
+  "description": "(ant) skills for Claude Code and Codex - implementation orchestration, Google Docs, Asana tasks, GitLab MR feedback, execute plans, frontend, skeleton loading states, Laravel caching, Laravel performance, Laravel architecture, merge conflicts",
+  "version": "8.0.0",
+  "author": {
+    "name": "(ant)",
+    "description": "full-service digitální agentura"
+  },
+  "homepage": "https://antstudio.cz",
+  "repository": "https://github.com/antstudiocz/ant-marketplace",
+  "license": "MIT"
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "(ant) Implementation Orchestrator"
+  short_description: "Guide implementation from git setup to verified delivery"
+  default_prompt: "Use $implementation-orchestrator to check git/delivery setup, clarify, scout, plan, delegate, review, and verify this end to end; answer in my language."

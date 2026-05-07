@@ -10,6 +10,12 @@ You are executing an implementation plan using the superpowers:executing-plans s
 
 **Announce at start:** "I'm using the execute-plan skill to implement this plan."
 
+## Platform Compatibility
+
+In Claude Code, use the referenced `superpowers:*` skills when they are available. In Codex, or whenever those skills are unavailable, route execution through `ant:implementation-orchestrator`: load the plan, confirm execution mode, create or reuse `implementation-plan.md`, delegate to an implementation lead, use slice workers only when useful, and finish with review and verification.
+
+When the instructions mention `AskUserQuestion`, use the native question UI if available; otherwise ask directly in chat. When they mention the `Read` or `Task` tool, use the host's equivalent file-reading or subagent/delegation capability.
+
 ## Step 1: Get Plan Location
 
 Parse the user's command for a URL or file path argument. Examples:
@@ -23,7 +29,7 @@ Wait for the user's response with the URL/path.
 
 ## Step 2: Get Execution Mode
 
-Ask the user using AskUserQuestion tool:
+Ask the user:
 - Question: "How do you want to execute the plan steps?"
 - Header: "Exec mode"
 - Options:
@@ -32,7 +38,7 @@ Ask the user using AskUserQuestion tool:
   - "Custom batch size" - User specifies how many steps per batch
   - "One by one" - Execute each step individually with confirmation between steps
 
-If user selects "Custom batch size", ask follow-up using AskUserQuestion tool:
+If user selects "Custom batch size", ask follow-up:
 - Question: "How many steps per batch?"
 - Header: "Batch size"
 - Options:
@@ -42,7 +48,7 @@ If user selects "Custom batch size", ask follow-up using AskUserQuestion tool:
 
 ## Step 2.5: Get Execution Strategy
 
-Ask the user using AskUserQuestion tool:
+Ask the user:
 - Question: "Which execution strategy do you want to use?"
 - Header: "Strategy"
 - Options:
@@ -57,15 +63,17 @@ If the plan location is a Google Docs URL:
 - Select "Full document" when asked
 
 If the plan location is a local file:
-- Read the file using the Read tool
+- Read the file using the available file reader
 
 ## Step 4: Execute
+
+If `superpowers:executing-plans` is unavailable, use `ant:implementation-orchestrator` for the execution flow and preserve the selected execution mode and review strategy as constraints.
 
 Invoke the `superpowers:executing-plans` skill with this context:
 
 **Execution mode:** [the mode from Step 2]
 
-**Model selection for subagents:** For each Task tool call, choose the `model` parameter based on step complexity:
+**Model selection for subagents:** For each subagent/delegation call, choose the model based on step complexity:
 
 | Model | When to use |
 |-------|-------------|
