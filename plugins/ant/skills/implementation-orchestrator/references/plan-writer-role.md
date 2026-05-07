@@ -13,6 +13,7 @@ Write the plan in the same language as the user's original request or parent pro
 - Convert the approved direction into a checklist-style implementation plan.
 - Preserve user decisions, constraints, non-goals, and acceptance criteria.
 - Preserve delivery decisions: current branch/worktree, target branch, dirty-state constraints, branch/worktree choice, and MR preference.
+- Preserve orchestration checkpoint context when provided: current phase, prior user decisions, open questions, scout facts, and handoff constraints.
 - Incorporate scout findings and codebase evidence.
 - Define architecture boundaries, file ownership expectations, and contracts.
 - Record legacy/debt decisions and the approved path.
@@ -57,6 +58,17 @@ Normally create or update `implementation-plan.md` unless the parent provides an
 - risks and open questions.
 
 Use checkboxes for executable implementation and validation steps.
+
+## Orchestration Checkpoints
+
+When the parent provides an orchestration state path, keep the plan consistent with it:
+
+- include approved user decisions from `decisions.md`;
+- incorporate repo facts from `findings.md`;
+- preserve open questions and handoff constraints;
+- return a short checkpoint summary the root orchestrator can write to `state.md` and `handoff.md`.
+
+Do not write raw logs or duplicate the full plan into checkpoint files. The checkpoint should help a new session resume, not replace the plan.
 
 ## Legacy / Debt Decision
 
@@ -147,4 +159,7 @@ Implementation strategy:
 
 Risks:
 <remaining risks>
+
+Checkpoint update:
+<short state/handoff summary for the root orchestrator>
 ```

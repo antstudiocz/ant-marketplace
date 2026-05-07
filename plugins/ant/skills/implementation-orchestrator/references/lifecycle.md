@@ -30,16 +30,17 @@ If native nested delegation is unavailable, keep the same logical flow but flatt
 ## Lifecycle
 
 1. Git context and delivery setup.
-2. Intake and brainstorming.
-3. Codebase scouting when facts from the repo are needed.
-4. Post-scout clarification when scout findings expose user decisions.
-5. Architecture, debt, and feasibility challenge.
-6. Direction approval from the user.
-7. Implementation plan artifact.
-8. Concise user-facing plan summary and implementation approval.
-9. Implementation lead delegation.
-10. Optional parallel slice work under the implementation lead.
-11. Integration, targeted checks, review, fix loop, and final evidence.
+2. Context checkpoint setup for medium+ work.
+3. Intake and brainstorming.
+4. Codebase scouting when facts from the repo are needed.
+5. Post-scout clarification when scout findings expose user decisions.
+6. Architecture, debt, and feasibility challenge.
+7. Direction approval from the user.
+8. Implementation plan artifact.
+9. Concise user-facing plan summary and implementation approval.
+10. Implementation lead delegation.
+11. Optional parallel slice work under the implementation lead.
+12. Integration, targeted checks, review, fix loop, and final evidence.
 
 Do not skip directly to implementation unless the task is tiny, clear, low-risk, and the user explicitly wants direct execution.
 
@@ -78,6 +79,149 @@ Ask the user before implementation when:
 Recommended default: create a purpose-named branch from the target branch for normal implementation, use a worktree for risky/parallel work or when the current workspace has unrelated dirty changes, and create a draft MR only after implementation, review, and verification pass if the user requested an MR.
 
 Do not invent the target branch. If it cannot be found from repo configuration or instructions, ask. Do not stash, reset, move, overwrite, create/switch branches, create worktrees, push, or create MRs without explicit user approval. If dirty changes are unrelated, record them and avoid touching them. Use the repository's required MR tool when known, such as `glab` for GitLab.
+
+## Context Persistence Gate
+
+For `Medium`, `High`, and `Critical` work, keep a concise local checkpoint under the repository so another session can continue after context compaction, reset, or handoff. Skip this only for `Low` tasks or when the user explicitly declines persistence.
+
+Use a local ignored directory:
+
+```text
+.ant/orchestrator/
+  active.md
+  <YYYY-MM-DD-short-purpose>/
+    state.md
+    decisions.md
+    findings.md
+    handoff.md
+```
+
+Before creating files, ensure `.ant/orchestrator/` is ignored without changing tracked repo policy unless the user asks. Prefer `.git/info/exclude`; if that is unavailable, ask before editing `.gitignore`.
+
+Write only durable context needed to resume:
+
+- original goal and current phase;
+- delivery context, branch/worktree/MR decisions, and dirty-state constraints;
+- open questions and user decisions;
+- repo facts from scouts;
+- legacy/debt findings and approved path;
+- architecture boundaries and contract decisions;
+- implementation-plan path and next recommended action;
+- implementation lead checkpoints, verification evidence, remaining risks, and blockers.
+
+Do not write:
+
+- raw tool output, full diffs, noisy transcripts, or complete source files;
+- secrets, tokens, env values, cookies, credentials, private customer data, or production data dumps;
+- every intermediate thought or speculative idea;
+- content that would make the repo dirty unless the user approved tracked documentation.
+
+Update cadence:
+
+- after git/delivery setup: create/update `state.md` and `active.md`;
+- after user decisions: update `decisions.md`;
+- after scouts: update `findings.md`;
+- after plan creation or implementation approval: update `state.md` and `handoff.md`;
+- after implementation lead checkpoints, review, verification, or blockers: update `state.md` and `handoff.md`;
+- before stopping, compacting, handing off, or reporting long-running status: update `handoff.md`.
+
+The root orchestrator owns these files. Child agents report facts to their parent; they do not independently write orchestration state unless the parent explicitly delegates it.
+
+Keep files short and current. Prefer replacing stale sections over appending a long history.
+
+### `active.md`
+
+```md
+# Active Orchestration
+
+Current session:
+- Path: .ant/orchestrator/<YYYY-MM-DD-short-purpose>/
+- Goal: <one sentence>
+- Phase: <current phase>
+- Next: <next action>
+```
+
+### `state.md`
+
+```md
+# Orchestration State
+
+Goal:
+
+Current phase:
+
+Delivery:
+
+Definition of done:
+
+Architecture boundaries:
+
+Contract decisions:
+
+Plan artifact:
+
+Implementation status:
+
+Verification:
+
+Risks / blockers:
+```
+
+### `decisions.md`
+
+```md
+# Decisions
+
+## User Decisions
+- <decision, date/session context, rationale>
+
+## Safe Assumptions
+- <assumption and why it is safe/reversible>
+
+## Open Questions
+- <question, why it matters, recommended default>
+```
+
+### `findings.md`
+
+```md
+# Findings
+
+## Repo Facts
+- <fact with file/path evidence>
+
+## Legacy / Debt
+- <classification and impact>
+
+## Architecture Notes
+- <ownership/boundary notes>
+```
+
+### `handoff.md`
+
+```md
+# Orchestration Handoff
+
+Status:
+
+Goal:
+
+Current phase:
+
+Repo facts:
+
+User decisions made:
+
+Open questions:
+
+Next recommended action:
+
+Do not:
+- <things a new session must not assume or do yet>
+
+Useful files:
+- <state/plan/source paths>
+```
 
 ## Intake And Brainstorming Gate
 
@@ -456,6 +600,8 @@ Constraints:
 <repo/user constraints>
 
 Create or update `implementation-plan.md` with a checklist-style plan covering delivery context, definition of done, architecture boundaries, legacy/debt decisions, contract-first details, concurrency plan, implementation checklist, validation checklist, reviewer focus, risks, assumptions, and open questions. If any blocking question remains, return `Needs clarification` instead of inventing an answer.
+
+Also update the orchestration checkpoint files when persistence is active: add approved decisions to `decisions.md`, plan path and implementation strategy to `state.md`, and the next action to `handoff.md`.
 ```
 
 ## Implementation Lead Prompt
@@ -479,6 +625,9 @@ Delivery context:
 Root orchestrator guidance:
 <risk class, model tier guidance, suggested concurrency, boundaries, validation expectations>
 
+Orchestration state:
+<path to .ant/orchestrator/... when persistence is active; report checkpoint content to the root instead of editing it unless explicitly delegated>
+
 Language:
 Respond in the same language as the original user request.
 
@@ -488,6 +637,7 @@ Responsibilities:
 - Decide whether to implement yourself or spawn slice workers according to the plan.
 - If you spawn slice workers, define owned files/subsystems, contract boundaries, validation expectations, and non-goals.
 - Aggregate child checkpoints; do not forward noisy logs.
+- Report durable decisions, findings, blockers, verification, and next steps so the root can update orchestration checkpoint files.
 - Integrate all slices, reconcile contracts, run targeted checks, handle review/fix loops, and return final evidence.
 - Escalate legacy/debt, architecture, contract, or scope decisions instead of inventing answers.
 ```
