@@ -1,0 +1,4 @@
+interface:
+  display_name: "(ant) Asana Task Analyzer"
+  short_description: "Analyze Asana tasks for implementation context"
+  default_prompt: "Use $asana-task-analyzer to analyze this Asana task and summarize requirements, unclear points, and implementation context in my language."
