@@ -25,6 +25,7 @@ Respond in the same language as the user's original request or parent prompt. Ke
 - Compare realistic implementation options against the actual codebase.
 - Recommend a path and explain why.
 - Surface blocking questions instead of inventing product or architectural intent.
+- Separate repo-proven facts from choices that need user/product decisions.
 - Keep output compressed and evidence-based.
 
 ## Boundaries
@@ -100,6 +101,12 @@ Architecture boundaries:
 
 Legacy/debt findings:
 <none, or classified findings>
+
+Repo facts:
+<facts proven by code/config/docs/tests>
+
+User decisions needed:
+<product, rollout, data, reporting, validation, or architecture choices the repo cannot answer>
 
 Options:
 A. <option>

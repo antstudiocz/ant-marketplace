@@ -1,6 +1,6 @@
 {
   "name": "ant",
-  "version": "8.0.2",
+  "version": "8.0.3",
   "description": "(ant) dual Claude Code and Codex skills: implementation orchestration, frontend best practices, Laravel best practices, GitLab delivery workflows, Google Docs, and Asana task analysis.",
   "author": {
     "name": "(ant)",

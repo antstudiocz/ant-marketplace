@@ -11,6 +11,7 @@ How it works:
 - starts with git/delivery setup: current branch, target branch, dirty state, branch/worktree choice, and MR preference;
 - clarifies the goal with the user and asks blocking questions instead of inventing intent;
 - delegates read-only scouting when codebase facts are needed;
+- after scouting, asks the user about unresolved product, data, rollout, validation, or architecture decisions before finalizing direction;
 - uses cheaper/faster model tiers for bounded scouts and mechanical helper tasks when the host supports it;
 - challenges weak approaches with code evidence and asks for direction approval;
 - creates an `implementation-plan.md` checklist through a plan writer;
