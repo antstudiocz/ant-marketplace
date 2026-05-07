@@ -13,11 +13,14 @@ plugins/ant/
   .codex-plugin/
     plugin.json       # Codex plugin metadata with matching version
   commands/           # Claude command files (aliases for skills)
-  skills/             # Shared Claude/Codex skill folders
+  skills/             # Shared Claude/Codex public skill folders
+    */references/     # Internal topic guidance loaded by umbrella skills
 assets/               # Shared README and branding assets
 ```
 
 ## Adding a New Skill
+
+Prefer a new public skill only for a distinct workflow or domain entrypoint. If the topic belongs under frontend, Laravel, delivery, or orchestration, add it as a reference under the existing umbrella skill instead.
 
 1. **Create skill folder and SKILL.md:**
    ```
@@ -48,6 +51,18 @@ assets/               # Shared README and branding assets
 4. **Update README.md** - add to Available Skills table
 
 5. **Release new version** (see below)
+
+## Adding Umbrella Skill References
+
+Detailed guidance that should not appear as a public skill belongs in a `references/` file under the owning umbrella skill:
+
+```
+plugins/ant/skills/frontend-best-practices/references/my-topic.md
+plugins/ant/skills/laravel-best-practices/references/my-topic.md
+plugins/ant/skills/delivery-workflows/references/my-topic.md
+```
+
+Do not name internal reference files `SKILL.md`; Codex may discover those as public skills.
 
 ## Adding a New Command
 
@@ -113,4 +128,5 @@ After making changes, Claude Code users need to run `/plugin update ant` to get 
 - Use `AskUserQuestion` tool for user choices with predefined options
 - For simple text input, just ask directly (no options needed)
 - Reference other skills with `ant:skill-name` or `superpowers:skill-name`
+- Keep the public skill list small. Prefer umbrella skills with targeted `references/` over many narrow public skills.
 - Add `**Announce at start:**` for clarity on what skill is being used
