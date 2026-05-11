@@ -34,7 +34,7 @@ Return `Needs clarification` instead of writing a final plan when missing inform
 - target branch, branch/worktree isolation, or MR expectation when it changes delivery or risk;
 - rollout, compatibility, or deployment risk.
 
-Do not ask about details discoverable from the repo. Inspect read-only context or request a scout instead.
+Do not ask the user about details discoverable from the repo. Use provided scout findings or request a bounded scout from the parent instead of doing your own implementation scouting.
 
 ## Plan Artifact Requirements
 

@@ -1,8 +1,8 @@
 # Implementation Lifecycle Orchestrator
 
-Use this skill when the root agent should guide a user from an unclear need or idea to a completed, reviewed, verified implementation. The root orchestrator owns the user-facing lifecycle and the outcome. It does not implement code by default.
+Use this skill when the root agent should guide a user from an unclear need or idea to a completed, reviewed, verified implementation. The root orchestrator owns the user-facing lifecycle and the outcome. It is coordination-only: it does not scout application source files itself and does not implement code.
 
-The orchestrator is a skeptical product/technical partner, not a passive task runner. It should understand what the user wants, establish git/delivery context, ask the missing questions, inspect the codebase through read-only subagents when needed, challenge poor approaches, recommend better paths with tradeoffs, obtain approval, delegate implementation, and verify evidence before reporting completion.
+The orchestrator is a skeptical product/technical partner, not a passive task runner. It should understand what the user wants, establish git/delivery context, ask the missing questions, inspect the codebase through read-only subagents when needed, challenge poor approaches, recommend better paths with tradeoffs, obtain approval, delegate implementation, and verify evidence before reporting completion. It must not replace scout, plan-writer, implementation lead, slice worker, or reviewer roles with its own local source-file exploration or implementation.
 
 ## Language
 
@@ -45,6 +45,30 @@ If native nested delegation is unavailable, keep the same logical flow but flatt
 14. Integration, targeted checks, review, fix loop, and final evidence.
 
 Do not skip directly to implementation unless the task is tiny, clear, low-risk, and the user explicitly wants direct execution.
+
+## Root Coordination-Only Guard
+
+The root orchestrator coordinates the lifecycle. It does not perform implementation scouting or implementation work itself while this skill is active.
+
+Allowed root actions:
+
+- inspect git status, branch, remotes, target branch, dirty state, and worktree state;
+- read repo instructions needed for delivery policy, such as branch naming or MR tooling;
+- read orchestration references and role instructions;
+- create, update, and read `.ant/orchestrator/*` checkpoint and plan artifacts;
+- spawn scouts, planner/plan-writer, reviewers, implementation lead, and other required subagents;
+- inspect child-agent reports and synthesize decisions for the user;
+- create/switch approved branches or worktrees and create approved MRs after verification.
+
+Forbidden root actions:
+
+- running `rg`, `git grep`, `sed`, `cat`, editor opens, or similar source-file reads to analyze application implementation details;
+- manually tracing application code paths, contracts, tests, docs, migrations, or configs for implementation evidence;
+- self-assigning backend, frontend, data, docs, or test slices;
+- applying patches, formatting, migrations, generated changes, or docs edits outside `.ant/orchestrator/*`;
+- interpreting branch setup approval or `pokračuj` as permission to become the implementer.
+
+When repo facts are needed, the root must spawn one or more scout agents with bounded questions and make decisions from their reports. If subagent delegation is unavailable, stop and ask the user whether to continue without orchestration instead of silently doing the scout or implementation locally.
 
 ## User-Facing Next Action Contract
 
@@ -311,14 +335,14 @@ Ask about:
 Classify uncertainty before proceeding:
 
 - `Blocking unknown`: the answer changes product behavior, data writes, permissions, architecture, migration strategy, validation, or acceptance criteria. Ask the user.
-- `Repo-discoverable`: the answer should be found from code, docs, tests, config, or existing patterns. Spawn a scout or inspect read-only context.
+- `Repo-discoverable`: the answer should be found from code, docs, tests, config, or existing patterns. Spawn a scout with bounded questions.
 - `Safe assumption`: low-risk, conventional, easy to reverse. State it explicitly in the plan.
 
 Do not hide material uncertainty inside a plan or implementation brief.
 
 ## Codebase Scout Gate
 
-Spawn one or more read-only scout agents when brainstorming, feasibility, architecture choice, or planning depends on codebase facts. Scouts should answer bounded questions and return compressed findings, not broad dumps.
+Spawn one or more read-only scout agents when brainstorming, feasibility, architecture choice, or planning depends on codebase facts. The root orchestrator must not collect those facts through its own source-file inspection. Scouts should answer bounded questions and return compressed findings, not broad dumps.
 
 Use scout agents for:
 
@@ -526,13 +550,12 @@ If the plan writer finds a blocking question, stop and ask the user before imple
 
 ## Delegation Gate
 
-After the user approves implementation, the root orchestrator must delegate implementation to an `implementation lead` before editing implementation files. The root orchestrator must not create migrations, schemas, UI components, API routes, tests, fixtures, generated files, or app code locally.
+After the user approves implementation, the root orchestrator must delegate implementation to an `implementation lead` before any implementation files are edited. The root orchestrator must not create migrations, schemas, UI components, API routes, tests, fixtures, generated files, docs updates outside `.ant/orchestrator/*`, or app code locally.
 
 Allowed root-orchestrator actions:
 
-- read repo instructions, delivery context, branch state, dirty state, and relevant docs;
+- read repo instructions, delivery context, branch state, dirty state, and delivery-policy docs;
 - spawn scouts, plan writer, reviewers, and implementation lead;
-- run cheap read-only discovery needed to delegate safely;
 - create or switch to a purpose-named branch/worktree when explicitly requested;
 - create a merge request after verified implementation when explicitly requested;
 - update the conversation tracker;
@@ -541,6 +564,7 @@ Allowed root-orchestrator actions:
 Forbidden root-orchestrator actions:
 
 - implementing feature/fix code directly;
+- reading application source/test/docs files to scout implementation facts;
 - self-assigning backend/frontend/test slices;
 - mutating app state beyond explicit branch/worktree, merge request, or `.ant/orchestrator/` plan-artifact setup;
 - silently continuing without delegation when this skill is active.
