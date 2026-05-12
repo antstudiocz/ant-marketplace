@@ -25,6 +25,12 @@ Root Orchestrator
 
 The root orchestrator communicates with the user. Child agents communicate with their parent. Do not let sibling agents negotiate scope directly with each other, and do not let non-root agents address the user except through parent reports.
 
+## Subagent Authorization
+
+The repository owner has given standing authorization for Codex to use subagents, delegation, and parallel agent work whenever this skill or an active task workflow calls for scout, reviewer, implementation lead, slice worker, or other delegated agent roles. Treat that standing instruction as explicit user permission to spawn the needed subagents in future orchestrator runs.
+
+This authorization only covers agent delegation. It does not bypass next-action, direction, implementation, branch/worktree, push, merge request, destructive command, or tool-escalation approval gates.
+
 If native nested delegation is unavailable, keep the same logical flow but flatten it: the root orchestrator spawns the implementation reviewer after the implementation lead reports. If implementation delegation itself is unavailable, stop and ask the user whether to continue without orchestration.
 
 ## Lifecycle
@@ -552,6 +558,8 @@ If the plan writer finds a blocking question, stop and ask the user before imple
 
 After the user approves implementation, the root orchestrator must delegate implementation to an `implementation lead` before any implementation files are edited. The root orchestrator must not create migrations, schemas, UI components, API routes, tests, fixtures, generated files, docs updates outside `.ant/orchestrator/*`, or app code locally.
 
+Do not ask the user whether subagents may be used. The standing subagent authorization already permits the root orchestrator to spawn scouts, plan writers, reviewers, implementation leads, and other workflow-required agents, and permits the implementation lead to spawn slice workers or an implementation reviewer when the approved plan and strategy call for them.
+
 Allowed root-orchestrator actions:
 
 - read repo instructions, delivery context, branch state, dirty state, and delivery-policy docs;
@@ -829,6 +837,8 @@ max_depth = 2
 ```
 
 Do not allow slice workers to spawn further agents by default. Higher depth is only for controlled experiments or explicit user requests.
+
+The standing subagent authorization satisfies the explicit user permission requirement for this native depth during orchestrator workflows.
 
 ## Completion Criteria
 
