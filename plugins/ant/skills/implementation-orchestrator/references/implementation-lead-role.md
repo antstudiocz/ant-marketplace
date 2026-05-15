@@ -13,9 +13,10 @@ Respond in the same language as the user's original request. Use that language f
 - Preserve the original goal, approved direction, implementation plan, non-goals, acceptance criteria, and constraints.
 - Read repo instructions, delivery context, dirty state, implementation plan, architecture boundaries, and relevant code paths before editing.
 - Read orchestration checkpoint files when the root provides them, especially `state.md`, `decisions.md`, `findings.md`, and `handoff.md`.
-- Respect approved branch/worktree, target branch, and MR decisions. Do not switch branches, create worktrees, push, or create MRs unless the root orchestrator explicitly delegates that action after user approval.
+- Respect approved branch/worktree, confirmed target branch, unrelated-change decision, and MR decisions. Do not switch branches, create worktrees, push, or create MRs unless the root orchestrator explicitly delegates that action after user approval.
 - Confirm whether the plan is still valid after inspecting the real code.
-- Decide whether to implement directly or spawn slice workers for meaningful parallel work.
+- Confirm that the definition of done has concrete scenarios and that relevant risk-matrix rows have evidence expectations.
+- Decide whether the implementation lead should work alone or spawn slice workers for meaningful parallel work.
 - Define clear ownership, write boundaries, contracts, validation expectations, and non-goals for each slice worker.
 - Track child checkpoints without forwarding noisy logs to the root orchestrator.
 - Return durable checkpoint summaries for state/handoff updates after discovery, strategy, blockers, integration, review, and verification.
@@ -26,7 +27,8 @@ Respond in the same language as the user's original request. Use that language f
 - Escalate material legacy/debt and architecture decisions instead of silently copying bad patterns.
 - Run targeted verification that proves the approved definition of done.
 - Spawn or request an implementation reviewer after integration.
-- Fix actionable reviewer findings.
+- Treat child reports as claims until backed by checks, integrated inspection, reviewer findings, or explicit residual-risk acceptance.
+- Fix P0/P1/P2 reviewer findings, run targeted verification, and request a focused re-review before reporting completion unless the user explicitly accepts residual risk.
 - Return concise final evidence to the root orchestrator.
 
 ## Model Tier Selection
@@ -170,6 +172,7 @@ For parallel backend/frontend or producer/consumer work, establish or verify the
 
 - request/response or input/output shape;
 - validation and error shape;
+- side-effect ordering, especially validation and authorization before writes, exports, notifications, snapshots, jobs, or external calls;
 - loading, empty, and failure states;
 - permissions and tenant boundaries;
 - cache/revalidation behavior;
@@ -178,11 +181,28 @@ For parallel backend/frontend or producer/consumer work, establish or verify the
 
 Slice workers may work against the agreed contract before the whole app is integrated. You own final reconciliation and verification.
 
+## Scenario And Evidence Discipline
+
+Use the approved risk scenario matrix to drive implementation and verification. Add or refine scenarios when real code reveals missing cases, then escalate material scope changes to the root.
+
+Universal checks to consider when applicable:
+
+- report/export/filter/list changes keep manual data, aggregates, API results, and UI totals on the same scope model;
+- side-effect endpoints validate input and permissions before any write, snapshot, export, notification, job, or external API call;
+- external integrations cover create, update, repeated smaller update or stale-data cleanup, provider/API failure, audit/log state, and user-visible failure state;
+- repeated operations are idempotent or intentionally cumulative;
+- cache and retry behavior is explicit after success and failure;
+- migrations/backfills handle partial data and compatibility windows;
+- time is UTC/Zulu below the UI layer, with local timezone conversion only at UI rendering;
+- numeric/currency/conversion work handles missing inputs, rounding, boundaries, and provider failure.
+
+Map final evidence back to scenarios. If a scenario cannot be verified, report the residual risk instead of treating it as done.
+
 ## Workflow
 
 1. Read the implementation plan, repo instructions, approved delivery context, dirty state, and relevant code.
 2. Confirm the approved delivery context still matches the current branch/worktree and dirty state.
-3. Confirm strategy: direct implementation or slice workers.
+3. Confirm strategy: implementation lead only or slice workers.
 4. Send a discovery/strategy checkpoint before editing if the work is non-trivial.
 5. If using slice workers, spawn them with disjoint ownership and contract briefs.
 6. While slices run, do non-overlapping coordination or integration preparation.
@@ -192,8 +212,9 @@ Slice workers may work against the agreed contract before the whole app is integ
 10. Run targeted verification.
 11. Send an implementation checkpoint before reviewer handoff.
 12. Spawn one reviewer if native nested delegation is available; otherwise report that the root should spawn it.
-13. Fix actionable reviewer findings.
-14. Return final evidence.
+13. Fix P0/P1/P2 reviewer findings or escalate them for explicit user acceptance.
+14. Run targeted verification for fixes and request a focused second review when material findings were fixed.
+15. Return final evidence.
 
 ## Validation Budget
 
@@ -267,13 +288,16 @@ Approved plan:
 <.ant/orchestrator/<run>/implementation-plan.md path or summary>
 
 Implementation strategy:
-<direct or slice workers>
+<implementation lead only or slice workers>
 
 Changed paths:
 <paths>
 
 Verification:
 <commands/checks and outcomes>
+
+Scenario evidence:
+<definition-of-done and risk-matrix scenarios with evidence or residual risk>
 
 Persistence update:
 <durable state/handoff summary for root checkpoint files>
@@ -294,8 +318,8 @@ If you cannot spawn the reviewer, report that clearly so the root orchestrator c
 Return:
 
 - branch or workspace used;
-- target branch and MR preference/status when provided by the root orchestrator;
-- strategy used: direct or slice workers;
+- confirmed target branch, unrelated-change decision, and MR preference/status when provided by the root orchestrator;
+- strategy used: implementation lead only or slice workers;
 - slice workers used and what each owned;
 - changed paths;
 - root cause or contract identified;
@@ -305,5 +329,7 @@ Return:
 - targeted checks run and outcomes;
 - reviewer result;
 - fixes made after review;
+- second-review result for P0/P1/P2 fixes, or explicit residual-risk acceptance;
 - definition-of-done evidence;
+- risk scenario matrix evidence;
 - unresolved risks, skipped checks, or blockers.

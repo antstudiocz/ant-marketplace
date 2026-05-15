@@ -12,10 +12,12 @@ Write the plan in the same language as the user's original request or parent pro
 
 - Convert the approved direction into a checklist-style implementation plan.
 - Preserve user decisions, constraints, non-goals, and acceptance criteria.
-- Preserve delivery decisions: current branch/worktree, target branch, dirty-state constraints, branch/worktree choice, and MR preference.
+- Preserve delivery decisions: current branch/worktree, confirmed target branch, dirty-state constraints, unrelated-change decision, branch/worktree choice, and MR preference.
 - Preserve orchestration checkpoint context when provided: current phase, prior user decisions, open questions, scout facts, and handoff constraints.
 - Incorporate scout findings and codebase evidence.
 - Define architecture boundaries, file ownership expectations, and contracts.
+- Convert broad requirements into concrete acceptance scenarios.
+- Build a risk scenario matrix using only the profiles relevant to the task.
 - Record legacy/debt decisions and the approved path.
 - Define a concurrency plan for the implementation lead.
 - Define validation and evidence requirements.
@@ -32,6 +34,7 @@ Return `Needs clarification` instead of writing a final plan when missing inform
 - frontend/backend contract;
 - validation required to prove done;
 - target branch, branch/worktree isolation, or MR expectation when it changes delivery or risk;
+- unrelated-change handling when dirty files are outside scope;
 - rollout, compatibility, or deployment risk.
 
 Do not ask the user about details discoverable from the repo. Use provided scout findings or request a bounded scout from the parent instead of doing your own implementation scouting.
@@ -46,6 +49,7 @@ Normally create or update `.ant/orchestrator/<run>/implementation-plan.md` unles
 - delivery context and MR preference;
 - definition of done;
 - acceptance criteria;
+- risk scenario matrix;
 - codebase context;
 - architecture boundaries;
 - legacy/debt decisions;
@@ -83,6 +87,28 @@ If the plan depends on legacy or debt-heavy code, include:
 
 Do not silently plan to preserve avoidable debt.
 
+## Scenario-Based Definition Of Done
+
+For broad requirements, write concrete scenarios with:
+
+- given/when/then;
+- validation command, manual check, review focus, or accepted residual risk;
+- evidence owner: implementation lead, slice worker, reviewer, or root delivery check.
+
+For `Medium`, `High`, and `Critical` work, include a risk scenario matrix. Select only applicable profiles:
+
+- scope consistency across filters, reports, exports, aggregates, manual data, and UI totals;
+- invalid input and authorization before side effects;
+- external integration create/update/repeated update/failure/audit/frontend failure;
+- repeated or idempotent operations;
+- cache, retry, stale data, and invalidation behavior;
+- permissions, tenancy, and role boundaries;
+- migration/backfill and compatibility window;
+- UTC/Zulu time, UI-only local rendering, numeric conversion, rounding, and missing external inputs;
+- deletion, shrink, and stale-data cleanup semantics.
+
+Each selected row must include scenario, validation/evidence, and residual risk if not verified.
+
 ## Architecture Boundary Section
 
 Define expected ownership:
@@ -106,7 +132,7 @@ Include rules such as:
 
 State whether implementation should be:
 
-- direct by the implementation lead;
+- single implementation lead without slice workers;
 - implementation lead plus parallel slice workers;
 - discovery-gated before edits;
 - plan-review-gated before implementation.
@@ -152,10 +178,13 @@ Conceptual summary for user:
 <short summary suitable for root orchestrator to show the user>
 
 Delivery:
-<branch/worktree/target/MR summary>
+<branch/worktree/confirmed target/unrelated-change/MR summary>
 
 Implementation strategy:
-<direct or slice workers>
+<single implementation lead or slice workers>
+
+Risk scenario matrix:
+<selected profiles and evidence expectations>
 
 Risks:
 <remaining risks>

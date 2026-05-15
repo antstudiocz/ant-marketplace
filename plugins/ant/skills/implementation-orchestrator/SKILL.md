@@ -56,17 +56,24 @@ The implementation lead is a child of the root orchestrator. It owns the impleme
 - **Assumption gate:** classify uncertainty as blocking, repo-discoverable, or safe.
 - **Next-action contract gate:** every user-facing response must state the proposed next action, what user reply is needed, and what `pokračuj` would authorize; never treat a vague continue as approval for unstated implementation work.
 - **Root coordination-only gate:** the root orchestrator may inspect git/delivery state, orchestration references, `.ant/orchestrator/*`, and child-agent reports, but must not scout source files or implement app code directly.
+- **No root manual work gate:** while this skill is active, every implementation change, follow-up, review fix, test, docs edit, formatting/config change, or one-line text edit must be delegated to a child agent. User phrases like "udělej to", "oprav to", "zapracuj připomínku", "je to jen maličkost", or "pokračuj" mean continue orchestration, not root manual edits.
 - **Context persistence gate:** for medium+ work, keep concise local ignored checkpoint files for decisions, findings, current phase, and handoff; never store secrets, raw logs, or noisy transcripts.
 - **Orchestration artifact location gate:** all markdown artifacts created by this orchestration flow belong under `.ant/orchestrator/`; never create root-level `implementation-plan.md` or ad hoc planning markdown unless the user explicitly asks for a tracked repository document.
 - **Post-scout clarification gate:** codebase facts cannot silently become product decisions; after scouting, ask the user about unresolved behavior, scope, rollout, data, validation, or architecture choices before issuing a final direction.
 - **Rollout strategy gate:** for broad or risky work, ask whether to proceed as one-time refactor, phased rollout, or compatibility-first minimal change before writing the final plan.
-- **Git/delivery gate:** record current branch, dirty state, target branch, branch/worktree decision, and merge request preference; never create/switch branches, worktrees, or MRs without explicit approval.
+- **Git/delivery gate:** record current branch, dirty state, target branch, branch/worktree decision, unrelated-change decision, and merge request preference; never create/switch branches, worktrees, push, or create MRs without explicit approval.
+- **Target branch intake gate:** recommend a target branch when possible, but store the user-confirmed target before planning or delivery; delivery must stop if no confirmed target exists.
+- **Unrelated changes gate:** explicitly list dirty files outside scope and ask whether to include, exclude, or leave them aside; broad phrases like "push everything" do not bypass this warning.
 - **Legacy/debt gate:** never silently copy bad architecture, legacy flow, duplicate paths, stale abstractions, or half-migrated behavior.
 - **Architecture boundary gate:** verify module ownership, layer responsibility, file placement, import boundaries, shared utilities, and test placement.
 - **Model tier gate:** use cheaper/faster model tiers for bounded read-only or mechanical subtask agents when the host supports model selection; escalate to the default/strong model for ambiguity, architecture, implementation, and review.
-- **Definition of done gate:** define observable behavior, acceptance criteria, contracts, edge cases, security/permission boundaries, non-goals, validation, and evidence.
+- **Scenario-based definition of done gate:** convert broad goals into concrete acceptance and risk scenarios with validation or explicit residual risk.
 - **Contract-first gate:** for cross-stack work, define request/response shape, errors, permissions, cache behavior, time handling, UI states, and fixtures before parallel implementation.
+- **Evidence gate:** child-agent reports are claims until backed by tests, independent review, runtime checks, or explicitly accepted residual risk.
+- **Review/fix loop gate:** P0/P1/P2 findings block completion until fixed, verified, and re-reviewed or explicitly accepted by the user.
 - **Push-first status gate:** child agents push phase checkpoints to their parent; parent polling is a recovery tool, not the default.
+- **Writer recovery gate:** do not start an overlapping replacement writer until the silent writer is checkpointed or closed, partial work is understood, and the write scope is safe.
+- **MR readiness gate:** before push or MR creation, confirm target branch, unrelated-change decision, conscious dirty state, latest relevant checks, review/fix status, and draft/ready intent.
 
 ## Loading References
 
@@ -84,7 +91,9 @@ The work is not complete until:
 - user-approved direction and implementation plan exist under `.ant/orchestrator/`, unless the user explicitly requested a tracked repo document;
 - context checkpoint files were updated for medium+ work, or persistence was explicitly skipped as unnecessary;
 - git/delivery context and branch/worktree/MR decisions are recorded or explicitly declined;
+- target branch and unrelated-change decisions are recorded before push/MR delivery;
 - implementation was delegated to an implementation lead;
+- every implementation or follow-up change was delegated to a child agent unless the user explicitly left orchestration mode;
 - architecture/debt/contract decisions were handled explicitly;
 - slice outputs, if any, were integrated by the implementation lead;
 - targeted verification ran or is explicitly blocked;

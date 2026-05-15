@@ -44,7 +44,7 @@ If native nested delegation is unavailable, keep the same logical flow but flatt
 13. Optional parallel slice work under the implementation lead.
 14. Integration, targeted checks, review, fix loop, and final evidence.
 
-Do not skip directly to implementation unless the task is tiny, clear, low-risk, and the user explicitly wants direct execution.
+Do not skip directly to root implementation. When this skill is active, root implementation is forbidden regardless of task size. Tiny, clear, low-risk changes still go through at least one child agent unless the user explicitly leaves orchestration mode.
 
 ## Root Coordination-Only Guard
 
@@ -65,10 +65,27 @@ Forbidden root actions:
 - running `rg`, `git grep`, `sed`, `cat`, editor opens, or similar source-file reads to analyze application implementation details;
 - manually tracing application code paths, contracts, tests, docs, migrations, or configs for implementation evidence;
 - self-assigning backend, frontend, data, docs, or test slices;
+- manually applying follow-up requests, review comments, cleanup, tests, docs edits, formatting, config changes, or one-line text edits;
 - applying patches, formatting, migrations, generated changes, or docs edits outside `.ant/orchestrator/*`;
 - interpreting branch setup approval or `pokračuj` as permission to become the implementer.
 
-When repo facts are needed, the root must spawn one or more scout agents with bounded questions and make decisions from their reports. If subagent delegation is unavailable, stop and ask the user whether to continue without orchestration instead of silently doing the scout or implementation locally.
+User phrases such as "udělej to", "oprav to", "zapracuj připomínku", "je to jen maličkost", "pokračuj", or "just do it" mean continue orchestration and delegate the work. They do not authorize root manual edits.
+
+When repo facts are needed, the root must spawn one or more scout agents with bounded questions and make decisions from their reports. When implementation work is needed, the root must use at least one child agent even for a one-line change. If subagent delegation is unavailable, stop and ask the user whether to leave orchestration mode instead of silently doing the scout or implementation locally.
+
+If the root believes manual work would be more efficient, it must ask before leaving orchestration:
+
+```text
+Tohle je velmi malá změna. Chceš pokračovat orchestration flow přes subagenta, nebo chceš explicitně opustit orchestration skill a nechat mě to udělat přímo?
+```
+
+Unless the user explicitly chooses to leave orchestration, the root must delegate.
+
+## Post-Completion Follow-Up Protocol
+
+After the orchestrator reports completion, any user follow-up, correction, missed requirement, bug report, review note, cleanup request, or "one more thing" reopens the orchestration lifecycle. The root must classify the follow-up, update checkpoint state when persistence is active, delegate the fix or change to a child agent, run or request targeted verification, and report evidence.
+
+Post-completion follow-ups never authorize root manual edits. They are handled as a new orchestration phase.
 
 ## User-Facing Next Action Contract
 
@@ -148,10 +165,12 @@ Inspect:
 Record:
 
 - current branch or detached state;
-- dirty files and whether they overlap the likely implementation scope;
-- inferred or user-provided target branch;
+- dirty files grouped as in-scope, unrelated, or unknown;
+- candidate target branches and the recommended target, with rationale;
+- user-confirmed target branch;
 - whether the current branch is acceptable for this task;
 - branch/worktree choice;
+- unrelated-change decision: include, exclude, leave aside, or ask again before delivery;
 - merge request preference: none, create after verification, create draft after verification, or ask again at the end.
 
 Treat `main`, `master`, `develop`, `staging`, `production`, `release/*`, and repo default branches as shared/protected unless repo instructions say otherwise. Treat a purpose-named non-default branch such as `feature/<short-purpose>`, `fix/<short-purpose>`, `refactor/<short-purpose>`, or `chore/<short-purpose>` as acceptable only when it matches the current task or the user confirms it.
@@ -159,15 +178,28 @@ Treat `main`, `master`, `develop`, `staging`, `production`, `release/*`, and rep
 Ask the user before implementation when:
 
 - the target branch is unclear;
+- a recommended target branch has not been confirmed by the user;
 - the current branch is shared/protected/default;
 - the current branch looks unrelated to the requested work;
+- dirty files are unrelated or unknown;
 - dirty files overlap the likely implementation scope;
 - a worktree would reduce risk for parallel, large, experimental, or dirty-worktree work;
 - the user has not said whether a merge request should be created after verification.
 
 Recommended default: create a purpose-named branch from the target branch for normal implementation, use a worktree for risky/parallel work or when the current workspace has unrelated dirty changes, and create a draft MR only after implementation, review, and verification pass if the user requested an MR.
 
-Do not invent the target branch. If it cannot be found from repo configuration or instructions, ask. Do not stash, reset, move, overwrite, create/switch branches, create worktrees, push, or create MRs without explicit user approval. If dirty changes are unrelated, record them and avoid touching them. Use the repository's required MR tool when known, such as `glab` for GitLab.
+Do not invent the target branch. If it cannot be found from repo configuration or instructions, ask. The root may recommend a target, but planning and delivery must use the user-confirmed target stored in decisions/checkpoint state.
+
+Unrelated dirty changes require an explicit decision before implementation and again before delivery if the worktree still contains them:
+
+- `Include`: they are intentionally part of this work and must be reviewed, checked, and described.
+- `Exclude`: they must not be staged, committed, pushed, or included in an MR.
+- `Leave aside`: they can remain in the worktree while agents avoid those paths.
+- `Ask before delivery`: acceptable during implementation, but push/MR delivery must stop and ask again.
+
+Broad user phrases such as "push everything", "ship it", or "include all changes" do not override this gate when unrelated or unknown changes exist. List the files or path groups and ask for an explicit include/exclude/leave-aside decision.
+
+Do not stash, reset, move, overwrite, create/switch branches, create worktrees, push, or create MRs without explicit user approval. If dirty changes are unrelated, record them and avoid touching them. Use the repository's required MR tool when known, such as `glab` for GitLab.
 
 ## Context Persistence Gate
 
@@ -200,6 +232,7 @@ Write only durable context needed to resume:
 - architecture boundaries and contract decisions;
 - `.ant/orchestrator/<run>/implementation-plan.md` path and next recommended action;
 - implementation lead checkpoints, verification evidence, remaining risks, and blockers.
+- review/fix-loop findings, fixes, targeted verification, second-review outcome, and remaining residual risk.
 
 Do not write:
 
@@ -215,6 +248,7 @@ Update cadence:
 - after scouts: update `findings.md`;
 - after plan creation or implementation approval: update `state.md` and `handoff.md`;
 - after implementation lead checkpoints, review, verification, or blockers: update `state.md` and `handoff.md`;
+- after review/fix loops: update `state.md` and `handoff.md` with findings, fixes, targeted verification, re-review result, and residual risk;
 - before stopping, compacting, handing off, or reporting long-running status: update `handoff.md`.
 
 The root orchestrator owns these files. Child agents report facts to their parent; they do not independently write orchestration state unless the parent explicitly delegates it.
@@ -498,7 +532,7 @@ If existing architecture is inconsistent or wrong, combine this with the Legacy 
 
 ## Definition Of Done Gate
 
-Before implementation starts, the plan must define what "done" means:
+Before implementation starts, the plan must define what "done" means as concrete acceptance scenarios, not only general goals.
 
 - user-visible behavior;
 - acceptance criteria;
@@ -511,15 +545,40 @@ Before implementation starts, the plan must define what "done" means:
 - evidence required in the final report;
 - explicit non-goals.
 
-If this cannot be defined safely, ask more questions or scout the codebase.
+For every broad requirement, write at least one scenario in this shape:
+
+```text
+Scenario:
+Given:
+When:
+Then:
+Validation:
+Evidence owner:
+Residual risk if not verified:
+```
+
+Use a risk scenario matrix for `Medium`, `High`, and `Critical` work. Include only profiles that apply, and explicitly mark non-applicable profiles as omitted rather than filling irrelevant rows:
+
+- `Scope consistency`: filtered lists, reports, exports, aggregates, manual overrides, and UI totals use the same scope model.
+- `Invalid input before side effects`: validation and authorization happen before snapshots, writes, exports, notifications, or external calls; invalid input does not fall back to a default.
+- `External integration`: create new remote resource, update existing remote resource, repeated smaller update clears stale remote data when applicable, provider/API failure behavior, audit/log state, and frontend/user-visible failure state.
+- `Repeated/idempotent operation`: repeated submit/export/import/job run does not duplicate or corrupt state.
+- `Cache and retry`: cache hit/miss, cache after failure, retry limits, stale data behavior, and invalidation/revalidation.
+- `Permissions and tenancy`: unauthorized, wrong tenant/account/project, and role-boundary cases.
+- `Migration/backfill`: forward migration, rollback or recovery expectation, partial-data handling, and old/new compatibility window.
+- `Time, locale, and numeric conversion`: UTC/Zulu in storage/API/business logic, UI-only local rendering, boundary dates, missing rates or conversion inputs, rounding, and provider failure.
+- `Deletion/shrink/update semantics`: smaller replacements remove stale data instead of leaving orphaned state.
+
+Each risk scenario must have validation, an explicit evidence owner, or an accepted residual risk. If this cannot be defined safely, ask more questions or scout the codebase.
 
 ## Contract-First Protocol
 
 For cross-stack or parallel backend/frontend work, define the contract before spawning implementation work:
 
-- API route, server action, event, job, component, or shared interface;
+- API route, server action, event, job, component, external integration, or shared interface;
 - request and response shape;
 - validation and error shape;
+- side-effect ordering and idempotency expectations;
 - loading, empty, and failure UI states;
 - permissions, tenant boundaries, and auth behavior;
 - cache/revalidation behavior;
@@ -527,6 +586,27 @@ For cross-stack or parallel backend/frontend work, define the contract before sp
 - test fixtures, mocks, or temporary adapters if frontend starts before backend is complete.
 
 Frontend and backend slice workers may run in parallel against the agreed contract even when the full app is temporarily non-working. The implementation lead owns final contract reconciliation and integrated verification.
+
+## Evidence And Review/Fix Gate
+
+Child-agent output is a claim, not proof. The root orchestrator and implementation lead must treat worker summaries as evidence candidates until they are backed by one of:
+
+- a targeted test, typecheck, lint, build subset, or runtime/manual check;
+- independent implementation review;
+- a focused diff/contract audit delegated to a reviewer or recovery scout;
+- explicit user acceptance of residual risk when verification is impossible or not worth the cost.
+
+Risky claims require independent proof. Examples: permission safety, data scope consistency, migration/backfill correctness, external writes, cache invalidation, numeric/time conversion, idempotency, and side-effect ordering.
+
+Review/fix loop rules:
+
+- P0/P1/P2 findings block completion.
+- The implementation lead must fix or escalate each actionable finding.
+- After fixes, run targeted verification for the changed behavior.
+- Run a second focused review for the fixed findings when the original reviewer found P0/P1/P2 or when the fix changed contracts, data, permissions, external writes, or architecture boundaries.
+- Only report completion after findings are fixed and verified, or after the user explicitly accepts the residual risk.
+
+The root orchestrator must update checkpoint state after review/fix loops with: findings, fix owner, changed paths, verification, second-review result, and remaining residual risk.
 
 ## Planning Artifact
 
@@ -537,6 +617,7 @@ The plan must be a practical checklist, not a vague essay. It should include:
 - goal and non-goals;
 - delivery context and branch/worktree/MR decisions;
 - acceptance criteria and definition of done;
+- risk scenario matrix;
 - codebase context and architecture boundaries;
 - legacy/debt decisions and approved path;
 - contract-first details for cross-stack work;
@@ -569,7 +650,7 @@ Forbidden root-orchestrator actions:
 - mutating app state beyond explicit branch/worktree, merge request, or `.ant/orchestrator/` plan-artifact setup;
 - silently continuing without delegation when this skill is active.
 
-Only implement directly if the user explicitly overrides the role boundary after being told delegation is unavailable, or if a tiny coordination edit is required to complete already delegated output. Record the deviation.
+The root must not implement directly, including tiny follow-up edits. If the user explicitly chooses to leave orchestration mode, stop using this lifecycle and make that mode switch clear in the conversation before any manual implementation work begins.
 
 ## Implementation Lead Model
 
@@ -615,9 +696,24 @@ If recovery is needed:
 
 1. Request a checkpoint.
 2. If no response, retry once with an explicit acknowledgement requirement.
-3. If still silent, inspect worktree/diff state before closing.
-4. Treat dirty changes as unknown partial work.
-5. Run or delegate a read-only recovery audit before restarting the same write scope.
+3. If still silent and the host supports it, send an interrupt checkpoint request (`interrupt=true`) asking for exactly:
+   - `Done`
+   - `In progress`
+   - `Changed files`
+   - `Checks`
+   - `Blockers`
+   - `Next`
+4. If still silent, close the child before replacing it.
+5. Inspect git status and treat dirty changes as unknown partial work.
+6. Run or delegate a read-only recovery audit before restarting the same write scope.
+7. Start a replacement writer only after the previous writer is checkpointed or closed, the partial diff is understood, and the new write ownership is explicit.
+
+No overlapping writer recovery:
+
+- Do not spawn another writer for the same files/subsystems while the original writer may still be editing.
+- Do not ask two children to fix the same review finding concurrently unless their write sets are explicitly disjoint.
+- A replacement worker brief must include existing partial changes, files it may touch, files it must not touch, and whether it should preserve, complete, or revert partial work.
+- The parent must record the recovery decision and residual risk in the orchestration checkpoint.
 
 User-facing updates should be short aggregate summaries from the root orchestrator, not raw child logs:
 
@@ -638,7 +734,7 @@ Classify work before selecting gates and agent count:
 - `High`: cross-stack, permissions, public API, cache, migration, generated registries, broad refactor, or multiple workers. Use scout, plan writer, plan review when appropriate, implementation lead, reviewer, and stronger validation.
 - `Critical`: auth, billing, tenant boundaries, destructive writes, data loss, security, irreversible migration, or compliance. Require explicit user decisions, plan review, discovery-gated implementation, and strong validation.
 
-Keep orchestration overhead proportional to value and risk. Do not use many agents for tiny work unless the user explicitly asks.
+Keep orchestration overhead proportional to value and risk. Do not use many agents for tiny work unless the user explicitly asks, but root still must delegate implementation work to at least one child agent while this skill is active.
 
 ## Anti-Microtask Rule
 
@@ -679,7 +775,7 @@ Original user goal:
 <goal>
 
 Delivery context:
-<current branch/worktree, target branch, dirty state summary, branch/worktree decision, MR preference>
+<current branch/worktree, confirmed target branch, dirty state summary, unrelated-change decision, branch/worktree decision, MR preference>
 
 Decision or question to support:
 <specific question>
@@ -711,7 +807,7 @@ Approved direction:
 <direction and user decisions>
 
 Delivery context:
-<current branch/worktree, target branch, dirty state summary, branch/worktree decision, MR preference>
+<current branch/worktree, confirmed target branch, dirty state summary, unrelated-change decision, branch/worktree decision, MR preference>
 
 Scout findings:
 <summaries or links>
@@ -719,7 +815,7 @@ Scout findings:
 Constraints:
 <repo/user constraints>
 
-Create or update `.ant/orchestrator/<YYYY-MM-DD-short-purpose>/implementation-plan.md` with a checklist-style plan covering delivery context, definition of done, architecture boundaries, legacy/debt decisions, contract-first details, concurrency plan, implementation checklist, validation checklist, reviewer focus, risks, assumptions, and open questions. If any blocking question remains, return `Needs clarification` instead of inventing an answer.
+Create or update `.ant/orchestrator/<YYYY-MM-DD-short-purpose>/implementation-plan.md` with a checklist-style plan covering delivery context, scenario-based definition of done, risk scenario matrix, architecture boundaries, legacy/debt decisions, contract-first details, concurrency plan, implementation checklist, validation checklist, reviewer focus, risks, assumptions, and open questions. If any blocking question remains, return `Needs clarification` instead of inventing an answer.
 
 Also update the orchestration checkpoint files when persistence is active: add approved decisions to `decisions.md`, plan path and implementation strategy to `state.md`, and the next action to `handoff.md`.
 ```
@@ -743,7 +839,7 @@ Approved implementation plan:
 <.ant/orchestrator/<run>/implementation-plan.md content or path>
 
 Delivery context:
-<current branch/worktree, target branch, dirty state summary, approved branch/worktree setup, MR preference>
+<current branch/worktree, confirmed target branch, dirty state summary, unrelated-change decision, approved branch/worktree setup, MR preference>
 
 Root orchestrator guidance:
 <risk class, model tier guidance, suggested concurrency, boundaries, validation expectations>
@@ -762,6 +858,7 @@ Responsibilities:
 - Aggregate child checkpoints; do not forward noisy logs.
 - Report durable decisions, findings, blockers, verification, and next steps so the root can update orchestration checkpoint files.
 - Integrate all slices, reconcile contracts, run targeted checks, handle review/fix loops, and return final evidence.
+- Treat child outputs as claims until backed by checks, review, or explicit residual-risk acceptance.
 - Escalate legacy/debt, architecture, contract, or scope decisions instead of inventing answers.
 ```
 
@@ -781,20 +878,40 @@ Artifact or report to review:
 <plan, implementation report, diff, or evidence>
 
 Delivery context:
-<target branch, branch/worktree/MR decisions, dirty state notes>
+<confirmed target branch, branch/worktree/MR decisions, dirty state and unrelated-change notes>
 
 Focus:
 - correctness and acceptance criteria;
 - delivery setup was respected and no branch/worktree/MR action happened without approval;
+- target branch and unrelated-change decisions were followed;
 - architecture boundaries and file placement;
 - security, permissions, tenant boundaries, and data safety;
 - legacy/debt handling;
 - contract consistency across slices;
+- risk scenario matrix and definition-of-done coverage;
 - test and validation adequacy;
 - AI slop indicators such as dead code, TODO debt, duplicate implementations, convenience shared utilities, suppressed errors, and weak evidence.
 
 Return material findings ordered by severity, or say there are no material findings and list residual risks.
 ```
+
+## Delivery And MR Readiness
+
+Delivery uses recorded decisions. It must not choose a target branch, draft/ready state, or unrelated-change handling by itself. If a required decision is missing, stop and ask the user.
+
+Before staging, committing, pushing, or creating/updating an MR, verify:
+
+- current branch/worktree matches the approved delivery context;
+- confirmed target branch exists in checkpoint/decisions;
+- dirty state is clean or consciously dirty with listed files;
+- unrelated changes have an explicit include/exclude/leave-aside decision;
+- only intended files are staged or included;
+- latest relevant checks are recorded, or skipped checks have reasons;
+- review/fix loop status is passed, or residual risks were explicitly accepted;
+- MR preference is recorded: none, draft, ready, or ask;
+- MR title/description accurately distinguish implemented scope, verification, and residual risk.
+
+If the user says "push everything", "ship it", or equivalent while unrelated or unknown changes remain, show the risky path groups and ask for an explicit include/exclude/leave-aside decision before delivery.
 
 ## Tracker
 

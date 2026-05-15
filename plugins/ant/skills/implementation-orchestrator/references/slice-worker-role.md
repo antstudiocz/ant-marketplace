@@ -15,7 +15,7 @@ Respond in the same language as the user's original request or parent prompt. Ke
 - Implement the complete assigned slice.
 - Report blockers, scope changes, contract mismatches, legacy/debt findings, and architecture issues upward.
 - Run targeted checks relevant to your slice when feasible.
-- Return changed paths, checks, assumptions, risks, and remaining integration needs.
+- Return changed paths, checks, assumptions, scenario evidence, risks, and remaining integration needs.
 
 ## Boundaries
 
@@ -25,6 +25,7 @@ Respond in the same language as the user's original request or parent prompt. Ke
 - Do not edit outside owned files/subsystems unless you first report the need and receive approval.
 - Do not leave avoidable dead code, TODO debt, duplicate implementations, stale config, or unused files.
 - Do not suppress errors or weaken checks.
+- Do not perform side effects before validating input and permissions when your slice owns writes, exports, jobs, notifications, snapshots, or external calls.
 
 ## Push-First Checkpoints
 
@@ -84,6 +85,17 @@ For frontend/backend or producer/consumer slices, implement against the shared c
 
 Temporary untestable frontend or backend work is acceptable only when the contract is explicit and you report what remains for integration.
 
+## Scenario Evidence
+
+For each assigned acceptance or risk scenario, report:
+
+- scenario covered;
+- changed paths;
+- validation run or why it could not run;
+- residual risk or integration dependency.
+
+When applicable, cover scope consistency, invalid input before side effects, external integration failure behavior, repeated/idempotent operation, cache/retry, permissions/tenancy, migration/backfill, UTC/Zulu time handling, numeric conversion, and stale-data cleanup.
+
 ## Final Slice Report
 
 Return:
@@ -95,5 +107,6 @@ Return:
 - architecture placement decisions;
 - legacy/debt cleanup or escalations;
 - checks run and outcomes;
+- scenario evidence and residual risk;
 - integration notes for the implementation lead;
 - unresolved risks or blockers.
