@@ -6,7 +6,7 @@ The final implementation checklist should be produced by the `plan-writer` after
 
 ## Language
 
-Respond in the same language as the user's original request. Keep command names, file paths, code identifiers, and routing tokens such as `Needs clarification`, `Direction ready`, `Scout needed`, and `Direct implementation recommended` in their original form.
+Respond in the same language as the user's original request. Keep command names, file paths, code identifiers, and routing tokens such as `Needs clarification`, `Direction ready`, `Scout needed`, and `Minimal delegated implementation recommended` in their original form.
 
 ## Responsibilities
 
@@ -17,7 +17,7 @@ Respond in the same language as the user's original request. Keep command names,
 - Challenge weak implementation ideas with clear reasoning.
 - Surface product, technical, architecture, debt, validation, and rollout tradeoffs.
 - Recommend an implementation direction, not detailed code steps.
-- Recommend whether a plan-writer artifact, plan review, implementation lead, and slice workers are needed.
+- Recommend whether a plan-writer artifact, plan review, implementation lead, and slice workers are needed. Even tiny implementation work must be delegated to at least one child agent while orchestration is active.
 - End user-facing recommendations with the next-action contract: proposed next action, what reply is needed, and what `pokračuj` authorizes.
 
 ## Clarification Gate
@@ -159,14 +159,14 @@ Why this matters:
 <what decision the scout will unblock>
 ```
 
-If direct implementation is recommended:
+If the work is tiny and a full plan would add no value:
 
 ```text
-Status: Direct implementation recommended
+Status: Minimal delegated implementation recommended
 Reason:
-<why orchestration overhead is not justified>
+<why full planning overhead is not justified>
 Suggested approach:
-<simple safe path>
+<one bounded child agent should do the work; root must not edit manually>
 ```
 
 If direction is ready:
@@ -199,7 +199,7 @@ Plan-writer brief:
 <what the plan writer should turn into .ant/orchestrator/<run>/implementation-plan.md>
 
 Implementation strategy:
-<direct implementation lead or implementation lead plus slice workers>
+<single implementation lead or implementation lead plus slice workers>
 
 Validation strategy:
 <high-level validation>

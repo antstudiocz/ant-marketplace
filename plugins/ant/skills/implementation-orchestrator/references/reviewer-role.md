@@ -13,6 +13,8 @@ Prioritize material risks:
 - unclear goals, non-goals, or acceptance criteria;
 - unsafe assumptions or invented intent;
 - missing definition of done;
+- broad goals not converted into acceptance scenarios;
+- missing or irrelevant risk scenario matrix rows;
 - incorrect architecture boundaries or file placement;
 - cross-module imports that bypass public contracts;
 - domain logic in UI/API glue;
@@ -20,11 +22,15 @@ Prioritize material risks:
 - correctness bugs and behavior regressions;
 - security, auth, permission, tenant, billing, or data-safety issues;
 - frontend/backend or producer/consumer contract mismatch;
+- side effects that happen before input validation, authorization, or scope checks;
+- data scope inconsistency across filters, reports, exports, aggregates, manual data, API results, and UI totals;
+- external integration gaps such as missing create/update/repeated update/failure/audit/user-visible failure scenarios;
 - cache/revalidation mistakes;
 - non-UTC time handling outside UI rendering;
 - avoidable legacy leftovers, duplicate implementations, stale config, unused files, dead code, half-migrated behavior, or technical debt;
 - missing, weak, or irrelevant tests;
 - evidence that does not prove the original goal or definition of done;
+- worker claims presented as proof without checks, independent review, runtime/manual evidence, or accepted residual risk;
 - AI slop indicators such as TODO debt, suppressed errors, broad catch-and-ignore blocks, fake fallbacks, unused abstractions, duplicated code, and formatting-only churn.
 
 Do not spend findings on style-only issues unless they hide a real defect, architecture risk, or maintenance cost.
@@ -39,8 +45,9 @@ For direction or plan review:
 2. Check whether the plan can satisfy the goal without inventing user intent.
 3. Check that legacy/debt and architecture choices were explicit and approved when material.
 4. Check that the concurrency plan is useful, bounded, and contract-first.
-5. Check that the definition of done and validation strategy are enough.
-6. Return findings first, ordered by severity.
+5. Check that the definition of done includes concrete scenarios and a relevant risk scenario matrix.
+6. Check that validation and evidence requirements can prove those scenarios.
+7. Return findings first, ordered by severity.
 
 For implementation review:
 
@@ -50,9 +57,10 @@ For implementation review:
 4. Check integrated behavior, not only isolated slices.
 5. Verify architecture boundaries and file placement.
 6. Verify contract consistency across backend/frontend/data/tests.
-7. Check whether tests cover positive and important negative cases.
-8. Check whether obsolete paths were removed and whether old/new behavior is not left side-by-side without approved migration.
-9. If a systemic issue appears, name sibling entrypoints or equivalent flows that should be included in the fix pass.
+7. Verify risk-matrix scenarios that apply to the changed behavior.
+8. Check whether tests cover positive and important negative cases.
+9. Check whether obsolete paths were removed and whether old/new behavior is not left side-by-side without approved migration.
+10. If a systemic issue appears, name sibling entrypoints or equivalent flows that should be included in the fix pass.
 
 ## Severity
 
@@ -60,6 +68,8 @@ For implementation review:
 - `P1`: serious correctness, architecture, permission, migration, or validation issue.
 - `P2`: material maintainability, test, contract, or debt issue that should be fixed in this work.
 - `P3`: minor risk or follow-up worth recording.
+
+P0/P1/P2 findings are not compatible with "done" unless the user explicitly accepts the residual risk. If reviewing a fix pass, focus on whether each prior finding was fixed, verified, and free of new regressions.
 
 ## Output
 
