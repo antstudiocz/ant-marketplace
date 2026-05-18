@@ -87,6 +87,39 @@ Tohle je velmi malá změna. Chceš pokračovat orchestration flow přes subagen
 
 Unless the user explicitly chooses to leave orchestration, the root must delegate.
 
+## Hard No-Edit Gate
+
+For `Medium`, `High`, and `Critical` work, implementation must not start until all of these are true:
+
+1. rollout strategy was presented when risk/scope requires it;
+2. conceptual direction was approved;
+3. implementation plan artifact was created, or the user explicitly approved skipping it for this task;
+4. the user explicitly approved that concrete plan with language equivalent to "schvaluju plán, začni implementovat";
+5. implementation is delegated to an implementation lead or other child agent.
+
+User phrases such as "rovnou implementuj", "pojďme to udělat", "tohle bych implementoval", "všechno zní dobře", "líbí se mi všechno", or "just implement it" authorize the next orchestration phase only. They mean "prepare or continue the plan" unless they explicitly approve a concrete implementation plan that already exists.
+
+If the user previously said not to edit, and later says something that sounds like implementation approval, treat it as approval to prepare the plan and stop for explicit confirmation of the concrete plan. The newer message does not bypass this gate for medium+ work.
+
+Root pre-edit fail-safe:
+
+```text
+Am I the root orchestrator, and am I about to edit app/source/test/docs files?
+If yes: stop. Root may not edit these files while orchestration is active.
+```
+
+Implementing child pre-edit checklist:
+
+```text
+Approved plan path or explicit skip decision:
+Exact user message approving implementation:
+Parent delegation message:
+Assigned ownership/write scope:
+Validation expectation:
+```
+
+If any item is missing, the child must stop and ask its parent for clarification before writing implementation files.
+
 ## Post-Completion Follow-Up Protocol
 
 After the orchestrator reports completion, any user follow-up, correction, missed requirement, bug report, review note, cleanup request, or "one more thing" reopens the orchestration lifecycle. The root must classify the follow-up, update checkpoint state when persistence is active, delegate the fix or change to a child agent, run or request targeted verification, and report evidence.
@@ -114,6 +147,7 @@ Rules:
 
 - `Pokračuj` authorizes only the next action explicitly stated in the previous assistant message.
 - `Pokračuj` never authorizes implementation unless the previous assistant message explicitly said the next action is starting implementation and asked for implementation approval.
+- For `Medium`, `High`, and `Critical` work, implementation approval must refer to a concrete existing plan, not only a broad direction or idea.
 - `Pokračuj` after brainstorming means continue brainstorming, scout, or prepare a direction, not write code.
 - `Pokračuj` after direction approval means create or refine the plan artifact, not implement.
 - `Pokračuj` after plan summary may start implementation only if the message clearly said "Next I will start implementation and change code" and the user confirmed.
@@ -634,6 +668,8 @@ The plan must be a practical checklist, not a vague essay. It should include:
 - risks, assumptions, and open questions.
 
 If the plan writer finds a blocking question, stop and ask the user before implementation. After plan updates, show the user a concise conceptual summary, not every file-level detail, and ask for explicit implementation approval.
+
+For `Medium`, `High`, and `Critical` work, broad approval phrases before the plan exists count as approval to create or refine the plan only. Do not delegate implementation until the user approves the concrete plan summary or explicitly approves skipping the plan artifact.
 
 ## Delegation Gate
 
