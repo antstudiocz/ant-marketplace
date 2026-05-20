@@ -19,16 +19,17 @@ Create the app brief, make the architecture recommendation, get user approval, t
 ## Reference Selection
 
 - Intake questions and scope discovery: `references/intake.md`.
-- Developer environment check, two implementation paths, database choices, and Docker setup guidance: `references/environment-and-paths.md`.
+- Developer environment check, two implementation paths, database choices, and setup decision rules: `references/environment-and-paths.md`.
+- Step-by-step local development setup for Git, Bun, Docker, and verification commands: `references/local-dev-setup.md`.
 - Simple versus full app architecture decision: `references/decision-matrix.md`.
 - Orchestrator handoff format and approval boundary: `references/orchestrator-handoff.md`.
 
-Load only the references needed for the current conversation. For a user who is still brainstorming, intake, environment-and-paths, and decision matrix are usually enough. For a user ready to build, also load the handoff reference.
+Load only the references needed for the current conversation. For a user who is still brainstorming, intake, environment-and-paths, and decision matrix are usually enough. Load `local-dev-setup.md` only when a required tool is missing, unknown, or the user asks how to install it. For a user ready to build, also load the handoff reference.
 
 ## Workflow
 
 1. Clarify the application goal, users, workflows, data, integrations, authentication, deployment, expected lifetime, and whether this is standalone or part of an existing product.
-2. Check the requester's local development environment, especially whether they can run Node/Bun and Docker.
+2. Check the requester's local development environment, especially whether they can run Bun, Git, and Docker.
 3. Ask enough product and technical questions to avoid unsupported assumptions. For internal or admin apps, explicitly clarify authorization, database, data ownership, auditability, and deployment.
 4. Present two implementation paths in plain language:
    - TypeScript-only frontend and backend;
@@ -52,7 +53,7 @@ Load only the references needed for the current conversation. For a user who is 
 - Do not choose Docker, databases, workers, authentication, or modular architecture just because the app could grow later. Require an actual workflow, persistence, integration, operational, or team-maintenance reason.
 - Do not force a frontend-only implementation when the app needs private data, long-lived persistence, background work, webhooks, secure credentials, role-based access, auditability, or reliable server-side integration logic.
 - Do not recommend plain React-only/Vite-only scaffolds for new apps. Prefer TanStack or Next.js as the application framework, with React only as an implementation detail of that framework.
-- Do not hide environment requirements. If the recommended path needs Docker and the requester does not have Docker, say that clearly and provide macOS/Windows setup guidance before implementation planning.
+- Do not hide environment requirements. If the recommended path needs Docker, Git, Bun, or another missing local tool, load `references/local-dev-setup.md`, guide the user step by step for their OS, and ask them to run verification commands before implementation planning.
 - Keep UTC time across API, storage, business logic, jobs, and integration boundaries. Convert to user local time only in UI rendering.
 - Use existing company/platform architecture when the app is being added to an existing codebase. Do not scaffold a separate app when a module, integration, or extension is the right ownership boundary.
 - For administration, backoffice, client portal, reporting, or other new surfaces inside an existing app, do not assume it must use the same frontend-only stack. Evaluate whether it should be a route/layout in the existing app, a separate admin frontend, a full-stack admin service, or a module in the existing platform.

@@ -7,7 +7,7 @@ Use this reference before recommending architecture. The goal is to avoid choosi
 Ask what the requester can actually use:
 
 1. Operating system: macOS, Windows, Linux, or cloud-only.
-2. Local tools: Node.js, Bun, Git, editor, terminal.
+2. Local tools: Bun, Git, editor, terminal, and Node.js only when an existing project requires it.
 3. Docker availability: installed and working, can install it, or cannot use it.
 4. Team reality: who will run and maintain the app after the first version?
 5. Deployment preference: static hosting, managed full-stack platform, VPS, Docker Compose, existing company platform, or unknown.
@@ -15,14 +15,17 @@ Ask what the requester can actually use:
 If the answer is unknown, ask the user to run simple checks when they can:
 
 ```bash
-node --version
 bun --version
 git --version
 docker --version
 docker compose version
 ```
 
+If an existing project requires Node.js, also ask for `node --version`.
+
 Do not block brainstorming on these checks, but do not finalize an implementation path that depends on unavailable tooling.
+
+If a required tool is missing or the user asks how to install it, load `local-dev-setup.md` and guide them through the OS-specific installation. Do not just paste a link and continue.
 
 ## Always Present Two Paths
 
@@ -90,7 +93,7 @@ If Docker is installed and the app is more than a small frontend/prototype, norm
 
 If Docker is not installed and the app can safely fit TypeScript-only with SQLite or managed services, recommend TypeScript-only for the first version.
 
-If Docker is not installed but Docker is clearly the better architecture, recommend Docker and pause before implementation planning. Explain why the better path needs Docker and provide setup instructions for the user's OS.
+If Docker is not installed but Docker is clearly the better architecture, recommend Docker and pause before implementation planning. Explain why the better path needs Docker, load `local-dev-setup.md`, and walk the user through setup for their OS.
 
 If the requester cannot install Docker but the app still needs Docker-level capabilities, recommend one of:
 
@@ -98,36 +101,6 @@ If the requester cannot install Docker but the app still needs Docker-level capa
 - managed platform services replacing local Docker dependencies;
 - reducing scope to a TypeScript prototype with explicit limitations.
 
-## Docker Setup Guidance
+## Setup Guidance
 
-Keep setup guidance current by pointing users to official Docker docs.
-
-macOS:
-
-1. Open Docker's official Mac install guide: https://docs.docker.com/desktop/setup/install/mac-install/
-2. Choose the correct download for Apple Silicon or Intel.
-3. Install Docker Desktop and start it.
-4. Verify in terminal:
-
-```bash
-docker --version
-docker compose version
-docker run hello-world
-```
-
-Windows:
-
-1. Open Docker's official Windows install guide: https://docs.docker.com/desktop/setup/install/windows-install/
-2. Prefer the WSL 2 backend for typical development.
-3. If Docker asks to enable WSL 2, follow the prompt and restart when required.
-4. Verify in PowerShell or Windows Terminal:
-
-```bash
-docker --version
-docker compose version
-docker run hello-world
-```
-
-For WSL 2 details, use Docker's WSL guide: https://docs.docker.com/desktop/features/wsl/
-
-Warn users that Docker Desktop licensing may matter for larger companies. Link the official Docker Desktop terms when relevant instead of guessing the user's legal/commercial status.
+Detailed installation steps belong in `local-dev-setup.md`, not in this decision reference.

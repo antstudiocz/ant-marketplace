@@ -31,6 +31,7 @@ Application brief:
 - Existing system context:
 - Reuse versus separate stack decision:
 - Requester development environment:
+- Local setup status and missing tools:
 - Compared implementation paths:
 - Approved implementation path:
 - Data and persistence:
