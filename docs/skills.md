@@ -2,6 +2,20 @@
 
 This marketplace exposes a small set of public skills. Detailed topic guidance lives under each skill's `references/` folder and is loaded only when relevant.
 
+## `create-application`
+
+Product and architecture intake for new applications, MVPs, prototypes, internal tools, dashboards, automation UIs, and full-stack products.
+
+How it works:
+
+- clarifies goal, users, workflows, data, auth, integrations, background work, deployment, and expected lifetime;
+- decides whether the app should be a simple React/TanStack frontend, standard full-stack app, Dockerized modular app, or existing platform/module change;
+- makes mock data, prototype scope, persistence, secrets, and production-readiness tradeoffs explicit;
+- prepares an approved application brief with acceptance criteria and non-goals;
+- hands the approved brief to `implementation-orchestrator`, which owns planning depth, subagents, implementation, review, verification, and delivery.
+
+Use it when the user wants to create a new app from an idea before writing code.
+
 ## `implementation-orchestrator`
 
 End-to-end implementation flow for features, fixes, refactors, migrations, audits, and remediation work.
