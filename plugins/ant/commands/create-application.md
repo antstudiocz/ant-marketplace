@@ -1,5 +1,5 @@
 ---
-description: "Create a new application or app-surface brief, choose simple versus full architecture, and hand off to orchestration."
+description: "Create a new application or app-surface brief, compare JavaScript-only and Docker paths, and hand off to orchestration."
 ---
 
 Invoke the `ant:create-application` skill and follow it exactly as presented to you.

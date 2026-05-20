@@ -7,6 +7,8 @@ Use this format after the user approves the app brief and architecture. The hand
 Before handoff, confirm:
 
 - architecture choice;
+- JavaScript-only versus Docker-based implementation path;
+- requester environment constraints;
 - app brief;
 - target repo or project location;
 - prototype versus production expectation;
@@ -28,8 +30,13 @@ Application brief:
 - Primary workflows:
 - Existing system context:
 - Reuse versus separate stack decision:
+- Requester development environment:
+- Compared implementation paths:
+- Approved implementation path:
 - Data and persistence:
+- Database/storage decision:
 - Auth and permissions:
+- Authorization and audit rules:
 - Integrations and secrets:
 - Background jobs, schedules, or webhooks:
 - Time handling:

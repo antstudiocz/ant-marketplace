@@ -9,7 +9,10 @@ Product and architecture intake for new applications, MVPs, prototypes, internal
 How it works:
 
 - clarifies goal, users, workflows, data, auth, integrations, background work, deployment, and expected lifetime;
+- checks the requester's local development environment, including whether Docker is available;
+- always compares a JavaScript/TypeScript-only path with a Docker-based multi-language path in non-technical language;
 - decides whether the app should be a simple React/TanStack frontend, standard full-stack app, Dockerized modular app, new surface inside an existing app, or existing platform/module change;
+- asks explicit questions about authorization, database/storage, auditability, deployment, and production expectations instead of making assumptions;
 - checks whether an admin/backoffice/client-portal surface can reuse the existing stack or needs a separate frontend/backend/security boundary;
 - makes mock data, prototype scope, persistence, secrets, and production-readiness tradeoffs explicit;
 - prepares an approved application brief with acceptance criteria and non-goals;

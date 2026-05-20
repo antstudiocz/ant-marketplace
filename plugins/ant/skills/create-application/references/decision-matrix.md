@@ -37,6 +37,19 @@ Default shape:
 - Docker Compose if local services are required;
 - migrations, env examples, and targeted tests.
 
+## JavaScript/TypeScript Full-Stack App Without Docker
+
+Use this when the app needs backend logic but the requester or team cannot reasonably run Docker, and the requirements can be served by JavaScript runtime plus SQLite or managed cloud services.
+
+Default shape:
+
+- React/TanStack frontend;
+- JavaScript/TypeScript server runtime;
+- SQLite for local/simple persistence or a managed database/auth provider for shared production data;
+- explicit limits around background jobs, local production parity, and operational complexity.
+
+Reject this shape when avoiding Docker would force secrets into frontend code, weaken permissions, fake database behavior, or hide the need for queues, workers, webhooks, or production-like local services.
+
 ## Dockerized Modular App
 
 Use this when:
@@ -89,6 +102,7 @@ Default shape:
 Give:
 
 - recommended architecture;
+- two-path comparison: JavaScript/TypeScript-only versus Docker-based multi-language;
 - why it fits;
 - why the next heavier option is unnecessary or why the lighter option is unsafe;
 - main implementation risks;
