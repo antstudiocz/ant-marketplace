@@ -7,7 +7,7 @@ Do not continue into implementation planning until the requester either verifies
 ## Setup Workflow
 
 1. Ask for the user's operating system: macOS, Windows, Linux, or cloud-only.
-2. Ask which required tools are already installed: Git, Bun, Docker Desktop or Docker Engine, editor, terminal.
+2. Ask which required tools are already installed: Git, Bun, Node/npm, Docker Desktop or Docker Engine, editor, terminal.
 3. Explain why each missing tool is needed in plain language.
 4. Give OS-specific steps for only the missing tools.
 5. Ask the user to run the verification commands and paste the result.
@@ -20,16 +20,24 @@ Use these checks after installation:
 ```bash
 git --version
 bun --version
+npm --version
+node --version
 docker --version
 docker compose version
 docker run hello-world
 ```
 
-If Docker is not needed for the approved path, skip the Docker commands. If an existing project requires Node.js, also ask for:
+If Docker is not needed for the approved path, skip the Docker commands. If either `bun --version` or both `node --version` and `npm --version` work, the TypeScript-only path has a usable package manager/runtime unless the selected framework or existing repository requires a specific one.
 
-```bash
-node --version
-```
+## Package Manager Choice
+
+Bun is not mandatory. Use this rule:
+
+- Existing repository: use the package manager the repository already uses, based on lockfiles and scripts.
+- New TypeScript project: Bun is a good default when available.
+- Bun missing, npm available: use npm and continue.
+- Both missing: install either Bun or Node/npm based on the chosen stack and team preference.
+- Docker path: still record the host package manager, but Docker may own most runtime dependencies.
 
 ## Install Git
 
@@ -76,6 +84,8 @@ git --version
 
 Official source: https://bun.sh/docs/installation
 
+Install Bun only when the approved path or existing repository needs Bun, or when no acceptable npm setup is available and the user agrees to install Bun.
+
 macOS and Linux:
 
 1. Run the official Bun install script:
@@ -108,6 +118,38 @@ bun --version
 ```
 
 If `bun` is installed but not found, follow the PATH troubleshooting steps in the official Bun installation docs.
+
+## Install Node.js And npm
+
+Official sources:
+
+- Node.js downloads: https://nodejs.org/en/download
+- npm install guidance: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
+
+Use this when npm is the selected package manager or when the requester already has npm but Node/npm verification fails.
+
+macOS and Windows:
+
+1. Open the official Node.js download page: https://nodejs.org/en/download
+2. Download the recommended installer for the user's OS.
+3. Run the installer. Node.js includes npm.
+4. Open a new terminal and verify:
+
+```bash
+node --version
+npm --version
+```
+
+Linux:
+
+1. Prefer the official Node.js download instructions for the user's distribution: https://nodejs.org/en/download
+2. If the team already has a Linux package-manager standard, follow that standard.
+3. Verify:
+
+```bash
+node --version
+npm --version
+```
 
 ## Install Docker
 

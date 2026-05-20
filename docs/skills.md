@@ -10,7 +10,7 @@ How it works:
 
 - clarifies goal, users, workflows, data, auth, integrations, background work, deployment, and expected lifetime;
 - checks the requester's local development environment, including whether Docker is available;
-- guides the requester through missing Git, Bun, or Docker setup from a dedicated local-dev setup reference before implementation planning;
+- guides the requester through missing Git, package manager/runtime, or Docker setup from a dedicated local-dev setup reference before implementation planning, while allowing npm when Bun is unavailable;
 - always compares a TypeScript-only path with a Docker-based multi-language path in non-technical language;
 - decides whether the app should be a TanStack/Next.js TypeScript frontend, TypeScript full-stack app, Dockerized modular app, new surface inside an existing app, or existing platform/module change;
 - asks explicit questions about authorization, database/storage, auditability, deployment, and production expectations instead of making assumptions;

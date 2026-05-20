@@ -7,7 +7,7 @@ Use this reference before recommending architecture. The goal is to avoid choosi
 Ask what the requester can actually use:
 
 1. Operating system: macOS, Windows, Linux, or cloud-only.
-2. Local tools: Bun, Git, editor, terminal, and Node.js only when an existing project requires it.
+2. Local tools: Git, editor, terminal, and package manager/runtime availability: Bun, or Node.js with npm.
 3. Docker availability: installed and working, can install it, or cannot use it.
 4. Team reality: who will run and maintain the app after the first version?
 5. Deployment preference: static hosting, managed full-stack platform, VPS, Docker Compose, existing company platform, or unknown.
@@ -16,12 +16,14 @@ If the answer is unknown, ask the user to run simple checks when they can:
 
 ```bash
 bun --version
+npm --version
+node --version
 git --version
 docker --version
 docker compose version
 ```
 
-If an existing project requires Node.js, also ask for `node --version`.
+If either Bun or npm/Node works, the TypeScript-only path can proceed unless the selected framework or existing project requires the other tool. Record the package manager choice in the app brief and do not force Bun installation when npm is already available and acceptable.
 
 Do not block brainstorming on these checks, but do not finalize an implementation path that depends on unavailable tooling.
 
@@ -41,7 +43,7 @@ Usually better when:
 - the app is small or medium-sized;
 - speed of iteration matters more than infrastructure control;
 - a managed database/auth/storage service is acceptable;
-- the app can run on a platform that supports TypeScript server code through the normal Node/Bun toolchain.
+- the app can run on a platform that supports TypeScript server code through the normal Bun or Node/npm toolchain.
 
 Tradeoffs to explain:
 
@@ -104,3 +106,11 @@ If the requester cannot install Docker but the app still needs Docker-level capa
 ## Setup Guidance
 
 Detailed installation steps belong in `local-dev-setup.md`, not in this decision reference.
+
+## Package Manager Guidance
+
+Prefer the package manager already used by an existing repository. For a new project, choose the lowest-friction option that the requester can actually run.
+
+- If Bun is available, it is a good default for TypeScript projects.
+- If Bun is missing but Node/npm is available, use npm rather than blocking on Bun installation.
+- If neither Bun nor npm is available, load `local-dev-setup.md` and help the requester install one. Recommend Bun for new TypeScript-first projects unless the team or hosting platform expects npm.
