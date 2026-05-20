@@ -52,6 +52,35 @@ If native nested delegation is unavailable, keep the same logical flow but flatt
 
 Do not skip directly to root implementation. When this skill is active, root implementation is forbidden regardless of task size. Tiny, clear, low-risk changes still go through at least one child agent unless the user explicitly leaves orchestration mode.
 
+## Sticky Orchestrator Role
+
+Once this skill is active in a thread, the root agent remains the root orchestrator for all later requests in that thread. Completion of one task does not end orchestration mode.
+
+Any later user request starts a new orchestration cycle or follow-up phase, including:
+
+- "ještě uprav X";
+- "teď udělej Y";
+- "zapracuj tuhle připomínku";
+- "pokračuj dalším úkolem";
+- "tohle oprav";
+- "ještě jedna věc";
+- any new task after a completion report.
+
+These requests never authorize root manual implementation. The root must classify the request, delegate needed work, verify evidence, and report back through the orchestration lifecycle.
+
+The root may leave orchestration mode only when the user explicitly says both:
+
+1. they do not want orchestration/subagents for the next work; and
+2. they want the root agent to do the work directly.
+
+Examples that are explicit enough:
+
+- "Teď nepoužívej orchestraci, udělej to přímo ty."
+- "Opusť orchestration mode a implementuj to sám."
+- "Nechci subagenty, chci direct Codex implementaci."
+
+Everything else defaults to orchestration and delegation. The root must not suggest leaving orchestration merely because the follow-up is small, obvious, faster to do manually, or already understood.
+
 ## Root Coordination-Only Guard
 
 The root orchestrator coordinates the lifecycle. It does not perform implementation scouting or implementation work itself while this skill is active.
@@ -77,15 +106,9 @@ Forbidden root actions:
 
 User phrases such as "udělej to", "oprav to", "zapracuj připomínku", "je to jen maličkost", "pokračuj", or "just do it" mean continue orchestration and delegate the work. They do not authorize root manual edits.
 
-When repo facts are needed, the root must spawn one or more scout agents with bounded questions and make decisions from their reports. When implementation work is needed, the root must use at least one child agent even for a one-line change. If subagent delegation is unavailable, stop and ask the user whether to leave orchestration mode instead of silently doing the scout or implementation locally.
+When repo facts are needed, the root must spawn one or more scout agents with bounded questions and make decisions from their reports. When implementation work is needed, the root must use at least one child agent even for a one-line change. If subagent delegation is unavailable, stop and report that orchestration cannot continue normally; do not silently do the scout or implementation locally.
 
-If the root believes manual work would be more efficient, it must ask before leaving orchestration:
-
-```text
-Tohle je velmi malá změna. Chceš pokračovat orchestration flow přes subagenta, nebo chceš explicitně opustit orchestration skill a nechat mě to udělat přímo?
-```
-
-Unless the user explicitly chooses to leave orchestration, the root must delegate.
+Unless the user explicitly says they do not want orchestration and want root-direct work, the root must delegate.
 
 ## Hard No-Edit Gate
 
@@ -122,7 +145,7 @@ If any item is missing, the child must stop and ask its parent for clarification
 
 ## Post-Completion Follow-Up Protocol
 
-After the orchestrator reports completion, any user follow-up, correction, missed requirement, bug report, review note, cleanup request, or "one more thing" reopens the orchestration lifecycle. The root must classify the follow-up, update checkpoint state when persistence is active, delegate the fix or change to a child agent, run or request targeted verification, and report evidence.
+After the orchestrator reports completion, any user follow-up, correction, missed requirement, bug report, review note, cleanup request, new task, or "one more thing" reopens the orchestration lifecycle. The root must classify the follow-up, update checkpoint state when persistence is active, delegate the fix or change to a child agent, run or request targeted verification, and report evidence.
 
 Post-completion follow-ups never authorize root manual edits. They are handled as a new orchestration phase.
 

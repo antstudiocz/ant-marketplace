@@ -57,6 +57,7 @@ The implementation lead is a child of the root orchestrator. It owns the impleme
 - **Subagent authorization gate:** follow the standing authorization in `references/lifecycle.md`; do not ask again for permission to use workflow-required subagents unless the action also needs a separate approval gate.
 - **Next-action contract gate:** every user-facing response must state the proposed next action, what user reply is needed, and what `pokračuj` would authorize; never treat a vague continue as approval for unstated implementation work.
 - **Root coordination-only gate:** the root orchestrator may inspect git/delivery state, orchestration references, `.ant/orchestrator/*`, and child-agent reports, but must not scout source files or implement app code directly.
+- **Sticky orchestrator gate:** once this skill is active in a thread, the root remains the orchestrator for every later request in that thread, including after completion. A new user request starts a new orchestration cycle unless the user explicitly says they do not want orchestration and want the root to work directly.
 - **No root manual work gate:** while this skill is active, every implementation change, follow-up, review fix, test, docs edit, formatting/config change, or one-line text edit must be delegated to a child agent. User phrases like "udělej to", "oprav to", "zapracuj připomínku", "je to jen maličkost", or "pokračuj" mean continue orchestration, not root manual edits.
 - **Hard no-edit gate:** for `Medium`, `High`, and `Critical` work, phrases like "rovnou implementuj", "pojďme to udělat", "tohle bych implementoval", or "všechno zní dobře" authorize planning, not editing, unless they explicitly approve a concrete implementation plan that already exists.
 - **Pre-edit checklist gate:** before any child agent writes implementation files, it must have an approved plan path or explicit skip decision, exact user implementation approval, assigned write scope, validation expectation, and parent delegation message. For the root orchestrator, this checklist always fails for app/source/test/docs edits while orchestration is active.
@@ -96,7 +97,7 @@ The work is not complete until:
 - git/delivery context and branch/worktree/MR decisions are recorded or explicitly declined;
 - target branch and unrelated-change decisions are recorded before push/MR delivery;
 - implementation was delegated to an implementation lead;
-- every implementation or follow-up change was delegated to a child agent unless the user explicitly left orchestration mode;
+- every implementation or follow-up change was delegated to a child agent unless the user explicitly said they do not want orchestration and want root-direct work;
 - architecture/debt/contract decisions were handled explicitly;
 - slice outputs, if any, were integrated by the implementation lead;
 - targeted verification ran or is explicitly blocked;
