@@ -11,7 +11,8 @@ Ask the fewest high-impact questions needed to classify the app. Prefer grouped 
 5. Which external systems, APIs, files, webhooks, AI tools, or integrations are involved?
 6. Does anything need to run in the background, on a schedule, or after the user closes the browser?
 7. Is this a throwaway prototype, internal tool, MVP, or production product?
-8. Where should it run: local only, static hosting, existing platform, Docker Compose, cloud app platform, or unknown?
+8. Is this standalone, or a new surface inside an existing app such as administration, backoffice, client portal, reporting, or a major module?
+9. Where should it run: local only, static hosting, existing platform, Docker Compose, cloud app platform, or unknown?
 
 ## Clarify Only When Blocking
 
@@ -21,6 +22,7 @@ Blocking questions usually include:
 - whether data must persist beyond a browser session;
 - whether credentials or secrets are required;
 - whether the app belongs inside an existing product architecture;
+- whether an admin/backoffice/client-portal surface can reuse the existing app stack or needs a separate frontend/backend/security boundary;
 - production versus prototype expectations.
 
 Safe assumptions can include naming, visual style, mock content, and non-critical UI copy when the user has not specified them. State those assumptions before handoff.
@@ -30,6 +32,8 @@ Safe assumptions can include naming, visual style, mock content, and non-critica
 Capture:
 
 - app name or working title;
+- standalone app or existing-product surface;
+- existing system context and reuse/separation constraints;
 - target users;
 - primary workflows;
 - data and persistence requirements;

@@ -50,7 +50,7 @@ Add this to your Codex config at `~/.codex/config.toml`, then restart Codex or o
 
 | Claude Code Command | Codex Skill | Description |
 |---------------------|-------------|-------------|
-| `/ant:create-application` | `$create-application` | Clarify a new app idea, choose simple versus full architecture, and hand off to orchestration |
+| `/ant:create-application` | `$create-application` | Clarify a new app or app surface, choose simple versus full architecture, and hand off to orchestration |
 | `/ant:implementation-orchestrator` | `$implementation-orchestrator` | Guide implementation from brainstorming to verified delivery |
 | `/ant:frontend-best-practices` | `$frontend-best-practices` | React, Next.js, TypeScript, accessibility, forms, performance, responsive UI, i18n, skeletons, and composition |
 | `/ant:laravel-best-practices` | `$laravel-best-practices` | Laravel 12+ architecture, caching, performance, Eloquent, queues, and backend review |

@@ -8,7 +8,7 @@ description: Use for end-to-end implementation work from git/delivery setup and 
 
 Use this skill when the user wants to turn an idea, feature, fix, refactor, audit, migration, or remediation into a completed and verified implementation.
 
-For greenfield application creation, prefer starting from the `create-application` skill when it is available. That skill owns product intake, simple-versus-full architecture classification, and the approved app brief. This orchestrator then owns the execution lifecycle, including git setup, planning depth, implementation delegation, review, verification, and delivery.
+For greenfield application creation or a new app-like surface inside an existing product, prefer starting from the `create-application` skill when it is available. That skill owns product intake, simple-versus-full architecture classification, existing-app reuse versus separate-stack decisions, and the approved app brief. This orchestrator then owns the execution lifecycle, including git setup, planning depth, implementation delegation, review, verification, and delivery.
 
 This is the only public orchestration skill. Internal roles live in `references/` and should be loaded only when needed:
 

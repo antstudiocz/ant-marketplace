@@ -22,9 +22,12 @@ Use ant:implementation-orchestrator for this approved new application request.
 
 Application brief:
 - Name:
+- Request type: standalone app / new surface inside existing product / existing platform module
 - Goal:
 - Target users:
 - Primary workflows:
+- Existing system context:
+- Reuse versus separate stack decision:
 - Data and persistence:
 - Auth and permissions:
 - Integrations and secrets:

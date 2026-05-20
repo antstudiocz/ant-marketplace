@@ -59,6 +59,19 @@ Default shape:
 
 Keep workflow-specific behavior in modules, integrations, extensions, templates, or adapters. Do not let a generic runtime become centered on one concrete workflow.
 
+## New Surface Inside Existing App
+
+Use this when the user is adding administration, backoffice, client portal, reporting, operational tooling, or another major app-like area to an existing product.
+
+First decide whether it is truly just a feature in the current app or a separate surface with its own architecture:
+
+- use the existing frontend routes/layouts when it shares the same users, auth, API contracts, deployment, and data access boundaries;
+- create a separate admin/frontend app when it has different navigation, release cadence, users, permissions, or operational workflows;
+- add backend/admin API work when it needs privileged operations, private data, audit logs, server-side validation, exports, or secure credentials;
+- choose a full Dockerized/modular shape when the surface introduces durable data ownership, jobs, webhooks, integrations, or multiple future modules.
+
+Do not assume a frontend-only product can grow an admin safely without a backend. Admin surfaces often create the first real need for authentication, permissions, database writes, auditability, and protected server-side operations.
+
 ## Existing Platform Or Module
 
 Use this when the user is extending an existing product such as AntBrain or another modular platform.
