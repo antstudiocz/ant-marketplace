@@ -28,9 +28,9 @@ Do not block brainstorming on these checks, but do not finalize an implementatio
 
 For new apps and app-like surfaces, present both paths in plain language before recommending one.
 
-### Path 1: JavaScript/TypeScript Only
+### Path 1: TypeScript Only
 
-Explain this as: one language for the frontend and backend, usually easier to start and easier for non-specialists to run.
+Explain this as: one typed language for the frontend and backend, usually easier to start and easier for non-specialists to run.
 
 Usually better when:
 
@@ -38,7 +38,7 @@ Usually better when:
 - the app is small or medium-sized;
 - speed of iteration matters more than infrastructure control;
 - a managed database/auth/storage service is acceptable;
-- the app can run on a platform that supports JavaScript server code.
+- the app can run on a platform that supports TypeScript server code through the normal Node/Bun toolchain.
 
 Tradeoffs to explain:
 
@@ -46,7 +46,7 @@ Tradeoffs to explain:
 - easier for vibe coders to inspect and modify;
 - database and background-job choices are more constrained without Docker;
 - local production-like testing is weaker unless the app uses managed services or a local SQLite-style database;
-- complex operations can become messy if everything is forced into JavaScript just to avoid Docker.
+- complex operations can become messy if everything is forced into one TypeScript stack just to avoid Docker.
 
 Database options without Docker:
 
@@ -76,7 +76,7 @@ Tradeoffs to explain:
 - heavier on the computer;
 - easier to run the same stack for every developer once Docker works;
 - better for real databases, workers, integrations, and multi-service apps;
-- lets the agent pick the best backend technology for the app instead of forcing everything into JavaScript.
+- lets the agent pick the best backend technology for the app instead of forcing everything into TypeScript.
 
 Database options with Docker:
 
@@ -86,9 +86,9 @@ Database options with Docker:
 
 ## Recommendation Rules
 
-If Docker is installed and the app is more than a small frontend/prototype, normally recommend the Docker path. Still mention the JavaScript-only path as the lower-setup alternative, but explain why it is not the recommended one.
+If Docker is installed and the app is more than a small frontend/prototype, normally recommend the Docker path. Still mention the TypeScript-only path as the lower-setup alternative, but explain why it is not the recommended one.
 
-If Docker is not installed and the app can safely fit JavaScript-only with SQLite or managed services, recommend JavaScript-only for the first version.
+If Docker is not installed and the app can safely fit TypeScript-only with SQLite or managed services, recommend TypeScript-only for the first version.
 
 If Docker is not installed but Docker is clearly the better architecture, recommend Docker and pause before implementation planning. Explain why the better path needs Docker and provide setup instructions for the user's OS.
 
@@ -96,7 +96,7 @@ If the requester cannot install Docker but the app still needs Docker-level capa
 
 - cloud development environment such as GitHub Codespaces;
 - managed platform services replacing local Docker dependencies;
-- reducing scope to a JavaScript prototype with explicit limitations.
+- reducing scope to a TypeScript prototype with explicit limitations.
 
 ## Docker Setup Guidance
 

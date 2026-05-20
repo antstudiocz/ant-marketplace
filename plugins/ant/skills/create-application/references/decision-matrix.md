@@ -2,7 +2,7 @@
 
 Choose the smallest architecture that can satisfy the actual requirements without hiding production risks.
 
-## Simple React/TanStack Frontend App
+## Simple TypeScript Frontend App
 
 Use this when:
 
@@ -14,8 +14,9 @@ Use this when:
 
 Default shape:
 
-- Vite or TanStack Start when routing/data patterns justify it;
-- React with TypeScript;
+- TanStack Router, TanStack Start, or Next.js depending on routing, data, and deployment needs;
+- TypeScript-only application code;
+- no plain React-only/Vite-only scaffold for new apps unless an existing repository already standardizes on it;
 - explicit mock-data boundary if backend data is not real yet;
 - no Docker unless the repo standard requires it.
 
@@ -31,20 +32,20 @@ Use this when:
 
 Default shape:
 
-- React/TanStack frontend;
+- TanStack or Next.js TypeScript frontend;
 - backend appropriate to the repo/team standard;
 - Postgres when relational persistence is needed;
 - Docker Compose if local services are required;
 - migrations, env examples, and targeted tests.
 
-## JavaScript/TypeScript Full-Stack App Without Docker
+## TypeScript Full-Stack App Without Docker
 
-Use this when the app needs backend logic but the requester or team cannot reasonably run Docker, and the requirements can be served by JavaScript runtime plus SQLite or managed cloud services.
+Use this when the app needs backend logic but the requester or team cannot reasonably run Docker, and the requirements can be served by a TypeScript runtime plus SQLite or managed cloud services.
 
 Default shape:
 
-- React/TanStack frontend;
-- JavaScript/TypeScript server runtime;
+- TanStack Start, Next.js, or another TypeScript-first full-stack framework;
+- TypeScript server runtime;
 - SQLite for local/simple persistence or a managed database/auth provider for shared production data;
 - explicit limits around background jobs, local production parity, and operational complexity.
 
@@ -102,7 +103,7 @@ Default shape:
 Give:
 
 - recommended architecture;
-- two-path comparison: JavaScript/TypeScript-only versus Docker-based multi-language;
+- two-path comparison: TypeScript-only versus Docker-based multi-language;
 - why it fits;
 - why the next heavier option is unnecessary or why the lighter option is unsafe;
 - main implementation risks;

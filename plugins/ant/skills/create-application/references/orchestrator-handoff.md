@@ -7,7 +7,7 @@ Use this format after the user approves the app brief and architecture. The hand
 Before handoff, confirm:
 
 - architecture choice;
-- JavaScript-only versus Docker-based implementation path;
+- TypeScript-only versus Docker-based implementation path;
 - requester environment constraints;
 - app brief;
 - target repo or project location;
