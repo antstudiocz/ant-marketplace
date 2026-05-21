@@ -15,7 +15,7 @@ How it works:
 - always compares a TypeScript-only path with a Docker-based multi-language path in non-technical language;
 - keeps intake short with at most three grouped first-round questions and ends intake with an explicit decision status;
 - decides whether the app should be a TypeScript frontend/content app, TypeScript full-stack app, CMS-backed app, Dockerized modular app, new surface inside an existing app, or existing platform/module change;
-- selects frameworks and CMS options by project shape, with examples such as Astro, TanStack Start, Next.js, Payload CMS, or the existing repo framework;
+- selects frameworks and CMS options by project shape, preferring TanStack Start over Next.js for new app-like TypeScript products unless Next.js has a concrete project fit;
 - challenges inconsistent goals, unsafe assumptions, and mismatched technology choices before asking for approval;
 - validates decisions repeatedly, optionally with an independent reviewer/subagent for medium/high-risk app choices;
 - asks explicit questions about authorization, database/storage, auditability, deployment, and production expectations instead of making assumptions;
