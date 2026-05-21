@@ -1,7 +1,7 @@
 {
   "name": "ant",
-  "version": "8.0.9",
-  "description": "(ant) dual Claude Code and Codex skills: implementation orchestration, frontend best practices, Laravel best practices, GitLab delivery workflows, Google Docs, and Asana task analysis.",
+  "version": "8.1.0",
+  "description": "(ant) dual Claude Code and Codex skills: create application intake, implementation orchestration, frontend best practices, Laravel best practices, GitLab delivery workflows, Google Docs, and Asana task analysis.",
   "author": {
     "name": "(ant)",
     "description": "full-service digital agency"
@@ -25,7 +25,7 @@
   "interface": {
     "displayName": "(ant)",
     "shortDescription": "Shared (ant) skills for Codex and Claude Code.",
-    "longDescription": "(ant) umbrella skills for implementation orchestration, frontend quality, Laravel architecture/performance/caching, GitLab MR/conflict delivery workflows, Google Docs, and Asana task analysis.",
+    "longDescription": "(ant) umbrella skills for new application intake, implementation orchestration, frontend quality, Laravel architecture/performance/caching, GitLab MR/conflict delivery workflows, Google Docs, and Asana task analysis.",
     "developerName": "(ant)",
     "category": "Productivity",
     "capabilities": [
@@ -34,6 +34,7 @@
     ],
     "defaultPrompt": [
       "Use the relevant (ant) skill for this task.",
+      "For new applications, use create-application to clarify the app shape and hand off to orchestration.",
       "For implementation work, use implementation-orchestrator from brainstorming through verification.",
       "For frontend, Laravel, or delivery work, prefer the umbrella best-practices/workflow skill and load only relevant references.",
       "Answer in my language."

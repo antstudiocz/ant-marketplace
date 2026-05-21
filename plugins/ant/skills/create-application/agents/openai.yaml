@@ -1,0 +1,4 @@
+interface:
+  display_name: "(ant) Create Application"
+  short_description: "Plan a new app or app surface"
+  default_prompt: "Use $create-application to clarify my new app or app-like product surface, compare TypeScript-only and Docker-based paths, choose the right architecture, and hand the approved brief to implementation orchestration."

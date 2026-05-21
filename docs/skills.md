@@ -2,6 +2,30 @@
 
 This marketplace exposes a small set of public skills. Detailed topic guidance lives under each skill's `references/` folder and is loaded only when relevant.
 
+## `create-application`
+
+Product and architecture intake for new applications, MVPs, prototypes, internal tools, dashboards, automation UIs, full-stack products, and new app-like surfaces inside existing products such as administration, backoffice, client portals, reporting, or major modules.
+
+How it works:
+
+- clarifies goal, users, workflows, data, auth, integrations, background work, deployment, and expected lifetime;
+- asks for the requester's technical level and adapts wording for beginner, intermediate, or advanced users;
+- checks the requester's local development environment, including whether Docker is available;
+- guides the requester through missing Git, package manager/runtime, or Docker setup from a dedicated local-dev setup reference before implementation planning, while allowing npm when Bun is unavailable;
+- always compares a TypeScript-only path with a Docker-based multi-language path in non-technical language;
+- keeps intake short with at most three grouped first-round questions and ends intake with an explicit decision status;
+- decides whether the app should be a TypeScript frontend/content app, TypeScript full-stack app, CMS-backed app, Dockerized modular app, new surface inside an existing app, or existing platform/module change;
+- selects frameworks and CMS options by project shape, with examples such as Astro, TanStack Start, Next.js, Payload CMS, or the existing repo framework;
+- challenges inconsistent goals, unsafe assumptions, and mismatched technology choices before asking for approval;
+- validates decisions repeatedly, optionally with an independent reviewer/subagent for medium/high-risk app choices;
+- asks explicit questions about authorization, database/storage, auditability, deployment, and production expectations instead of making assumptions;
+- checks whether an admin/backoffice/client-portal surface can reuse the existing stack or needs a separate frontend/backend/security boundary;
+- makes mock data, prototype scope, persistence, secrets, and production-readiness tradeoffs explicit;
+- prepares an approved application brief with acceptance criteria and non-goals;
+- hands the approved brief to `implementation-orchestrator`, which owns planning depth, subagents, implementation, review, verification, and delivery.
+
+Use it when the user wants to create a new app from an idea before writing code.
+
 ## `implementation-orchestrator`
 
 End-to-end implementation flow for features, fixes, refactors, migrations, audits, and remediation work.
