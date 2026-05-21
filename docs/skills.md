@@ -9,8 +9,8 @@ Product and architecture intake for new applications, MVPs, prototypes, internal
 How it works:
 
 - clarifies goal, users, workflows, data, auth, integrations, background work, deployment, and expected lifetime;
-- asks for the requester's technical level and adapts wording for beginner, intermediate, or advanced users;
-- checks the requester's local development environment, including whether Docker is available;
+- asks for the requester's technical level and adapts wording for beginner, intermediate, or advanced users, including plain-language explanations for infrastructure terms such as cron, Supabase, workers, queues, and managed services;
+- checks the requester's local development environment, including whether Docker is available, by inspecting the local machine directly when the host supports it;
 - guides the requester through missing Git, package manager/runtime, or Docker setup from a dedicated local-dev setup reference before implementation planning, while allowing npm when Bun is unavailable;
 - always compares a TypeScript-only path with a Docker-based multi-language path in non-technical language;
 - keeps intake short with at most three grouped first-round questions and ends intake with an explicit decision status;

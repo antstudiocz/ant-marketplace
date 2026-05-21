@@ -6,11 +6,11 @@ Do not continue into implementation planning until the requester either verifies
 
 ## Setup Workflow
 
-1. Ask for the user's operating system: macOS, Windows, Linux, or cloud-only.
-2. Ask which required tools are already installed: Git, Bun, Node/npm, Docker Desktop or Docker Engine, editor, terminal.
+1. If the host can access the same development machine, detect the operating system and required tools with read-only shell checks before asking the user.
+2. Ask for the user's operating system and installed tools only when direct inspection is unavailable, blocked, or the user will develop on a different machine.
 3. Explain why each missing tool is needed in plain language.
 4. Give OS-specific steps for only the missing tools.
-5. Ask the user to run the verification commands and paste the result.
+5. Ask the user to run the verification commands and paste the result only when the host cannot verify the commands directly.
 6. If installation fails, troubleshoot the failing step before changing architecture.
 
 ## Verification Commands

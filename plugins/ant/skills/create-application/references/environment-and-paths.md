@@ -4,7 +4,21 @@ Use this reference before recommending architecture. The goal is to avoid choosi
 
 ## Environment Check
 
-Ask what the requester can actually use:
+Prefer direct inspection over questions when the host can access the same development machine or workspace. In Codex-style local sessions, run read-only checks first and record the result:
+
+```bash
+uname -s
+git --version
+bun --version
+npm --version
+node --version
+docker --version
+docker compose version
+```
+
+Treat missing-command failures as useful evidence, not as a reason to stop. If Docker is installed but may not be running, verify with a harmless Docker command only when the Docker path is likely relevant.
+
+Ask what the requester can actually use only when direct inspection is unavailable, blocked, or may describe the wrong machine:
 
 1. Operating system: macOS, Windows, Linux, or cloud-only.
 2. Local tools: Git, editor, terminal, and package manager/runtime availability: Bun, or Node.js with npm.
@@ -12,7 +26,7 @@ Ask what the requester can actually use:
 4. Team reality: who will run and maintain the app after the first version?
 5. Deployment preference: static hosting, managed full-stack platform, VPS, Docker Compose, existing company platform, or unknown.
 
-If the answer is unknown, ask the user to run simple checks when they can:
+If direct inspection is unavailable and the answer is unknown, ask the user to run simple checks when they can:
 
 ```bash
 bun --version
@@ -26,6 +40,8 @@ docker compose version
 If either Bun or npm/Node works, the TypeScript-only path can proceed unless the selected framework or existing project requires the other tool. Record the package manager choice in the app brief and do not force Bun installation when npm is already available and acceptable.
 
 Do not block brainstorming on these checks, but do not finalize an implementation path that depends on unavailable tooling.
+
+If direct inspection shows the needed tools are available, do not ask the user to confirm those same facts. Ask only whether the app will be developed or maintained on a different machine, team setup, or deployment environment when that affects the recommendation.
 
 If a required tool is missing or the user asks how to install it, load `local-dev-setup.md` and guide them through the OS-specific installation. Do not just paste a link and continue.
 

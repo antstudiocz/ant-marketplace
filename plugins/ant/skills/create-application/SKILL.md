@@ -37,7 +37,7 @@ Load only the references needed for the current conversation. For a user who is 
 2. Adapt all follow-up questions, explanations, and recommendations to that level.
 3. Ask at most 3 grouped questions in the first round. Continue only when answers expose a real blocker or contradiction.
 4. Clarify the application goal, users, workflows, data, integrations, authentication, deployment, expected lifetime, and whether this is standalone or part of an existing product.
-5. Check the requester's local development environment, especially whether they can run Git, Docker, and at least one TypeScript-capable package manager/runtime path such as Bun or Node/npm.
+5. Check the requester's local development environment, especially whether they can run Git, Docker, and at least one TypeScript-capable package manager/runtime path such as Bun or Node/npm. When the host provides shell access to the same machine/workspace, inspect this directly before asking the requester.
 6. Ask enough product and technical questions to avoid unsupported assumptions. For internal or admin apps, explicitly clarify authorization, database, data ownership, auditability, and deployment.
 7. Present two implementation paths using the requester's technical level:
    - TypeScript-only frontend and backend;
@@ -64,11 +64,13 @@ Load only the references needed for the current conversation. For a user who is 
 
 - Do not choose Docker, databases, workers, authentication, or modular architecture just because the app could grow later. Require an actual workflow, persistence, integration, operational, or team-maintenance reason.
 - Do not ask beginner/non-technical users deep implementation questions before explaining the concept in plain language. First understand the goal and desired behavior, then translate it into technical choices.
+- For beginner/non-technical and intermediate users, explain infrastructure and platform terms in plain language the first time they appear in a recommendation or question. This includes terms such as cron, Supabase, Vercel, backend, API, worker, webhook, queue, database, authentication, authorization, Docker, Postgres, and managed service.
 - Do not accept incompatible answers silently. If goals, constraints, or selected technologies do not fit together, say what does not fit and propose better options before approval.
 - Do not rely on a single pass for medium/high-risk architecture choices. Validate the recommendation against requirements, environment, red flags, and alternatives before asking for approval.
 - Do not force a frontend-only implementation when the app needs private data, long-lived persistence, background work, webhooks, secure credentials, role-based access, auditability, or reliable server-side integration logic.
 - Do not recommend plain React-only/Vite-only scaffolds for new apps. Choose a TypeScript application framework or CMS based on the app shape. TanStack, Next.js, Astro, and Payload are examples, not mandatory defaults.
 - Do not hide environment requirements. If the recommended path needs Docker, Git, a package manager, or another missing local tool, load `references/local-dev-setup.md`, guide the user step by step for their OS, and ask them to run verification commands before implementation planning. Bun is not a hard blocker when the requester already has working Node/npm and the chosen stack can use npm.
+- Do not ask the requester for operating system, Git, Bun/npm/Node, or Docker availability when the host can inspect the same development machine directly. Run read-only environment checks first and ask only for missing context, permission, or confirmation that they intend to use a different machine.
 - Keep UTC time across API, storage, business logic, jobs, and integration boundaries. Convert to user local time only in UI rendering.
 - Use existing company/platform architecture when the app is being added to an existing codebase. Do not scaffold a separate app when a module, integration, or extension is the right ownership boundary.
 - For administration, backoffice, client portal, reporting, or other new surfaces inside an existing app, do not assume it must use the same frontend-only stack. Evaluate whether it should be a route/layout in the existing app, a separate admin frontend, a full-stack admin service, or a module in the existing platform.
