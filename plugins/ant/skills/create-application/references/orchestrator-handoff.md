@@ -7,6 +7,7 @@ Use this format after the user approves the app brief and architecture. The hand
 Before handoff, confirm:
 
 - architecture choice;
+- requester technical level and communication style;
 - TypeScript-only versus Docker-based implementation path;
 - requester environment constraints;
 - app brief;
@@ -25,6 +26,8 @@ Use ant:implementation-orchestrator for this approved new application request.
 Application brief:
 - Name:
 - Request type: standalone app / new surface inside existing product / existing platform module
+- Requester technical level:
+- Communication style:
 - Goal:
 - Target users:
 - Primary workflows:
