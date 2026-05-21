@@ -56,7 +56,7 @@ Add this to your Codex config at `~/.codex/config.toml`, then restart Codex or o
 | `/ant:laravel-best-practices` | `$laravel-best-practices` | Laravel 12+ architecture, caching, performance, Eloquent, queues, and backend review |
 | `/ant:delivery-workflows` | `$delivery-workflows` | GitLab MR creation, merge conflicts, and delivery hygiene |
 | `/ant:google-docs` | `$google-docs` | Read and extract content from Google Docs |
-| `/ant:asana-task` | `$asana-task-analyzer` | Analyze Asana tasks for implementers |
+| `/ant:asana-task-analyzer` (`/ant:asana-task` alias) | `$asana-task-analyzer` | Analyze Asana tasks for implementers |
 
 See [docs/skills.md](docs/skills.md) for a short explanation of how each skill works.
 
@@ -82,7 +82,8 @@ Codex: rerun the same `codex-marketplace add` command with the same scope (`--gl
 
 1. Create a folder in `plugins/ant/skills/your-skill-name/` with a `SKILL.md` file for a new public workflow
 2. Prefer adding detailed topic guidance under an existing skill's `references/` folder when it belongs to an umbrella skill
-3. Open a PR
+3. Do not add same-name command aliases; Claude Code discovers skills directly from `skills/*/SKILL.md`
+4. Open a PR
 
 ---
 

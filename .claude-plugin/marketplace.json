@@ -1,28 +1,19 @@
 {
   "name": "ant-marketplace",
+  "description": "(ant) skills marketplace for Claude Code.",
   "owner": {
     "name": "(ant)",
     "description": "full-service digitální agentura"
   },
   "metadata": {
     "description": "(ant) skills for Claude Code and Codex",
-    "version": "8.1.1"
+    "version": "8.1.2"
   },
   "plugins": [
     {
       "name": "ant",
       "description": "(ant) skills - create application intake, implementation orchestration, frontend best practices, Laravel best practices, GitLab delivery workflows, Google Docs, and Asana tasks",
-      "source": "./plugins/ant",
-      "strict": true,
-      "skills": [
-        "./skills/create-application",
-        "./skills/implementation-orchestrator",
-        "./skills/frontend-best-practices",
-        "./skills/laravel-best-practices",
-        "./skills/delivery-workflows",
-        "./skills/google-docs",
-        "./skills/asana-task-analyzer"
-      ]
+      "source": "./plugins/ant"
     }
   ]
 }
