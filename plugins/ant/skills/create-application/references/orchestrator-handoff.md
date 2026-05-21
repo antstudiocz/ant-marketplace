@@ -35,6 +35,7 @@ Application brief:
 - Local setup status and missing tools:
 - Compared implementation paths:
 - Approved implementation path:
+- Framework/CMS choice:
 - Data and persistence:
 - Database/storage decision:
 - Auth and permissions:

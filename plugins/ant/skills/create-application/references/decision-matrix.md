@@ -14,7 +14,7 @@ Use this when:
 
 Default shape:
 
-- TanStack Router, TanStack Start, or Next.js depending on routing, data, and deployment needs;
+- TypeScript framework selected through `framework-selection.md`;
 - TypeScript-only application code;
 - no plain React-only/Vite-only scaffold for new apps unless an existing repository already standardizes on it;
 - explicit mock-data boundary if backend data is not real yet;
@@ -32,7 +32,7 @@ Use this when:
 
 Default shape:
 
-- TanStack or Next.js TypeScript frontend;
+- TypeScript frontend selected through `framework-selection.md`;
 - backend appropriate to the repo/team standard;
 - Postgres when relational persistence is needed;
 - Docker Compose if local services are required;
@@ -44,7 +44,7 @@ Use this when the app needs backend logic but the requester or team cannot reaso
 
 Default shape:
 
-- TanStack Start, Next.js, or another TypeScript-first full-stack framework;
+- TypeScript-first full-stack framework or CMS selected through `framework-selection.md`;
 - TypeScript server runtime;
 - SQLite for local/simple persistence or a managed database/auth provider for shared production data;
 - explicit limits around background jobs, local production parity, and operational complexity.
