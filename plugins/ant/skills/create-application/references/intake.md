@@ -2,6 +2,8 @@
 
 Ask the fewest high-impact questions needed to classify the app. Prefer grouped questions over a long interview, then make safe assumptions explicit.
 
+For the first round, ask at most 3 grouped questions. Use `decision-gates.md` for the exact minimum viable question rule and required intake end state.
+
 ## Minimum Questions
 
 Adapt wording to the selected communication level from `communication-level.md`.
@@ -52,6 +54,7 @@ Capture:
 - time handling requirements;
 - deployment target;
 - recommended architecture;
+- intake decision status;
 - acceptance criteria;
 - non-goals;
 - open questions.

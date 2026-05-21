@@ -14,7 +14,11 @@ Before handoff, confirm:
 - target repo or project location;
 - prototype versus production expectation;
 - any known non-goals;
-- whether to proceed with implementation planning.
+- whether to proceed with implementation planning;
+- decisions already approved;
+- decisions still open;
+- safe assumptions;
+- assumptions that must be verified before coding.
 
 If these are not approved, keep clarifying. Do not move into implementation.
 
@@ -28,6 +32,7 @@ Application brief:
 - Request type: standalone app / new surface inside existing product / existing platform module
 - Requester technical level:
 - Communication style:
+- Intake decision status:
 - Goal:
 - Target users:
 - Primary workflows:
@@ -49,6 +54,12 @@ Application brief:
 - Deployment target:
 - Recommended architecture:
 - Why this architecture:
+- Decisions already approved:
+- Decisions still open:
+- Assumptions safe to proceed with:
+- Assumptions to verify before coding:
+- Red flags reviewed:
+- Challenge/reconciliation notes:
 - Non-goals:
 - Acceptance criteria:
 - Open questions:

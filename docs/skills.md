@@ -13,8 +13,10 @@ How it works:
 - checks the requester's local development environment, including whether Docker is available;
 - guides the requester through missing Git, package manager/runtime, or Docker setup from a dedicated local-dev setup reference before implementation planning, while allowing npm when Bun is unavailable;
 - always compares a TypeScript-only path with a Docker-based multi-language path in non-technical language;
+- keeps intake short with at most three grouped first-round questions and ends intake with an explicit decision status;
 - decides whether the app should be a TypeScript frontend/content app, TypeScript full-stack app, CMS-backed app, Dockerized modular app, new surface inside an existing app, or existing platform/module change;
 - selects frameworks and CMS options by project shape, with examples such as Astro, TanStack Start, Next.js, Payload CMS, or the existing repo framework;
+- challenges inconsistent goals, unsafe assumptions, and mismatched technology choices before asking for approval;
 - asks explicit questions about authorization, database/storage, auditability, deployment, and production expectations instead of making assumptions;
 - checks whether an admin/backoffice/client-portal surface can reuse the existing stack or needs a separate frontend/backend/security boundary;
 - makes mock data, prototype scope, persistence, secrets, and production-readiness tradeoffs explicit;
