@@ -6,11 +6,17 @@ Use this reference to keep intake short and to prevent implementation from start
 
 Start with at most 3 grouped questions. Adapt wording to the selected communication level.
 
-Good first round:
+Good first round when the host cannot inspect the local environment directly:
 
 1. What are we building, who uses it, and what are the first 2-3 things users must do?
 2. What data/auth/integrations are involved, and is any of it private or business-critical?
 3. What can you run locally today: OS, Git, package manager/runtime, Docker, and target deployment if known?
+
+Good first round when the host can inspect the same machine/workspace directly:
+
+1. What are we building, who uses it, and what are the first 2-3 things users must do?
+2. What data/auth/integrations are involved, and is any of it private or business-critical?
+3. Where should it run after the first version, and will anyone develop or maintain it on a different machine than this one?
 
 Continue asking only when answers expose a real blocker, contradiction, or required decision. Do not turn intake into a long checklist when the missing detail is safe to decide later.
 

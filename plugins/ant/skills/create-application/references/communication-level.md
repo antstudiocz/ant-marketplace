@@ -24,18 +24,29 @@ How to ask:
 
 - ask in plain language;
 - explain terms before using them;
+- define every infrastructure/platform term the first time it appears in an answer or question;
 - use examples instead of abstract labels;
 - ask about outcomes, people, screens, data, approvals, and risks;
 - translate technical choices into practical consequences.
 
 Explain concepts like:
 
+- **API**: a controlled way for the app to talk to another service or to its own server;
+- **backend**: the server-side part of the app that keeps secrets safe, talks to databases, and runs logic users should not run in the browser;
+- **cron / scheduled job**: a timer that runs work automatically, such as downloading ad data every morning;
 - **Docker**: a way to run all required app parts, such as database and backend, in the same predictable setup on each computer;
 - **database**: where the app stores information so it is still there later;
 - **authentication**: how users log in;
 - **authorization**: what each user is allowed to see or change;
 - **CMS**: an admin area where non-developers can manage content or structured data;
-- **background job**: work the app does later or repeatedly, even when nobody is clicking a button.
+- **background job**: work the app does later or repeatedly, even when nobody is clicking a button;
+- **worker**: a separate app process that handles background jobs instead of serving pages directly;
+- **queue**: a waiting line for background jobs, so the app can process them reliably one by one or in batches;
+- **webhook**: an automatic message one service sends to another when something happens;
+- **Supabase**: a managed service that can provide a Postgres database, login, storage, and admin tools without running those pieces yourself;
+- **Vercel**: a managed hosting platform for web apps, especially common for Next.js projects;
+- **Postgres**: a reliable relational database commonly used for business apps;
+- **managed service**: a cloud provider runs a technical piece for you, so you configure and pay for it instead of maintaining servers yourself.
 
 Output style:
 
@@ -55,7 +66,7 @@ Primary goal:
 How to ask:
 
 - use normal product and light technical terms;
-- explain terms that are easy to misunderstand, such as Docker, CMS, auth, database, worker, webhook;
+- explain terms that are easy to misunderstand the first time they appear, such as cron, Supabase, Vercel, Docker, CMS, auth, database, worker, queue, webhook, backend, API, Postgres, and managed service;
 - include tradeoffs and operational consequences;
 - describe the implementation process at a high level.
 
@@ -63,6 +74,7 @@ Output style:
 
 - show the two implementation paths with practical pros/cons;
 - name likely technologies and why they fit;
+- pair named services with a short practical explanation when the name matters to the decision, for example "Supabase, which gives us hosted login and Postgres without local database setup";
 - describe the planned flow: intake, architecture choice, setup check, app brief approval, orchestrator handoff, implementation, validation.
 
 ## Advanced
