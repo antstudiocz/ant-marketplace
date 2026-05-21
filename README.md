@@ -56,7 +56,7 @@ Add this to your Codex config at `~/.codex/config.toml`, then restart Codex or o
 | `/ant:laravel-best-practices` | `$laravel-best-practices` | Laravel 12+ architecture, caching, performance, Eloquent, queues, and backend review |
 | `/ant:delivery-workflows` | `$delivery-workflows` | GitLab MR creation, merge conflicts, and delivery hygiene |
 | `/ant:google-docs` | `$google-docs` | Read and extract content from Google Docs |
-| `/ant:asana-task-analyzer` (`/ant:asana-task` alias) | `$asana-task-analyzer` | Analyze Asana tasks for implementers |
+| `/ant:asana-task-analyzer` | `$asana-task-analyzer` | Analyze Asana tasks for implementers |
 
 See [docs/skills.md](docs/skills.md) for a short explanation of how each skill works.
 
