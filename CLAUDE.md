@@ -12,8 +12,9 @@ plugins/ant/
     plugin.json       # Claude plugin metadata with version
   .codex-plugin/
     plugin.json       # Codex plugin metadata with matching version
-  commands/           # Claude command files (aliases for skills)
+  commands/           # Claude command aliases only; avoid duplicates of skill names
   skills/             # Shared Claude/Codex public skill folders
+    */agents/         # Codex skill UI metadata such as openai.yaml
     */references/     # Internal topic guidance loaded by umbrella skills
 assets/               # Shared README and branding assets
 ```
@@ -37,16 +38,13 @@ Prefer a new public skill only for a distinct workflow or domain entrypoint. If 
 
    # Skill Title
 
-   Instructions for Claude to follow...
+   Instructions for Claude Code and Codex to follow...
    ```
 
-3. **Register in marketplace.json:**
-   ```json
-   "skills": [
-     "./skills/google-docs",
-     "./skills/my-skill"  // Add here, relative to plugins/ant
-   ]
-   ```
+3. **Do not register skills in marketplace.json.**
+   - Claude discovers `plugins/ant/skills/*/SKILL.md` from the plugin root.
+   - Codex discovers the same folder through `plugins/ant/.codex-plugin/plugin.json` → `"skills": "./skills/"`.
+   - Explicit skill lists in the Claude marketplace can duplicate the same public skills.
 
 4. **Update README.md** - add to Available Skills table
 
@@ -62,11 +60,11 @@ plugins/ant/skills/laravel-best-practices/references/my-topic.md
 plugins/ant/skills/delivery-workflows/references/my-topic.md
 ```
 
-Do not name internal reference files `SKILL.md`; Codex may discover those as public skills.
+Do not name internal reference files `SKILL.md`; Codex and Claude Code may discover those as public skills.
 
 ## Adding a New Command
 
-Commands are optional aliases that reference skills. The skill itself is what matters.
+Commands are optional Claude aliases. Do not create a command with the same name as a public skill; Claude treats `commands/*.md` as flat skill files and this duplicates the exposed skill. Use commands only for meaningful alternate names such as `asana-task` → `asana-task-analyzer`.
 
 1. **Create command file:**
    ```
@@ -77,17 +75,18 @@ Commands are optional aliases that reference skills. The skill itself is what ma
    ```markdown
    ---
    description: "Short description"
+   disable-model-invocation: true
    ---
 
-   Invoke the ant:my-skill skill and follow it exactly as presented to you
+   Invoke the ant:my-skill skill and follow it exactly as presented to you.
    ```
 
 ## Releasing a New Version
 
-**All manifests must have matching versions:**
-- `plugins/ant/.claude-plugin/plugin.json` → `"version": "X.Y.Z"`
-- `plugins/ant/.codex-plugin/plugin.json` → `"version": "X.Y.Z"`
-- `.claude-plugin/marketplace.json` → `"version": "X.Y.Z"`
+**Version files to update:**
+- `plugins/ant/.claude-plugin/plugin.json` → `"version": "X.Y.Z"` (Claude plugin update authority)
+- `plugins/ant/.codex-plugin/plugin.json` → `"version": "X.Y.Z"` (Codex plugin version)
+- `.claude-plugin/marketplace.json` → `"metadata.version": "X.Y.Z"` (marketplace display metadata)
 
 **Version bumping:**
 - **Major (X.0.0)** - Breaking changes
@@ -99,11 +98,18 @@ Commands are optional aliases that reference skills. The skill itself is what ma
 1. **Update all version files to the same version:**
    - `plugins/ant/.claude-plugin/plugin.json` → change `"version": "X.Y.Z"`
    - `plugins/ant/.codex-plugin/plugin.json` → change `"version": "X.Y.Z"`
-   - `.claude-plugin/marketplace.json` → change `"version": "X.Y.Z"` (in metadata section)
+   - `.claude-plugin/marketplace.json` → change `"metadata.version": "X.Y.Z"`
 
-   ⚠️ **CRITICAL: All versions MUST match, otherwise plugin won't work correctly!**
+   Claude Code resolves plugin version from `plugins/ant/.claude-plugin/plugin.json` first. Keep marketplace metadata aligned for readability, but do not rely on it as the plugin update authority.
 
-2. **Commit, push and create release:**
+2. **Validate:**
+   ```bash
+   claude plugin validate .
+   claude plugin validate ./plugins/ant
+   jq empty .agents/plugins/marketplace.json .claude-plugin/marketplace.json plugins/ant/.claude-plugin/plugin.json plugins/ant/.codex-plugin/plugin.json
+   ```
+
+3. **Commit, push and create release:**
    ```bash
    git add -A && git commit -m "feat/fix: description"
    git push origin master
@@ -121,7 +127,17 @@ Rerun the Codex install command for `antstudiocz/ant-marketplace/plugins/ant`.
 
 ## Testing Locally
 
-After making changes, Claude Code users need to run `/plugin update ant` to get the latest version from the GitHub release. Codex users should rerun the plugin install command for the `plugins/ant` path.
+Claude Code:
+```
+claude plugin validate .
+claude plugin validate ./plugins/ant
+claude --plugin-dir ./plugins/ant
+```
+
+Codex:
+- verify JSON manifests with `jq empty`;
+- rerun the plugin install command for the `plugins/ant` path;
+- restart Codex or open a new session so updated skills are loaded.
 
 ## Skill Best Practices
 

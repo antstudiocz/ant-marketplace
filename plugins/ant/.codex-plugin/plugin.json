@@ -1,6 +1,6 @@
 {
   "name": "ant",
-  "version": "8.1.1",
+  "version": "8.1.2",
   "description": "(ant) dual Claude Code and Codex skills: create application intake, implementation orchestration, frontend best practices, Laravel best practices, GitLab delivery workflows, Google Docs, and Asana task analysis.",
   "author": {
     "name": "(ant)",
@@ -34,10 +34,8 @@
     ],
     "defaultPrompt": [
       "Use the relevant (ant) skill for this task.",
-      "For new applications, use create-application to clarify the app shape and hand off to orchestration.",
-      "For implementation work, use implementation-orchestrator from brainstorming through verification.",
-      "For frontend, Laravel, or delivery work, prefer the umbrella best-practices/workflow skill and load only relevant references.",
-      "Answer in my language."
+      "Use create-application for new apps and implementation-orchestrator for scoped implementation work.",
+      "Answer in my language and load only references needed for the task."
     ],
     "brandColor": "#5BFFC4"
   }
