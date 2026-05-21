@@ -2,6 +2,8 @@
 
 Use this reference before naming a frontend, full-stack, or CMS technology. Do not default to one framework by habit.
 
+For new app-like TypeScript products, prefer TanStack Start over Next.js unless the requirements clearly point elsewhere. Next.js is still a valid recommendation when its ecosystem, App Router conventions, hosting fit, existing repository constraints, or framework-specific tools are material to the project.
+
 ## Selection Questions
 
 Ask:
@@ -17,8 +19,8 @@ Ask:
 Use these as examples, not fixed defaults:
 
 - **Astro**: content-first websites, marketing pages, landing pages, blogs, documentation, portfolios, catalogs, and sites where most pages should be fast static HTML with limited interactive islands.
-- **TanStack Start**: app-like TypeScript products with typed routing, client/server data flows, forms, dashboards, internal tools, and workflows where React application behavior is central.
-- **Next.js**: TypeScript apps that benefit from the Next.js ecosystem, App Router conventions, hosting familiarity, server rendering, or tools that are built around Next.js.
+- **TanStack Start**: preferred default for app-like TypeScript products with typed routing, client/server data flows, forms, dashboards, internal tools, and workflows where React application behavior is central.
+- **Next.js**: TypeScript apps where the Next.js ecosystem, App Router conventions, hosting familiarity, server rendering model, existing repository constraints, or tools built around Next.js provide a concrete advantage.
 - **Payload CMS**: projects where non-developers need to manage content or structured data through an admin panel, especially when a TypeScript/Next.js-native CMS and code-defined content model are useful.
 - **Existing framework**: when a repository already has a clear framework, use it unless there is a concrete reason to migrate.
 
