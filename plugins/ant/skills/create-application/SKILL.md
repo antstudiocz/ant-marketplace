@@ -25,10 +25,11 @@ Create the app brief, make the architecture recommendation, get user approval, t
 - TypeScript framework and CMS selection guidance: `references/framework-selection.md`.
 - Intake decision gates and minimal question rules: `references/decision-gates.md`.
 - Architecture signals, red flags, and challenge/reconciliation loop: `references/architecture-guardrails.md`.
+- Continuous decision validation and optional independent reviewer/subagent checks: `references/decision-validation.md`.
 - Simple versus full app architecture decision: `references/decision-matrix.md`.
 - Orchestrator handoff format and approval boundary: `references/orchestrator-handoff.md`.
 
-Load only the references needed for the current conversation. For a user who is still brainstorming, intake, communication-level, environment-and-paths, framework-selection, decision-gates, architecture-guardrails, and decision matrix are usually enough. Load `local-dev-setup.md` only when a required tool is missing, unknown, or the user asks how to install it. For a user ready to build, also load the handoff reference.
+Load only the references needed for the current conversation. For a user who is still brainstorming, intake, communication-level, environment-and-paths, framework-selection, decision-gates, architecture-guardrails, and decision matrix are usually enough. Load `decision-validation.md` before architecture approval, after material requirement changes, or when the recommendation is medium/high risk. Load `local-dev-setup.md` only when a required tool is missing, unknown, or the user asks how to install it. For a user ready to build, also load the handoff reference.
 
 ## Workflow
 
@@ -44,25 +45,27 @@ Load only the references needed for the current conversation. For a user who is 
 8. Compare the paths with practical pros/cons and recommend one based on requirements and developer environment.
 9. Select a TypeScript framework or CMS candidate based on project shape, not habit.
 10. Run the challenge/reconciliation loop: identify contradictions, red flags, mismatched technology choices, and better alternatives.
-11. Classify uncertainty as blocking, repo-discoverable, or safe to assume.
-12. End intake with one explicit decision gate status.
-13. Recommend one architecture:
+11. Run decision validation. For medium/high-risk recommendations, use an independent reviewer/subagent when the host supports it; otherwise perform a named second-pass self-review.
+12. Classify uncertainty as blocking, repo-discoverable, or safe to assume.
+13. End intake with one explicit decision gate status.
+14. Recommend one architecture:
    - simple TypeScript frontend or content app using the best-fit framework, not plain React;
    - TypeScript full-stack app without Docker;
    - standard full-stack app;
    - Dockerized modular app similar to AntBrain;
    - new app surface inside an existing product;
    - existing platform/module work, if the user is extending an existing system.
-14. Explain the tradeoff in a few concrete sentences, especially when avoiding overengineering or rejecting a too-simple frontend-only shape.
-15. Produce an application brief with acceptance criteria and explicit non-goals.
-16. Ask the user to approve the implementation path, architecture, framework/CMS choice, and brief before coding.
-17. After approval, invoke `ant:implementation-orchestrator` and pass the handoff from `references/orchestrator-handoff.md`.
+15. Explain the tradeoff in a few concrete sentences, especially when avoiding overengineering or rejecting a too-simple frontend-only shape.
+16. Produce an application brief with acceptance criteria and explicit non-goals.
+17. Ask the user to approve the implementation path, architecture, framework/CMS choice, and brief before coding.
+18. After approval, invoke `ant:implementation-orchestrator` and pass the handoff from `references/orchestrator-handoff.md`.
 
 ## Boundaries
 
 - Do not choose Docker, databases, workers, authentication, or modular architecture just because the app could grow later. Require an actual workflow, persistence, integration, operational, or team-maintenance reason.
 - Do not ask beginner/non-technical users deep implementation questions before explaining the concept in plain language. First understand the goal and desired behavior, then translate it into technical choices.
 - Do not accept incompatible answers silently. If goals, constraints, or selected technologies do not fit together, say what does not fit and propose better options before approval.
+- Do not rely on a single pass for medium/high-risk architecture choices. Validate the recommendation against requirements, environment, red flags, and alternatives before asking for approval.
 - Do not force a frontend-only implementation when the app needs private data, long-lived persistence, background work, webhooks, secure credentials, role-based access, auditability, or reliable server-side integration logic.
 - Do not recommend plain React-only/Vite-only scaffolds for new apps. Choose a TypeScript application framework or CMS based on the app shape. TanStack, Next.js, Astro, and Payload are examples, not mandatory defaults.
 - Do not hide environment requirements. If the recommended path needs Docker, Git, a package manager, or another missing local tool, load `references/local-dev-setup.md`, guide the user step by step for their OS, and ask them to run verification commands before implementation planning. Bun is not a hard blocker when the requester already has working Node/npm and the chosen stack can use npm.

@@ -18,7 +18,9 @@ Before handoff, confirm:
 - decisions already approved;
 - decisions still open;
 - safe assumptions;
-- assumptions that must be verified before coding.
+- assumptions that must be verified before coding;
+- validation passes completed;
+- independent reviewer/subagent notes if used.
 
 If these are not approved, keep clarifying. Do not move into implementation.
 
@@ -58,6 +60,9 @@ Application brief:
 - Decisions still open:
 - Assumptions safe to proceed with:
 - Assumptions to verify before coding:
+- Validation passes completed:
+- Independent reviewer/subagent notes:
+- Alternatives considered and rejected:
 - Red flags reviewed:
 - Challenge/reconciliation notes:
 - Non-goals:

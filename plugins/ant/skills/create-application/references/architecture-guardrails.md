@@ -34,12 +34,13 @@ Stop and challenge before approval when you see:
 
 ## Challenge And Reconcile Loop
 
-Before final recommendation:
+Before final recommendation and again whenever a material answer changes:
 
 1. Compare the user's goals, environment, data/auth needs, framework/CMS candidate, and implementation path.
 2. List anything that does not fit together in plain language.
 3. Propose 1-3 better options with tradeoffs.
-4. Ask the user to choose or approve the revised recommendation.
+4. Re-run the decision validation pass from `decision-validation.md`.
+5. Ask the user to choose or approve the revised recommendation.
 
 Example:
 
