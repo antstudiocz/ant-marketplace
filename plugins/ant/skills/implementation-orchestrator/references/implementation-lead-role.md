@@ -142,6 +142,7 @@ State changes:
 Decisions:
 Findings:
 Open questions:
+Active children:
 Next handoff action:
 ```
 

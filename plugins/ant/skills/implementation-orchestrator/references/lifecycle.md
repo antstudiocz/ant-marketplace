@@ -295,6 +295,7 @@ Write only durable context needed to resume:
 - architecture boundaries and contract decisions;
 - `.ant/orchestrator/<run>/implementation-plan.md` path and next recommended action;
 - implementation lead checkpoints, verification evidence, remaining risks, and blockers.
+- active child agents, their roles, scopes, owned files/subsystems, last known status, expected next checkpoint, and replacement policy.
 - review/fix-loop findings, fixes, targeted verification, second-review outcome, and remaining residual risk.
 
 Do not write:
@@ -312,7 +313,7 @@ Update cadence:
 - after plan creation or implementation approval: update `state.md` and `handoff.md`;
 - after implementation lead checkpoints, review, verification, or blockers: update `state.md` and `handoff.md`;
 - after review/fix loops: update `state.md` and `handoff.md` with findings, fixes, targeted verification, re-review result, and residual risk;
-- before stopping, compacting, handing off, or reporting long-running status: update `handoff.md`.
+- before stopping, compacting, context reset, handing off, starting long-running child work, or reporting long-running status: update `handoff.md` with active child-agent state.
 
 The root orchestrator owns these files. Child agents report facts to their parent; they do not independently write orchestration state unless the parent explicitly delegates it.
 
@@ -352,6 +353,8 @@ Plan artifact:
 Implementation status:
 
 Verification:
+
+Active children:
 
 Risks / blockers:
 ```
@@ -403,6 +406,8 @@ User decisions made:
 
 Open questions:
 
+Active children:
+
 Next recommended action:
 
 Do not:
@@ -411,6 +416,90 @@ Do not:
 Useful files:
 - <state/plan/source paths>
 ```
+
+### `Active children` Section
+
+Use this section in `state.md` and `handoff.md` whenever any child agent has been spawned or may still be running:
+
+```md
+## Active Children
+
+- Agent: <id/name if available>
+  Role:
+  Scope:
+  Owned files/subsystems:
+  Started:
+  Last checkpoint:
+  Expected next checkpoint:
+  Status: active | blocked | final | unknown
+  May still be running: yes | no | unknown
+  Replacement policy:
+```
+
+Compaction does not cancel child agents. If the child handle may be lost after compaction, preserve enough role/scope/ownership information here to avoid duplicate writers.
+
+## Post-Compact Recovery Protocol
+
+After any context compaction, resume, or suspected context loss, the root orchestrator must rebuild current orchestration state before continuing.
+
+Before answering, editing, delegating, starting/replacing child agents, or reporting completion, inspect:
+
+- `.ant/orchestrator/active.md`;
+- active run `state.md`;
+- `decisions.md`;
+- `findings.md`;
+- `handoff.md`;
+- `implementation-plan.md` if present;
+- current git branch and dirty state;
+- known child-agent handles/status if available.
+
+Then reconstruct:
+
+- current phase;
+- original goal;
+- approved direction and plan status;
+- confirmed target branch and unrelated-change decisions;
+- active blockers;
+- delegated agents, ownership, and write scopes;
+- completed work;
+- pending verification;
+- review/fix-loop status;
+- next safe action.
+
+Default assumptions after compact:
+
+- orchestration mode is still active;
+- root is still coordination-only;
+- completion of a previous task does not end orchestration mode;
+- root must not edit app/source/test/docs;
+- follow-up requests start a new orchestration phase;
+- implementation requires concrete plan approval unless explicitly skipped.
+
+If reconstructed state is incomplete, stale, or contradictory, stop and ask the user or recover child-agent state instead of guessing.
+
+## Post-Compact Child-Agent Recovery
+
+After compaction or suspected context loss, assume any previously spawned child agent may still be running unless it was explicitly closed or reported final status. The root must not spawn replacement agents or duplicate the same work until child-agent state is reconstructed.
+
+Recovery steps:
+
+1. Read `.ant/orchestrator/active.md`, `state.md`, `handoff.md`, and any `Active Children` sections.
+2. Identify known child agents: role, assigned scope, owned files/subsystems, expected checkpoint, last known status, and whether work may still be running.
+3. Poll or wait existing child agents if handles are available.
+4. If handles are unavailable, treat their write scopes as possibly active or partially changed.
+5. Inspect git status/diff only as recovery evidence, not as implementation work.
+6. Do not start a replacement worker for the same scope until the existing child is final, closed, or unreachable after an interrupt checkpoint attempt.
+7. If a child is silent but may still be writing, send `interrupt=true` checkpoint request when possible and ask for:
+   - `Done`
+   - `In progress`
+   - `Changed files`
+   - `Checks`
+   - `Blockers`
+   - `Next`
+8. Only then decide whether to wait, close, or replace.
+9. Update `handoff.md` with reconstructed child-agent state before continuing.
+
+The root must not overwrite partial work or hand the same write scope to another child while child status is unknown.
 
 ## Intake And Brainstorming Gate
 
@@ -748,6 +837,8 @@ Required child-to-parent checkpoints:
 - before reviewer handoff;
 - after review/fix loops and final evidence;
 - during long phases as a short heartbeat.
+
+Every checkpoint from a parent that owns children should include an `Active children` summary when any child may still be active, blocked, or unknown.
 
 Suggested heartbeat policy:
 
