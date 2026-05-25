@@ -149,6 +149,52 @@ After the orchestrator reports completion, any user follow-up, correction, misse
 
 Post-completion follow-ups never authorize root manual edits. They are handled as a new orchestration phase.
 
+## Mid-Flight User Input Protocol
+
+When the user sends a new message while scouts, plan writers, implementation leads, slice workers, reviewers, commands, or verification are still active, treat the latest user message as authoritative without assuming the original run is canceled.
+
+Default behavior:
+
+- keep the current orchestration run active unless the user explicitly says to pause, stop, cancel, discard, or replace it;
+- acknowledge the new message promptly when the host allows, then continue coordinating the original task;
+- answer informational questions from known orchestration state, child checkpoints, plan artifacts, or recorded decisions without interrupting workers unnecessarily;
+- do not invent fresh repo facts from source files at the root; ask an active child for a checkpoint or spawn a bounded scout only when the answer requires repo investigation and does not overlap an active writer scope;
+- update `decisions.md`, `state.md`, or `handoff.md` when the new message changes durable decisions, assumptions, scope, blockers, or next actions;
+- preserve all existing next-action, approval, hard no-edit, branch/worktree, delivery, and root coordination-only gates.
+
+Classify each mid-flight message before acting:
+
+- `Status question`: user asks what is happening. Return a short aggregate status from known checkpoints. Do not poll unless the last expected checkpoint is late or the user asks for current live state.
+- `Informational side question`: user asks something that can be answered from known context. Answer briefly and state that the original work continues.
+- `Clarification`: user adds detail that confirms or narrows existing scope. Record it and forward it to active children at the next safe checkpoint.
+- `Scope addendum`: user adds related acceptance criteria or constraints. Record it, assess whether it fits the approved direction/plan, and either forward it or stop for approval if it changes risk, validation, contracts, delivery, or effort.
+- `Scope change`: user changes behavior, architecture, rollout, data policy, permissions, validation standard, or target outcome. Pause the affected phase, request a child checkpoint if needed, and return a revised next-action contract before continuing.
+- `Blocking correction`: user says an active assumption, direction, or implementation path is wrong. Send a non-interrupt or interrupt checkpoint request to affected children depending on urgency, then reconcile the plan before more writing continues.
+- `Unrelated new task`: queue it as a separate orchestration cycle after the active run, unless the user explicitly asks to pause or switch away from the current run.
+- `Pause/stop/cancel`: stop spawning new work, checkpoint active children, ask whether to preserve partial work, and update handoff state before closing or replacing any worker.
+
+Forwarding changes to active children:
+
+- Prefer non-interrupt messages when the change is additive, clarifying, or can wait until the next checkpoint.
+- Use `interrupt=true` only for urgent direction changes, user corrections that make current work wasteful or wrong, safety issues, overlapping write ownership, or recovery from silence.
+- A child update must include the latest user message, which parts of the approved plan changed, which parts remain unchanged, whether the child should continue, pause, checkpoint, or revise scope, and what evidence/checks are still expected.
+- Do not ask two children to handle the same change unless their write scopes are explicitly disjoint.
+- Do not start a replacement child for the same scope until the existing child is final, paused with a checkpoint, closed, or unreachable after the recovery protocol.
+
+When responding to the user mid-flight, use a compact status shape:
+
+```text
+Přijal jsem upřesnění.
+
+Status:
+- Původní běh: <continues | paused | needs revised approval>.
+- Zapracuju: <what changes now>.
+- Nechávám beze změny: <what remains from the original plan>.
+- Další bezpečný krok: <checkpoint/forward/update/ask>.
+```
+
+If the user's new message changes approval-sensitive scope, end with the normal next-action contract and do not let active implementation continue into the changed area until the decision is approved.
+
 ## User-Facing Next Action Contract
 
 Every root-orchestrator response that is not a final completion report must end with a short next-action contract. The goal is that the user can safely answer `pokračuj`, `nepokračuj`, or answer the listed questions without the agent guessing what was approved.
@@ -290,6 +336,7 @@ Write only durable context needed to resume:
 - original goal and current phase;
 - delivery context, branch/worktree/MR decisions, and dirty-state constraints;
 - open questions and user decisions;
+- mid-flight user inputs that changed scope, assumptions, blockers, child instructions, or next actions;
 - repo facts from scouts;
 - legacy/debt findings and approved path;
 - architecture boundaries and contract decisions;
@@ -309,6 +356,7 @@ Update cadence:
 
 - after git/delivery setup: create/update `state.md` and `active.md`;
 - after user decisions: update `decisions.md`;
+- after mid-flight user inputs that affect scope, assumptions, active children, blockers, or next actions: update `decisions.md`, `state.md`, or `handoff.md` as appropriate;
 - after scouts: update `findings.md`;
 - after plan creation or implementation approval: update `state.md` and `handoff.md`;
 - after implementation lead checkpoints, review, verification, or blockers: update `state.md` and `handoff.md`;
