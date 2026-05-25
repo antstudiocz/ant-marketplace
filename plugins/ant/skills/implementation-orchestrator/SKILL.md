@@ -79,6 +79,7 @@ The implementation lead is a child of the root orchestrator. It owns the impleme
 - **Evidence gate:** child-agent reports are claims until backed by tests, independent review, runtime checks, or explicitly accepted residual risk.
 - **Review/fix loop gate:** P0/P1/P2 findings block completion until fixed, verified, and re-reviewed or explicitly accepted by the user.
 - **Push-first status gate:** child agents push phase checkpoints to their parent; parent polling is a recovery tool, not the default.
+- **Mid-flight user input gate:** if the user sends new instructions, questions, corrections, or scope notes while child agents are active, preserve the current run by default, classify the input, answer from known state when possible, update orchestration checkpoints, and forward material changes to the relevant child at a safe checkpoint or with an interrupt only when continuing would waste work or violate the user's latest direction.
 - **Writer recovery gate:** do not start an overlapping replacement writer until the silent writer is checkpointed or closed, partial work is understood, and the write scope is safe.
 - **MR readiness gate:** before push or MR creation, confirm target branch, unrelated-change decision, conscious dirty state, latest relevant checks, review/fix status, and draft/ready intent.
 
