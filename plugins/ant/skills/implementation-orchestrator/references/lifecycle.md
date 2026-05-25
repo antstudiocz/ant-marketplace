@@ -2,11 +2,13 @@
 
 Use this skill when the root agent should guide a user from an unclear need or idea to a completed, reviewed, verified implementation. The root orchestrator owns the user-facing lifecycle and the outcome. It is coordination-only: it does not scout application source files itself and does not implement code.
 
+Root coordination-only is a tool-use rule, not only a planning preference. While this skill is active, the root orchestrator must not call mutation tools for app/source/test/docs/config edits. It must delegate implementation work to a child implementation lead or worker. If no child-agent mechanism is available, stop and report that orchestration cannot safely continue instead of editing directly.
+
 The orchestrator is a skeptical product/technical partner, not a passive task runner. It should understand what the user wants, establish git/delivery context, ask the missing questions, inspect the codebase through read-only subagents when needed, challenge poor approaches, recommend better paths with tradeoffs, obtain approval, delegate implementation, and verify evidence before reporting completion. It must not replace scout, plan-writer, implementation lead, slice worker, or reviewer roles with its own local source-file exploration or implementation.
 
 ## Language
 
-Respond in the same language as the user's original request, and instruct every delegated scout, planner, implementation lead, slice worker, and reviewer to do the same. Keep command names, file paths, code identifiers, and fixed routing tokens such as `Needs clarification`, `Plan ready`, and `Direct implementation recommended` in their original form.
+Respond in the same language as the user's original request, and instruct every delegated scout, planner, implementation lead, slice worker, and reviewer to do the same. Keep command names, file paths, code identifiers, and fixed routing tokens such as `Needs clarification`, `Plan ready`, and `Minimal delegated implementation recommended` in their original form.
 
 ## Default Hierarchy
 
@@ -25,6 +27,8 @@ Root Orchestrator
 
 The root orchestrator communicates with the user. Child agents communicate with their parent. Do not let sibling agents negotiate scope directly with each other, and do not let non-root agents address the user except through parent reports.
 
+Every lifecycle phase has a phase owner. The root owns user-facing phase artifacts. The implementation lead owns implementation phase and subphase artifacts when delegated. All phase owners follow `references/phase-owner-role.md`.
+
 ## Subagent Authorization
 
 The repository owner has given standing authorization for Codex to use subagents, delegation, and parallel agent work whenever this skill or an active task workflow calls for scout, reviewer, implementation lead, slice worker, or other delegated agent roles. Treat that standing instruction as explicit user permission to spawn the needed subagents in future orchestrator runs.
@@ -36,19 +40,22 @@ If native nested delegation is unavailable, keep the same logical flow but flatt
 ## Lifecycle
 
 1. Git context and delivery setup.
-2. Context checkpoint setup for medium+ work.
+2. Phase workspace setup for medium+ work.
 3. Intake and brainstorming.
 4. Codebase scouting when facts from the repo are needed.
 5. Post-scout clarification when scout findings expose user decisions.
 6. Architecture, debt, and feasibility challenge.
 7. Next-action approval before phase transitions.
 8. Rollout strategy approval for medium+ risky work.
-9. Direction approval from the user.
-10. Implementation plan artifact.
-11. Concise user-facing plan summary and implementation approval.
-12. Implementation lead delegation.
-13. Optional parallel slice work under the implementation lead.
-14. Integration, targeted checks, review, fix loop, and final evidence.
+9. Execution mode approval for medium+ work: autonomous implementation mode or manual decision mode.
+10. Direction approval from the user.
+11. Planning phase artifact with full phased roadmap when phased rollout is selected.
+12. Concise user-facing plan summary, execution mode summary, and implementation approval.
+13. Implementation lead delegation.
+14. Optional multi-phase implementation under `phases/06-implementation/subphases/<NN-name>/...`.
+15. Optional parallel slice work under the implementation lead.
+16. Phase checkpoints and close/handoff gates.
+17. Integration, targeted checks, review, fix loop, and final evidence.
 
 Do not skip directly to root implementation. When this skill is active, root implementation is forbidden regardless of task size. Tiny, clear, low-risk changes still go through at least one child agent unless the user explicitly leaves orchestration mode.
 
@@ -66,7 +73,7 @@ Any later user request starts a new orchestration cycle or follow-up phase, incl
 - "ještě jedna věc";
 - any new task after a completion report.
 
-These requests never authorize root manual implementation. The root must classify the request, delegate needed work, verify evidence, and report back through the orchestration lifecycle.
+These requests never authorize root manual implementation, debugging, polish, review-fix edits, docs touchups, formatting, or one-line changes. The root must classify the request, update artifacts, delegate needed work, verify evidence, and report back through the orchestration lifecycle.
 
 The root may leave orchestration mode only when the user explicitly says both:
 
@@ -90,7 +97,7 @@ Allowed root actions:
 - inspect git status, branch, remotes, target branch, dirty state, and worktree state;
 - read repo instructions needed for delivery policy, such as branch naming or MR tooling;
 - read orchestration references and role instructions;
-- create, update, and read `.ant/orchestrator/*` checkpoint and plan artifacts;
+- create, update, and read `.ant/orchestrator/*` run, phase, handoff, and plan artifacts;
 - spawn scouts, planner/plan-writer, reviewers, implementation lead, and other required subagents;
 - inspect child-agent reports and synthesize decisions for the user;
 - create/switch approved branches or worktrees and create approved MRs after verification.
@@ -100,11 +107,12 @@ Forbidden root actions:
 - running `rg`, `git grep`, `sed`, `cat`, editor opens, or similar source-file reads to analyze application implementation details;
 - manually tracing application code paths, contracts, tests, docs, migrations, or configs for implementation evidence;
 - self-assigning backend, frontend, data, docs, or test slices;
-- manually applying follow-up requests, review comments, cleanup, tests, docs edits, formatting, config changes, or one-line text edits;
+- manually applying follow-up requests, debugging fixes, review comments, cleanup, polish, tests, docs edits, formatting, config changes, or one-line text edits;
 - applying patches, formatting, migrations, generated changes, or docs edits outside `.ant/orchestrator/*`;
+- calling mutation tools such as `apply_patch`, editor write tools, code generators, formatters, migrations, package commands, or shell commands that write to implementation files;
 - interpreting branch setup approval or `pokračuj` as permission to become the implementer.
 
-User phrases such as "udělej to", "oprav to", "zapracuj připomínku", "je to jen maličkost", "pokračuj", or "just do it" mean continue orchestration and delegate the work. They do not authorize root manual edits.
+User phrases such as "udělej to", "rovnou udělej změny", "oprav to", "zapracuj připomínku", "je to jen maličkost", "pokračuj", or "just do it" mean continue orchestration and delegate the work. They do not authorize root manual edits.
 
 When repo facts are needed, the root must spawn one or more scout agents with bounded questions and make decisions from their reports. When implementation work is needed, the root must use at least one child agent even for a one-line change. If subagent delegation is unavailable, stop and report that orchestration cannot continue normally; do not silently do the scout or implementation locally.
 
@@ -115,10 +123,12 @@ Unless the user explicitly says they do not want orchestration and want root-dir
 For `Medium`, `High`, and `Critical` work, implementation must not start until all of these are true:
 
 1. rollout strategy was presented when risk/scope requires it;
-2. conceptual direction was approved;
-3. implementation plan artifact was created, or the user explicitly approved skipping it for this task;
-4. the user explicitly approved that concrete plan with language equivalent to "schvaluju plán, začni implementovat";
-5. implementation is delegated to an implementation lead or other child agent.
+2. execution mode and decision policy were selected for medium+ work;
+3. conceptual direction was approved;
+4. phased rollout work has an approved whole-roadmap plan before phase 1 starts;
+5. implementation plan artifact was created, or the user explicitly approved skipping it for this task;
+6. the user explicitly approved that concrete plan with language equivalent to "schvaluju plán, začni implementovat";
+7. implementation is delegated to an implementation lead or other child agent.
 
 User phrases such as "rovnou implementuj", "pojďme to udělat", "tohle bych implementoval", "všechno zní dobře", "líbí se mi všechno", or "just implement it" authorize the next orchestration phase only. They mean "prepare or continue the plan" unless they explicitly approve a concrete implementation plan that already exists.
 
@@ -129,6 +139,14 @@ Root pre-edit fail-safe:
 ```text
 Am I the root orchestrator, and am I about to edit app/source/test/docs files?
 If yes: stop. Root may not edit these files while orchestration is active.
+```
+
+Root pre-tool fail-safe:
+
+```text
+Am I about to call a tool that can mutate implementation files?
+If yes: stop unless the write is only under `.ant/orchestrator/*` or it is an explicitly approved branch/worktree/MR action.
+Delegate implementation mutations to a child agent instead.
 ```
 
 Implementing child pre-edit checklist:
@@ -145,9 +163,9 @@ If any item is missing, the child must stop and ask its parent for clarification
 
 ## Post-Completion Follow-Up Protocol
 
-After the orchestrator reports completion, any user follow-up, correction, missed requirement, bug report, review note, cleanup request, new task, or "one more thing" reopens the orchestration lifecycle. The root must classify the follow-up, update checkpoint state when persistence is active, delegate the fix or change to a child agent, run or request targeted verification, and report evidence.
+After the orchestrator reports completion, any user follow-up, correction, missed requirement, bug report, review note, cleanup request, polish request, tiny edit, post-delivery issue, new task, or "one more thing" reopens the orchestration lifecycle. The root must classify the follow-up, update phase artifacts when persistence is active, delegate the fix or change to a child agent, run or request targeted verification, and report evidence.
 
-Post-completion follow-ups never authorize root manual edits. They are handled as a new orchestration phase.
+Post-completion follow-ups never authorize root manual edits or debugging. They are handled as a new orchestration phase unless the user explicitly leaves orchestration mode and asks the root to work directly.
 
 ## Mid-Flight User Input Protocol
 
@@ -159,7 +177,7 @@ Default behavior:
 - acknowledge the new message promptly when the host allows, then continue coordinating the original task;
 - answer informational questions from known orchestration state, child checkpoints, plan artifacts, or recorded decisions without interrupting workers unnecessarily;
 - do not invent fresh repo facts from source files at the root; ask an active child for a checkpoint or spawn a bounded scout only when the answer requires repo investigation and does not overlap an active writer scope;
-- update `decisions.md`, `state.md`, or `handoff.md` when the new message changes durable decisions, assumptions, scope, blockers, or next actions;
+- update the run and current phase `decisions.md`, `state.md`, or `handoff.md` when the new message changes durable decisions, assumptions, scope, blockers, or next actions;
 - preserve all existing next-action, approval, hard no-edit, branch/worktree, delivery, and root coordination-only gates.
 
 Classify each mid-flight message before acting:
@@ -171,7 +189,7 @@ Classify each mid-flight message before acting:
 - `Scope change`: user changes behavior, architecture, rollout, data policy, permissions, validation standard, or target outcome. Pause the affected phase, request a child checkpoint if needed, and return a revised next-action contract before continuing.
 - `Blocking correction`: user says an active assumption, direction, or implementation path is wrong. Send a non-interrupt or interrupt checkpoint request to affected children depending on urgency, then reconcile the plan before more writing continues.
 - `Unrelated new task`: queue it as a separate orchestration cycle after the active run, unless the user explicitly asks to pause or switch away from the current run.
-- `Pause/stop/cancel`: stop spawning new work, checkpoint active children, ask whether to preserve partial work, and update handoff state before closing or replacing any worker.
+- `Pause/stop/cancel`: stop spawning new work, checkpoint active children, ask whether to preserve partial work, and update phase handoff state before closing or replacing any worker.
 
 Forwarding changes to active children:
 
@@ -216,10 +234,11 @@ Rules:
 
 - `Pokračuj` authorizes only the next action explicitly stated in the previous assistant message.
 - `Pokračuj` never authorizes implementation unless the previous assistant message explicitly said the next action is starting implementation and asked for implementation approval.
+- Even when `pokračuj` or an explicit implementation approval authorizes implementation, it authorizes root delegation to an implementation lead, not root manual edits.
 - For `Medium`, `High`, and `Critical` work, implementation approval must refer to a concrete existing plan, not only a broad direction or idea.
 - `Pokračuj` after brainstorming means continue brainstorming, scout, or prepare a direction, not write code.
 - `Pokračuj` after direction approval means create or refine the plan artifact, not implement.
-- `Pokračuj` after plan summary may start implementation only if the message clearly said "Next I will start implementation and change code" and the user confirmed.
+- `Pokračuj` after plan summary may start implementation only if the message clearly said "Next I will delegate implementation to an implementation lead" and the user confirmed. Do not phrase the contract as root editing code.
 - If there are blocking questions, ask them and stop. Do not spawn plan writer, implementation lead, or write code while waiting.
 - If the next action is broad, split it into a single bounded next action and say what will remain for later.
 
@@ -238,7 +257,7 @@ Navrhovaný další krok:
 
 ## Internal Role Invocation Rule
 
-Planner, scout, plan-writer, implementation lead, slice worker, and reviewer are internal roles, not public skills. Do not ask a child agent to use `ant-implementation-orchestrator:planner`, `ant-implementation-orchestrator:scout`, `ant-implementation-orchestrator:reviewer`, or similar names. Those skills do not exist.
+Planner, scout, phase-owner, plan-writer, implementation lead, slice worker, and reviewer are internal roles, not public skills. Do not ask a child agent to use `ant-implementation-orchestrator:planner`, `ant-implementation-orchestrator:scout`, `ant-implementation-orchestrator:reviewer`, or similar names. Those skills do not exist.
 
 When delegating, include the needed role instructions in the prompt:
 
@@ -297,7 +316,7 @@ Ask the user before implementation when:
 
 Recommended default: create a purpose-named branch from the target branch for normal implementation, use a worktree for risky/parallel work or when the current workspace has unrelated dirty changes, and create a draft MR only after implementation, review, and verification pass if the user requested an MR.
 
-Do not invent the target branch. If it cannot be found from repo configuration or instructions, ask. The root may recommend a target, but planning and delivery must use the user-confirmed target stored in decisions/checkpoint state.
+Do not invent the target branch. If it cannot be found from repo configuration or instructions, ask. The root may recommend a target, but planning and delivery must use the user-confirmed target stored in run or phase decisions.
 
 Unrelated dirty changes require an explicit decision before implementation and again before delivery if the worktree still contains them:
 
@@ -312,7 +331,7 @@ Do not stash, reset, move, overwrite, create/switch branches, create worktrees, 
 
 ## Context Persistence Gate
 
-For `Medium`, `High`, and `Critical` work, keep a concise local checkpoint under the repository so another session can continue after context compaction, reset, or handoff. Skip this only for `Low` tasks or when the user explicitly declines persistence.
+For `Medium`, `High`, and `Critical` work, keep a concise local phase workspace under the repository so another session can continue after context compaction, reset, or handoff. Skip this only for `Low` tasks or when the user explicitly declines persistence.
 
 Use a local ignored directory:
 
@@ -320,29 +339,81 @@ Use a local ignored directory:
 .ant/orchestrator/
   active.md
   <YYYY-MM-DD-short-purpose>/
+    index.md
     state.md
     decisions.md
-    findings.md
     handoff.md
-    implementation-plan.md
+    phases/
+      01-intake/
+        phase.md
+        decisions.md
+        handoff.md
+      02-brainstorming/
+        phase.md
+        options.md
+        decisions.md
+        handoff.md
+      03-discovery/
+        phase.md
+        findings.md
+        decisions.md
+        handoff.md
+      04-direction/
+        phase.md
+        options.md
+        decisions.md
+        handoff.md
+      05-planning/
+        phase.md
+        implementation-plan.md
+        decisions.md
+        review.md
+        handoff.md
+      06-implementation/
+        phase.md
+        implementation-plan.md
+        decisions.md
+        verification.md
+        review.md
+        handoff.md
+        subphases/
+          <NN-name>/
+            phase.md
+            decisions.md
+            handoff.md
+      07-review/
+        phase.md
+        findings.md
+        decisions.md
+        review.md
+        handoff.md
+      08-delivery/
+        phase.md
+        verification.md
+        decisions.md
+        handoff.md
 ```
 
-Before creating files, ensure `.ant/orchestrator/` is ignored without changing tracked repo policy unless the user asks. Prefer `.git/info/exclude`; if that is unavailable, ask before editing `.gitignore`.
+Create only the phase folders needed for the run. Before creating files, ensure `.ant/orchestrator/` is ignored without changing tracked repo policy unless the user asks. Prefer `.git/info/exclude`; if that is unavailable, ask before editing `.gitignore`.
 
-All markdown artifacts created by the orchestration flow must stay under `.ant/orchestrator/`. The default plan artifact path is `.ant/orchestrator/<YYYY-MM-DD-short-purpose>/implementation-plan.md`. Do not create root-level `implementation-plan.md`, `plan.md`, or ad hoc planning markdown unless the user explicitly asks for a tracked repository document.
+All markdown artifacts created by the orchestration flow must stay under `.ant/orchestrator/`. The default plan artifact path is `.ant/orchestrator/<run>/phases/05-planning/implementation-plan.md`. Do not create root-level `implementation-plan.md`, `plan.md`, or ad hoc planning markdown unless the user explicitly asks for a tracked repository document. If resuming an older run that already has `.ant/orchestrator/<run>/implementation-plan.md`, keep it readable and link the canonical phase artifact from `index.md`.
+
+Phase artifacts are the source of truth; chat is only the UI. Before any user-facing phase transition, pause, stop, handoff, context reset, long-running status report, reviewer handoff, implementation approval request, or completion report, update the run state and current phase folder first.
 
 Write only durable context needed to resume:
 
 - original goal and current phase;
+- execution mode, decision policy, and autonomous/manual escalation rules;
+- phased rollout roadmap, current phase, phase dependencies, and stop/continue rules;
 - delivery context, branch/worktree/MR decisions, and dirty-state constraints;
 - open questions and user decisions;
 - mid-flight user inputs that changed scope, assumptions, blockers, child instructions, or next actions;
-- repo facts from scouts;
+- repo facts from scouts in phase `findings.md`;
 - legacy/debt findings and approved path;
 - architecture boundaries and contract decisions;
-- `.ant/orchestrator/<run>/implementation-plan.md` path and next recommended action;
-- implementation lead checkpoints, verification evidence, remaining risks, and blockers.
-- active child agents, their roles, scopes, owned files/subsystems, last known status, expected next checkpoint, and replacement policy.
+- plan artifact path and next recommended action;
+- implementation lead checkpoints, subphase status, verification evidence, remaining risks, and blockers;
+- active child agents, their roles, scopes, owned files/subsystems, last known status, expected next checkpoint, and replacement policy;
 - review/fix-loop findings, fixes, targeted verification, second-review outcome, and remaining residual risk.
 
 Do not write:
@@ -354,18 +425,15 @@ Do not write:
 
 Update cadence:
 
-- after git/delivery setup: create/update `state.md` and `active.md`;
-- after user decisions: update `decisions.md`;
-- after mid-flight user inputs that affect scope, assumptions, active children, blockers, or next actions: update `decisions.md`, `state.md`, or `handoff.md` as appropriate;
-- after scouts: update `findings.md`;
-- after plan creation or implementation approval: update `state.md` and `handoff.md`;
-- after implementation lead checkpoints, review, verification, or blockers: update `state.md` and `handoff.md`;
-- after review/fix loops: update `state.md` and `handoff.md` with findings, fixes, targeted verification, re-review result, and residual risk;
-- before stopping, compacting, context reset, handing off, starting long-running child work, or reporting long-running status: update `handoff.md` with active child-agent state.
+- after git/delivery setup: create/update `active.md`, run `index.md`, run `state.md`, and the current phase `phase.md`;
+- after user decisions: update run `decisions.md` and current phase `decisions.md`;
+- after mid-flight user inputs that affect scope, assumptions, active children, blockers, or next actions: update run and phase `decisions.md`, `state.md`, or `handoff.md` as appropriate;
+- after scouts: update `phases/03-discovery/findings.md` or the active phase's `findings.md`;
+- after direction, option, plan, implementation, review, verification, or delivery checkpoints: update the owning phase files plus run `state.md` and `handoff.md`;
+- after review/fix loops: update the relevant `review.md`, `verification.md`, `state.md`, and `handoff.md` with findings, fixes, targeted verification, re-review result, and residual risk;
+- before stopping, compacting, context reset, handing off, starting long-running child work, or reporting long-running status: update the current phase `handoff.md` and run `handoff.md` with active child-agent state.
 
-The root orchestrator owns these files. Child agents report facts to their parent; they do not independently write orchestration state unless the parent explicitly delegates it.
-
-Keep files short and current. Prefer replacing stale sections over appending a long history.
+The root orchestrator owns run-level files and user-facing phase transitions. Child agents report facts to their parent; they do not independently write orchestration state unless the parent explicitly delegates a phase artifact scope. Keep files short and current. Prefer replacing stale sections over appending a long history.
 
 ### `active.md`
 
@@ -375,8 +443,35 @@ Keep files short and current. Prefer replacing stale sections over appending a l
 Current session:
 - Path: .ant/orchestrator/<YYYY-MM-DD-short-purpose>/
 - Goal: <one sentence>
-- Phase: <current phase>
+- Phase: <current phase folder>
 - Next: <next action>
+```
+
+### `index.md`
+
+```md
+# Orchestration Index
+
+Goal:
+
+Run status:
+
+Current phase:
+
+Canonical artifacts:
+- State: state.md
+- Decisions: decisions.md
+- Handoff: handoff.md
+- Plan: phases/05-planning/implementation-plan.md
+
+Phase folders:
+- phases/<NN-name>/ - <status and owner>
+
+Files to read first:
+- <run/phase files a new session should read first>
+
+Must not assume:
+- <unresolved intent, active workers, dirty-state constraints, residual risks>
 ```
 
 ### `state.md`
@@ -391,6 +486,10 @@ Current phase:
 Delivery:
 
 Definition of done:
+
+Execution mode:
+
+Phased roadmap:
 
 Architecture boundaries:
 
@@ -422,20 +521,37 @@ Risks / blockers:
 - <question, why it matters, recommended default>
 ```
 
-### `findings.md`
+### Phase Folder Minimum
 
-```md
-# Findings
+Every phase folder must contain at least:
 
-## Repo Facts
-- <fact with file/path evidence>
+- `phase.md` - status, owner, input, goal, work done, evidence, blockers, and close status.
+- `decisions.md` - user decisions, safe assumptions, local decisions, and escalations for this phase.
+- `handoff.md` - next phase handoff, files to read first, must-not-assume notes, open questions, active children, and next safe action.
 
-## Legacy / Debt
-- <classification and impact>
+Add phase-specific files when relevant:
 
-## Architecture Notes
-- <ownership/boundary notes>
-```
+- `findings.md` for scouting or investigation evidence.
+- `options.md` for strategy, rollout, architecture, or product choices.
+- `implementation-plan.md` for planning and implementation subplans.
+- `verification.md` for checks, manual validation, scenario evidence, and blocked checks.
+- `review.md` for plan review, implementation review, findings, fix status, and re-review.
+
+### Phase Close / Handoff Gate
+
+No phase is complete until its folder records:
+
+- status: `active`, `blocked`, `paused`, `ready-for-next-phase`, or `closed`;
+- input: user messages, approved scope, parent prompt, relevant plan paths, and child reports used;
+- work done: concise summary and changed artifact paths;
+- decisions: user decisions, safe assumptions, autonomous decisions, and escalations;
+- evidence: scout facts, validation, review results, or accepted residual risk;
+- open questions and blockers;
+- next phase handoff: what the next owner should do first;
+- files to read first: run index/state plus phase-specific artifacts and key source paths from scouts/workers;
+- must-not-assume notes: unresolved intent, forbidden edits, active workers, dirty-state constraints, and residual risks.
+
+If any item is missing, keep the phase `active` or `blocked` and do not transition, pause, stop, hand off, or report completion as if it were closed.
 
 ### `handoff.md`
 
@@ -448,6 +564,8 @@ Goal:
 
 Current phase:
 
+Phase close status:
+
 Repo facts:
 
 User decisions made:
@@ -458,11 +576,11 @@ Active children:
 
 Next recommended action:
 
-Do not:
-- <things a new session must not assume or do yet>
+Files to read first:
+- <run/phase/source paths>
 
-Useful files:
-- <state/plan/source paths>
+Must not assume:
+- <things a new session must not assume or do yet>
 ```
 
 ### `Active children` Section
@@ -493,17 +611,19 @@ After any context compaction, resume, or suspected context loss, the root orches
 Before answering, editing, delegating, starting/replacing child agents, or reporting completion, inspect:
 
 - `.ant/orchestrator/active.md`;
+- active run `index.md`;
 - active run `state.md`;
 - `decisions.md`;
-- `findings.md`;
 - `handoff.md`;
-- `implementation-plan.md` if present;
+- current phase `phase.md`, `decisions.md`, `handoff.md`, and phase-specific files;
+- `phases/05-planning/implementation-plan.md` if present, or legacy root `implementation-plan.md` if resuming an old run;
 - current git branch and dirty state;
 - known child-agent handles/status if available.
 
 Then reconstruct:
 
 - current phase;
+- current phase close status and next handoff;
 - original goal;
 - approved direction and plan status;
 - confirmed target branch and unrelated-change decisions;
@@ -531,7 +651,7 @@ After compaction or suspected context loss, assume any previously spawned child 
 
 Recovery steps:
 
-1. Read `.ant/orchestrator/active.md`, `state.md`, `handoff.md`, and any `Active Children` sections.
+1. Read `.ant/orchestrator/active.md`, active run `index.md`, `state.md`, run and phase `handoff.md`, and any `Active Children` sections.
 2. Identify known child agents: role, assigned scope, owned files/subsystems, expected checkpoint, last known status, and whether work may still be running.
 3. Poll or wait existing child agents if handles are available.
 4. If handles are unavailable, treat their write scopes as possibly active or partially changed.
@@ -634,6 +754,53 @@ Mám pokračovat touto strategií, nebo chceš one-time refactor / minimal compa
 ```
 
 Do not silently choose the strategy for the user. A scout can inform this choice, but final strategy is a user decision when it changes scope, delivery time, risk, or compatibility.
+
+## Execution Mode Gate
+
+Before detailed plan writing for `Medium`, `High`, and `Critical` work, ask which execution mode should govern implementation decisions:
+
+1. `Autonomous implementation mode`: best for overnight or long-running implementation. The user approves the full plan, decision policy, and escalation rules up front. During implementation, agents may resolve technical unknowns by spawning bounded scouts or reviewers, compare valid technical variants against code evidence, and choose the cleanest long-term solution within the approved scope.
+2. `Manual decision mode`: best when the user wants to choose between valid variants. Agents still scout, review, and recommend options, but unresolved product, architecture, debt, rollout, compatibility, or validation choices are returned to the user before implementation continues.
+
+If the user says "leave it running overnight", "run autonomously", "nech to bezet pres noc", or similar, recommend `Autonomous implementation mode` and ask for explicit approval unless the mode was already selected.
+
+The plan must record a `Decision policy`:
+
+- what the implementation lead may decide autonomously;
+- which technical preference wins by default, usually clean long-term path over a shortcut when scope and risk are reasonable;
+- when to spawn a scout, reviewer, or focused checker before deciding;
+- which decisions must stop and ask the user;
+- which residual risks may be accepted only by the user.
+
+Autonomous mode does not permit silent scope expansion. Stop and ask the user before changing:
+
+- user-visible product behavior or acceptance criteria;
+- destructive data behavior, migration/backfill policy, rollback policy, or data preservation;
+- permissions, tenant boundaries, billing, security, compliance, or external side effects;
+- rollout strategy, compatibility window, deployment risk, target branch, push, or merge request intent;
+- the approved definition of done or validation standard.
+
+Manual mode does not lower the analysis bar. Scouts and reviewers should still collect evidence and recommend a path; the difference is that the root orchestrator asks the user to choose among material valid options instead of selecting one autonomously.
+
+## Phased Roadmap Gate
+
+When `Phased rollout` is selected, the plan must cover the whole roadmap before implementation of phase 1 starts. Do not write a detailed plan for only the first phase and begin implementation while later phases remain undefined.
+
+The roadmap must include every planned phase, even if later phases are intentionally less detailed than the current implementation phase. For each phase, record:
+
+- phase goal and non-goals;
+- dependencies on earlier phases;
+- acceptance criteria and definition of done;
+- contract, compatibility, migration, or rollback expectations;
+- validation and evidence expectations;
+- whether the implementation lead may continue automatically after the phase checkpoint;
+- stop conditions that require user input before the next phase.
+
+The current phase should have an executable checklist. Later phases may use coarser checklist items, but they must be concrete enough to preserve architecture direction and prevent incompatible phase 1 decisions.
+
+In autonomous mode, the implementation lead may continue from one approved phase to the next after recording a checkpoint and satisfying that phase's stop/continue rules. In manual mode, phase transitions that involve a material choice must return to the user with options and a recommendation.
+
+Implementation itself may be multi-phase. Use `phases/06-implementation/subphases/<NN-name>/...` when the approved implementation needs separable foundation, contract, UI, data, verification, cleanup, or provider migration work. Each implementation subphase must have the minimum phase files, roadmap checkpoint, verification expectations, review status when applicable, and an explicit stop/continue rule before the next subphase starts.
 
 ## Model Tier Routing
 
@@ -806,16 +973,19 @@ Review/fix loop rules:
 - Run a second focused review for the fixed findings when the original reviewer found P0/P1/P2 or when the fix changed contracts, data, permissions, external writes, or architecture boundaries.
 - Only report completion after findings are fixed and verified, or after the user explicitly accepts the residual risk.
 
-The root orchestrator must update checkpoint state after review/fix loops with: findings, fix owner, changed paths, verification, second-review result, and remaining residual risk.
+The root orchestrator must update phase artifacts after review/fix loops with: findings, fix owner, changed paths, verification, second-review result, and remaining residual risk.
 
 ## Planning Artifact
 
-After the user approves the direction, spawn a `plan-writer` to create or update `.ant/orchestrator/<YYYY-MM-DD-short-purpose>/implementation-plan.md`. If persistence was not active yet, create the `.ant/orchestrator/<run>/` folder first and make the plan the first artifact in that run folder. Use a different location only when the user explicitly asks for a tracked repository document.
+After the user approves the direction, spawn a `plan-writer` to create or update `.ant/orchestrator/<run>/phases/05-planning/implementation-plan.md`. If persistence was not active yet, create the `.ant/orchestrator/<run>/` folder and `phases/05-planning/` first. Use a different location only when the user explicitly asks for a tracked repository document.
 
 The plan must be a practical checklist, not a vague essay. It should include:
 
 - goal and non-goals;
 - delivery context and branch/worktree/MR decisions;
+- execution mode and decision policy;
+- full phased roadmap when phased rollout is selected;
+- phase artifact layout and close/handoff expectations;
 - acceptance criteria and definition of done;
 - risk scenario matrix;
 - codebase context and architecture boundaries;
@@ -827,7 +997,7 @@ The plan must be a practical checklist, not a vague essay. It should include:
 - reviewer focus;
 - risks, assumptions, and open questions.
 
-If the plan writer finds a blocking question, stop and ask the user before implementation. After plan updates, show the user a concise conceptual summary, not every file-level detail, and ask for explicit implementation approval.
+If the plan writer finds a blocking question, stop and ask the user before implementation. After plan updates, update `phases/05-planning/phase.md`, phase `decisions.md`, and phase `handoff.md`, then show the user a concise conceptual summary, execution mode, phase roadmap when relevant, decision policy, and current phase detail, not every file-level detail, and ask for explicit implementation approval.
 
 For `Medium`, `High`, and `Critical` work, broad approval phrases before the plan exists count as approval to create or refine the plan only. Do not delegate implementation until the user approves the concrete plan summary or explicitly approves skipping the plan artifact.
 
@@ -844,7 +1014,7 @@ Allowed root-orchestrator actions:
 - create or switch to a purpose-named branch/worktree when explicitly requested;
 - create a merge request after verified implementation when explicitly requested;
 - update the conversation tracker;
-- create or update the approved plan artifact under `.ant/orchestrator/<run>/`.
+- create or update orchestration run and phase artifacts under `.ant/orchestrator/<run>/`.
 
 Forbidden root-orchestrator actions:
 
@@ -852,13 +1022,14 @@ Forbidden root-orchestrator actions:
 - reading application source/test/docs files to scout implementation facts;
 - self-assigning backend/frontend/test slices;
 - mutating app state beyond explicit branch/worktree, merge request, or `.ant/orchestrator/` plan-artifact setup;
+- treating review fixes, debugging, or polish as root-owned work after implementation;
 - silently continuing without delegation when this skill is active.
 
 The root must not implement directly, including tiny follow-up edits. If the user explicitly chooses to leave orchestration mode, stop using this lifecycle and make that mode switch clear in the conversation before any manual implementation work begins.
 
 ## Implementation Lead Model
 
-The implementation lead is a child of the root orchestrator and owns the implementation phase. It may implement the whole workstream itself or act as a sub-orchestrator for parallel slice workers.
+The implementation lead is a child of the root orchestrator and owns the implementation phase. It may implement the whole workstream itself, split implementation into subphases under `phases/06-implementation/subphases/<NN-name>/...`, or act as a sub-orchestrator for parallel slice workers.
 
 The root orchestrator may recommend a concurrency plan, but the implementation lead must confirm or adjust it after reading the actual code and plan. Parallel slice workers are appropriate when:
 
@@ -873,6 +1044,8 @@ Slice workers should not spawn further subagents by default. Keep the normal pro
 ## Push-First Communication And Liveness
 
 Status updates are push-first. Child agents must proactively report meaningful phase checkpoints to their parent. Parent agents should not poll by default because polling can interrupt active work and add coordination noise.
+
+For persisted runs, a checkpoint is not ready for user-facing transition until the owning phase artifacts are updated or the child has returned exact artifact updates for the parent to write.
 
 Required child-to-parent checkpoints:
 
@@ -919,7 +1092,7 @@ No overlapping writer recovery:
 - Do not spawn another writer for the same files/subsystems while the original writer may still be editing.
 - Do not ask two children to fix the same review finding concurrently unless their write sets are explicitly disjoint.
 - A replacement worker brief must include existing partial changes, files it may touch, files it must not touch, and whether it should preserve, complete, or revert partial work.
-- The parent must record the recovery decision and residual risk in the orchestration checkpoint.
+- The parent must record the recovery decision and residual risk in the current phase artifacts.
 
 User-facing updates should be short aggregate summaries from the root orchestrator, not raw child logs:
 
@@ -935,7 +1108,7 @@ Progress:
 
 Classify work before selecting gates and agent count:
 
-- `Low`: narrow local change, no shared contracts. Direct implementation may be recommended.
+- `Low`: narrow local change, no shared contracts. Minimal delegated implementation may be recommended, but the root still does not edit while orchestration is active.
 - `Medium`: one feature/fix across a bounded area. Scout or plan writer plus one implementation lead and reviewer.
 - `High`: cross-stack, permissions, public API, cache, migration, generated registries, broad refactor, or multiple workers. Use scout, plan writer, plan review when appropriate, implementation lead, reviewer, and stronger validation.
 - `Critical`: auth, billing, tenant boundaries, destructive writes, data loss, security, irreversible migration, or compliance. Require explicit user decisions, plan review, discovery-gated implementation, and strong validation.
@@ -1000,6 +1173,7 @@ Use this prompt after the user approves the direction:
 
 ```text
 Use the plan writer role instructions from `references/plan-writer-role.md`.
+Use the phase owner rules from `references/phase-owner-role.md` for planning phase artifacts.
 
 You are writing the implementation plan artifact for this approved direction. Do not implement app code.
 
@@ -1021,9 +1195,9 @@ Scout findings:
 Constraints:
 <repo/user constraints>
 
-Create or update `.ant/orchestrator/<YYYY-MM-DD-short-purpose>/implementation-plan.md` with a checklist-style plan covering delivery context, scenario-based definition of done, risk scenario matrix, architecture boundaries, legacy/debt decisions, contract-first details, concurrency plan, implementation checklist, validation checklist, reviewer focus, risks, assumptions, and open questions. If any blocking question remains, return `Needs clarification` instead of inventing an answer.
+Create or update `.ant/orchestrator/<run>/phases/05-planning/implementation-plan.md` with a checklist-style plan covering delivery context, execution mode, decision policy, full phased roadmap when phased rollout is selected, phase artifact layout, close/handoff expectations, scenario-based definition of done, risk scenario matrix, architecture boundaries, legacy/debt decisions, contract-first details, concurrency plan, implementation checklist, validation checklist, reviewer focus, risks, assumptions, and open questions. If any blocking question remains, return `Needs clarification` instead of inventing an answer.
 
-Also update the orchestration checkpoint files when persistence is active: add approved decisions to `decisions.md`, plan path and implementation strategy to `state.md`, and the next action to `handoff.md`.
+Also update the planning phase artifacts when persistence is active: add approved decisions to run and phase `decisions.md`, plan path and implementation strategy to `state.md`, and phase close/next action to `phases/05-planning/handoff.md` plus run `handoff.md`.
 ```
 
 ## Implementation Lead Prompt
@@ -1032,6 +1206,7 @@ When the user approves implementation, spawn an implementation lead before editi
 
 ```text
 Use the implementation lead role instructions from `references/implementation-lead-role.md`.
+Use the phase owner rules from `references/phase-owner-role.md` for implementation phase and subphase artifacts.
 
 You are the implementation lead for this approved plan. You are a child of the root orchestrator and own the implementation phase end-to-end.
 
@@ -1042,7 +1217,7 @@ Original goal:
 <goal>
 
 Approved implementation plan:
-<.ant/orchestrator/<run>/implementation-plan.md content or path>
+<.ant/orchestrator/<run>/phases/05-planning/implementation-plan.md content or path>
 
 Delivery context:
 <current branch/worktree, confirmed target branch, dirty state summary, unrelated-change decision, approved branch/worktree setup, MR preference>
@@ -1051,21 +1226,24 @@ Root orchestrator guidance:
 <risk class, model tier guidance, suggested concurrency, boundaries, validation expectations>
 
 Orchestration state:
-<path to .ant/orchestrator/... when persistence is active; report checkpoint content to the root instead of editing it unless explicitly delegated>
+<path to .ant/orchestrator/... when persistence is active; report artifact updates to the root instead of editing them unless explicitly delegated>
 
 Language:
 Respond in the same language as the original user request.
 
 Responsibilities:
 - Confirm the implementation strategy after reading the real code.
+- Confirm execution mode, decision policy, escalation rules, and phased roadmap before resolving variants or starting a new phase.
+- Confirm implementation phase/subphase artifact ownership and close-gate expectations before starting work.
 - Use fast/cheap model tiers only for bounded read-only scouts or simple mechanical slice checks when the host supports model selection; use the default/strong model for implementation, architecture decisions, review, and final evidence.
 - Decide whether to implement yourself or spawn slice workers according to the plan.
 - If you spawn slice workers, define owned files/subsystems, contract boundaries, validation expectations, and non-goals.
 - Aggregate child checkpoints; do not forward noisy logs.
-- Report durable decisions, findings, blockers, verification, and next steps so the root can update orchestration checkpoint files.
+- Report durable decisions, findings, blockers, verification, and next steps so the root can update run and phase artifacts.
 - Integrate all slices, reconcile contracts, run targeted checks, handle review/fix loops, and return final evidence.
 - Treat child outputs as claims until backed by checks, review, or explicit residual-risk acceptance.
-- Escalate legacy/debt, architecture, contract, or scope decisions instead of inventing answers.
+- In autonomous mode, resolve technical variants only within the approved decision policy and code evidence; in manual mode, return material options to the root/user.
+- Escalate legacy/debt, architecture, contract, or scope decisions that exceed the approved decision policy instead of inventing answers.
 ```
 
 ## Reviewer Prompt
@@ -1090,6 +1268,8 @@ Focus:
 - correctness and acceptance criteria;
 - delivery setup was respected and no branch/worktree/MR action happened without approval;
 - target branch and unrelated-change decisions were followed;
+- execution mode, decision policy, phased roadmap, and stop/continue rules were explicit and followed;
+- required phase artifacts exist, are current, and satisfy the phase close/handoff gate before transition or completion;
 - architecture boundaries and file placement;
 - security, permissions, tenant boundaries, and data safety;
 - legacy/debt handling;
@@ -1108,7 +1288,7 @@ Delivery uses recorded decisions. It must not choose a target branch, draft/read
 Before staging, committing, pushing, or creating/updating an MR, verify:
 
 - current branch/worktree matches the approved delivery context;
-- confirmed target branch exists in checkpoint/decisions;
+- confirmed target branch exists in run or phase decisions;
 - dirty state is clean or consciously dirty with listed files;
 - unrelated changes have an explicit include/exclude/leave-aside decision;
 - only intended files are staged or included;
@@ -1129,7 +1309,10 @@ Delivery:
 Intake:
 Scout:
 Direction:
+Execution mode:
+Phase artifacts:
 Plan artifact:
+Phased roadmap:
 Plan review:
 Implementation lead:
 Slice work:
@@ -1160,6 +1343,11 @@ The standing subagent authorization satisfies the explicit user permission requi
 The orchestrated implementation is not complete until:
 
 - the user approved the direction and implementation plan;
+- run-level `index.md`, `state.md`, and `decisions.md` are current for persisted runs;
+- every completed phase folder has current `phase.md`, `decisions.md`, `handoff.md`, and phase-specific evidence files;
+- the current phase close/handoff gate records status, input, work done, decisions, evidence, open questions, next phase handoff, files to read first, and must-not-assume notes;
+- execution mode and decision policy are recorded for medium+ work;
+- phased rollout work has an approved whole-roadmap plan before any phase implementation starts;
 - the plan defines done, scope, non-goals, contracts, architecture boundaries, and validation;
 - an implementation lead, not the root orchestrator, owned implementation;
 - any slice workers reported changed paths, checks, assumptions, and risks;

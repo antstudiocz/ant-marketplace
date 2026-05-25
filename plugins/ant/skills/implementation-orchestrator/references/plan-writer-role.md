@@ -13,12 +13,15 @@ Write the plan in the same language as the user's original request or parent pro
 - Convert the approved direction into a checklist-style implementation plan.
 - Preserve user decisions, constraints, non-goals, and acceptance criteria.
 - Preserve delivery decisions: current branch/worktree, confirmed target branch, dirty-state constraints, unrelated-change decision, branch/worktree choice, and MR preference.
-- Preserve orchestration checkpoint context when provided: current phase, prior user decisions, open questions, scout facts, and handoff constraints.
+- Preserve execution mode: `Autonomous implementation mode` or `Manual decision mode`, including decision policy and escalation rules.
+- Preserve orchestration artifact context when provided: current phase, prior user decisions, open questions, scout facts, and handoff constraints.
 - Incorporate scout findings and codebase evidence.
 - Define architecture boundaries, file ownership expectations, and contracts.
 - Convert broad requirements into concrete acceptance scenarios.
 - Build a risk scenario matrix using only the profiles relevant to the task.
 - Record legacy/debt decisions and the approved path.
+- Define the full phased roadmap when phased rollout is selected, before any phase implementation can begin.
+- Define phase artifact layout and close/handoff expectations so another AI session can resume the work.
 - Define a concurrency plan for the implementation lead.
 - Define validation and evidence requirements.
 - Ask blocking questions instead of inventing missing intent.
@@ -36,17 +39,21 @@ Return `Needs clarification` instead of writing a final plan when missing inform
 - target branch, branch/worktree isolation, or MR expectation when it changes delivery or risk;
 - unrelated-change handling when dirty files are outside scope;
 - rollout, compatibility, or deployment risk.
+- execution mode, decision policy, or escalation rules for medium+ work.
 
 Do not ask the user about details discoverable from the repo. Use provided scout findings or request a bounded scout from the parent instead of doing your own implementation scouting.
 
 ## Plan Artifact Requirements
 
-Normally create or update `.ant/orchestrator/<run>/implementation-plan.md` unless the parent provides another path. The parent must only provide another path when the user explicitly requested a tracked repository document. The plan must include:
+Normally create or update `.ant/orchestrator/<run>/phases/05-planning/implementation-plan.md` unless the parent provides another path. The parent must only provide another path when the user explicitly requested a tracked repository document. The plan must include:
 
 - goal;
 - non-goals;
 - approved decisions;
+- execution mode and decision policy;
 - delivery context and MR preference;
+- phased roadmap when phased rollout is selected;
+- phase workspace layout and close/handoff rules;
 - definition of done;
 - acceptance criteria;
 - risk scenario matrix;
@@ -63,16 +70,56 @@ Normally create or update `.ant/orchestrator/<run>/implementation-plan.md` unles
 
 Use checkboxes for executable implementation and validation steps.
 
-## Orchestration Checkpoints
+## Phase Artifact Requirements
+
+The plan is part of the planning phase, not a standalone root file. Keep these artifacts current when the parent delegates write access, or return exact updates for the root orchestrator to write:
+
+- run `index.md` links to the canonical plan and current phase;
+- run `state.md` records plan status, execution mode, roadmap, and next action;
+- run and phase `decisions.md` record approved direction, execution mode, rollout strategy, and safe assumptions;
+- `phases/05-planning/phase.md` records status, inputs, work done, evidence, blockers, and close status;
+- `phases/05-planning/handoff.md` records next phase handoff, files to read first, must-not-assume notes, open questions, and next safe action.
+
+Before reporting `Plan ready`, satisfy the phase close gate for planning or clearly mark the phase as `blocked` with the missing inputs. The planning phase is not complete until its folder has status, input, work done, decisions, evidence, open questions, next phase handoff, files to read first, and must-not-assume notes.
+
+## Execution Mode And Phased Roadmap
+
+For `Medium`, `High`, and `Critical` work, include an `Execution mode` section:
+
+- selected mode: `Autonomous implementation mode` or `Manual decision mode`;
+- what the implementation lead may decide without asking the user;
+- which decisions must be escalated to the root/user;
+- when scouts, reviewers, or focused checkers should be spawned before deciding;
+- how residual risks are handled.
+
+In autonomous mode, the decision policy should prefer the cleanest long-term solution that fits the approved scope, evidence, architecture boundaries, and validation budget. It must not authorize silent product behavior changes, destructive data changes, permission/security/billing changes, rollout strategy changes, target-branch/MR changes, or weaker validation.
+
+In manual mode, the plan should identify known choice points and require the implementation lead/root to return options and a recommendation when those choice points are reached.
+
+If `Phased rollout` is selected, include a `Phased roadmap` section before the implementation checklist. It must cover all planned phases, not only the first phase. For each phase, include:
+
+- goal and non-goals;
+- dependencies on earlier phases;
+- acceptance criteria and definition of done;
+- contract, compatibility, migration, or rollback expectations;
+- validation and evidence expectations;
+- whether the implementation lead may continue automatically after checkpoint;
+- stop conditions requiring user input.
+
+The current phase should have detailed executable checklist items. Later phases may be coarser, but they must be specific enough to preserve architecture direction and prevent incompatible phase 1 decisions.
+
+If implementation itself needs multiple steps, define `phases/06-implementation/subphases/<NN-name>/...` in the plan. Each subphase needs a goal, inputs, dependencies, acceptance evidence, verification, review expectation when relevant, and stop/continue rule.
+
+## Orchestration Artifacts
 
 When the parent provides an orchestration state path, keep the plan consistent with it:
 
 - include approved user decisions from `decisions.md`;
-- incorporate repo facts from `findings.md`;
+- incorporate repo facts from phase `findings.md`;
 - preserve open questions and handoff constraints;
-- return a short checkpoint summary the root orchestrator can write to `state.md` and `handoff.md`.
+- return a short artifact summary the root orchestrator can write to run `state.md`, run `handoff.md`, and the planning phase files.
 
-Do not write raw logs or duplicate the full plan into checkpoint files. The checkpoint should help a new session resume, not replace the plan.
+Do not write raw logs or duplicate the full plan into run or phase files. The artifact summary should help a new session resume, not replace the plan.
 
 ## Legacy / Debt Decision
 
@@ -174,6 +221,9 @@ Status: Plan ready
 Plan artifact:
 <path>
 
+Phase artifacts:
+<planning phase close status, files updated or exact updates for root>
+
 Conceptual summary for user:
 <short summary suitable for root orchestrator to show the user>
 
@@ -182,6 +232,15 @@ Delivery:
 
 Implementation strategy:
 <single implementation lead or slice workers>
+
+Execution mode:
+<autonomous/manual mode, decision policy, escalation rules>
+
+Phased roadmap:
+<all phases, current phase detail, stop/continue rules, or not applicable>
+
+Implementation subphases:
+<subphase structure under phases/06-implementation/subphases/ or not applicable>
 
 Risk scenario matrix:
 <selected profiles and evidence expectations>

@@ -17,7 +17,9 @@ Respond in the same language as the user's original request. Keep command names,
 - Challenge weak implementation ideas with clear reasoning.
 - Surface product, technical, architecture, debt, validation, and rollout tradeoffs.
 - Recommend an implementation direction, not detailed code steps.
+- Recommend an execution mode for medium+ work: `Autonomous implementation mode` for long-running/overnight execution or `Manual decision mode` when the user should choose among material variants.
 - Recommend whether a plan-writer artifact, plan review, implementation lead, and slice workers are needed. Even tiny implementation work must be delegated to at least one child agent while orchestration is active.
+- Return durable phase-artifact updates for the root when planning decisions, options, open questions, or handoff state changes.
 - End user-facing recommendations with the next-action contract: proposed next action, what reply is needed, and what `pokračuj` authorizes.
 
 ## Clarification Gate
@@ -34,6 +36,7 @@ Return `Needs clarification` when missing answers change:
 - architecture/refactor path;
 - validation and definition of done;
 - rollout, compatibility, deadline, or deployment risk.
+- execution mode or decision authority during implementation.
 
 Every blocking question must include:
 
@@ -76,6 +79,13 @@ Compare:
 - `Compatibility-first minimal change`.
 
 Recommend one option and ask the user to approve or choose another. Do not let `pokračuj` move into plan writing until the strategy has been stated and approved.
+
+For medium+ work, also recommend an execution mode before `Direction ready`:
+
+- `Autonomous implementation mode`: user approves the full plan and decision policy up front; agents choose among technical variants using code evidence and escalate only decisions outside policy.
+- `Manual decision mode`: agents still scout and recommend, but the user chooses among material valid variants before implementation continues.
+
+If the user wants overnight or unattended work, recommend autonomous mode with explicit escalation rules. Do not let `pokračuj` move into detailed plan writing until execution mode has been stated and approved for medium+ work.
 
 ## Challenge Duty
 
@@ -141,6 +151,9 @@ If different:
 
 Why this matters:
 <short risk explanation>
+
+Phase artifact update:
+<planning/intake phase status, open questions, next handoff, files to read first, must-not-assume notes>
 ```
 
 If scout analysis is needed:
@@ -157,6 +170,9 @@ Scout questions:
 
 Why this matters:
 <what decision the scout will unblock>
+
+Phase artifact update:
+<scouting phase inputs, questions, next handoff, files to read first, must-not-assume notes>
 ```
 
 If the work is tiny and a full plan would add no value:
@@ -167,6 +183,9 @@ Reason:
 <why full planning overhead is not justified>
 Suggested approach:
 <one bounded child agent should do the work; root must not edit manually>
+
+Phase artifact update:
+<status/input/work done/decisions/evidence/open questions/next handoff/files to read first/must-not-assume notes>
 ```
 
 If direction is ready:
@@ -192,11 +211,20 @@ Success criteria:
 Legacy/debt decision:
 <none, approved choice, or decision needed>
 
+Rollout strategy:
+<one-time/phased/minimal and approval status>
+
+Execution mode:
+<autonomous/manual recommendation and approval status>
+
 Architecture boundaries:
 <expected ownership>
 
 Plan-writer brief:
-<what the plan writer should turn into .ant/orchestrator/<run>/implementation-plan.md>
+<what the plan writer should turn into .ant/orchestrator/<run>/phases/05-planning/implementation-plan.md>
+
+Phase artifact update:
+<direction phase close status, options/decisions/handoff updates, files to read first, must-not-assume notes>
 
 Implementation strategy:
 <single implementation lead or implementation lead plus slice workers>

@@ -33,16 +33,20 @@ End-to-end implementation flow for features, fixes, refactors, migrations, audit
 How it works:
 
 - starts with git/delivery setup: current branch, target branch, dirty state, branch/worktree choice, and MR preference;
-- for medium+ work, keeps concise local ignored orchestration checkpoints so a later session can resume;
+- for medium+ work, keeps a local ignored phase workspace under `.ant/orchestrator/<run>/` with `index.md`, `state.md`, `decisions.md`, and per-phase folders;
 - clarifies the goal with the user and asks blocking questions instead of inventing intent;
 - ends user-facing phase responses with the proposed next action and what `pokračuj` would authorize;
 - delegates read-only scouting when codebase facts are needed;
 - after scouting, asks the user about unresolved product, data, rollout, validation, or architecture decisions before finalizing direction;
 - asks for one-time refactor vs phased rollout vs minimal compatibility strategy on broad or risky work;
+- asks for autonomous implementation mode vs manual decision mode on medium+ work before detailed planning;
+- requires a whole-roadmap phased plan before implementing phase 1 when phased rollout is selected;
+- treats phase artifacts as the source of truth and updates them before phase transitions, pauses, handoffs, or completion reports;
 - uses cheaper/faster model tiers for bounded scouts and mechanical helper tasks when the host supports it;
 - challenges weak approaches with code evidence and asks for direction approval;
-- creates an `.ant/orchestrator/<run>/implementation-plan.md` checklist through a plan writer;
-- delegates implementation to an implementation lead, which may use slice workers for parallel backend/frontend/data/test work;
+- creates an `.ant/orchestrator/<run>/phases/05-planning/implementation-plan.md` checklist through a plan writer;
+- delegates implementation to an implementation lead, which may use `phases/06-implementation/subphases/` and slice workers for parallel backend/frontend/data/test work;
+- remains coordination-only after completion, including follow-up debugging, review fixes, polish, tiny edits, and post-delivery issues;
 - finishes with integration, targeted validation, review/fix loops, and final evidence.
 
 Use it when the user wants a task driven from idea to working, verified implementation.
