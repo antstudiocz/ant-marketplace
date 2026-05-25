@@ -1,7 +1,7 @@
 {
   "name": "ant",
   "description": "(ant) skills for Claude Code and Codex - create application intake, implementation orchestration, frontend best practices, Laravel best practices, GitLab delivery workflows, Google Docs, and Asana tasks",
-  "version": "8.1.2",
+  "version": "8.1.3",
   "author": {
     "name": "(ant)",
     "description": "full-service digitální agentura"

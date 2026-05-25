@@ -14,6 +14,10 @@ Prioritize material risks:
 - unsafe assumptions or invented intent;
 - missing definition of done;
 - broad goals not converted into acceptance scenarios;
+- missing execution mode, weak decision policy, or unclear autonomous/manual escalation rules for medium+ work;
+- phased rollout plans that only define phase 1 and leave later phases too vague to constrain architecture or compatibility;
+- missing or stale phase artifacts, incomplete phase close/handoff fields, or reliance on chat as the only source of truth;
+- root orchestrator doing implementation, debugging, polish, review fixes, or tiny edits directly while orchestration mode is active;
 - missing or irrelevant risk scenario matrix rows;
 - incorrect architecture boundaries or file placement;
 - cross-module imports that bypass public contracts;
@@ -44,10 +48,13 @@ For direction or plan review:
 1. Read the original goal, user decisions, scout findings, direction, assumptions, implementation plan, and validation plan.
 2. Check whether the plan can satisfy the goal without inventing user intent.
 3. Check that legacy/debt and architecture choices were explicit and approved when material.
-4. Check that the concurrency plan is useful, bounded, and contract-first.
-5. Check that the definition of done includes concrete scenarios and a relevant risk scenario matrix.
-6. Check that validation and evidence requirements can prove those scenarios.
-7. Return findings first, ordered by severity.
+4. Check that execution mode, decision policy, escalation rules, and residual-risk ownership are explicit for medium+ work.
+5. Check that run `index.md`, `state.md`, `decisions.md`, and phase files are current when persistence is active.
+6. If phased rollout is selected, check that the full roadmap exists before phase 1 implementation and that each phase has goals, dependencies, acceptance criteria, validation, and stop/continue rules.
+7. Check that the concurrency plan is useful, bounded, and contract-first.
+8. Check that the definition of done includes concrete scenarios and a relevant risk scenario matrix.
+9. Check that validation and evidence requirements can prove those scenarios.
+10. Return findings first, ordered by severity.
 
 For implementation review:
 
@@ -55,12 +62,14 @@ For implementation review:
 2. Inspect the diff and directly adjacent contracts.
 3. Trace real execution paths for risky behavior.
 4. Check integrated behavior, not only isolated slices.
-5. Verify architecture boundaries and file placement.
-6. Verify contract consistency across backend/frontend/data/tests.
-7. Verify risk-matrix scenarios that apply to the changed behavior.
-8. Check whether tests cover positive and important negative cases.
-9. Check whether obsolete paths were removed and whether old/new behavior is not left side-by-side without approved migration.
-10. If a systemic issue appears, name sibling entrypoints or equivalent flows that should be included in the fix pass.
+5. Check whether the implementation stayed within the approved execution mode, decision policy, phased roadmap, implementation subphases, and stop/continue rules.
+6. Check that implementation phase/subphase artifacts contain status, inputs, work done, decisions, evidence, open questions, next handoff, files to read first, and must-not-assume notes before completion.
+7. Verify architecture boundaries and file placement.
+8. Verify contract consistency across backend/frontend/data/tests.
+9. Verify risk-matrix scenarios that apply to the changed behavior.
+10. Check whether tests cover positive and important negative cases.
+11. Check whether obsolete paths were removed and whether old/new behavior is not left side-by-side without approved migration.
+12. If a systemic issue appears, name sibling entrypoints or equivalent flows that should be included in the fix pass.
 
 ## Severity
 

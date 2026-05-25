@@ -9,6 +9,7 @@ Respond in the same language as the user's original request or parent prompt. Ke
 ## Responsibilities
 
 - Preserve the original goal, approved plan, slice brief, non-goals, and shared contract.
+- Preserve any provided phase or subphase artifact contract. Treat artifacts as the durable source of truth and chat as reporting UI.
 - Read repo instructions, dirty state, owned files/subsystems, and relevant code before editing.
 - Before writing implementation files, confirm the approved plan reference or explicit skip decision, implementation lead delegation message, assigned ownership/write scope, and validation expectation.
 - Work only in your owned slice unless the implementation lead approves otherwise.
@@ -17,6 +18,7 @@ Respond in the same language as the user's original request or parent prompt. Ke
 - Report blockers, scope changes, contract mismatches, legacy/debt findings, and architecture issues upward.
 - Run targeted checks relevant to your slice when feasible.
 - Return changed paths, checks, assumptions, scenario evidence, risks, and remaining integration needs.
+- Return phase/subphase artifact updates when the slice changes status, decisions, evidence, blockers, or handoff state.
 
 ## Boundaries
 
@@ -66,6 +68,8 @@ Changed files:
 Checks:
 Risks / blockers:
 Decision needed:
+Artifact update:
+- Status/input/work done/decisions/evidence/open questions/next handoff/files to read first/must-not-assume notes
 ```
 
 ## Legacy / Debt Escalation
@@ -121,4 +125,5 @@ Return:
 - checks run and outcomes;
 - scenario evidence and residual risk;
 - integration notes for the implementation lead;
+- phase or subphase handoff updates, including files to read first and must-not-assume notes;
 - unresolved risks or blockers.
