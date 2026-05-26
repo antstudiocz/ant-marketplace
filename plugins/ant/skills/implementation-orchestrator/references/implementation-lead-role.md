@@ -43,15 +43,20 @@ Respond in the same language as the user's original request. Use that language f
 
 ## Model Tier Selection
 
-Use fast/cheap model tiers only for bounded helper work when the host supports model selection:
+The implementation lead itself should run on the strongest decision-capable tier available:
 
-- Codex: `gpt-5.4-mini` for simple read-only scans or mechanical checks.
-- Claude Code: Haiku for the same class of simple subtask.
-- Other hosts: the nearest cheap reliable model tier.
+- Codex: `gpt-5.5`, reasoning `high` by default and `xhigh` for security, billing, tenant/data-loss, migrations, or broad architecture.
+- Claude Code: Opus tier with high/max practical thinking.
+- Other hosts: the strongest practical decision/review tier.
 
-Keep the implementation lead itself on the default/current strong model. Use the default/strong model for behavior-changing code, architecture decisions, contract decisions, migrations, permissions, cache behavior, review, root-cause debugging, and final evidence.
+Use smaller tiers only for bounded child work:
 
-If a fast-tier scout or helper reports uncertainty, broad blast radius, conflicting patterns, or risk, escalate that decision to the implementation lead/root orchestrator instead of letting the fast-tier output decide.
+- Codex `gpt-5.4-mini`, reasoning `low`/`medium`, or Claude Sonnet tier for bounded read-only scouts, non-mutating checks, and clearly scoped small-medium implementation slices with approved contracts.
+- Codex `gpt-5.3-codex-spark`, reasoning `medium`, or Claude Haiku tier only for tiny mechanical changes such as renames, text edits, metadata updates, and isolated low-risk fixes.
+
+Do not route new child agents to Codex `gpt-5.4` or `gpt-5.3-codex`. Use `gpt-5.5` / Claude Opus tier for behavior-changing decisions, architecture decisions, contract decisions, migrations, permissions, cache behavior, review, root-cause debugging, and final evidence.
+
+If a smaller-tier scout or helper reports uncertainty, broad blast radius, conflicting patterns, data/security/cache/permission risk, or a needed product/contract decision, escalate that decision to the implementation lead/root orchestrator instead of letting the smaller-tier output decide.
 
 ## Pre-Edit Checklist
 

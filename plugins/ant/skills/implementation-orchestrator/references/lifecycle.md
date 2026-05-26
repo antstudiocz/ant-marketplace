@@ -804,46 +804,38 @@ Implementation itself may be multi-phase. Use `phases/06-implementation/subphase
 
 ## Model Tier Routing
 
-Use the cheapest model tier that can safely answer the delegated question when the host supports model selection. Do not spend frontier-model budget on bounded read-only scans or mechanical work, but never let model cost override correctness.
+The root orchestrator's own model is selected externally by the user/session. This skill does not override the root model. The root orchestrator owns model-tier selection for direct child agents. The implementation lead owns model-tier selection for its children within root guidance.
 
-The root orchestrator owns model-tier selection for direct child agents. The implementation lead owns model-tier selection for its children within root guidance. For user phrases like "Explore Codebase", "scan the codebase", "find the current flow", or "inspect repo patterns", default to `Fast scout/mechanical` unless the question is broad, risky, or architecture-critical.
+Do not route new child agents to Codex `gpt-5.4` or `gpt-5.3-codex`.
 
-Use `Fast scout/mechanical` for:
+Use `Decision / lead / review` for work that must decide, integrate, review, or own risk:
 
-- bounded codebase scans with explicit questions and no edits;
-- file/path discovery, ownership mapping, import/reference searches, and test-pattern lookup;
-- mechanical documentation or metadata checks;
-- simple non-mutating verification summaries.
+- Codex: `gpt-5.5`, reasoning `high`; use `xhigh` for security, billing, tenant/data-loss, migrations, broad architecture, or critical root-cause debugging.
+- Claude Code: Opus tier with high/max practical thinking.
+- Use for implementation leads, plan review, implementation review, product/architecture recommendations, contract decisions, root-cause debugging, final evidence, and any work touching security, permissions, cache, billing, tenant boundaries, data integrity, migrations, or public contracts.
 
-Recommended provider examples:
+Use `Bounded small-medium work` only when the task has clear ownership, constraints, acceptance criteria, and no unresolved strategy decision:
 
-- Codex: `gpt-5.4-mini` when available.
-- Claude Code: Haiku when available.
-- Other hosts: the cheapest/fastest reliable model tier exposed by that host.
+- Codex: `gpt-5.4-mini`, reasoning `low` or `medium`.
+- Claude Code: Sonnet tier with low/standard thinking.
+- Use for bounded read-only scouts, repo pattern scans, non-mutating checks, and clearly scoped small-medium implementation slices under an approved plan.
 
-Use the default/current strong model for:
+Use `Tiny mechanical work` only for low-risk, obvious, isolated edits:
 
-- root orchestration, user-facing synthesis, and product/architecture recommendations;
-- plan writing and plan review;
-- implementation lead work;
-- slice work that changes behavior, public contracts, data, security, permissions, cache, or migrations;
-- reviewer roles and final evidence review.
+- Codex: `gpt-5.3-codex-spark`, reasoning `medium`.
+- Claude Code: Haiku tier with low/off thinking.
+- Use for renames, copy/text edits, metadata updates, simple generated-file alignment, exact reference counts, and isolated one-file fixes with explicit instructions.
 
-Use the strongest practical model tier for:
-
-- ambiguous architecture decisions;
-- critical/security/billing/tenant/data-loss work;
-- broad refactors or multi-system contract design;
-- root-cause debugging where cheaper scouts disagree or cannot explain evidence.
-
-Escalate from a fast model to the default/strong model when the scout reports `Needs clarification`, `Blocked`, broad blast radius, conflicting patterns, security/data risk, unclear architecture ownership, or low confidence. Fast-tier outputs are evidence for the parent; they are not final decisions.
+Smaller-tier outputs are evidence for the parent; they are not final decisions. Escalate to `Decision / lead / review` when a child reports `Needs clarification`, `Blocked`, low confidence, broad blast radius, conflicting patterns, unclear architecture ownership, security/data/cache/permission risk, behavior changes beyond the assigned slice, public contract changes, migrations, or product choices.
 
 When spawning a subagent, include the model tier in the prompt:
 
 ```text
-Model tier: Fast scout/mechanical | Default implementation | Strong architecture/review
-Provider hint: Codex gpt-5.4-mini / Claude Code Haiku for Fast scout when available; otherwise use the host's nearest cheap reliable tier.
-Escalate if the task is broader or riskier than the tier allows.
+Model routing:
+- Codex: gpt-5.5 high/xhigh | gpt-5.4-mini low/medium | gpt-5.3-codex-spark medium
+- Claude Code: Opus high/max | Sonnet low/standard | Haiku low/off
+- Do not use Codex gpt-5.4 or gpt-5.3-codex for this workflow.
+Escalation rule: if the task is broader, riskier, or more ambiguous than this tier allows, stop and report the needed escalation.
 ```
 
 ## Challenge And Recommendation Duty
@@ -1148,7 +1140,7 @@ Use the scout role instructions from `references/scout-role.md`.
 
 You are a read-only codebase scout for this (ant) implementation lifecycle. Do not edit files or run mutating commands.
 
-Model tier: Fast scout/mechanical when available for this provider (Codex: gpt-5.4-mini; Claude Code: Haiku). Escalate in your response if the question needs a stronger model.
+Model routing: Codex `gpt-5.4-mini`, reasoning `low`/`medium`; Claude Code Sonnet tier with low/standard thinking. Use Codex `gpt-5.3-codex-spark` / Claude Haiku only for tiny mechanical discovery. Do not use Codex `gpt-5.4` or `gpt-5.3-codex`. Escalate to `gpt-5.5` / Claude Opus tier if the question needs architecture judgment, root-cause debugging, risk assessment, or product/contract decisions.
 
 Original user goal:
 <goal>
@@ -1235,7 +1227,10 @@ Responsibilities:
 - Confirm the implementation strategy after reading the real code.
 - Confirm execution mode, decision policy, escalation rules, and phased roadmap before resolving variants or starting a new phase.
 - Confirm implementation phase/subphase artifact ownership and close-gate expectations before starting work.
-- Use fast/cheap model tiers only for bounded read-only scouts or simple mechanical slice checks when the host supports model selection; use the default/strong model for implementation, architecture decisions, review, and final evidence.
+- Run the implementation lead on Codex `gpt-5.5` with `high` reasoning by default, or `xhigh` for security, billing, tenant/data-loss, migrations, broad architecture, or critical root-cause debugging. On Claude Code, use Opus tier with high/max practical thinking.
+- Use Codex `gpt-5.4-mini` / Claude Sonnet only for bounded small-medium child slices with approved contracts and no unresolved decisions.
+- Use Codex `gpt-5.3-codex-spark` / Claude Haiku only for tiny mechanical child tasks.
+- Do not use Codex `gpt-5.4` or `gpt-5.3-codex`.
 - Decide whether to implement yourself or spawn slice workers according to the plan.
 - If you spawn slice workers, define owned files/subsystems, contract boundaries, validation expectations, and non-goals.
 - Aggregate child checkpoints; do not forward noisy logs.

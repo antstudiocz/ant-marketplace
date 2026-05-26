@@ -86,7 +86,7 @@ The implementation lead is a child of the root orchestrator. It owns the impleme
 - **Unrelated changes gate:** explicitly list dirty files outside scope and ask whether to include, exclude, or leave them aside; broad phrases like "push everything" do not bypass this warning.
 - **Legacy/debt gate:** never silently copy bad architecture, legacy flow, duplicate paths, stale abstractions, or half-migrated behavior.
 - **Architecture boundary gate:** verify module ownership, layer responsibility, file placement, import boundaries, shared utilities, and test placement.
-- **Model tier gate:** use cheaper/faster model tiers for bounded read-only or mechanical subtask agents when the host supports model selection; escalate to the default/strong model for ambiguity, architecture, implementation, and review.
+- **Model routing gate:** the root model is selected by the user/session. When spawning child agents, route by role and risk: `gpt-5.5` / Claude Opus tier for implementation leads, decisions, architecture, review, and high-risk work; `gpt-5.4-mini` / Claude Sonnet tier for bounded small-medium work; `gpt-5.3-codex-spark` / Claude Haiku tier for tiny mechanical tasks. Do not use `gpt-5.4` or `gpt-5.3-codex` for new child-agent routing.
 - **Scenario-based definition of done gate:** convert broad goals into concrete acceptance and risk scenarios with validation or explicit residual risk.
 - **Contract-first gate:** for cross-stack work, define request/response shape, errors, permissions, cache behavior, time handling, UI states, and fixtures before parallel implementation.
 - **Evidence gate:** child-agent reports are claims until backed by tests, independent review, runtime checks, or explicitly accepted residual risk.
