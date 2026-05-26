@@ -46,6 +46,18 @@ max_depth = 2
 
 Add this to your Codex config at `~/.codex/config.toml`, then restart Codex or open a new session. Without this setting, the orchestrator can still run in a flattened mode, but the implementation lead cannot spawn slice workers or reviewers itself.
 
+### Implementation Orchestrator Model Routing
+
+The root orchestrator's model is selected by the user/session. During orchestration, route child agents by role and risk:
+
+| Work class | Codex model | Codex reasoning | Claude Code tier | Use for |
+|------------|-------------|-----------------|------------------|---------|
+| Decision, lead, review, high-risk | `gpt-5.5` | `high` / `xhigh` | Opus | implementation lead, architecture, root-cause debugging, review, security, billing, tenant/data risk |
+| Bounded small-medium work | `gpt-5.4-mini` | `low` / `medium` | Sonnet | read-only scouting, clearly scoped implementation slices, non-mutating checks |
+| Tiny mechanical work | `gpt-5.3-codex-spark` | `medium` | Haiku | renames, copy/text edits, metadata updates, isolated low-risk changes |
+
+Do not route new orchestrator child agents to `gpt-5.4` or `gpt-5.3-codex`. If a smaller model hits ambiguity, conflicting evidence, contract changes, data/cache/permission risk, or review-level judgment, it must stop and escalate to `gpt-5.5` / Opus.
+
 ## Available Skills
 
 | Claude Code Command | Codex Skill | Description |

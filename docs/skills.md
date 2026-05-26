@@ -42,7 +42,7 @@ How it works:
 - asks for autonomous implementation mode vs manual decision mode on medium+ work before detailed planning;
 - requires a whole-roadmap phased plan before implementing phase 1 when phased rollout is selected;
 - treats phase artifacts as the source of truth and updates them before phase transitions, pauses, handoffs, or completion reports;
-- uses cheaper/faster model tiers for bounded scouts and mechanical helper tasks when the host supports it;
+- routes child agents explicitly by role and risk: `gpt-5.5`/Opus for decisions, leads, and review; `gpt-5.4-mini`/Sonnet for bounded small-medium work; `gpt-5.3-codex-spark`/Haiku for tiny mechanical tasks;
 - challenges weak approaches with code evidence and asks for direction approval;
 - creates an `.ant/orchestrator/<run>/phases/05-planning/implementation-plan.md` checklist through a plan writer;
 - delegates implementation to an implementation lead, which may use `phases/06-implementation/subphases/` and slice workers for parallel backend/frontend/data/test work;
