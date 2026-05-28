@@ -1,0 +1,128 @@
+{
+  "schemaVersion": "1.0.0",
+  "runId": "2026-05-26-release-notes",
+  "workspaceRoot": "/Users/example/Sites/project",
+  "host": "claude-code",
+  "createdAt": "2026-05-26T09:00:00Z",
+  "updatedAt": "2026-05-26T09:45:00Z",
+  "status": "reviewing",
+  "currentPhaseId": "06-implementation",
+  "preferredLanguage": "en",
+  "agents": [
+    {
+      "id": "root",
+      "role": "root-orchestrator",
+      "status": "running",
+      "displayName": "Root Orchestrator",
+      "summary": "Coordinates the lifecycle and user decisions.",
+      "startedAt": "2026-05-26T09:00:00Z",
+      "updatedAt": "2026-05-26T09:45:00Z"
+    },
+    {
+      "id": "writer",
+      "role": "implementation-lead",
+      "status": "done",
+      "displayName": "Implementation Lead",
+      "summary": "Implemented the approved change.",
+      "startedAt": "2026-05-26T09:20:00Z",
+      "updatedAt": "2026-05-26T09:40:00Z"
+    },
+    {
+      "id": "reviewer",
+      "role": "reviewer",
+      "status": "running",
+      "displayName": "Implementation Reviewer",
+      "summary": "Reviewing integrated output.",
+      "startedAt": "2026-05-26T09:40:00Z",
+      "updatedAt": "2026-05-26T09:45:00Z"
+    }
+  ],
+  "edges": [
+    {
+      "fromAgentId": "root",
+      "toAgentId": "writer",
+      "relation": "delegates"
+    },
+    {
+      "fromAgentId": "root",
+      "toAgentId": "reviewer",
+      "relation": "reviews"
+    },
+    {
+      "fromAgentId": "writer",
+      "toAgentId": "root",
+      "relation": "reports_to"
+    }
+  ],
+  "phases": [
+    {
+      "id": "05-planning",
+      "title": "Planning",
+      "status": "completed",
+      "ownerAgentId": "root",
+      "startedAt": "2026-05-26T09:10:00Z",
+      "completedAt": "2026-05-26T09:20:00Z",
+      "summary": "Plan approved.",
+      "artifactRefs": ["plan"]
+    },
+    {
+      "id": "06-implementation",
+      "title": "Implementation",
+      "status": "needs_review",
+      "ownerAgentId": "writer",
+      "startedAt": "2026-05-26T09:20:00Z",
+      "completedAt": "2026-05-26T09:40:00Z",
+      "summary": "Implementation complete and under review.",
+      "artifactRefs": ["phase"]
+    }
+  ],
+  "blockers": [
+    {
+      "id": "review-open",
+      "title": "Implementation review pending",
+      "severity": "info",
+      "status": "open",
+      "phaseId": "06-implementation",
+      "ownerAgentId": "reviewer",
+      "createdAt": "2026-05-26T09:40:00Z",
+      "resolvedAt": null,
+      "summary": "Completion waits on reviewer result."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "plan",
+      "kind": "markdown",
+      "path": ".ant/orchestrator/2026-05-26-release-notes/phases/05-planning/implementation-plan.md",
+      "title": "Implementation Plan",
+      "phaseId": "05-planning",
+      "agentId": "root",
+      "updatedAt": "2026-05-26T09:20:00Z"
+    },
+    {
+      "id": "phase",
+      "kind": "markdown",
+      "path": ".ant/orchestrator/2026-05-26-release-notes/phases/06-implementation/phase.md",
+      "title": "Implementation Phase",
+      "phaseId": "06-implementation",
+      "agentId": "writer",
+      "updatedAt": "2026-05-26T09:40:00Z"
+    }
+  ],
+  "checkpoints": [
+    {
+      "id": "ready-for-review",
+      "timestamp": "2026-05-26T09:40:00Z",
+      "title": "Ready for review",
+      "severity": "info",
+      "phaseId": "06-implementation",
+      "agentId": "writer",
+      "summary": "Implementation and targeted checks are complete.",
+      "artifactRefs": ["phase"]
+    }
+  ],
+  "metadata": {
+    "languageSource": "initial-user-request",
+    "sourceHostVersion": "claude-code"
+  }
+}

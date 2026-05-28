@@ -1,0 +1,105 @@
+{
+  "schemaVersion": "1.0.0",
+  "runId": "2026-05-26-orchestrator-console",
+  "workspaceRoot": "/Users/matejcerny/Sites/lematodefuk-marketplace",
+  "host": "codex",
+  "createdAt": "2026-05-26T08:00:00Z",
+  "updatedAt": "2026-05-26T11:30:00Z",
+  "status": "implementing",
+  "currentPhaseId": "06-implementation",
+  "preferredLanguage": "cs-CZ",
+  "agents": [
+    {
+      "id": "root",
+      "role": "root-orchestrator",
+      "status": "running",
+      "displayName": "Root Orchestrator",
+      "summary": "Coordinates user-facing orchestration lifecycle.",
+      "startedAt": "2026-05-26T08:00:00Z",
+      "updatedAt": "2026-05-26T11:30:00Z"
+    },
+    {
+      "id": "implementation-lead",
+      "role": "implementation-lead",
+      "status": "running",
+      "displayName": "Implementation Lead",
+      "summary": "Owns implementation phase and verification.",
+      "startedAt": "2026-05-26T11:25:00Z",
+      "updatedAt": "2026-05-26T11:30:00Z"
+    }
+  ],
+  "edges": [
+    {
+      "fromAgentId": "root",
+      "toAgentId": "implementation-lead",
+      "relation": "delegates",
+      "label": "delegated implementation"
+    },
+    {
+      "fromAgentId": "implementation-lead",
+      "toAgentId": "root",
+      "relation": "reports_to",
+      "label": "checkpoint reports"
+    }
+  ],
+  "phases": [
+    {
+      "id": "05-planning",
+      "title": "Planning",
+      "status": "completed",
+      "ownerAgentId": "root",
+      "startedAt": "2026-05-26T10:50:00Z",
+      "completedAt": "2026-05-26T11:20:00Z",
+      "summary": "Concrete implementation plan approved.",
+      "artifactRefs": ["plan"]
+    },
+    {
+      "id": "06-implementation",
+      "title": "Implementation",
+      "status": "in_progress",
+      "ownerAgentId": "implementation-lead",
+      "startedAt": "2026-05-26T11:25:00Z",
+      "completedAt": null,
+      "summary": "Contract-first implementation is active.",
+      "artifactRefs": ["implementation-phase"]
+    }
+  ],
+  "blockers": [],
+  "artifacts": [
+    {
+      "id": "plan",
+      "kind": "markdown",
+      "path": ".ant/orchestrator/2026-05-26-orchestrator-console/phases/05-planning/implementation-plan.md",
+      "title": "Implementation Plan",
+      "phaseId": "05-planning",
+      "agentId": "root",
+      "updatedAt": "2026-05-26T11:20:00Z"
+    },
+    {
+      "id": "implementation-phase",
+      "kind": "markdown",
+      "path": ".ant/orchestrator/2026-05-26-orchestrator-console/phases/06-implementation/phase.md",
+      "title": "Implementation Phase",
+      "phaseId": "06-implementation",
+      "agentId": "implementation-lead",
+      "updatedAt": "2026-05-26T11:30:00Z"
+    }
+  ],
+  "checkpoints": [
+    {
+      "id": "checkpoint-implementation-started",
+      "timestamp": "2026-05-26T11:30:00Z",
+      "title": "Implementation started",
+      "severity": "info",
+      "phaseId": "06-implementation",
+      "agentId": "implementation-lead",
+      "summary": "Preflight is complete and contract work is starting.",
+      "artifactRefs": ["implementation-phase"]
+    }
+  ],
+  "metadata": {
+    "languageSource": "user-preference",
+    "targetBranch": "origin/master",
+    "implementationBranch": "feature/orchestrator-console"
+  }
+}

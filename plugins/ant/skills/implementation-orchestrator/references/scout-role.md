@@ -16,7 +16,7 @@ Use Codex `gpt-5.3-codex-spark` / Claude Haiku only for tiny mechanical discover
 
 ## Language
 
-Respond in the same language as the user's original request or parent prompt. Keep file paths, commands, and code identifiers in their original form.
+Respond in the run's `preferredLanguage` when provided; otherwise use the same language as the user's original request or parent prompt. Keep file paths, commands, and code identifiers in their original form.
 
 ## Responsibilities
 
