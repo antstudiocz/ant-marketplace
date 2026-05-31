@@ -15,6 +15,12 @@
       "status": "running",
       "displayName": "Root Orchestrator",
       "summary": "Coordinates user-facing orchestration lifecycle.",
+      "intent": "Coordinate the run, route work to child agents, and keep user-facing state current.",
+      "plannedWork": [
+        "Track active phase, decisions, blockers, and handoffs.",
+        "Delegate implementation and review work to the right child agents."
+      ],
+      "doneDefinition": "The run is verified, evidence is linked, and the next user decision is clear.",
       "startedAt": "2026-05-26T08:00:00Z",
       "updatedAt": "2026-05-26T11:30:00Z"
     },
@@ -24,6 +30,13 @@
       "status": "running",
       "displayName": "Implementation Lead",
       "summary": "Owns implementation phase and verification.",
+      "intent": "Implement the approved plan and coordinate verification.",
+      "plannedWork": [
+        "Build the structured state contract and macOS console surface.",
+        "Spawn bounded slice workers when the implementation can be split safely.",
+        "Run tests and report verification evidence."
+      ],
+      "doneDefinition": "Implementation is complete, reviewed, verified, and linked to final evidence.",
       "startedAt": "2026-05-26T11:25:00Z",
       "updatedAt": "2026-05-26T11:30:00Z"
     }
@@ -99,6 +112,11 @@
   ],
   "metadata": {
     "languageSource": "user-preference",
+    "originalRiskTier": "high",
+    "activeRiskTier": "high",
+    "flowMode": "scout-plan-implement-review",
+    "cycle": "initial-implementation",
+    "rootMode": "dispatch-only",
     "targetBranch": "origin/master",
     "implementationBranch": "feature/orchestrator-console"
   }

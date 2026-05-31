@@ -145,6 +145,67 @@ public struct OrchestratorRun: Codable, Identifiable, Equatable, Sendable {
     public let artifacts: [Artifact]
     public let checkpoints: [Checkpoint]
     public let metadata: [String: JSONValue]?
+
+    public var flowContext: OrchestrationFlowContext {
+        OrchestrationFlowContext(metadata: metadata)
+    }
+}
+
+public struct OrchestrationFlowContext: Equatable, Sendable {
+    public let originalRiskTier: String?
+    public let activeRiskTier: String?
+    public let flowMode: String?
+    public let cycle: String?
+    public let followUpOf: String?
+    public let rootMode: String?
+
+    public init(metadata: [String: JSONValue]?) {
+        originalRiskTier = Self.string("originalRiskTier", in: metadata)
+        activeRiskTier = Self.string("activeRiskTier", in: metadata)
+        flowMode = Self.string("flowMode", in: metadata)
+        cycle = Self.string("cycle", in: metadata)
+        followUpOf = Self.string("followUpOf", in: metadata)
+        rootMode = Self.string("rootMode", in: metadata)
+    }
+
+    public var hasDisplayableValue: Bool {
+        activeRiskTier != nil || flowMode != nil || cycle != nil
+    }
+
+    public var displayRiskTier: String? {
+        activeRiskTier.map(Self.displayLabel)
+    }
+
+    public var displayOriginalRiskTier: String? {
+        originalRiskTier.map(Self.displayLabel)
+    }
+
+    public var displayFlowMode: String? {
+        flowMode.map(Self.displayLabel)
+    }
+
+    public var displayCycle: String? {
+        cycle.map(Self.displayLabel)
+    }
+
+    private static func string(_ key: String, in metadata: [String: JSONValue]?) -> String? {
+        guard let value = metadata?[key]?.stringValue?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !value.isEmpty else {
+            return nil
+        }
+        return value
+    }
+
+    private static func displayLabel(_ value: String) -> String {
+        value
+            .replacingOccurrences(of: "_", with: "-")
+            .split(separator: "-")
+            .map { part in
+                guard let first = part.first else { return "" }
+                return String(first).uppercased() + String(part.dropFirst())
+            }
+            .joined(separator: " ")
+    }
 }
 
 public struct Agent: Codable, Identifiable, Equatable, Sendable {
@@ -153,9 +214,16 @@ public struct Agent: Codable, Identifiable, Equatable, Sendable {
     public let status: AgentStatus
     public let displayName: String?
     public let summary: String?
+    public let intent: String?
+    public let plannedWork: [String]?
+    public let doneDefinition: String?
     public let startedAt: Date?
     public let updatedAt: Date?
     public let metadata: [String: JSONValue]?
+
+    public var workerKind: String? {
+        metadata?["workerKind"]?.stringValue
+    }
 }
 
 public struct AgentEdge: Codable, Identifiable, Equatable, Sendable {

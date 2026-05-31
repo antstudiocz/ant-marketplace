@@ -43,3 +43,12 @@ public enum JSONValue: Codable, Equatable, Sendable {
         }
     }
 }
+
+public extension JSONValue {
+    var stringValue: String? {
+        if case .string(let value) = self {
+            return value
+        }
+        return nil
+    }
+}

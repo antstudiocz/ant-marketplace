@@ -118,6 +118,12 @@
         "status": { "$ref": "#/$defs/agentStatus" },
         "displayName": { "$ref": "#/$defs/nonEmptyString" },
         "summary": { "type": "string" },
+        "intent": { "type": "string" },
+        "plannedWork": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "doneDefinition": { "type": "string" },
         "startedAt": {
           "anyOf": [
             { "type": "null" },

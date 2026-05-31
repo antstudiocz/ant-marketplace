@@ -54,6 +54,15 @@ private struct RunHeaderView: View {
 
                 HStack(alignment: .center, spacing: 14) {
                     HeaderFact(label: L10n.t("Phase", "Fáze"), value: run.currentPhase?.localizedTitle ?? run.state?.currentPhaseId ?? L10n.t("None", "Žádná"))
+                    if let state = run.state, let riskTier = state.flowContext.displayRiskTier {
+                        HeaderFact(label: L10n.t("Risk", "Riziko"), value: riskTier)
+                    }
+                    if let state = run.state, let flowMode = state.flowContext.displayFlowMode {
+                        HeaderFact(label: L10n.t("Flow", "Flow"), value: flowMode)
+                    }
+                    if let state = run.state, let cycle = state.flowContext.displayCycle {
+                        HeaderFact(label: L10n.t("Cycle", "Cyklus"), value: cycle)
+                    }
                     HeaderFact(label: L10n.t("Updated", "Aktualizace"), value: ConsoleFormatters.relative(run.updatedAt))
                 }
             }
@@ -624,6 +633,14 @@ private struct AgentNodeButton: View {
                     .foregroundStyle(node.agent.role.tint.opacity(0.82))
                     .lineLimit(1)
 
+                if let intent = node.agent.intentLine {
+                    Text(OrchestratorCopy.text(intent))
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
                 AgentNodeStatusBadge(status: node.agent.status)
             }
             .padding(11)
@@ -904,6 +921,7 @@ private struct AgentBriefDialog: View {
     private var summaryScroll: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
+                BriefSection(title: L10n.t("Assignment", "Zadání agenta"), items: brief.assignment)
                 BriefSection(title: L10n.t("Did", "Dělal"), items: brief.did)
                 BriefSection(title: L10n.t("Next", "Bude dělat"), items: brief.next)
                 BriefSection(title: L10n.t("Output", "Výstup"), items: brief.outputs)
@@ -1085,6 +1103,7 @@ private struct AgentSheetSelection: Identifiable {
 }
 
 private struct AgentBrief {
+    let assignment: [String]
     let did: [String]
     let next: [String]
     let outputs: [String]
@@ -1105,6 +1124,7 @@ private struct AgentBrief {
         } ?? []
         let events = detail?.relatedEvents.prefix(4).map(\.message) ?? []
         let summary = selection.agent.summary.map { [$0] } ?? []
+        let assignmentItems = Self.assignmentItems(for: selection.agent)
 
         var didItems = Array((checkpoints + events + summary).uniqued().prefix(6))
         if didItems.isEmpty, selection.agent.status == .done {
@@ -1131,6 +1151,7 @@ private struct AgentBrief {
             artifact.title?.isEmpty == false ? artifact.title! : artifact.displayTitle
         }
 
+        self.assignment = assignmentItems
         self.did = didItems
         self.next = nextItems.uniqued()
         self.outputs = outputItems.isEmpty && selection.agent.status == .done
@@ -1139,6 +1160,37 @@ private struct AgentBrief {
         self.parents = detail?.parents ?? []
         self.children = detail?.children ?? []
         self.markdownArtifacts = relatedMarkdown
+    }
+
+    private static func assignmentItems(for agent: Agent) -> [String] {
+        var items: [String] = []
+
+        if let intent = agent.intentLine {
+            items.append(intent)
+        }
+
+        items.append(contentsOf: agent.plannedWork?.map {
+            $0.trimmingCharacters(in: .whitespacesAndNewlines)
+        } ?? [])
+
+        if let doneDefinition = agent.doneDefinition?.trimmingCharacters(in: .whitespacesAndNewlines),
+           !doneDefinition.isEmpty {
+            items.append(L10n.t("Done when: \(doneDefinition)", "Hotovo, když: \(doneDefinition)"))
+        }
+
+        return items.uniqued()
+    }
+}
+
+private extension Agent {
+    var intentLine: String? {
+        if let intent = intent?.trimmingCharacters(in: .whitespacesAndNewlines), !intent.isEmpty {
+            return intent
+        }
+        if let summary = summary?.trimmingCharacters(in: .whitespacesAndNewlines), !summary.isEmpty {
+            return summary
+        }
+        return nil
     }
 }
 
@@ -1648,7 +1700,7 @@ private struct AgentHierarchyNode: Identifiable {
 private struct AgentBoardMetrics {
     let layout: AgentHierarchyLayout
     let size: CGSize
-    let nodeSize = CGSize(width: 190, height: 96)
+    let nodeSize = CGSize(width: 190, height: 118)
     let rowGap: CGFloat = 28
     let topPadding: CGFloat = 30
 
@@ -2170,6 +2222,12 @@ struct AgentSummaryRow: Identifiable {
         }
         if let checkpoint = detail?.relatedCheckpoints.first {
             return checkpoint.summary?.isEmpty == false ? checkpoint.summary! : checkpoint.title
+        }
+        if let planned = agent.plannedWork?.first?.trimmingCharacters(in: .whitespacesAndNewlines), !planned.isEmpty {
+            return planned
+        }
+        if let intent = agent.intent?.trimmingCharacters(in: .whitespacesAndNewlines), !intent.isEmpty {
+            return intent
         }
         if let summary = agent.summary, !summary.isEmpty {
             return summary

@@ -15,6 +15,12 @@
       "status": "running",
       "displayName": "Root Orchestrator",
       "summary": "Coordinates the lifecycle and user decisions.",
+      "intent": "Coordinate the release-notes workflow and keep the user-facing handoff current.",
+      "plannedWork": [
+        "Track planning, implementation, review, and delivery status.",
+        "Route final review findings back to the implementation lead if needed."
+      ],
+      "doneDefinition": "Review is closed and the user has a clear delivery handoff.",
       "startedAt": "2026-05-26T09:00:00Z",
       "updatedAt": "2026-05-26T09:45:00Z"
     },
@@ -24,6 +30,12 @@
       "status": "done",
       "displayName": "Implementation Lead",
       "summary": "Implemented the approved change.",
+      "intent": "Apply the approved release-notes change.",
+      "plannedWork": [
+        "Update the release notes output according to the approved plan.",
+        "Hand the result to the reviewer with evidence."
+      ],
+      "doneDefinition": "The change is implemented and ready for review.",
       "startedAt": "2026-05-26T09:20:00Z",
       "updatedAt": "2026-05-26T09:40:00Z"
     },
@@ -33,6 +45,12 @@
       "status": "running",
       "displayName": "Implementation Reviewer",
       "summary": "Reviewing integrated output.",
+      "intent": "Review the integrated output before delivery.",
+      "plannedWork": [
+        "Check the implemented output against the approved plan.",
+        "Report any findings back to the root orchestrator."
+      ],
+      "doneDefinition": "Review findings are reported and residual risk is clear.",
       "startedAt": "2026-05-26T09:40:00Z",
       "updatedAt": "2026-05-26T09:45:00Z"
     }
@@ -123,6 +141,11 @@
   ],
   "metadata": {
     "languageSource": "initial-user-request",
+    "originalRiskTier": "low",
+    "activeRiskTier": "low",
+    "flowMode": "single-delegated-worker",
+    "cycle": "initial-implementation",
+    "rootMode": "dispatch-only",
     "sourceHostVersion": "claude-code"
   }
 }

@@ -26,8 +26,14 @@ final class OrchestratorParserTests: XCTestCase {
               "status": "completed",
               "displayName": "Lead",
               "summary": null,
+              "intent": "Implement the approved slice.",
+              "plannedWork": ["Update app UI", "Run verification"],
+              "doneDefinition": "Tests pass and evidence is linked.",
               "startedAt": "2026-05-26T10:01:00Z",
-              "updatedAt": "2026-05-26T10:15:00Z"
+              "updatedAt": "2026-05-26T10:15:00Z",
+              "metadata": {
+                "workerKind": "bounded-low-worker"
+              }
             }
           ],
           "edges": [],
@@ -45,7 +51,15 @@ final class OrchestratorParserTests: XCTestCase {
           ],
           "blockers": [],
           "artifacts": [],
-          "checkpoints": []
+          "checkpoints": [],
+          "metadata": {
+            "originalRiskTier": "critical",
+            "activeRiskTier": "low",
+            "flowMode": "single-delegated-worker",
+            "cycle": "follow-up-003",
+            "followUpOf": "initial-implementation",
+            "rootMode": "dispatch-only"
+          }
         }
         """.write(to: runDirectory.appendingPathComponent("state.json"), atomically: true, encoding: .utf8)
 
@@ -58,9 +72,17 @@ final class OrchestratorParserTests: XCTestCase {
         XCTAssertEqual(runs.count, 1)
         XCTAssertEqual(runs[0].status, .implementing)
         XCTAssertEqual(runs[0].state?.agents.first?.status, .done)
+        XCTAssertEqual(runs[0].state?.agents.first?.intent, "Implement the approved slice.")
+        XCTAssertEqual(runs[0].state?.agents.first?.plannedWork, ["Update app UI", "Run verification"])
+        XCTAssertEqual(runs[0].state?.agents.first?.doneDefinition, "Tests pass and evidence is linked.")
         XCTAssertEqual(runs[0].state?.phases.first?.status, .inProgress)
         XCTAssertEqual(runs[0].events.first?.type, .phaseStarted)
         XCTAssertEqual(runs[0].state?.preferredLanguage, "cs")
+        XCTAssertEqual(runs[0].state?.flowContext.activeRiskTier, "low")
+        XCTAssertEqual(runs[0].state?.flowContext.displayRiskTier, "Low")
+        XCTAssertEqual(runs[0].state?.flowContext.displayFlowMode, "Single Delegated Worker")
+        XCTAssertEqual(runs[0].state?.flowContext.cycle, "follow-up-003")
+        XCTAssertEqual(runs[0].state?.agents.first?.workerKind, "bounded-low-worker")
     }
 
     func testBuildsAgentDetailFromStructuredStateAndEvents() throws {

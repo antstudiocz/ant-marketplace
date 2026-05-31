@@ -413,19 +413,24 @@ public struct CommandCenterSummary: Equatable, Sendable {
     }
 
     private static func riskSummary(run: OrchestratorRun, health: RunHealthSummary, currentWork: CurrentWorkSummary) -> String {
+        let flow = run.flowContext
+        let tierPrefix = flow.displayRiskTier.map { "Active risk tier: \($0). " } ?? ""
         if let blocker = currentWork.openBlockers.first {
-            return "\(currentWork.openBlockers.count) open blocker\(currentWork.openBlockers.count == 1 ? "" : "s"); highest: \(blocker.title)."
+            return "\(tierPrefix)\(currentWork.openBlockers.count) open blocker\(currentWork.openBlockers.count == 1 ? "" : "s"); highest: \(blocker.title)."
         }
         if health.failedValidations > 0 {
-            return "\(health.failedValidations) validation failure\(health.failedValidations == 1 ? "" : "s") recorded."
+            return "\(tierPrefix)\(health.failedValidations) validation failure\(health.failedValidations == 1 ? "" : "s") recorded."
         }
         if health.openReviewFindings > 0 {
-            return "\(health.openReviewFindings) open review finding\(health.openReviewFindings == 1 ? "" : "s")."
+            return "\(tierPrefix)\(health.openReviewFindings) open review finding\(health.openReviewFindings == 1 ? "" : "s")."
         }
         if !health.missingEvidence.isEmpty, run.status != .notStarted {
-            return "Evidence gaps: \(health.missingEvidence.prefix(2).joined(separator: ", "))."
+            return "\(tierPrefix)Evidence gaps: \(health.missingEvidence.prefix(2).joined(separator: ", "))."
         }
-        return "No open blocker, failed validation, or unresolved review signal."
+        if let flowMode = flow.displayFlowMode {
+            return "\(tierPrefix)Flow mode: \(flowMode). No open blocker, failed validation, or unresolved review signal."
+        }
+        return "\(tierPrefix)No open blocker, failed validation, or unresolved review signal."
     }
 
     private static func decisionSummary(currentWork: CurrentWorkSummary, progress: RunProgressFacts) -> String {
@@ -458,6 +463,13 @@ public struct CommandCenterSummary: Equatable, Sendable {
                 detail: milestones.first(where: { $0.isCurrent })?.title,
                 severity: .info,
                 timestamp: nil
+            ),
+            ProgressFact(
+                id: "flow",
+                title: run.flowContext.displayRiskTier.map { "Risk tier: \($0)" } ?? "Risk tier not recorded",
+                detail: run.flowContext.displayFlowMode,
+                severity: .info,
+                timestamp: run.updatedAt
             ),
             ProgressFact(
                 id: "validation",

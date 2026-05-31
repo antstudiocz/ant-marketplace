@@ -66,7 +66,7 @@ User local time conversion belongs only in UI rendering.
 This value is a forward-looking instruction and display hint:
 
 - Producers should set `preferredLanguage` when the host app or the user provides a language preference. If no explicit preference exists, infer it from the initial user request and fall back to `en`.
-- Producers should write future user-facing event messages, checkpoints, summaries, notes, markdown headings, phase titles, agent summaries, and handoffs in `preferredLanguage` when it is set.
+- Producers should write future user-facing event messages, checkpoints, summaries, notes, markdown headings, phase titles, agent summaries, agent assignment fields, and handoffs in `preferredLanguage` when it is set.
 - Producers must not translate or rewrite historical events, checkpoints, or markdown artifacts when the preference changes.
 - Fixed enum values, file paths, code identifiers, command names, timestamps, and schema fields remain unchanged.
 - All time storage remains UTC/Zulu; language preference affects text only.
@@ -82,6 +82,45 @@ This value is a forward-looking instruction and display hint:
 
 The contract is intentionally host-neutral. Host-specific details belong in `metadata`, `data`, or linked artifacts, not in divergent top-level shapes.
 
+## Risk-Tier Dispatch Metadata
+
+The orchestrator may use a lighter or heavier delegated workflow per request while keeping the same stable schema. Do not add new enum values for risk tiers or flow modes. Store dispatch details in `state.json.metadata` and child-agent metadata:
+
+```json
+{
+  "metadata": {
+    "originalRiskTier": "critical",
+    "activeRiskTier": "low",
+    "flowMode": "single-delegated-worker",
+    "cycle": "follow-up-003",
+    "followUpOf": "initial-implementation",
+    "rootMode": "dispatch-only"
+  },
+  "agents": [
+    {
+      "id": "follow-up-003-worker",
+      "role": "implementation-lead",
+      "status": "running",
+      "displayName": "Low bounded worker",
+      "metadata": {
+        "workerKind": "bounded-low-worker"
+      }
+    }
+  ]
+}
+```
+
+Recommended values:
+
+- `originalRiskTier`: first cycle risk tier for this run, usually `low`, `medium`, `high`, or `critical`.
+- `activeRiskTier`: current cycle risk tier. Follow-ups must be classified fresh and must not inherit this value automatically from the previous cycle.
+- `flowMode`: display hint such as `single-delegated-worker`, `implementation-lead`, `scout-plan-implement-review`, or `full-critical-lifecycle`.
+- `cycle`: stable current cycle id such as `initial-implementation`, `review-fix-001`, `follow-up-002`, or `delivery`.
+- `followUpOf`: optional cycle id this cycle follows.
+- `rootMode`: should be `dispatch-only` for this orchestrator.
+
+Consumers should treat these fields as optional display hints. Current run state still comes from top-level `status`, `currentPhaseId`, `agents`, `edges`, `phases`, `blockers`, `artifacts`, and `checkpoints`.
+
 ## Snapshot Rules
 
 Producers should rewrite `state.json` atomically whenever the latest run state changes:
@@ -91,9 +130,19 @@ Producers should rewrite `state.json` atomically whenever the latest run state c
 - validation or review state changes;
 - a durable handoff is updated.
 
-If a completed run receives a follow-up that requires more work, producers must rewrite `state.json` before work starts so `status` is no longer `completed` and `currentPhaseId` points at the active phase or follow-up subphase. Append a `run.status_changed` event and preserve historical completion evidence instead of rewriting it.
+If a completed run receives a follow-up that requires more work, producers must rewrite `state.json` before work starts so `status` is no longer `completed`, `currentPhaseId` points at the active phase or follow-up subphase, and `metadata.activeRiskTier` / `metadata.cycle` describe the new cycle. Append a `run.status_changed` event and preserve historical completion evidence instead of rewriting it.
 
 `state.json` must be valid against `state.schema.json`.
+
+## Agent Assignment Summary
+
+Each active or planned agent should expose a short machine-readable assignment so UI consumers can explain why the agent exists without scraping markdown:
+
+- `agent.intent`: one concise user-facing sentence, for example `Run security review of file deletion behavior`.
+- `agent.plannedWork`: short bullets describing the next work the agent is expected to do.
+- `agent.doneDefinition`: one concise condition that tells the parent when the assignment is complete.
+
+Keep these fields operational and current. They should describe planned responsibility, not a full activity log. Historical progress belongs in `checkpoints`, `events.jsonl`, and linked markdown artifacts.
 
 ## Event Rules
 
