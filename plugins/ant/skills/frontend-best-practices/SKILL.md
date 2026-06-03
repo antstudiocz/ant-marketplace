@@ -6,7 +6,7 @@ description: "Use for React, Next.js, TypeScript, and frontend UI work: componen
 
 # Frontend Best Practices
 
-Use this skill for frontend implementation, refactoring, review, and UI architecture work. This is the single public frontend entrypoint; detailed guidance lives in `references/` and should be loaded only when relevant.
+Use this skill for frontend implementation, refactoring, review, and UI architecture work. This is the single public frontend engineering entrypoint; detailed guidance lives in `references/` and should be loaded only when relevant. For `(ant)` brand direction, pair it with `ant:brand-design`.
 
 Reference files may contain original skill frontmatter. Treat it as reference metadata, not as separate skill invocation.
 

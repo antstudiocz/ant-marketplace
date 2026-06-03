@@ -94,6 +94,7 @@ The generated `.pkg`, `.dmg`, and `.app` files are written under `apps/orchestra
 |---------------------|-------------|-------------|
 | `/ant:create-application` | `$create-application` | Clarify a new app or app surface, compare TypeScript-only and Docker paths, and hand off to orchestration |
 | `/ant:implementation-orchestrator` | `$implementation-orchestrator` | Guide implementation from brainstorming to verified delivery |
+| `/ant:brand-design` | `$brand-design` | Design and review websites, apps, decks, documents, and visuals against the (ant) brand |
 | `/ant:frontend-best-practices` | `$frontend-best-practices` | React, Next.js, TypeScript, accessibility, forms, performance, responsive UI, i18n, skeletons, and composition |
 | `/ant:laravel-best-practices` | `$laravel-best-practices` | Laravel 12+ architecture, caching, performance, Eloquent, queues, and backend review |
 | `/ant:delivery-workflows` | `$delivery-workflows` | GitLab MR creation, merge conflicts, and delivery hygiene |

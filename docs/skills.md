@@ -51,13 +51,28 @@ How it works:
 
 Use it when the user wants a task driven from idea to working, verified implementation.
 
+## `brand-design`
+
+Brand design guidance for creating or reviewing websites, apps, decks, documents, social visuals, email signatures, and other visual outputs against the `(ant)` identity.
+
+How it works:
+
+- selects the right brand mode for the medium: core editorial, product/UI, campaign/social, or endorsement;
+- uses the source brand primitives: black/white contrast, mint `#5bffc4`, approved grays, Aktiv Grotesk EX for headline character, Inter for body/UI text, and correct logo variants;
+- loads only the relevant brand references for colors, typography, visual language, digital UI patterns, asset usage, or review;
+- treats bracketed labels, hard rules, typographic hierarchy, and `(ant) crafted` as system elements rather than decoration;
+- pairs with `frontend-best-practices` when implementation quality, accessibility, responsiveness, or framework behavior is in scope;
+- flags missing source assets, unavailable licensed fonts, weak contrast, generic SaaS styling, and misuse of logo or mint-heavy palettes.
+
+Use it when a task asks for an `(ant)` branded design, a redesign toward the `(ant)` identity, or a brand-fit review.
+
 ## `frontend-best-practices`
 
 Frontend quality and architecture guidance for React, Next.js, TypeScript, accessibility, forms, i18n, responsive UI, semantic HTML, performance, skeleton loading states, React 19 APIs, and composition patterns.
 
 How it works:
 
-- acts as the single public frontend entrypoint;
+- acts as the single public frontend engineering entrypoint;
 - identifies the relevant frontend surface before loading extra context;
 - loads only the needed references, such as `components.md`, `forms.md`, `accessibility.md`, `next-best-practices/overview.md`, `react-19.md`, or specific rule files;
 - checks UI structure, type boundaries, translations, accessibility, loading states, responsive behavior, and framework-specific Server/Client boundaries.
