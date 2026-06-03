@@ -5,10 +5,10 @@ final class FileSystemWatcher {
     private var sources: [DispatchSourceFileSystemObject] = []
     private var descriptors: [CInt] = []
     private let queue = DispatchQueue(label: "orchestrator-console.file-watcher")
-    private let onChange: @Sendable () -> Void
+    private let onChange: @MainActor () -> Void
     private var pendingWorkItem: DispatchWorkItem?
 
-    init(urls: [URL], onChange: @escaping @Sendable () -> Void) {
+    init(urls: [URL], onChange: @escaping @MainActor () -> Void) {
         self.onChange = onChange
         for url in urls {
             watch(url)
@@ -50,7 +50,7 @@ final class FileSystemWatcher {
     private func scheduleChange() {
         pendingWorkItem?.cancel()
         let workItem = DispatchWorkItem { [onChange] in
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 onChange()
             }
         }

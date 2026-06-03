@@ -155,9 +155,7 @@ final class RunStore: ObservableObject {
         })
 
         watcher = FileSystemWatcher(urls: urls) { [weak self] in
-            Task { @MainActor in
-                self?.reload()
-            }
+            self?.reload()
         }
     }
 
