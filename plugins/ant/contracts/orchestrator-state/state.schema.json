@@ -1,0 +1,279 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://antstudiocz.github.io/ant-marketplace/contracts/orchestrator-state/state.schema.json",
+  "title": "Orchestrator State Snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "runId",
+    "workspaceRoot",
+    "host",
+    "createdAt",
+    "updatedAt",
+    "status",
+    "currentPhaseId",
+    "agents",
+    "edges",
+    "phases",
+    "blockers",
+    "artifacts",
+    "checkpoints"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "runId": { "$ref": "#/$defs/nonEmptyString" },
+    "workspaceRoot": {
+      "anyOf": [
+        { "type": "null" },
+        { "$ref": "#/$defs/nonEmptyString" }
+      ]
+    },
+    "host": { "enum": ["codex", "claude-code", "unknown"] },
+    "createdAt": { "$ref": "#/$defs/zuluTimestamp" },
+    "updatedAt": { "$ref": "#/$defs/zuluTimestamp" },
+    "status": { "$ref": "#/$defs/runStatus" },
+    "currentPhaseId": {
+      "anyOf": [
+        { "type": "null" },
+        { "$ref": "#/$defs/nonEmptyString" }
+      ]
+    },
+    "preferredLanguage": {
+      "anyOf": [
+        { "type": "null" },
+        { "$ref": "#/$defs/languageTag" }
+      ]
+    },
+    "agents": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/agent" }
+    },
+    "edges": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/edge" }
+    },
+    "phases": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/phase" }
+    },
+    "blockers": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/blocker" }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/artifact" }
+    },
+    "checkpoints": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/checkpoint" }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "languageTag": {
+      "type": "string",
+      "enum": ["cs-CZ", "en"]
+    },
+    "zuluTimestamp": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?Z$"
+    },
+    "runStatus": {
+      "enum": ["not_started", "planning", "implementing", "reviewing", "verifying", "blocked", "paused", "completed", "failed", "cancelled"]
+    },
+    "phaseStatus": {
+      "enum": ["not_started", "in_progress", "blocked", "needs_review", "completed", "skipped", "failed"]
+    },
+    "agentRole": {
+      "enum": ["root-orchestrator", "planner", "scout", "plan-writer", "implementation-lead", "slice-worker", "reviewer"]
+    },
+    "agentStatus": {
+      "enum": ["pending", "running", "blocked", "done", "failed", "cancelled"]
+    },
+    "severity": {
+      "enum": ["info", "warning", "error", "critical"]
+    },
+    "artifactKind": {
+      "enum": ["markdown", "json", "jsonl", "source", "test", "log", "schema", "app", "external"]
+    },
+    "edgeRelation": {
+      "enum": ["delegates", "reviews", "reports_to", "blocks"]
+    },
+    "agent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "role", "status"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmptyString" },
+        "role": { "$ref": "#/$defs/agentRole" },
+        "status": { "$ref": "#/$defs/agentStatus" },
+        "displayName": { "$ref": "#/$defs/nonEmptyString" },
+        "summary": { "type": "string" },
+        "shortLabel": { "type": "string" },
+        "intent": { "type": "string" },
+        "plannedWork": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "doneDefinition": { "type": "string" },
+        "startedAt": {
+          "anyOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/zuluTimestamp" }
+          ]
+        },
+        "updatedAt": {
+          "anyOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/zuluTimestamp" }
+          ]
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fromAgentId", "toAgentId", "relation"],
+      "properties": {
+        "fromAgentId": { "$ref": "#/$defs/nonEmptyString" },
+        "toAgentId": { "$ref": "#/$defs/nonEmptyString" },
+        "relation": { "$ref": "#/$defs/edgeRelation" },
+        "label": { "type": "string" }
+      }
+    },
+    "phase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "status"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmptyString" },
+        "title": { "$ref": "#/$defs/nonEmptyString" },
+        "status": { "$ref": "#/$defs/phaseStatus" },
+        "ownerAgentId": {
+          "anyOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/nonEmptyString" }
+          ]
+        },
+        "startedAt": {
+          "anyOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/zuluTimestamp" }
+          ]
+        },
+        "completedAt": {
+          "anyOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/zuluTimestamp" }
+          ]
+        },
+        "summary": { "type": "string" },
+        "artifactRefs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        }
+      }
+    },
+    "blocker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "severity", "status"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmptyString" },
+        "title": { "$ref": "#/$defs/nonEmptyString" },
+        "severity": { "$ref": "#/$defs/severity" },
+        "status": { "enum": ["open", "resolved"] },
+        "phaseId": {
+          "anyOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/nonEmptyString" }
+          ]
+        },
+        "ownerAgentId": {
+          "anyOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/nonEmptyString" }
+          ]
+        },
+        "createdAt": { "$ref": "#/$defs/zuluTimestamp" },
+        "resolvedAt": {
+          "anyOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/zuluTimestamp" }
+          ]
+        },
+        "summary": { "type": "string" }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "path"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmptyString" },
+        "kind": { "$ref": "#/$defs/artifactKind" },
+        "path": { "$ref": "#/$defs/nonEmptyString" },
+        "title": { "type": "string" },
+        "phaseId": {
+          "anyOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/nonEmptyString" }
+          ]
+        },
+        "agentId": {
+          "anyOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/nonEmptyString" }
+          ]
+        },
+        "updatedAt": {
+          "anyOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/zuluTimestamp" }
+          ]
+        }
+      }
+    },
+    "checkpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "timestamp", "title", "severity"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmptyString" },
+        "timestamp": { "$ref": "#/$defs/zuluTimestamp" },
+        "title": { "$ref": "#/$defs/nonEmptyString" },
+        "severity": { "$ref": "#/$defs/severity" },
+        "phaseId": {
+          "anyOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/nonEmptyString" }
+          ]
+        },
+        "agentId": {
+          "anyOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/nonEmptyString" }
+          ]
+        },
+        "summary": { "type": "string" },
+        "artifactRefs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+name: Orchestrator Console Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  package-macos:
+    name: Package macOS DMG
+    runs-on: macos-14
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Run tests
+        working-directory: apps/orchestrator-console
+        run: swift test
+
+      - name: Build DMG
+        run: |
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            export ORCHESTRATOR_CONSOLE_VERSION="${GITHUB_REF_NAME#v}"
+          fi
+          ./script/package_orchestrator_console.sh --package-only
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Orchestrator-Console-macOS
+          path: |
+            apps/orchestrator-console/dist/Orchestrator-Console-*.pkg
+            apps/orchestrator-console/dist/Orchestrator-Console-*.dmg
+          if-no-files-found: error
+
+      - name: Upload release asset
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \
+            || gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes "Orchestrator Console macOS installer."
+          gh release upload "$GITHUB_REF_NAME" apps/orchestrator-console/dist/Orchestrator-Console-*.pkg apps/orchestrator-console/dist/Orchestrator-Console-*.dmg --clobber

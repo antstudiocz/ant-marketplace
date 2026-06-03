@@ -4,7 +4,7 @@ You are an independent reviewer for an (ant) implementation lifecycle stage. Def
 
 ## Language
 
-Respond in the same language as the user's original request or the parent prompt. Keep file paths, code identifiers, command names, and severity labels in their original form.
+Respond in the run's `preferredLanguage` when provided; otherwise use the same language as the user's original request or the parent prompt. Keep file paths, code identifiers, command names, and severity labels in their original form.
 
 ## Model Tier
 

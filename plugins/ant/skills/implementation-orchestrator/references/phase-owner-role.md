@@ -4,6 +4,17 @@ Use this internal reference for any role that owns a lifecycle phase or implemen
 
 Phase artifacts are the source of truth. Chat summaries are only UI. Before a phase transition, pause, stop, handoff, replacement worker, reviewer handoff, or completion report, update the artifacts first or report exact artifact updates to the parent that owns the files.
 
+For new persisted runs, markdown is the human resume layer and the machine-readable source lives beside it:
+
+```text
+.ant/orchestrator/<run>/state.json
+.ant/orchestrator/<run>/events.jsonl
+```
+
+Use `plugins/ant/contracts/orchestrator-state/` for the canonical schema, enums, event types, and UTC/Zulu timestamp rules. A phase owner that is delegated artifact ownership should update `state.json` whenever the current snapshot changes and append `events.jsonl` entries for durable lifecycle events. If the parent owns the run-level files, return the exact state/event updates needed instead of silently skipping them.
+
+If the run has `preferredLanguage` in `state.json`, write future user-facing phase titles, markdown headings, phase summaries, checkpoints, event messages, and handoffs in that language. Supported values are `cs-CZ` and `en`. Do not translate or rewrite older artifacts when the preference is added or changed.
+
 ## Workspace Shape
 
 Use this structure for new medium+ runs:
@@ -14,6 +25,8 @@ Use this structure for new medium+ runs:
   <YYYY-MM-DD-short-purpose>/
     index.md
     state.md
+    state.json
+    events.jsonl
     decisions.md
     handoff.md
     phases/
@@ -74,7 +87,7 @@ Create only the phase folders needed for the run. Keep numbering stable once sha
 Every phase folder must contain at least:
 
 - `phase.md` - status, owner, goal, inputs, work done, evidence, blockers, and close status.
-- `decisions.md` - user decisions, safe assumptions, local decisions, and escalations.
+- `decisions.md` - user decisions, safe assumptions, local decisions, and escalations. Every new user decision entry must include a full UTC/Zulu timestamp such as `2026-05-26T14:03:12Z`; do not write date-only user decisions.
 - `handoff.md` - next phase handoff, files to read first, must-not-assume notes, open questions, active children, and next safe action.
 
 Add phase-specific files when relevant:

@@ -10,13 +10,16 @@ The standing subagent authorization in `references/lifecycle.md` permits you to 
 
 ## Language
 
-Respond in the same language as the user's original request. Use that language for progress reports, slice prompts, reviewer handoff, final evidence, risks, and questions. Keep command names, file paths, code identifiers, and fixed orchestration tokens in their original form.
+Respond in the run's `preferredLanguage` when provided; otherwise use the same language as the user's original request. Use that language for progress reports, slice prompts, reviewer handoff, final evidence, risks, and questions. Keep command names, file paths, code identifiers, and fixed orchestration tokens in their original form.
+
+When the run's `state.json` includes `preferredLanguage`, treat it as the language for future user-facing event messages, checkpoints, summaries, phase titles, markdown headings, handoffs, and child-agent progress reports. Supported values are `cs-CZ` and `en`. Do not translate existing events, checkpoints, or markdown artifacts after the preference changes.
 
 ## Responsibilities
 
 - Preserve the original goal, approved direction, implementation plan, non-goals, acceptance criteria, and constraints.
 - Preserve the approved execution mode, decision policy, escalation rules, and phased roadmap.
 - Preserve the phase workspace contract. Treat `phases/06-implementation/` and delegated subphase artifacts as the durable source of truth.
+- Preserve the machine-readable orchestration contract in `plugins/ant/contracts/orchestrator-state/` when the approved scope includes it. New run producers should write `.ant/orchestrator/<run>/state.json` snapshots and append `.ant/orchestrator/<run>/events.jsonl` events using UTC/Zulu timestamps and normalized contract statuses.
 - Read repo instructions, delivery context, dirty state, implementation plan, architecture boundaries, and relevant code paths before editing.
 - Read orchestration artifacts when the root provides them, especially `index.md`, `state.md`, `decisions.md`, current phase files, and `handoff.md`.
 - Respect approved branch/worktree, confirmed target branch, unrelated-change decision, and MR decisions. Do not switch branches, create worktrees, push, or create MRs unless the root orchestrator explicitly delegates that action after user approval.
@@ -38,6 +41,7 @@ Respond in the same language as the user's original request. Use that language f
 - For multi-phase implementation, maintain or report updates for `phases/06-implementation/subphases/<NN-name>/...` with phase close evidence.
 - Spawn or request an implementation reviewer after integration.
 - Treat child reports as claims until backed by checks, integrated inspection, reviewer findings, or explicit residual-risk acceptance.
+- Do not make dashboards or automation depend on free-form markdown when `state.json` and `events.jsonl` are present. Markdown-only runs should be handled as degraded historical input.
 - Fix P0/P1/P2 reviewer findings, run targeted verification, and request a focused re-review before reporting completion unless the user explicitly accepts residual risk.
 - Return concise final evidence to the root orchestrator.
 
@@ -369,7 +373,7 @@ Model tier:
 <Fast scout/mechanical only for bounded helper work; otherwise default/strong model>
 
 Language:
-Respond in the same language as the original user request.
+Respond in the run's `preferredLanguage` when provided; otherwise use the same language as the original user request.
 
 Push checkpoints after discovery, blockers, risky changes, completion, and checks. Escalate scope, architecture, legacy/debt, or contract decisions to me instead of guessing.
 ```
@@ -417,7 +421,7 @@ Known risks or skipped checks:
 <risks>
 
 Language:
-Respond in the same language as the original user request.
+Respond in the run's `preferredLanguage` when provided; otherwise use the same language as the original user request.
 
 Review correctness, acceptance criteria, regressions, security, permissions, tenant boundaries, architecture boundaries, file placement, contract consistency across slices, missing tests, and evidence quality. Also check for AI slop: dead code, unused files, duplicate implementations, stale config, TODO debt, suppressed errors, convenience shared utilities, and avoidable legacy leftovers. Return concrete findings ordered by severity, or say there are no material issues and list residual risks.
 ```

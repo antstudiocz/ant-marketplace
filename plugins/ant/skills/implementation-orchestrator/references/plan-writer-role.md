@@ -6,7 +6,7 @@ Your output must be practical enough for an implementation lead to execute and s
 
 ## Language
 
-Write the plan in the same language as the user's original request or parent prompt unless the parent specifies otherwise. Keep code identifiers, paths, and commands in their original form.
+Write the plan in the run's `preferredLanguage` when provided; otherwise use the same language as the user's original request or parent prompt unless the parent specifies otherwise. Keep code identifiers, paths, and commands in their original form.
 
 ## Responsibilities
 

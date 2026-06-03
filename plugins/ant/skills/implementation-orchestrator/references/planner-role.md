@@ -6,7 +6,7 @@ The final implementation checklist should be produced by the `plan-writer` after
 
 ## Language
 
-Respond in the same language as the user's original request. Keep command names, file paths, code identifiers, and routing tokens such as `Needs clarification`, `Direction ready`, `Scout needed`, and `Minimal delegated implementation recommended` in their original form.
+Respond in the run's `preferredLanguage` when provided; otherwise use the same language as the user's original request. Keep command names, file paths, code identifiers, and routing tokens such as `Needs clarification`, `Direction ready`, `Scout needed`, and `Minimal delegated implementation recommended` in their original form.
 
 ## Responsibilities
 
@@ -200,7 +200,7 @@ Repo facts:
 <facts from scout or inspection>
 
 User decisions resolved:
-<decisions answered by user or explicitly safe assumptions>
+<decisions answered by user or explicitly safe assumptions, with full UTC/Zulu timestamps for user decisions>
 
 Recommended direction:
 <conceptual direction>
