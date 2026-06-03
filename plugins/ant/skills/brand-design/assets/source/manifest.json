@@ -1,0 +1,1271 @@
+{
+    "schema_version": "1.2",
+    "export": {
+        "type": "public",
+        "date": "2026-06-03T13:27:12+02:00",
+        "version": "1.0",
+        "language": "cs",
+        "generator": "Visualbook Agent Export v1.0",
+        "scope": "Veřejný obsah (zaheslované sekce vyřazeny)",
+        "sections_included": 12,
+        "sections_excluded_locked": 0,
+        "structure_mode": "onebrand",
+        "asset_naming": "Obrázky z modulů: při více jazycích assets/images/<kód>/<slug-sekce>/<slug-modulu>/ (u modulů: pokud slug mutace odpovídá uid složky a titulek je přeložený, export použije slug z titulku). Ikony modulu ikon ve stejné složce jako ostatní obrázky modulu (bez podsložky icons). Loga: assets/logos/<uid-stránky-logos>/<slug-logo>/ (uid = složka kontejneru v content/, rozliší více sekcí Loga). Logopack na rodiči logos: assets/logos/<uid-stránky-logos>/. Písma: assets/fonts/…. Kolize → -1, -2, …"
+    },
+    "brand": {
+        "name": "(ant)",
+        "slug": "ant",
+        "description": "Brand manuál",
+        "url": "https://brand.antstudio.cz",
+        "languages": [
+            "cs"
+        ]
+    },
+    "design_tokens": {
+        "colors": {
+            "header": "#191a1b",
+            "headings": "#191a1b",
+            "text": "#697077",
+            "link": "#000000",
+            "button_primary": "#000000"
+        },
+        "typography": {
+            "fonts": [
+                {
+                    "name": "Aktiv Grotesk EX",
+                    "role": "Aktiv Grotesk Ex",
+                    "styles": [
+                        "Regular (400)",
+                        "Medium (500)",
+                        "SemiBold (600)",
+                        "Bold (700)"
+                    ]
+                },
+                {
+                    "name": "Inter",
+                    "role": "Textové písmo",
+                    "styles": [
+                        "Regular (400)",
+                        "Light (300)",
+                        "Medium (500)",
+                        "SemiBold (600)",
+                        "Bold (700)"
+                    ]
+                }
+            ],
+            "alternative_font": {
+                "name": "Alternativní písmo",
+                "pc": "Arial",
+                "mac": "Helvetica / Sans Francisco"
+            },
+            "font_usage": [
+                {
+                    "font": "Aktiv Grotesk EX",
+                    "usage": [
+                        "Web design",
+                        "Mobile application",
+                        "Shared online documents",
+                        "Offline documents",
+                        "Marketing materials"
+                    ]
+                },
+                {
+                    "font": "Inter",
+                    "usage": [
+                        "Web design",
+                        "Offline documents",
+                        "Shared online documents",
+                        "Mobile application",
+                        "Marketing materials"
+                    ]
+                }
+            ]
+        },
+        "border_radius": {
+            "default": "10px"
+        }
+    },
+    "color_swatches": [
+        {
+            "group": "swatch",
+            "colors": [
+                {
+                    "name": "Zelená",
+                    "hex": "#5bffc4",
+                    "rgb": "91, 255, 196",
+                    "cmyk": "-",
+                    "pantone_c": "Pantone 3385",
+                    "pantone_u": null,
+                    "ral": "-",
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Černá",
+                    "hex": "#000000",
+                    "rgb": "0, 0, 0",
+                    "cmyk": "60-40-40-100",
+                    "pantone_c": "Pantone Black C",
+                    "pantone_u": "Pantone Black U",
+                    "ral": "9005",
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Šedá Světlá",
+                    "hex": "#e7e8e9",
+                    "rgb": "231, 232, 233",
+                    "cmyk": "2-1-1-8",
+                    "pantone_c": "Pantone 427 C",
+                    "pantone_u": null,
+                    "ral": "9003",
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Šedá Tmavá",
+                    "hex": "#aeb1b7",
+                    "rgb": "174, 177, 183",
+                    "cmyk": "-",
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": "-",
+                    "ncs": null,
+                    "three_m": null
+                }
+            ]
+        },
+        {
+            "group": "swatch",
+            "colors": [
+                {
+                    "name": "Hnědá Světlá",
+                    "hex": "#ffe4c1",
+                    "rgb": "255, 228, 193",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Fialová Světlá",
+                    "hex": "#dad4ff",
+                    "rgb": "218, 212, 255",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Hnědá Tmavá",
+                    "hex": "#f4ca99",
+                    "rgb": "244, 202, 153",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Žlutá",
+                    "hex": "#fffd92",
+                    "rgb": "255, 253, 146",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Růžová",
+                    "hex": "#ffe2eb",
+                    "rgb": "255, 226, 235",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Modrá SVětlá",
+                    "hex": "#d7edff",
+                    "rgb": "215, 237, 255",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                }
+            ]
+        },
+        {
+            "group": "palette",
+            "colors": [
+                {
+                    "name": "Gray 100",
+                    "hex": "#161616",
+                    "rgb": "22, 22, 22",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Gray 90",
+                    "hex": "#262626",
+                    "rgb": "38, 38, 38",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Gray 80",
+                    "hex": "#393939",
+                    "rgb": "57, 57, 57",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Gray 70",
+                    "hex": "#525252",
+                    "rgb": "82, 82, 82",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Gray 60",
+                    "hex": "#6F6F6F",
+                    "rgb": "111, 111, 111",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Gray 50",
+                    "hex": "#8D8D8D",
+                    "rgb": "141, 141, 141",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Gray 40",
+                    "hex": "#A8A8A8",
+                    "rgb": "168, 168, 168",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Gray 30",
+                    "hex": "#C6C6C6",
+                    "rgb": "198, 198, 198",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Gray 20",
+                    "hex": "#E0E0E0",
+                    "rgb": "224, 224, 224",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Gray 10",
+                    "hex": "#F4F4F4",
+                    "rgb": "244, 244, 244",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Gray 00",
+                    "hex": "#FAFAFA",
+                    "rgb": "250, 250, 250",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                }
+            ]
+        },
+        {
+            "group": "palette",
+            "colors": [
+                {
+                    "name": "Cool Gray 100",
+                    "hex": "#121619",
+                    "rgb": "18, 22, 25",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Cool Gray 90",
+                    "hex": "#21272A",
+                    "rgb": "33, 39, 42",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Cool Gray 80",
+                    "hex": "#343A3F",
+                    "rgb": "52, 58, 63",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Cool Gray 70",
+                    "hex": "#4D5358",
+                    "rgb": "77, 83, 88",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Cool Gray 60",
+                    "hex": "#697077",
+                    "rgb": "105, 112, 119",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Cool Gray 50",
+                    "hex": "#878D96",
+                    "rgb": "135, 141, 150",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Cool Gray 40",
+                    "hex": "#A2A9B0",
+                    "rgb": "162, 169, 176",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Cool Gray 30",
+                    "hex": "#C1C7CD",
+                    "rgb": "193, 199, 205",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Cool Gray 20",
+                    "hex": "#DDE1E6",
+                    "rgb": "221, 225, 230",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Cool Gray 10",
+                    "hex": "#F2F4F8",
+                    "rgb": "242, 244, 248",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                },
+                {
+                    "name": "Cool Gray 00",
+                    "hex": "#fafafa",
+                    "rgb": "250, 250, 250",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                }
+            ]
+        },
+        {
+            "group": "palette",
+            "colors": [
+                {
+                    "name": "Mint Green 100",
+                    "hex": "#d3fff5",
+                    "rgb": "211, 255, 245",
+                    "cmyk": null,
+                    "pantone_c": null,
+                    "pantone_u": null,
+                    "ral": null,
+                    "ncs": null,
+                    "three_m": null
+                }
+            ]
+        }
+    ],
+    "sections": [
+        {
+            "id": "logo",
+            "title": "Logo",
+            "template": "logos",
+            "order": 1,
+            "locked": false,
+            "children": [
+                {
+                    "id": "logo/primarni-logo-ant",
+                    "title": "Primární logo (ant)",
+                    "template": "logo"
+                },
+                {
+                    "id": "logo/logo-s-claimem",
+                    "title": "Logo/Označení",
+                    "template": "logo"
+                }
+            ]
+        },
+        {
+            "id": "barevnost",
+            "title": "Barvy",
+            "template": "colors",
+            "order": 2,
+            "locked": false,
+            "children": []
+        },
+        {
+            "id": "pisma",
+            "title": "Typografie",
+            "template": "typography",
+            "order": 3,
+            "locked": false,
+            "children": []
+        },
+        {
+            "id": "sablony",
+            "title": "Šablony",
+            "template": "portal-page",
+            "order": 4,
+            "locked": false,
+            "children": []
+        },
+        {
+            "id": "tone-of-voice",
+            "title": "Tone of Voice",
+            "template": "modular-custom-page",
+            "order": 5,
+            "locked": false,
+            "children": []
+        },
+        {
+            "id": "design-zdroje",
+            "title": "Digitální nastavení",
+            "template": "modular-custom-page",
+            "order": 6,
+            "locked": false,
+            "children": []
+        },
+        {
+            "id": "externi-odkaz",
+            "title": "Externí odkaz",
+            "template": "external-link",
+            "order": 7,
+            "locked": false,
+            "children": []
+        },
+        {
+            "id": "obsahova-stranka-s-prehledem-vsech-sekci",
+            "title": "Obsahová stránka s přehledem všech sekcí",
+            "template": "modular-custom-page",
+            "order": 8,
+            "locked": false,
+            "children": []
+        },
+        {
+            "id": "brand-messaging",
+            "title": "Brand Messaging",
+            "template": "modular-custom-page",
+            "order": 9,
+            "locked": false,
+            "children": []
+        },
+        {
+            "id": "vizualni-identita",
+            "title": "Vizuální identita",
+            "template": "portal-page",
+            "order": 10,
+            "locked": false,
+            "children": []
+        },
+        {
+            "id": "o-znacce",
+            "title": "O značce",
+            "template": "modular-custom-page",
+            "order": 11,
+            "locked": false,
+            "children": []
+        }
+    ],
+    "assets": [
+        {
+            "path": "assets/logos/logo-light-primarni-logo-ant.svg",
+            "type": "logo",
+            "format": "svg",
+            "description": "Logo pro světlé pozadí — „Primární logo (ant)\"",
+            "logo_page_id": "logo/primarni-logo-ant",
+            "logo_variant": "light",
+            "width": 1024,
+            "height": 284,
+            "aspect_ratio": 3.6056
+        },
+        {
+            "path": "assets/logos/logo-dark-primarni-logo-ant.svg",
+            "type": "logo",
+            "format": "svg",
+            "description": "Logo pro tmavé pozadí — „Primární logo (ant)\"",
+            "logo_page_id": "logo/primarni-logo-ant",
+            "logo_variant": "dark",
+            "width": 1024,
+            "height": 285,
+            "aspect_ratio": 3.593
+        },
+        {
+            "path": "assets/logos/logo-light-logo-s-claimem.svg",
+            "type": "logo",
+            "format": "svg",
+            "description": "Logo pro světlé pozadí — „Logo/Označení\"",
+            "logo_page_id": "logo/logo-s-claimem",
+            "logo_variant": "light",
+            "width": 1024,
+            "height": 232,
+            "aspect_ratio": 4.4138
+        },
+        {
+            "path": "assets/logos/logo-dark-logo-s-claimem.svg",
+            "type": "logo",
+            "format": "svg",
+            "description": "Logo pro tmavé pozadí — „Logo/Označení\"",
+            "logo_page_id": "logo/logo-s-claimem",
+            "logo_variant": "dark",
+            "width": 1024,
+            "height": 232,
+            "aspect_ratio": 4.4138
+        },
+        {
+            "path": "assets/fonts/inter_font.zip",
+            "type": "download",
+            "format": "zip",
+            "description": "Stažení písma — „Inter“ — Stáhnout písmo",
+            "section_title": "Inter",
+            "original_filename": "inter_font.zip",
+            "page_id": "pisma/modules/inter",
+            "manual_section_id": "pisma",
+            "manual_section_title": "Typografie",
+            "bytes": 9311376
+        },
+        {
+            "path": "assets/images/img_obraz.png",
+            "type": "image",
+            "format": "png",
+            "description": "Karta rozcestníku — „Tiskoviny“",
+            "section_title": "Tiskoviny",
+            "original_filename": "img_obraz.png",
+            "page_id": "sablony/modules/tiskoviny",
+            "manual_section_id": "sablony",
+            "manual_section_title": "Šablony",
+            "width": 700,
+            "height": 476,
+            "aspect_ratio": 1.4706
+        },
+        {
+            "path": "assets/images/dohoda_img.png",
+            "type": "image",
+            "format": "png",
+            "description": "Karta rozcestníku — „Tiskoviny“",
+            "section_title": "Tiskoviny",
+            "original_filename": "dohoda_img.png",
+            "page_id": "sablony/modules/tiskoviny",
+            "manual_section_id": "sablony",
+            "manual_section_title": "Šablony",
+            "width": 700,
+            "height": 476,
+            "aspect_ratio": 1.4706
+        },
+        {
+            "path": "assets/images/image-2.png",
+            "type": "image",
+            "format": "png",
+            "description": "Karta rozcestníku — „Tiskoviny“",
+            "section_title": "Tiskoviny",
+            "original_filename": "image-2.png",
+            "page_id": "sablony/modules/tiskoviny",
+            "manual_section_id": "sablony",
+            "manual_section_title": "Šablony",
+            "width": 700,
+            "height": 476,
+            "aspect_ratio": 1.4706
+        },
+        {
+            "path": "assets/images/label_nahled.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Obrázek a text — „Labels“",
+            "section_title": "Labels",
+            "original_filename": "label_nahled.webp",
+            "page_id": "design-zdroje/modules/labels",
+            "manual_section_id": "design-zdroje",
+            "manual_section_title": "Digitální nastavení",
+            "width": 1460,
+            "height": 1095,
+            "aspect_ratio": 1.3333
+        },
+        {
+            "path": "assets/images/labels01.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Obrázek a text — „Labels“",
+            "section_title": "Labels",
+            "original_filename": "labels01.webp",
+            "page_id": "design-zdroje/modules/labels",
+            "manual_section_id": "design-zdroje",
+            "manual_section_title": "Digitální nastavení",
+            "width": 1460,
+            "height": 1095,
+            "aspect_ratio": 1.3333
+        },
+        {
+            "path": "assets/images/label_nahled_02.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Obrázek a text — „Labels“",
+            "section_title": "Labels",
+            "original_filename": "label_nahled_02.webp",
+            "page_id": "design-zdroje/modules/labels",
+            "manual_section_id": "design-zdroje",
+            "manual_section_title": "Digitální nastavení",
+            "width": 1460,
+            "height": 1095,
+            "aspect_ratio": 1.3333
+        },
+        {
+            "path": "assets/images/labels02.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Obrázek a text — „Labels“",
+            "section_title": "Labels",
+            "original_filename": "labels02.webp",
+            "page_id": "design-zdroje/modules/labels",
+            "manual_section_id": "design-zdroje",
+            "manual_section_title": "Digitální nastavení",
+            "width": 1460,
+            "height": 1095,
+            "aspect_ratio": 1.3333
+        },
+        {
+            "path": "assets/images/02.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Obrázek a text — „Autorský podpis“",
+            "section_title": "Autorský podpis",
+            "original_filename": "02.webp",
+            "page_id": "design-zdroje/modules/autorsky-podpis",
+            "manual_section_id": "design-zdroje",
+            "manual_section_title": "Digitální nastavení",
+            "width": 1460,
+            "height": 1095,
+            "aspect_ratio": 1.3333
+        },
+        {
+            "path": "assets/images/03.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Obrázek a text — „Autorský podpis“",
+            "section_title": "Autorský podpis",
+            "original_filename": "03.webp",
+            "page_id": "design-zdroje/modules/autorsky-podpis",
+            "manual_section_id": "design-zdroje",
+            "manual_section_title": "Digitální nastavení",
+            "width": 1460,
+            "height": 1095,
+            "aspect_ratio": 1.3333
+        },
+        {
+            "path": "assets/images/04.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Obrázek a text — „Autorský podpis“",
+            "section_title": "Autorský podpis",
+            "original_filename": "04.webp",
+            "page_id": "design-zdroje/modules/autorsky-podpis",
+            "manual_section_id": "design-zdroje",
+            "manual_section_title": "Digitální nastavení",
+            "width": 1460,
+            "height": 1095,
+            "aspect_ratio": 1.3333
+        },
+        {
+            "path": "assets/images/meet_01.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Obrázek a text — „Google Meet“",
+            "section_title": "Google Meet",
+            "original_filename": "meet_01.webp",
+            "page_id": "design-zdroje/modules/google-meet",
+            "manual_section_id": "design-zdroje",
+            "manual_section_title": "Digitální nastavení",
+            "width": 1460,
+            "height": 821,
+            "aspect_ratio": 1.7783
+        },
+        {
+            "path": "assets/images/meet_07.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Obrázek a text — „Google Meet“",
+            "section_title": "Google Meet",
+            "original_filename": "meet_07.webp",
+            "page_id": "design-zdroje/modules/google-meet",
+            "manual_section_id": "design-zdroje",
+            "manual_section_title": "Digitální nastavení",
+            "width": 1460,
+            "height": 821,
+            "aspect_ratio": 1.7783
+        },
+        {
+            "path": "assets/images/meet_03.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Obrázek a text — „Google Meet“",
+            "section_title": "Google Meet",
+            "original_filename": "meet_03.webp",
+            "page_id": "design-zdroje/modules/google-meet",
+            "manual_section_id": "design-zdroje",
+            "manual_section_title": "Digitální nastavení",
+            "width": 1460,
+            "height": 821,
+            "aspect_ratio": 1.7783
+        },
+        {
+            "path": "assets/images/meet_02.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Obrázek a text — „Google Meet“",
+            "section_title": "Google Meet",
+            "original_filename": "meet_02.webp",
+            "page_id": "design-zdroje/modules/google-meet",
+            "manual_section_id": "design-zdroje",
+            "manual_section_title": "Digitální nastavení",
+            "width": 1460,
+            "height": 821,
+            "aspect_ratio": 1.7783
+        },
+        {
+            "path": "assets/images/meet_06.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Obrázek a text — „Google Meet“",
+            "section_title": "Google Meet",
+            "original_filename": "meet_06.webp",
+            "page_id": "design-zdroje/modules/google-meet",
+            "manual_section_id": "design-zdroje",
+            "manual_section_title": "Digitální nastavení",
+            "width": 1460,
+            "height": 821,
+            "aspect_ratio": 1.7783
+        },
+        {
+            "path": "assets/images/meet_05.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Obrázek a text — „Google Meet“",
+            "section_title": "Google Meet",
+            "original_filename": "meet_05.webp",
+            "page_id": "design-zdroje/modules/google-meet",
+            "manual_section_id": "design-zdroje",
+            "manual_section_title": "Digitální nastavení",
+            "width": 1460,
+            "height": 821,
+            "aspect_ratio": 1.7783
+        },
+        {
+            "path": "assets/images/meet_04.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Obrázek a text — „Google Meet“",
+            "section_title": "Google Meet",
+            "original_filename": "meet_04.webp",
+            "page_id": "design-zdroje/modules/google-meet",
+            "manual_section_id": "design-zdroje",
+            "manual_section_title": "Digitální nastavení",
+            "width": 1460,
+            "height": 821,
+            "aspect_ratio": 1.7783
+        },
+        {
+            "path": "assets/images/frame-1.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Obrázek a text — „AI Notetaker“",
+            "section_title": "AI Notetaker",
+            "original_filename": "frame-1.webp",
+            "page_id": "design-zdroje/modules/ai-notetaker",
+            "manual_section_id": "design-zdroje",
+            "manual_section_title": "Digitální nastavení",
+            "width": 1460,
+            "height": 821,
+            "aspect_ratio": 1.7783
+        },
+        {
+            "path": "assets/others/bot_ant_profil.png",
+            "type": "download",
+            "format": "png",
+            "description": "Profil tl;dv - AI Notetaker",
+            "section_title": "AI Notetaker",
+            "original_filename": "bot_ant_profil.png",
+            "page_id": "design-zdroje/modules/ai-notetaker",
+            "manual_section_id": "design-zdroje",
+            "manual_section_title": "Digitální nastavení",
+            "bytes": 36810
+        },
+        {
+            "path": "assets/images/eml_dlazdice.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Obrázek a text — „E-mailový podpis“",
+            "section_title": "E-mailový podpis",
+            "original_filename": "eml_dlazdice.webp",
+            "page_id": "design-zdroje/modules/e-mailovy-podpis",
+            "manual_section_id": "design-zdroje",
+            "manual_section_title": "Digitální nastavení",
+            "width": 700,
+            "height": 476,
+            "aspect_ratio": 1.4706
+        },
+        {
+            "path": "assets/images/stationery_mockup_1.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Obrázek a text — „Sekce: Obrázek (multifunkční)“",
+            "section_title": "Sekce: Obrázek (multifunkční)",
+            "original_filename": "stationery_mockup_1.webp",
+            "page_id": "obsahova-stranka-s-prehledem-vsech-sekci/modules/sekce-obrazek-multifunkcni",
+            "manual_section_id": "obsahova-stranka-s-prehledem-vsech-sekci",
+            "manual_section_title": "Obsahová stránka s přehledem všech sekcí",
+            "width": 1460,
+            "height": 1095,
+            "aspect_ratio": 1.3333
+        },
+        {
+            "path": "assets/images/stationery_mockup_1.webp",
+            "type": "download",
+            "format": "webp",
+            "description": "Stáhnout náhled",
+            "section_title": "Sekce: Obrázek (multifunkční)",
+            "original_filename": "stationery_mockup_1.webp",
+            "page_id": "obsahova-stranka-s-prehledem-vsech-sekci/modules/sekce-obrazek-multifunkcni",
+            "manual_section_id": "obsahova-stranka-s-prehledem-vsech-sekci",
+            "manual_section_title": "Obsahová stránka s přehledem všech sekcí",
+            "bytes": 86192
+        },
+        {
+            "path": "assets/images/stationery_mockup_2.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Obrázek a text — „Sekce: Obrázek (jednoduchý)“",
+            "section_title": "Sekce: Obrázek (jednoduchý)",
+            "original_filename": "stationery_mockup_2.webp",
+            "page_id": "obsahova-stranka-s-prehledem-vsech-sekci/modules/sekce-obrazek-jednoduchy",
+            "manual_section_id": "obsahova-stranka-s-prehledem-vsech-sekci",
+            "manual_section_title": "Obsahová stránka s přehledem všech sekcí",
+            "width": 1460,
+            "height": 1095,
+            "aspect_ratio": 1.3333
+        },
+        {
+            "path": "assets/images/stationery_mockup_3.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Každou fotografii můžete okomentovat pomocí tohoto popisku — použití: zakázáno (přeškrtnutí)",
+            "section_title": "Sekce: Galerie obrázků",
+            "original_filename": "stationery_mockup_3.webp",
+            "page_id": "obsahova-stranka-s-prehledem-vsech-sekci/modules/sekce-galerie-obrazku",
+            "manual_section_id": "obsahova-stranka-s-prehledem-vsech-sekci",
+            "manual_section_title": "Obsahová stránka s přehledem všech sekcí",
+            "width": 1600,
+            "height": 1200,
+            "aspect_ratio": 1.3333
+        },
+        {
+            "path": "assets/images/stationery_mockup_4.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Každou fotografii můžete okomentovat pomocí tohoto popisku — použití: povoleno (ikona check)",
+            "section_title": "Sekce: Galerie obrázků",
+            "original_filename": "stationery_mockup_4.webp",
+            "page_id": "obsahova-stranka-s-prehledem-vsech-sekci/modules/sekce-galerie-obrazku",
+            "manual_section_id": "obsahova-stranka-s-prehledem-vsech-sekci",
+            "manual_section_title": "Obsahová stránka s přehledem všech sekcí",
+            "width": 1600,
+            "height": 1200,
+            "aspect_ratio": 1.3333
+        },
+        {
+            "path": "assets/images/stationery_mockup_5.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Fotografie může být také bez pravidel (přeškrtnutí nebo s ikonou „check“). — použití: bez pravidel",
+            "section_title": "Sekce: Galerie obrázků",
+            "original_filename": "stationery_mockup_5.webp",
+            "page_id": "obsahova-stranka-s-prehledem-vsech-sekci/modules/sekce-galerie-obrazku",
+            "manual_section_id": "obsahova-stranka-s-prehledem-vsech-sekci",
+            "manual_section_title": "Obsahová stránka s přehledem všech sekcí",
+            "width": 1600,
+            "height": 1200,
+            "aspect_ratio": 1.3333
+        },
+        {
+            "path": "assets/images/obsahova-stranka-s-prehledem-vsech-sekci/stationery_mockup_1.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Galerie (logo na obrázku) — „Sekce: Galerie obrázků“ — použití: bez pravidel",
+            "section_title": "Sekce: Galerie obrázků",
+            "original_filename": "stationery_mockup_1.webp",
+            "page_id": "obsahova-stranka-s-prehledem-vsech-sekci/modules/sekce-galerie-obrazku",
+            "manual_section_id": "obsahova-stranka-s-prehledem-vsech-sekci",
+            "manual_section_title": "Obsahová stránka s přehledem všech sekcí",
+            "width": 1600,
+            "height": 1200,
+            "aspect_ratio": 1.3333
+        },
+        {
+            "path": "assets/images/stationery_mockup_1.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Karusel — „Sekce: Karusel (slideshow)“",
+            "section_title": "Sekce: Karusel (slideshow)",
+            "original_filename": "stationery_mockup_1.webp",
+            "page_id": "obsahova-stranka-s-prehledem-vsech-sekci/modules/sekce-karusel-slideshow",
+            "manual_section_id": "obsahova-stranka-s-prehledem-vsech-sekci",
+            "manual_section_title": "Obsahová stránka s přehledem všech sekcí",
+            "width": 1460,
+            "height": 1095,
+            "aspect_ratio": 1.3333
+        },
+        {
+            "path": "assets/images/stationery_mockup_2.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Karusel — „Sekce: Karusel (slideshow)“",
+            "section_title": "Sekce: Karusel (slideshow)",
+            "original_filename": "stationery_mockup_2.webp",
+            "page_id": "obsahova-stranka-s-prehledem-vsech-sekci/modules/sekce-karusel-slideshow",
+            "manual_section_id": "obsahova-stranka-s-prehledem-vsech-sekci",
+            "manual_section_title": "Obsahová stránka s přehledem všech sekcí",
+            "width": 1460,
+            "height": 1095,
+            "aspect_ratio": 1.3333
+        },
+        {
+            "path": "assets/images/obsahova-stranka-s-prehledem-vsech-sekci/stationery_mockup_3.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Karusel — „Sekce: Karusel (slideshow)“",
+            "section_title": "Sekce: Karusel (slideshow)",
+            "original_filename": "stationery_mockup_3.webp",
+            "page_id": "obsahova-stranka-s-prehledem-vsech-sekci/modules/sekce-karusel-slideshow",
+            "manual_section_id": "obsahova-stranka-s-prehledem-vsech-sekci",
+            "manual_section_title": "Obsahová stránka s přehledem všech sekcí",
+            "width": 1460,
+            "height": 1095,
+            "aspect_ratio": 1.3333
+        },
+        {
+            "path": "assets/images/obsahova-stranka-s-prehledem-vsech-sekci/stationery_mockup_4.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Karusel — „Sekce: Karusel (slideshow)“",
+            "section_title": "Sekce: Karusel (slideshow)",
+            "original_filename": "stationery_mockup_4.webp",
+            "page_id": "obsahova-stranka-s-prehledem-vsech-sekci/modules/sekce-karusel-slideshow",
+            "manual_section_id": "obsahova-stranka-s-prehledem-vsech-sekci",
+            "manual_section_title": "Obsahová stránka s přehledem všech sekcí",
+            "width": 1460,
+            "height": 1095,
+            "aspect_ratio": 1.3333
+        },
+        {
+            "path": "assets/images/obsahova-stranka-s-prehledem-vsech-sekci/stationery_mockup_5.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Karusel — „Sekce: Karusel (slideshow)“",
+            "section_title": "Sekce: Karusel (slideshow)",
+            "original_filename": "stationery_mockup_5.webp",
+            "page_id": "obsahova-stranka-s-prehledem-vsech-sekci/modules/sekce-karusel-slideshow",
+            "manual_section_id": "obsahova-stranka-s-prehledem-vsech-sekci",
+            "manual_section_title": "Obsahová stránka s přehledem všech sekcí",
+            "width": 1460,
+            "height": 1095,
+            "aspect_ratio": 1.3333
+        },
+        {
+            "path": "assets/others/stationery_mockup_5.jpg",
+            "type": "download",
+            "format": "jpg",
+            "description": "Další libovolné tlačítko",
+            "section_title": "Sekce: Video (multifunkční)",
+            "original_filename": "stationery_mockup_5.jpg",
+            "page_id": "obsahova-stranka-s-prehledem-vsech-sekci/modules/sekce-video-multifunkcni",
+            "manual_section_id": "obsahova-stranka-s-prehledem-vsech-sekci",
+            "manual_section_title": "Obsahová stránka s přehledem všech sekcí",
+            "bytes": 211477
+        },
+        {
+            "path": "assets/others/inter-regular.ttf",
+            "type": "download",
+            "format": "ttf",
+            "description": "Regular",
+            "section_title": "Sekce: Soubory ke stažení",
+            "original_filename": "inter-regular.ttf",
+            "page_id": "obsahova-stranka-s-prehledem-vsech-sekci/modules/sekce-soubory-ke-stazeni",
+            "manual_section_id": "obsahova-stranka-s-prehledem-vsech-sekci",
+            "manual_section_title": "Obsahová stránka s přehledem všech sekcí",
+            "bytes": 309828
+        },
+        {
+            "path": "assets/others/lexend-medium.ttf",
+            "type": "download",
+            "format": "ttf",
+            "description": "Medium",
+            "section_title": "Sekce: Soubory ke stažení",
+            "original_filename": "lexend-medium.ttf",
+            "page_id": "obsahova-stranka-s-prehledem-vsech-sekci/modules/sekce-soubory-ke-stazeni",
+            "manual_section_id": "obsahova-stranka-s-prehledem-vsech-sekci",
+            "manual_section_title": "Obsahová stránka s přehledem všech sekcí",
+            "bytes": 78696
+        },
+        {
+            "path": "assets/others/lexend-bold.ttf",
+            "type": "download",
+            "format": "ttf",
+            "description": "Bold",
+            "section_title": "Sekce: Soubory ke stažení",
+            "original_filename": "lexend-bold.ttf",
+            "page_id": "obsahova-stranka-s-prehledem-vsech-sekci/modules/sekce-soubory-ke-stazeni",
+            "manual_section_id": "obsahova-stranka-s-prehledem-vsech-sekci",
+            "manual_section_title": "Obsahová stránka s přehledem všech sekcí",
+            "bytes": 78632
+        },
+        {
+            "path": "assets/images/02.png",
+            "type": "image",
+            "format": "png",
+            "description": "Obrázek v textu (blok) — modul „Brand Messaging“",
+            "section_title": "Brand Messaging",
+            "original_filename": "02.png",
+            "page_id": "o-znacce/modules/brand-messaging",
+            "manual_section_id": "o-znacce",
+            "manual_section_title": "O značce",
+            "width": 1460,
+            "height": 800,
+            "aspect_ratio": 1.825
+        },
+        {
+            "path": "assets/others/ant-komunikacni-manual.pdf",
+            "type": "download",
+            "format": "pdf",
+            "description": "Komunikacní manuál (ant)",
+            "section_title": "Komunikační manuál",
+            "original_filename": "ant-komunikacni-manual.pdf",
+            "page_id": "o-znacce/modules/komunikacni-manual",
+            "manual_section_id": "o-znacce",
+            "manual_section_title": "O značce",
+            "bytes": 4542351
+        },
+        {
+            "path": "assets/images/foto01.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Obrázek a text — „Fotografie“",
+            "section_title": "Fotografie",
+            "original_filename": "foto01.webp",
+            "page_id": "o-znacce/modules/fotografie",
+            "manual_section_id": "o-znacce",
+            "manual_section_title": "O značce",
+            "width": 1460,
+            "height": 1095,
+            "aspect_ratio": 1.3333
+        },
+        {
+            "path": "assets/images/foto02.webp",
+            "type": "image",
+            "format": "webp",
+            "description": "Obrázek a text — „Fotografie“",
+            "section_title": "Fotografie",
+            "original_filename": "foto02.webp",
+            "page_id": "o-znacce/modules/fotografie",
+            "manual_section_id": "o-znacce",
+            "manual_section_title": "O značce",
+            "width": 1460,
+            "height": 1095,
+            "aspect_ratio": 1.3333
+        }
+    ],
+    "logo_pages": [
+        {
+            "page_id": "logo/primarni-logo-ant",
+            "slug": "primarni-logo-ant",
+            "title": "Primární logo (ant)",
+            "background_mode": "lightDark",
+            "brand_background": {
+                "light_hex": "#ffffff",
+                "dark_hex": "#000000"
+            },
+            "minimum_size": {
+                "basis": "minimumHeight",
+                "px": "14",
+                "mm": "5"
+            },
+            "protection_zone": null,
+            "colored_backgrounds": [
+                {
+                    "background_hex": "#5bffc4",
+                    "usage_allowed": true
+                },
+                {
+                    "background_hex": "#000000",
+                    "usage_allowed": true
+                },
+                {
+                    "background_hex": "#ffffff",
+                    "usage_allowed": true
+                },
+                {
+                    "background_hex": "#e7e8e9",
+                    "usage_allowed": true
+                },
+                {
+                    "background_hex": "#aeb1b7",
+                    "usage_allowed": true
+                },
+                {
+                    "background_hex": "#ffe4c1",
+                    "usage_allowed": false
+                },
+                {
+                    "background_hex": "#d7edff",
+                    "usage_allowed": false
+                },
+                {
+                    "background_hex": "#ffffff",
+                    "usage_allowed": false
+                }
+            ],
+            "things_to_avoid": []
+        },
+        {
+            "page_id": "logo/logo-s-claimem",
+            "slug": "logo-s-claimem",
+            "title": "Logo/Označení",
+            "background_mode": "lightDark",
+            "brand_background": {
+                "light_hex": "#ffffff",
+                "dark_hex": "#000000"
+            },
+            "minimum_size": {
+                "basis": "minimumHeight",
+                "px": "16",
+                "mm": "20"
+            },
+            "protection_zone": null,
+            "colored_backgrounds": [
+                {
+                    "background_hex": "#5bffc4",
+                    "usage_allowed": true
+                },
+                {
+                    "background_hex": "#000000",
+                    "usage_allowed": true
+                },
+                {
+                    "background_hex": "#ffffff",
+                    "usage_allowed": true
+                },
+                {
+                    "background_hex": "#e7e8e9",
+                    "usage_allowed": true
+                }
+            ],
+            "things_to_avoid": []
+        }
+    ]
+}

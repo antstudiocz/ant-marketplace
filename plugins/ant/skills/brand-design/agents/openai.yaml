@@ -1,0 +1,5 @@
+interface:
+  display_name: "(ant) Brand Design"
+  short_description: "Design and review using the (ant) brand"
+  brand_color: "#5BFFC4"
+  default_prompt: "Use $brand-design to create or review this design against the (ant) brand identity."

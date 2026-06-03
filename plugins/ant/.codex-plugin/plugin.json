@@ -1,7 +1,7 @@
 {
   "name": "ant",
-  "version": "8.1.4",
-  "description": "(ant) dual Claude Code and Codex skills: create application intake, implementation orchestration, frontend best practices, Laravel best practices, GitLab delivery workflows, Google Docs, and Asana task analysis.",
+  "version": "8.3.0",
+  "description": "(ant) dual Claude Code and Codex skills: create application intake, implementation orchestration, brand design, frontend best practices, Laravel best practices, GitLab delivery workflows, Google Docs, and Asana task analysis.",
   "author": {
     "name": "(ant)",
     "description": "full-service digital agency"
@@ -16,6 +16,8 @@
     "claude",
     "implementation",
     "orchestration",
+    "brand",
+    "design",
     "frontend",
     "laravel",
     "react",
@@ -25,7 +27,7 @@
   "interface": {
     "displayName": "(ant)",
     "shortDescription": "Shared (ant) skills for Codex and Claude Code.",
-    "longDescription": "(ant) umbrella skills for new application intake, implementation orchestration, frontend quality, Laravel architecture/performance/caching, GitLab MR/conflict delivery workflows, Google Docs, and Asana task analysis.",
+    "longDescription": "(ant) umbrella skills for new application intake, implementation orchestration, brand design, frontend quality, Laravel architecture/performance/caching, GitLab MR/conflict delivery workflows, Google Docs, and Asana task analysis.",
     "developerName": "(ant)",
     "category": "Productivity",
     "capabilities": [
