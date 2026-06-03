@@ -66,7 +66,7 @@ User local time conversion belongs only in UI rendering.
 This value is a forward-looking instruction and display hint:
 
 - Producers should set `preferredLanguage` when the host app or the user provides a language preference. If no explicit preference exists, infer it from the initial user request and fall back to `en`.
-- Producers should write future user-facing event messages, checkpoints, summaries, notes, markdown headings, phase titles, agent summaries, agent assignment fields, and handoffs in `preferredLanguage` when it is set.
+- Producers should write future user-facing event messages, checkpoints, summaries, notes, markdown headings, phase titles, agent summaries, agent graph labels, agent assignment fields, and handoffs in `preferredLanguage` when it is set.
 - Producers must not translate or rewrite historical events, checkpoints, or markdown artifacts when the preference changes.
 - Fixed enum values, file paths, code identifiers, command names, timestamps, and schema fields remain unchanged.
 - All time storage remains UTC/Zulu; language preference affects text only.
@@ -138,11 +138,12 @@ If a completed run receives a follow-up that requires more work, producers must 
 
 Each active or planned agent should expose a short machine-readable assignment so UI consumers can explain why the agent exists without scraping markdown:
 
+- `agent.shortLabel`: a 2-4 word graph label, for example `Security review` or `Zapracování review`.
 - `agent.intent`: one concise user-facing sentence, for example `Run security review of file deletion behavior`.
 - `agent.plannedWork`: short bullets describing the next work the agent is expected to do.
 - `agent.doneDefinition`: one concise condition that tells the parent when the assignment is complete.
 
-Keep these fields operational and current. They should describe planned responsibility, not a full activity log. Historical progress belongs in `checkpoints`, `events.jsonl`, and linked markdown artifacts.
+Keep these fields operational and current. `shortLabel` is for dense graph cards and should not be a sentence. The other assignment fields should describe planned responsibility, not a full activity log. Historical progress belongs in `checkpoints`, `events.jsonl`, and linked markdown artifacts.
 
 ## Event Rules
 

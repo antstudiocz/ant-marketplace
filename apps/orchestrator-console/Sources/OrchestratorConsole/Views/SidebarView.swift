@@ -11,7 +11,7 @@ struct SidebarView: View {
         List(selection: $store.selectedRunId) {
             Section(L10n.t("Workspace", "Workspace")) {
                 ProjectSwitcher(store: store, addProject: addProject)
-                    .listRowInsets(EdgeInsets(top: 4, leading: 10, bottom: 6, trailing: 10))
+                    .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 6, trailing: 10))
             }
 
             Section {

@@ -342,7 +342,7 @@ struct ArtifactPreviewSheet: View {
                 Label(L10n.t("Preview unavailable", "Náhled není dostupný"), systemImage: "exclamationmark.triangle")
                     .font(.headline)
                     .foregroundStyle(.orange)
-                Text(error.localizedDescription)
+                Text(error.localizedUserMessage)
                     .foregroundStyle(.secondary)
             }
             .padding(18)
@@ -365,9 +365,9 @@ struct ArtifactPreviewSheet: View {
                 rawPreviewContent(preview, axes: [.horizontal, .vertical], font: .system(.body, design: .monospaced), expandsHorizontally: false)
             }
         case .text:
-            rawPreviewContent(preview, axes: .vertical, font: .body, expandsHorizontally: true)
+            CodePreviewView(preview: preview, searchText: searchText)
         case .code:
-            rawPreviewContent(preview, axes: [.horizontal, .vertical], font: .system(.body, design: .monospaced), expandsHorizontally: false)
+            CodePreviewView(preview: preview, searchText: searchText)
         }
     }
 
@@ -414,6 +414,7 @@ struct MarkdownInteractionContext {
     let run: OrchestratorRun
     let artifact: Artifact?
     var artifacts: [Artifact] = []
+    var workspaceURL: URL? = nil
     let onSelectAgent: (Agent) -> Void
     var onSelectArtifact: ((Artifact) -> Void)? = nil
 
@@ -517,7 +518,7 @@ struct MarkdownInteractionContext {
             }
         }
 
-        if let regex = try? NSRegularExpression(pattern: #"([A-Za-z0-9_./-]+\.md)"#) {
+        if let regex = try? NSRegularExpression(pattern: fileReferencePattern, options: [.caseInsensitive]) {
             let range = NSRange(text.startIndex..<text.endIndex, in: text)
             for match in regex.matches(in: text, range: range) {
                 guard let tokenRange = Range(match.range(at: 1), in: text) else { continue }
@@ -534,6 +535,19 @@ struct MarkdownInteractionContext {
         }
     }
 
+    func canPreviewArtifact(_ artifact: Artifact) -> Bool {
+        guard let workspaceURL else { return true }
+        guard let url = ArtifactResolver(workspaceURL: workspaceURL).resolve(artifact) else { return false }
+
+        var isDirectory: ObjCBool = false
+        guard FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory), !isDirectory.boolValue else {
+            return false
+        }
+
+        let values = try? url.resourceValues(forKeys: [.isRegularFileKey])
+        return values?.isRegularFile == true
+    }
+
     func leadingAgentReference(in text: String) -> MarkdownAgentReference? {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
         let pattern = #"^`?([0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12})`?(?:\s+\("([^"]+)"\))?\s*:?\s*(.*)$"#
@@ -547,8 +561,16 @@ struct MarkdownInteractionContext {
         let quotedName = Range(match.range(at: 2), in: trimmed).map { String(trimmed[$0]) }
         let rest = Range(match.range(at: 3), in: trimmed).map { String(trimmed[$0]).trimmingCharacters(in: .whitespaces) } ?? ""
         let agent = agent(for: id) ?? quotedName.flatMap(agent(for:))
-        guard let agent else { return nil }
-        return MarkdownAgentReference(agent: agent, rest: rest)
+        return MarkdownAgentReference(
+            agent: agent,
+            missingLabel: quotedName ?? shortAgentId(id),
+            missingSubtitle: quotedName == nil ? nil : shortAgentId(id),
+            rest: rest
+        )
+    }
+
+    private func shortAgentId(_ id: String) -> String {
+        String(id.prefix(8))
     }
 
     private func phase(for value: String) -> Phase? {
@@ -580,27 +602,26 @@ struct MarkdownInteractionContext {
         let normalized = normalizedPathToken(value)
         guard !normalized.isEmpty else { return nil }
 
-        let markdownArtifacts = artifacts.filter { artifact in
-            artifact.kind == .markdown || ["md", "markdown"].contains(URL(fileURLWithPath: artifact.path).pathExtension.lowercased())
-        }
-        let candidates = markdownArtifacts.isEmpty ? artifacts : markdownArtifacts
-
-        if let artifact = candidates.first(where: { normalizedPathToken($0.path) == normalized }) {
+        if let artifact = artifacts.first(where: { normalizedPathToken($0.path) == normalized }) {
             return artifact
         }
 
-        if let artifact = candidates.first(where: { candidate in
+        if let artifact = artifacts.first(where: { candidate in
             let path = normalizedPathToken(candidate.path)
             return path.hasSuffix("/\(normalized)") || path.hasSuffix(normalized)
         }) {
             return artifact
         }
 
-        let titleToken = normalized.replacingOccurrences(of: ".md", with: "")
-        return candidates.first { candidate in
+        let titleToken = normalizedTitleToken(normalized)
+        if let artifact = artifacts.first(where: { candidate in
             normalizedPathToken(candidate.displayTitle) == titleToken
                 || normalizedPathToken(candidate.title ?? "") == titleToken
+        }) {
+            return artifact
         }
+
+        return syntheticArtifact(forReference: value)
     }
 
     private func normalizedAgentToken(_ value: String) -> String {
@@ -619,10 +640,138 @@ struct MarkdownInteractionContext {
             .replacingOccurrences(of: "\\", with: "/")
             .lowercased()
     }
+
+    private func normalizedTitleToken(_ normalizedPath: String) -> String {
+        let lastComponent = URL(fileURLWithPath: normalizedPath).lastPathComponent
+        let extensionToRemove = URL(fileURLWithPath: lastComponent).pathExtension
+        guard !extensionToRemove.isEmpty else { return lastComponent }
+        return String(lastComponent.dropLast(extensionToRemove.count + 1))
+    }
+
+    private func syntheticArtifact(forReference value: String) -> Artifact? {
+        let path = resolvedFileReferencePath(value)
+        guard isSupportedFileReference(path) else { return nil }
+
+        let kind = artifactKind(forPath: path)
+        return Artifact(
+            id: "inline-file:\(normalizedPathToken(path))",
+            kind: kind,
+            path: path,
+            title: syntheticTitle(forPath: path),
+            phaseId: artifact?.phaseId,
+            agentId: artifact?.agentId,
+            updatedAt: nil
+        )
+    }
+
+    private func cleanedFileReference(_ value: String) -> String {
+        value
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .trimmingCharacters(in: CharacterSet(charactersIn: "`\"'()[]{}.,:;"))
+            .replacingOccurrences(of: "\\", with: "/")
+    }
+
+    private func resolvedFileReferencePath(_ value: String) -> String {
+        let path = cleanedFileReference(value)
+        guard !path.hasPrefix("/") else { return path }
+
+        let normalized = normalizedPathToken(path)
+        if isWorkspaceRootedReference(normalized) {
+            return path
+        }
+
+        guard let currentArtifactPath = artifact?.path, !currentArtifactPath.hasPrefix("/") else {
+            return path
+        }
+
+        let relativePath = path.hasPrefix("./") ? String(path.dropFirst(2)) : path
+        let baseDirectory = (currentArtifactPath as NSString).deletingLastPathComponent
+        guard !baseDirectory.isEmpty, baseDirectory != "." else {
+            return relativePath
+        }
+
+        return "\(baseDirectory)/\(relativePath)"
+    }
+
+    private func isSupportedFileReference(_ path: String) -> Bool {
+        guard !path.isEmpty else { return false }
+        guard !path.contains("<"), !path.contains(">") else { return false }
+        let normalized = normalizedPathToken(path)
+        guard !normalized.contains("/../"), !normalized.hasPrefix("../") else { return false }
+        guard normalized.contains("/") || normalized.hasPrefix(".") || artifact != nil else { return false }
+
+        let fileExtension = URL(fileURLWithPath: normalized).pathExtension.lowercased()
+        return Self.readableFileExtensions.contains(fileExtension)
+    }
+
+    private func isWorkspaceRootedReference(_ normalizedPath: String) -> Bool {
+        normalizedPath.hasPrefix(".ant/")
+            || normalizedPath.hasPrefix("apps/")
+            || normalizedPath.hasPrefix("plugins/")
+            || normalizedPath.hasPrefix("script/")
+            || normalizedPath.hasPrefix("scripts/")
+            || normalizedPath.hasPrefix("tests/")
+            || normalizedPath.hasPrefix("sources/")
+            || normalizedPath.hasPrefix("package")
+            || normalizedPath.hasPrefix("readme")
+    }
+
+    private func syntheticTitle(forPath path: String) -> String {
+        let url = URL(fileURLWithPath: path)
+        let fileExtension = url.pathExtension
+        let filename = url.lastPathComponent
+        guard !fileExtension.isEmpty else { return filename }
+
+        let basename = String(filename.dropLast(fileExtension.count + 1))
+        return basename.isEmpty ? filename : basename
+    }
+
+    private func artifactKind(forPath path: String) -> ArtifactKind {
+        if path.hasPrefix("/") {
+            return .external
+        }
+
+        let normalized = normalizedPathToken(path)
+        let fileExtension = URL(fileURLWithPath: normalized).pathExtension.lowercased()
+        let filename = URL(fileURLWithPath: normalized).lastPathComponent.lowercased()
+
+        switch fileExtension {
+        case "md", "markdown":
+            return .markdown
+        case "json":
+            return filename.hasSuffix(".schema.json") || normalized.contains("/schema") ? .schema : .json
+        case "jsonl":
+            return .jsonl
+        case "log":
+            return .log
+        case "swift":
+            return normalized.contains("/tests/") || filename.contains("test") ? .test : .source
+        case "bash", "c", "cc", "conf", "cpp", "css", "gql", "graphql", "h", "hpp", "html", "java",
+             "js", "jsx", "kt", "m", "mm", "php", "plist", "py", "rb", "rs", "scss", "sh", "sql",
+             "toml", "ts", "tsx", "xml", "yaml", "yml", "zsh":
+            return .source
+        default:
+            return .unknown
+        }
+    }
+
+    private static let readableFileExtensions: Set<String> = [
+        "bash", "c", "cc", "conf", "cpp", "css", "csv", "gql", "graphql",
+        "h", "hpp", "html", "java", "js", "json", "jsonl", "jsx", "kt",
+        "log", "m", "markdown", "md", "mm", "php", "plist", "py", "rb",
+        "rs", "schema", "scss", "sh", "sql", "swift", "toml", "ts", "tsx",
+        "tsv", "txt", "xml", "yaml", "yml", "zsh"
+    ]
+
+    private var fileReferencePattern: String {
+        #"(?<![\w/.-])([.~A-Za-z0-9_/@:+-][A-Za-z0-9_./@:+~-]*\.(?:bash|c|cc|conf|cpp|css|csv|gql|graphql|h|hpp|html|java|js|json|jsonl|jsx|kt|log|m|markdown|md|mm|php|plist|py|rb|rs|schema|scss|sh|sql|swift|toml|ts|tsx|tsv|txt|xml|yaml|yml|zsh))(?![\w/.-])"#
+    }
 }
 
 struct MarkdownAgentReference {
-    let agent: Agent
+    let agent: Agent?
+    let missingLabel: String
+    let missingSubtitle: String?
     let rest: String
 }
 
@@ -940,7 +1089,11 @@ private struct MarkdownPreviewSectionView: View {
                     }
 
                     ForEach(section.blocks) { block in
-                        MarkdownPreviewBlockView(block: block, searchText: searchText, interactionContext: interactionContext)
+                        if isDecisionSection, case .bulletList(let items) = block.kind {
+                            MarkdownDecisionListView(items: items, searchText: searchText, interactionContext: interactionContext)
+                        } else {
+                            MarkdownPreviewBlockView(block: block, searchText: searchText, interactionContext: interactionContext)
+                        }
                     }
                 }
                 .padding(.horizontal, 14)
@@ -975,6 +1128,135 @@ private struct MarkdownPreviewSectionView: View {
     private var shouldRenderValueWithLabel: Bool {
         ["close status"].contains(section.title.lowercased())
     }
+
+    private var isDecisionSection: Bool {
+        ["user decisions", "rozhodnutí uživatele"].contains(section.title.lowercased())
+    }
+}
+
+private struct MarkdownDecisionListView: View {
+    let items: [String]
+    let searchText: String
+    let interactionContext: MarkdownInteractionContext?
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            ForEach(Array(items.enumerated()), id: \.offset) { _, item in
+                MarkdownDecisionRow(entry: MarkdownDecisionEntry(item), searchText: searchText, interactionContext: interactionContext)
+            }
+        }
+    }
+}
+
+private struct MarkdownDecisionRow: View {
+    let entry: MarkdownDecisionEntry
+    let searchText: String
+    let interactionContext: MarkdownInteractionContext?
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 11) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(entry.dateLabel)
+                    .font(.caption.weight(.semibold))
+                    .lineLimit(1)
+                if let timeLabel = entry.timeLabel {
+                    Text(timeLabel)
+                        .font(.caption2.weight(.medium))
+                        .lineLimit(1)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 5)
+            .frame(width: 86, alignment: .leading)
+            .background(Color.accentColor.opacity(0.11), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .foregroundStyle(Color.accentColor)
+
+            MarkdownPreviewInlineLine(text: entry.text, searchText: searchText, interactionContext: interactionContext)
+                .font(.body)
+                .lineSpacing(3)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(nsColor: .textBackgroundColor).opacity(0.72), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .stroke(Color.secondary.opacity(0.10), lineWidth: 1)
+        }
+    }
+}
+
+private struct MarkdownDecisionEntry {
+    let dateLabel: String
+    let timeLabel: String?
+    let text: String
+
+    init(_ raw: String) {
+        let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if let parsed = Self.parseTimestampPrefix(trimmed) {
+            dateLabel = parsed.dateLabel
+            timeLabel = parsed.timeLabel
+            text = parsed.rest
+        } else {
+            dateLabel = L10n.t("Decision", "Rozhodnutí")
+            timeLabel = nil
+            text = trimmed
+        }
+    }
+
+    private static func parseTimestampPrefix(_ value: String) -> (dateLabel: String, timeLabel: String?, rest: String)? {
+        let pattern = #"^(\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z)?):\s*(.+)$"#
+        guard let regex = try? NSRegularExpression(pattern: pattern),
+              let match = regex.firstMatch(in: value, range: NSRange(value.startIndex..<value.endIndex, in: value)),
+              let timestampRange = Range(match.range(at: 1), in: value),
+              let restRange = Range(match.range(at: 2), in: value) else {
+            return nil
+        }
+
+        let timestamp = String(value[timestampRange])
+        let rest = String(value[restRange]).trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if timestamp.contains("T"), let date = ISO8601DateFormatter().date(from: timestamp) {
+            return (
+                Self.localDateFormatter.string(from: date),
+                Self.localTimeFormatter.string(from: date),
+                rest
+            )
+        }
+
+        if let date = Self.sourceDateFormatter.date(from: timestamp) {
+            return (Self.localDateFormatter.string(from: date), nil, rest)
+        }
+
+        return (timestamp, nil, rest)
+    }
+
+    private static let sourceDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter
+    }()
+
+    private static let localDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        formatter.locale = AppLanguage.current.locale
+        return formatter
+    }()
+
+    private static let localTimeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        formatter.locale = AppLanguage.current.locale
+        return formatter
+    }()
 }
 
 private struct MarkdownPreviewBlockView: View {
@@ -1074,7 +1356,7 @@ private struct MarkdownPreviewInlineLine: View {
                     : interactionContext.agent(for: metadata.value) {
                     MarkdownAgentBadge(agent: agent, context: interactionContext)
                 } else {
-                    MarkdownPlainBadge(label: metadata.value)
+                    DisabledAgentBadge(label: metadata.value, subtitle: nil)
                 }
             }
             .fixedSize(horizontal: false, vertical: true)
@@ -1087,7 +1369,11 @@ private struct MarkdownPreviewInlineLine: View {
             )
         } else if let reference = interactionContext?.leadingAgentReference(in: text), let interactionContext {
             HStack(alignment: .top, spacing: 8) {
-                MarkdownAgentBadge(agent: reference.agent, context: interactionContext)
+                if let agent = reference.agent {
+                    MarkdownAgentBadge(agent: agent, context: interactionContext)
+                } else {
+                    DisabledAgentBadge(label: reference.missingLabel, subtitle: reference.missingSubtitle)
+                }
                 if !reference.rest.isEmpty {
                     Text(ArtifactPreview.highlighted(reference.rest, searchText: searchText))
                         .fixedSize(horizontal: false, vertical: true)
@@ -1150,10 +1436,11 @@ private struct MarkdownPreviewFileReferenceLine: View {
     let context: MarkdownInteractionContext
 
     var body: some View {
-        HStack(alignment: .center, spacing: 7) {
+        VStack(alignment: .leading, spacing: 6) {
             if let label = leadingLabel {
                 Text(label)
                     .fontWeight(.medium)
+                    .fixedSize(horizontal: false, vertical: true)
             }
 
             FlowBadgeRow {
@@ -1162,13 +1449,14 @@ private struct MarkdownPreviewFileReferenceLine: View {
                 }
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .fixedSize(horizontal: false, vertical: true)
     }
 
     private var leadingLabel: String? {
-        let patterns = [#"`([^`]+)`"#, #"([A-Za-z0-9_./-]+\.md)"#]
+        let patterns = [#"`([^`]+)`"#, Self.fileReferencePattern]
         for pattern in patterns {
-            guard let regex = try? NSRegularExpression(pattern: pattern) else { continue }
+            guard let regex = try? NSRegularExpression(pattern: pattern, options: [.caseInsensitive]) else { continue }
             let range = NSRange(text.startIndex..<text.endIndex, in: text)
             guard let match = regex.firstMatch(in: text, range: range),
                   let matchRange = Range(match.range, in: text) else {
@@ -1184,6 +1472,8 @@ private struct MarkdownPreviewFileReferenceLine: View {
         }
         return nil
     }
+
+    private static let fileReferencePattern = #"(?<![\w/.-])([.~A-Za-z0-9_/@:+-][A-Za-z0-9_./@:+~-]*\.(?:bash|c|cc|conf|cpp|css|csv|gql|graphql|h|hpp|html|java|js|json|jsonl|jsx|kt|log|m|markdown|md|mm|php|plist|py|rb|rs|schema|scss|sh|sql|swift|toml|ts|tsx|tsv|txt|xml|yaml|yml|zsh))(?![\w/.-])"#
 }
 
 private struct MarkdownPhaseBadge: View {
@@ -1208,6 +1498,7 @@ private struct MarkdownPhaseBadge: View {
         HStack(spacing: 5) {
             Image(systemName: "flag")
                 .font(.caption2)
+            BadgePrefix(text: L10n.t("PHASE", "FÁZE"), tint: reference.phase.status.tint)
             Text(reference.phase.localizedTitle)
                 .font(.caption.weight(.semibold))
                 .lineLimit(1)
@@ -1220,6 +1511,21 @@ private struct MarkdownPhaseBadge: View {
     }
 }
 
+struct BadgePrefix: View {
+    let text: String
+    let tint: Color
+
+    var body: some View {
+        Text(text)
+            .font(.caption2.weight(.bold))
+            .lineLimit(1)
+            .padding(.horizontal, 5)
+            .padding(.vertical, 2)
+            .background(tint.opacity(0.16), in: Capsule())
+            .foregroundStyle(tint.opacity(0.92))
+    }
+}
+
 private struct MarkdownArtifactBadge: View {
     let artifact: Artifact
     let context: MarkdownInteractionContext
@@ -1228,8 +1534,12 @@ private struct MarkdownArtifactBadge: View {
         MarkdownArtifactBadgeStyle(artifact: artifact)
     }
 
+    private var canPreview: Bool {
+        context.canPreviewArtifact(artifact)
+    }
+
     var body: some View {
-        if let onSelectArtifact = context.onSelectArtifact {
+        if canPreview, let onSelectArtifact = context.onSelectArtifact {
             Button {
                 onSelectArtifact(artifact)
             } label: {
@@ -1239,59 +1549,109 @@ private struct MarkdownArtifactBadge: View {
             .help(artifact.path)
         } else {
             badge
+                .opacity(canPreview ? 1 : 0.55)
+                .help(canPreview ? artifact.path : L10n.t("File does not exist", "Soubor neexistuje"))
         }
     }
 
+    @ViewBuilder
     private var badge: some View {
-        HStack(spacing: 5) {
+        let content = HStack(spacing: 5) {
             Image(systemName: style.systemImage)
                 .font(.caption2)
+            BadgePrefix(text: style.prefix, tint: style.tint)
             Text(artifact.displayTitle)
                 .font(.caption.weight(.semibold))
                 .lineLimit(1)
+                .fixedSize(horizontal: true, vertical: false)
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 3)
         .background(style.tint.opacity(0.13), in: Capsule())
         .foregroundStyle(style.tint)
-        .badgePointerCursor()
+
+        if canPreview {
+            content.badgePointerCursor()
+        } else {
+            content
+        }
     }
 }
 
-private struct MarkdownArtifactBadgeStyle {
+struct MarkdownArtifactBadgeStyle {
     let tint: Color
     let systemImage: String
+    let prefix: String
 
     init(artifact: Artifact) {
         let text = "\(artifact.path) \(artifact.title ?? "")".lowercased()
+        let filePrefix = Self.filePrefix(for: artifact)
 
         if text.hasSuffix("state.md") {
             tint = .indigo
             systemImage = "doc.plaintext"
+            prefix = filePrefix
         } else if text.contains("decision") {
             tint = .orange
             systemImage = "checkmark.bubble"
+            prefix = L10n.t("DECISION", "ROZHODNUTÍ")
         } else if text.contains("handoff") {
             tint = .teal
             systemImage = "arrowshape.turn.up.right"
+            prefix = L10n.t("HANDOFF", "PŘEDÁNÍ")
         } else if text.contains("finding") {
             tint = .red
             systemImage = "exclamationmark.bubble"
+            prefix = L10n.t("FINDING", "NÁLEZ")
         } else if text.contains("review") {
             tint = .purple
             systemImage = "checkmark.seal"
+            prefix = L10n.t("REVIEW", "KONTROLA")
         } else if text.contains("verification") || text.contains("validation") {
             tint = .green
             systemImage = "testtube.2"
+            prefix = L10n.t("VERIFY", "OVĚŘENÍ")
         } else if text.contains("phase") {
             tint = .blue
             systemImage = "flag"
+            prefix = L10n.t("PHASE", "FÁZE")
         } else if text.contains("plan") {
             tint = .mint
             systemImage = "list.bullet.clipboard"
+            prefix = L10n.t("PLAN", "PLÁN")
         } else {
             tint = .secondary
             systemImage = "doc.richtext"
+            prefix = filePrefix
+        }
+    }
+
+    private static func filePrefix(for artifact: Artifact) -> String {
+        let fileExtension = URL(fileURLWithPath: artifact.path).pathExtension.lowercased()
+        switch artifact.kind {
+        case .markdown:
+            return "MD"
+        case .json, .schema:
+            return "JSON"
+        case .jsonl:
+            return "JSONL"
+        case .source, .test:
+            return L10n.t("CODE", "KÓD")
+        case .log:
+            return "LOG"
+        case .external, .unknown:
+            switch fileExtension {
+            case "md", "markdown": return "MD"
+            case "json", "schema": return "JSON"
+            case "jsonl": return "JSONL"
+            case "log": return "LOG"
+            case "swift", "sh", "bash", "zsh", "js", "jsx", "ts", "tsx", "py", "rb", "rs", "go", "java", "css", "scss", "toml", "yaml", "yml", "xml", "html", "sql", "graphql", "gql":
+                return L10n.t("CODE", "KÓD")
+            default:
+                return L10n.t("FILE", "SOUBOR")
+            }
+        case .app:
+            return "APP"
         }
     }
 }
@@ -1300,9 +1660,64 @@ private struct FlowBadgeRow<Content: View>: View {
     @ViewBuilder var content: Content
 
     var body: some View {
-        HStack(spacing: 6) {
+        WrappingBadgeLayout(horizontalSpacing: 6, verticalSpacing: 6) {
             content
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+private struct WrappingBadgeLayout: Layout {
+    let horizontalSpacing: CGFloat
+    let verticalSpacing: CGFloat
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let sizes = subviews.map { $0.sizeThatFits(.unspecified) }
+        let maxWidth = proposal.width ?? .greatestFiniteMagnitude
+        let result = layout(sizes: sizes, maxWidth: maxWidth)
+        return CGSize(width: proposal.width ?? result.size.width, height: result.size.height)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        let sizes = subviews.map { $0.sizeThatFits(.unspecified) }
+        let result = layout(sizes: sizes, maxWidth: bounds.width)
+
+        for index in subviews.indices {
+            subviews[index].place(
+                at: CGPoint(x: bounds.minX + result.positions[index].x, y: bounds.minY + result.positions[index].y),
+                proposal: ProposedViewSize(sizes[index])
+            )
+        }
+    }
+
+    private func layout(sizes: [CGSize], maxWidth: CGFloat) -> (size: CGSize, positions: [CGPoint]) {
+        guard !sizes.isEmpty else {
+            return (.zero, [])
+        }
+
+        let availableWidth = max(maxWidth, 1)
+        var positions: [CGPoint] = []
+        var cursorX: CGFloat = 0
+        var cursorY: CGFloat = 0
+        var lineHeight: CGFloat = 0
+        var usedWidth: CGFloat = 0
+
+        for size in sizes {
+            let nextX = cursorX == 0 ? 0 : cursorX + horizontalSpacing
+            if nextX > 0, nextX + size.width > availableWidth {
+                cursorY += lineHeight + verticalSpacing
+                cursorX = 0
+                lineHeight = 0
+            }
+
+            let x = cursorX == 0 ? 0 : cursorX + horizontalSpacing
+            positions.append(CGPoint(x: x, y: cursorY))
+            cursorX = x + size.width
+            lineHeight = max(lineHeight, size.height)
+            usedWidth = max(usedWidth, cursorX)
+        }
+
+        return (CGSize(width: usedWidth, height: cursorY + lineHeight), positions)
     }
 }
 
@@ -1369,6 +1784,7 @@ struct AgentBadgeButton: View {
             HStack(spacing: 6) {
                 Image(systemName: agent.role.systemImage)
                     .font(.caption2)
+                BadgePrefix(text: L10n.t("AGENT", "AGENT"), tint: agent.role.tint)
                 VStack(alignment: .leading, spacing: 0) {
                     Text(agent.displayName ?? agent.id)
                         .font(.caption.weight(.semibold))
@@ -1390,6 +1806,37 @@ struct AgentBadgeButton: View {
         }
         .buttonStyle(.plain)
         .help(L10n.t("Open agent detail", "Otevřít detail agenta"))
+    }
+}
+
+private struct DisabledAgentBadge: View {
+    let label: String
+    let subtitle: String?
+
+    var body: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "person.crop.circle.badge.questionmark")
+                .font(.caption2)
+            BadgePrefix(text: L10n.t("AGENT", "AGENT"), tint: .secondary)
+            VStack(alignment: .leading, spacing: 0) {
+                Text(label)
+                    .font(.caption.weight(.semibold))
+                    .lineLimit(1)
+                Text(subtitle ?? L10n.t("Missing agent", "Chybějící agent"))
+                    .font(.caption2.weight(.medium))
+                    .lineLimit(1)
+                    .foregroundStyle(.secondary.opacity(0.72))
+            }
+            Circle()
+                .fill(Color.secondary.opacity(0.65))
+                .frame(width: 6, height: 6)
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(Color.secondary.opacity(0.13), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .foregroundStyle(.secondary)
+        .opacity(0.78)
+        .help(L10n.t("This agent is not available in the current structured state.", "Tenhle agent není dostupný v aktuálním strukturovaném stavu."))
     }
 }
 

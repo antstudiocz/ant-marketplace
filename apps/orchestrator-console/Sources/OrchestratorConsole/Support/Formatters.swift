@@ -222,7 +222,7 @@ extension AgentRole {
         switch self {
         case .rootOrchestrator: return .purple
         case .implementationLead: return .blue
-        case .sliceWorker: return .green
+        case .sliceWorker: return .teal
         case .scout: return .mint
         case .planner, .planWriter: return .orange
         case .reviewer: return .indigo

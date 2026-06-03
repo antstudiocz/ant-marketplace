@@ -15,6 +15,7 @@
       "status": "running",
       "displayName": "Root Orchestrator",
       "summary": "Coordinates user-facing orchestration lifecycle.",
+      "shortLabel": "Run coordination",
       "intent": "Coordinate the run, route work to child agents, and keep user-facing state current.",
       "plannedWork": [
         "Track active phase, decisions, blockers, and handoffs.",
@@ -30,6 +31,7 @@
       "status": "running",
       "displayName": "Implementation Lead",
       "summary": "Owns implementation phase and verification.",
+      "shortLabel": "Implementation lead",
       "intent": "Implement the approved plan and coordinate verification.",
       "plannedWork": [
         "Build the structured state contract and macOS console surface.",

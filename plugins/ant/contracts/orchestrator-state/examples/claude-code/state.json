@@ -15,6 +15,7 @@
       "status": "running",
       "displayName": "Root Orchestrator",
       "summary": "Coordinates the lifecycle and user decisions.",
+      "shortLabel": "Run coordination",
       "intent": "Coordinate the release-notes workflow and keep the user-facing handoff current.",
       "plannedWork": [
         "Track planning, implementation, review, and delivery status.",
@@ -30,6 +31,7 @@
       "status": "done",
       "displayName": "Implementation Lead",
       "summary": "Implemented the approved change.",
+      "shortLabel": "Release notes update",
       "intent": "Apply the approved release-notes change.",
       "plannedWork": [
         "Update the release notes output according to the approved plan.",
@@ -45,6 +47,7 @@
       "status": "running",
       "displayName": "Implementation Reviewer",
       "summary": "Reviewing integrated output.",
+      "shortLabel": "Output review",
       "intent": "Review the integrated output before delivery.",
       "plannedWork": [
         "Check the implemented output against the approved plan.",

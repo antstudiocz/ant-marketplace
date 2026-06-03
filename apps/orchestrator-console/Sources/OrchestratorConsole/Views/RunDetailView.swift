@@ -308,6 +308,7 @@ private struct MarkdownTreePage: View {
                             run: $0,
                             artifact: selectedArtifact,
                             artifacts: artifacts,
+                            workspaceURL: store.workspaceURL,
                             onSelectAgent: onSelectAgent,
                             onSelectArtifact: onSelect
                         )
@@ -316,6 +317,7 @@ private struct MarkdownTreePage: View {
             }
             .frame(minWidth: 640)
         }
+        .padding(24)
     }
 }
 
@@ -633,13 +635,7 @@ private struct AgentNodeButton: View {
                     .foregroundStyle(node.agent.role.tint.opacity(0.82))
                     .lineLimit(1)
 
-                if let intent = node.agent.intentLine {
-                    Text(OrchestratorCopy.text(intent))
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(2)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
+                AgentNodeWorkLabel(agent: node.agent)
 
                 AgentNodeStatusBadge(status: node.agent.status)
             }
@@ -660,6 +656,8 @@ private struct AgentNodeButton: View {
         .buttonStyle(.plain)
         .opacity(isDimmed ? 0.36 : 1)
         .help(L10n.t("Open agent summary", "Otevřít souhrn agenta"))
+        .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .badgePointerCursor()
     }
 }
 
@@ -679,6 +677,25 @@ private struct AgentNodeStatusBadge: View {
         .background(status.tint.opacity(0.13), in: Capsule())
         .foregroundStyle(status.tint)
         .badgePointerCursor()
+    }
+}
+
+private struct AgentNodeWorkLabel: View {
+    let agent: Agent
+
+    var body: some View {
+        HStack(spacing: 5) {
+            Image(systemName: "target")
+                .font(.caption2.weight(.semibold))
+            Text(agent.graphWorkLabel)
+                .font(.caption.weight(.semibold))
+                .lineLimit(1)
+        }
+        .padding(.horizontal, 7)
+        .padding(.vertical, 3)
+        .background(agent.role.tint.opacity(0.10), in: Capsule())
+        .foregroundStyle(agent.role.tint.opacity(0.92))
+        .help(agent.intentLine ?? agent.graphWorkLabel)
     }
 }
 
@@ -778,42 +795,149 @@ private struct MarkdownInlinePreview: View {
     let artifact: Artifact?
     @ObservedObject var store: RunStore
     var interactionContext: MarkdownInteractionContext? = nil
+    @State private var loadState: MarkdownPreviewLoadState = .idle
 
     var body: some View {
         Group {
-            if let artifact {
-                switch store.previewArtifact(artifact) {
-                case .success(let preview):
-                    ScrollView {
-                        if preview.displayMode == .markdown {
-                            MarkdownArtifactPreview(content: preview.content, searchText: "", interactionContext: interactionContext)
-                                .padding(18)
-                                .frame(maxWidth: .infinity, alignment: .topLeading)
-                        } else {
-                            Text(preview.content)
-                                .font(.system(.body, design: .monospaced))
-                                .textSelection(.enabled)
-                                .padding(18)
-                                .frame(maxWidth: .infinity, alignment: .topLeading)
+            if artifact != nil {
+                switch loadState {
+                case .idle, .loading:
+                    VStack(spacing: 10) {
+                        ProgressView()
+                            .controlSize(.small)
+                        Text(L10n.t("Opening file...", "Otevírám soubor..."))
+                            .font(.callout.weight(.medium))
+                        if let artifact {
+                            Text(artifact.displayTitle)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .lineLimit(1)
+                                .truncationMode(.middle)
                         }
                     }
-                case .failure(let error):
-                    VStack(alignment: .leading, spacing: 8) {
-                        Label(L10n.t("Preview unavailable", "Náhled není dostupný"), systemImage: "exclamationmark.triangle")
-                            .font(.headline)
-                            .foregroundStyle(.orange)
-                        Text(error.localizedDescription)
-                            .font(.callout)
-                            .foregroundStyle(.secondary)
-                    }
-                    .padding(18)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+
+                case .loaded(let preview):
+                    previewView(preview)
+
+                case .failed(let error):
+                    errorView(error)
                 }
             } else {
                 EmptyView()
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .task(id: artifact?.id ?? "none") {
+            await loadPreview()
+        }
+    }
+
+    @ViewBuilder
+    private func previewView(_ preview: ArtifactPreview) -> some View {
+        if preview.displayMode == .markdown {
+            ScrollView {
+                MarkdownArtifactPreview(content: preview.content, searchText: "", interactionContext: interactionContext)
+                    .padding(18)
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
+            }
+        } else {
+            CodePreviewView(preview: preview)
+        }
+    }
+
+    private func errorView(_ error: ArtifactPreviewError) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label(L10n.t("Preview unavailable", "Náhled není dostupný"), systemImage: "exclamationmark.triangle")
+                .font(.headline)
+                .foregroundStyle(.orange)
+            Text(error.localizedUserMessage)
+                .font(.callout)
+                .foregroundStyle(.secondary)
+        }
+        .padding(18)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+    }
+
+    private func loadPreview() async {
+        guard let artifact else {
+            loadState = .idle
+            return
+        }
+
+        loadState = .loading
+        guard let workspaceURL = store.workspaceURL else {
+            loadState = .failed(.missingWorkspace)
+            return
+        }
+
+        let result = await Task.detached(priority: .userInitiated) {
+            do {
+                return Result<ArtifactPreview, ArtifactPreviewError>.success(
+                    try ArtifactPreviewReader(workspaceURL: workspaceURL).preview(artifact)
+                )
+            } catch let error as ArtifactPreviewError {
+                return .failure(error)
+            } catch {
+                return .failure(.readFailed(artifact.path))
+            }
+        }.value
+
+        guard !Task.isCancelled else { return }
+        switch result {
+        case .success(let preview):
+            loadState = .loaded(preview)
+        case .failure(let error):
+            loadState = .failed(error)
+        }
+    }
+}
+
+private enum MarkdownPreviewLoadState {
+    case idle
+    case loading
+    case loaded(ArtifactPreview)
+    case failed(ArtifactPreviewError)
+}
+
+extension ArtifactPreviewError {
+    var localizedUserMessage: String {
+        switch self {
+        case .missingWorkspace:
+            return L10n.t("No workspace is selected.", "Není vybraný žádný workspace.")
+        case .unresolvedPath:
+            return L10n.t("The file path could not be resolved safely.", "Cestu k souboru se nepodařilo bezpečně najít.")
+        case .unreadableKind(let kind, let path):
+            return L10n.t(
+                "This file type cannot be previewed in the app: \(kind.rawValue) (\(path))",
+                "Tenhle typ souboru nejde zobrazit v aplikaci: \(kind.rawValue) (\(path))"
+            )
+        case .missingFile(let path):
+            return L10n.t(
+                "The file does not exist: \(path)",
+                "Soubor neexistuje: \(path)"
+            )
+        case .notRegularFile(let path):
+            return L10n.t(
+                "This is not a regular file: \(path)",
+                "Tohle není běžný soubor: \(path)"
+            )
+        case .fileTooLarge(let size, let limit):
+            return L10n.t(
+                "The file is too large to preview in app (\(size) bytes, limit \(limit) bytes).",
+                "Soubor je příliš velký pro náhled v aplikaci (\(size) bytů, limit \(limit) bytů)."
+            )
+        case .nonUTF8(let path):
+            return L10n.t(
+                "The file is not UTF-8 text: \(path)",
+                "Soubor není UTF-8 text: \(path)"
+            )
+        case .readFailed(let path):
+            return L10n.t(
+                "The file could not be read: \(path)",
+                "Soubor se nepodařilo přečíst: \(path)"
+            )
+        }
     }
 }
 
@@ -824,15 +948,11 @@ private struct AgentBriefDialog: View {
     let goBack: () -> Void
     let onSelectAgent: (Agent) -> Void
     let close: () -> Void
-    @State private var selectedArtifactId: String?
+    @State private var selectedArtifact: Artifact?
+    @State private var artifactBackStack: [Artifact] = []
 
     private var brief: AgentBrief {
         AgentBrief(selection: selection)
-    }
-
-    private var selectedArtifact: Artifact? {
-        guard let selectedArtifactId else { return nil }
-        return brief.markdownArtifacts.first { $0.id == selectedArtifactId }
     }
 
     var body: some View {
@@ -865,12 +985,13 @@ private struct AgentBriefDialog: View {
         .onTapGesture {}
         .shadow(color: .black.opacity(0.22), radius: 34, y: 18)
         .onChange(of: selection.agent.id) { _, _ in
-            selectedArtifactId = nil
+            selectedArtifact = nil
+            artifactBackStack.removeAll()
         }
     }
 
     private var header: some View {
-        ZStack(alignment: .leading) {
+        HStack(alignment: .center, spacing: 10) {
             if canGoBack {
                 Button {
                     goBack()
@@ -880,6 +1001,7 @@ private struct AgentBriefDialog: View {
                 }
                 .buttonStyle(.borderless)
                 .help(L10n.t("Back", "Zpět"))
+                .badgePointerCursor()
             }
 
             HStack(alignment: .center, spacing: 12) {
@@ -930,7 +1052,7 @@ private struct AgentBriefDialog: View {
                 AgentDialogMarkdownList(
                     artifacts: brief.markdownArtifacts,
                     selectedArtifact: selectedArtifact,
-                    select: { selectedArtifactId = $0.id }
+                    select: selectArtifact
                 )
             }
             .padding(20)
@@ -941,27 +1063,50 @@ private struct AgentBriefDialog: View {
     private var markdownPane: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 8) {
+                if !artifactBackStack.isEmpty {
+                    Button {
+                        goBackArtifact()
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .frame(width: 22, height: 22)
+                    }
+                    .buttonStyle(.borderless)
+                    .help(L10n.t("Back", "Zpět"))
+                    .badgePointerCursor()
+                }
+
                 Label(selectedArtifact?.displayTitle ?? L10n.t("No markdown", "Žádný markdown"), systemImage: "doc.richtext")
                     .font(.headline)
                     .lineLimit(1)
                 Spacer()
+                Button {
+                    selectedArtifact = nil
+                    artifactBackStack.removeAll()
+                } label: {
+                    Image(systemName: "xmark")
+                        .frame(width: 22, height: 22)
+                }
+                .buttonStyle(.borderless)
+                .help(L10n.t("Close preview", "Zavřít náhled"))
+                .badgePointerCursor()
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
 
             Divider()
 
-            if let selectedArtifact {
+            if let previewArtifact = selectedArtifact {
                 MarkdownInlinePreview(
-                    artifact: selectedArtifact,
+                    artifact: previewArtifact,
                     store: store,
                     interactionContext: MarkdownInteractionContext(
                         run: selection.run,
-                        artifact: selectedArtifact,
+                        artifact: previewArtifact,
                         artifacts: brief.markdownArtifacts,
+                        workspaceURL: store.workspaceURL,
                         onSelectAgent: onSelectAgent,
                         onSelectArtifact: { artifact in
-                            selectedArtifactId = artifact.id
+                            selectArtifact(artifact)
                         }
                     )
                 )
@@ -971,6 +1116,19 @@ private struct AgentBriefDialog: View {
                 Spacer()
             }
         }
+    }
+
+    private func selectArtifact(_ artifact: Artifact) {
+        guard selectedArtifact?.id != artifact.id else { return }
+        if let selectedArtifact {
+            artifactBackStack.append(selectedArtifact)
+        }
+        selectedArtifact = artifact
+    }
+
+    private func goBackArtifact() {
+        guard let previous = artifactBackStack.popLast() else { return }
+        selectedArtifact = previous
     }
 }
 
@@ -1057,39 +1215,54 @@ private struct AgentDialogMarkdownList: View {
                     .font(.callout)
                     .foregroundStyle(.secondary)
             } else {
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 6) {
                     ForEach(artifacts.prefix(8)) { artifact in
                         let isSelected = artifact.id == selectedArtifact?.id
                         Button {
                             select(artifact)
                         } label: {
-                            HStack(spacing: 8) {
-                                Image(systemName: "doc.richtext")
-                                    .foregroundStyle(isSelected ? Color.accentColor : .secondary)
-                                    .frame(width: 16)
-                                VStack(alignment: .leading, spacing: 1) {
-                                    Text(artifact.displayTitle)
-                                        .font(.callout.weight(.medium))
-                                        .lineLimit(1)
-                                    Text(artifact.path)
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-                                        .lineLimit(1)
-                                        .truncationMode(.middle)
-                                }
-                                Spacer(minLength: 8)
-                            }
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 7)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(isSelected ? Color.accentColor.opacity(0.12) : Color.clear, in: RoundedRectangle(cornerRadius: 6, style: .continuous))
+                            AgentDialogArtifactBadge(artifact: artifact, isSelected: isSelected)
                         }
                         .buttonStyle(.plain)
-                        .help(L10n.t("Preview in app", "Zobrazit v aplikaci"))
+                        .help(artifact.path)
+                        .badgePointerCursor()
                     }
                 }
             }
         }
+    }
+}
+
+private struct AgentDialogArtifactBadge: View {
+    let artifact: Artifact
+    let isSelected: Bool
+
+    private var style: MarkdownArtifactBadgeStyle {
+        MarkdownArtifactBadgeStyle(artifact: artifact)
+    }
+
+    var body: some View {
+        HStack(spacing: 6) {
+            Image(systemName: style.systemImage)
+                .font(.caption2)
+            BadgePrefix(text: style.prefix, tint: style.tint)
+            Text(artifact.displayTitle)
+                .font(.caption.weight(.semibold))
+                .lineLimit(1)
+            if isSelected {
+                Image(systemName: "checkmark")
+                    .font(.caption2.weight(.bold))
+            }
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(style.tint.opacity(isSelected ? 0.20 : 0.13), in: Capsule())
+        .overlay {
+            Capsule()
+                .stroke(isSelected ? style.tint.opacity(0.45) : Color.clear, lineWidth: 1)
+        }
+        .foregroundStyle(style.tint)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
@@ -1183,6 +1356,26 @@ private struct AgentBrief {
 }
 
 private extension Agent {
+    var graphWorkLabel: String {
+        if let shortLabel = shortLabel?.trimmingCharacters(in: .whitespacesAndNewlines), !shortLabel.isEmpty {
+            return shortLabel
+        }
+
+        let source = [
+            plannedWork?.first,
+            intent,
+            summary
+        ]
+            .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .first { !$0.isEmpty }
+
+        guard let source else {
+            return role.defaultGraphWorkLabel
+        }
+
+        return Self.derivedGraphWorkLabel(from: source, role: role)
+    }
+
     var intentLine: String? {
         if let intent = intent?.trimmingCharacters(in: .whitespacesAndNewlines), !intent.isEmpty {
             return intent
@@ -1191,6 +1384,76 @@ private extension Agent {
             return summary
         }
         return nil
+    }
+
+    static func derivedGraphWorkLabel(from value: String, role: AgentRole) -> String {
+        let normalized = value.lowercased()
+            .replacingOccurrences(of: "-", with: " ")
+            .replacingOccurrences(of: "_", with: " ")
+
+        if normalized.contains("security") || normalized.contains("path safety") || normalized.contains("destructive") {
+            return L10n.t("Security review", "Security review")
+        }
+        if normalized.contains("p0") || normalized.contains("p1") || normalized.contains("p2") || normalized.contains("finding") || normalized.contains("review") {
+            return normalized.contains("p2")
+                ? L10n.t("P2 review", "Review P2 nálezů")
+                : L10n.t("Output review", "Review výstupu")
+        }
+        if normalized.contains("discovery") || normalized.contains("repo shape") || normalized.contains("read only") || normalized.contains("scout") {
+            return L10n.t("Repo discovery", "Repo průzkum")
+        }
+        if normalized.contains("implementation plan") || normalized.contains("approved plan") || normalized.contains("planning") {
+            return L10n.t("Implementation plan", "Implementační plán")
+        }
+        if normalized.contains("command center") || normalized.contains("command center") || normalized.contains("control center") || normalized.contains("redesign") {
+            return L10n.t("Command center", "Command center")
+        }
+        if normalized.contains("contract") && (normalized.contains("macos") || normalized.contains("app")) {
+            return L10n.t("Contract + app", "Kontrakt + appka")
+        }
+        if normalized.contains("contract") || normalized.contains("schema") {
+            return L10n.t("State contract", "State kontrakt")
+        }
+        if normalized.contains("markdown") || normalized.contains("preview") {
+            return L10n.t("Markdown preview", "Markdown náhled")
+        }
+        if normalized.contains("graph") || normalized.contains("agent map") || normalized.contains("topology") {
+            return L10n.t("Agent map", "Mapa agentů")
+        }
+        if normalized.contains("project") || normalized.contains("sidebar") || normalized.contains("switch") {
+            return L10n.t("Project switcher", "Project switcher")
+        }
+        if normalized.contains("delete") || normalized.contains("deletion") || normalized.contains("remove") {
+            return L10n.t("Run deletion", "Mazání běhu")
+        }
+        if normalized.contains("validation") || normalized.contains("verification") || normalized.contains("verify") || normalized.contains("test") {
+            return L10n.t("Verification", "Ověření")
+        }
+
+        return role.defaultGraphWorkLabel
+    }
+}
+
+private extension AgentRole {
+    var defaultGraphWorkLabel: String {
+        switch self {
+        case .rootOrchestrator:
+            return L10n.t("Run coordination", "Řízení běhu")
+        case .planner:
+            return L10n.t("Planning", "Plánování")
+        case .scout:
+            return L10n.t("Repo discovery", "Repo průzkum")
+        case .planWriter:
+            return L10n.t("Implementation plan", "Implementační plán")
+        case .implementationLead:
+            return L10n.t("Implementation lead", "Řízení implementace")
+        case .sliceWorker:
+            return L10n.t("Implementation slice", "Implementační slice")
+        case .reviewer:
+            return L10n.t("Output review", "Review výstupu")
+        case .unknown:
+            return L10n.t("Assigned work", "Přiřazená práce")
+        }
     }
 }
 

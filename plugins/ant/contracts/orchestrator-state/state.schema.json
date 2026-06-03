@@ -118,6 +118,7 @@
         "status": { "$ref": "#/$defs/agentStatus" },
         "displayName": { "$ref": "#/$defs/nonEmptyString" },
         "summary": { "type": "string" },
+        "shortLabel": { "type": "string" },
         "intent": { "type": "string" },
         "plannedWork": {
           "type": "array",

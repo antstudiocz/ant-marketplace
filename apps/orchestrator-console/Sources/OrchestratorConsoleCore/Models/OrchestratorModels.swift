@@ -214,6 +214,7 @@ public struct Agent: Codable, Identifiable, Equatable, Sendable {
     public let status: AgentStatus
     public let displayName: String?
     public let summary: String?
+    public let shortLabel: String?
     public let intent: String?
     public let plannedWork: [String]?
     public let doneDefinition: String?

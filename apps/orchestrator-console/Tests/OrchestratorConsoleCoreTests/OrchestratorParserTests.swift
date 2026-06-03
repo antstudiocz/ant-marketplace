@@ -26,6 +26,7 @@ final class OrchestratorParserTests: XCTestCase {
               "status": "completed",
               "displayName": "Lead",
               "summary": null,
+              "shortLabel": "UI update",
               "intent": "Implement the approved slice.",
               "plannedWork": ["Update app UI", "Run verification"],
               "doneDefinition": "Tests pass and evidence is linked.",
@@ -72,6 +73,7 @@ final class OrchestratorParserTests: XCTestCase {
         XCTAssertEqual(runs.count, 1)
         XCTAssertEqual(runs[0].status, .implementing)
         XCTAssertEqual(runs[0].state?.agents.first?.status, .done)
+        XCTAssertEqual(runs[0].state?.agents.first?.shortLabel, "UI update")
         XCTAssertEqual(runs[0].state?.agents.first?.intent, "Implement the approved slice.")
         XCTAssertEqual(runs[0].state?.agents.first?.plannedWork, ["Update app UI", "Run verification"])
         XCTAssertEqual(runs[0].state?.agents.first?.doneDefinition, "Tests pass and evidence is linked.")
