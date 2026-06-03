@@ -1,6 +1,6 @@
 # Asset Usage
 
-Bundled assets are a curated subset of the public brand export. The full source markdown is available as `source-ant-brand.md`, and the source manifest is available at `../assets/source/manifest.json`.
+Bundled assets include the full public Visualbook export asset set from 2026-06-03. The original source markdown is available at `../assets/source/ant-brand.md`, an agent-readable copy is available as `source-ant-brand.md`, and the source manifest is available at `../assets/source/manifest.json`.
 
 ## Logos
 
@@ -18,15 +18,31 @@ Selection:
 - claim versions are wider and need more space;
 - primary logo is safer for compact UI.
 
+## Fonts And Downloads
+
+Bundled font/download files:
+
+- `../assets/fonts/inter_font.zip`: full Inter font ZIP from the Visualbook export;
+- `../assets/others/inter-regular.ttf`: Inter Regular;
+- `../assets/others/lexend-medium.ttf`: Lexend Medium from the export downloads;
+- `../assets/others/lexend-bold.ttf`: Lexend Bold from the export downloads;
+- `../assets/others/ant-komunikacni-manual.pdf`: communication manual PDF;
+- `../assets/others/bot_ant_profil.png`: AI Notetaker profile image;
+- `../assets/others/stationery_mockup_5.jpg`: stationery mockup download.
+
+Aktiv Grotesk EX is referenced by the manual as the primary headline font, but the public export does not include an Aktiv Grotesk EX font file. Treat it as an externally licensed Adobe font unless the target project already provides it.
+
 ## Images
 
-Curated examples in `../assets/images/`:
+Bundled images in `../assets/images/` include:
 
-- `label_nahled.webp`: phone/mockup example with label language and mint background;
-- `labels01.webp`: label system visual;
-- `02.webp`: `(ant) crafted` endorsement example;
-- `foto01.webp`: portrait/photo style on dark background;
-- `eml_dlazdice.webp`: email-signature visual example.
+- label system examples: `label_nahled.webp`, `label_nahled_02.webp`, `labels01.webp`, `labels02.webp`;
+- `(ant) crafted` endorsement examples: `02.webp`, `03.webp`, `04.webp`, plus `02.png`;
+- portraits/photo style: `foto01.webp`, `foto02.webp`;
+- Google Meet backgrounds: `meet_01.webp` through `meet_07.webp`;
+- stationery and print mockups: `stationery_mockup_1.webp` through `stationery_mockup_5.webp` and nested `obsahova-stranka-s-prehledem-vsech-sekci/` mockups;
+- templates/download visuals: `img_obraz.png`, `dohoda_img.png`, `image-2.png`;
+- email and internal tooling visuals: `eml_dlazdice.webp`, `frame-1.webp`.
 
 Use these as:
 
@@ -35,10 +51,6 @@ Use these as:
 - examples in design decks or brand explanation surfaces.
 
 Do not use these images as generic decoration in unrelated product UI.
-
-## Source Files Not Bundled
-
-The export also contained a full Inter font ZIP, a PDF communication manual, additional meet backgrounds, stationery mockups, and other downloads. They are not bundled here to keep the plugin focused. When the task needs those exact assets, use `source-ant-brand.md` to identify them and ask for the current source package or brand URL if they are not in the repository.
 
 ## Source Lookup
 
