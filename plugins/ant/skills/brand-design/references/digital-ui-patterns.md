@@ -78,6 +78,29 @@ Tables/data:
 - Keep hero sections useful: brand/product signal first, next content hinted below the fold.
 - On mobile, preserve typographic intent without clipping; shorten labels before shrinking them too far.
 - Avoid viewport-width font scaling. Use defined responsive type steps.
+- Constrain every grid/flex child that can contain long text with `min-width: 0` and a deliberate `max-width`; otherwise large headings can draw across neighboring panels.
+- Do not rely on `overflow: hidden` to make a visual fit. If hidden overflow is needed for transitions, the content still needs a safe layout inside the visible area.
+
+## Presentation And Fixed-Viewport Layouts
+
+Use these rules for standalone HTML decks, slide presentations, kiosk screens, dashboard reports, or any surface that uses `100vh`, `100dvh`, fixed navigation, or slide-by-slide interaction.
+
+- Reserve explicit safe areas for fixed controls, progress bars, footers, captions, and any environment overlays. The slide content area must end before those rails begin.
+- Keep controls outside the content grid, or make the content grid account for them with padding such as `padding-bottom: control-height + page-padding`.
+- Never place fixed controls on top of readable content, even when they have high contrast or transparency.
+- Avoid one-size-fits-all hero type such as `font-size: 10vw` for long Czech headings. Use responsive type steps that consider both width and height, shorten copy, or add a content-fit routine.
+- In split layouts, define columns with `minmax(0, ...)`, add `min-width: 0` to children, and set a tighter `max-width` for large headings so they cannot enter the adjacent column.
+- Treat every slide as a separate layout. A deck is not valid because slide 1 works; each slide must fit independently.
+- Prefer shorter slide headlines over automatic shrinking when the message is too long. Shrink only within professional limits.
+- Support direct slide links such as `?slide=6` or hashes when practical; they make QA and review easier.
+
+Required checks before handing off an HTML deck:
+
+- Open or render representative desktop and narrow/mobile viewports.
+- Check the longest headline, densest split layout, and last slide.
+- Verify no overlap among headline/body/panels/footer/controller/progress.
+- Verify keyboard controls do not move focus into hidden slides.
+- If browser tooling is available, screenshot any slide that has dense text or split columns and inspect it visually.
 
 ## Motion
 
@@ -95,5 +118,5 @@ For frontend code:
 1. Use `ant:frontend-best-practices` alongside this skill.
 2. Inspect existing design tokens/components before adding new ones.
 3. Map brand choices into the project's token system.
-4. Verify contrast, keyboard/focus states, responsive fit, and layout stability.
-5. Use screenshots or browser checks for visual work when a local target is available.
+4. Verify contrast, keyboard/focus states, responsive fit, layout stability, and absence of overlap.
+5. Use screenshots or browser checks for visual work when a local target is available. For deck-like outputs, check multiple slides, not just the first viewport.

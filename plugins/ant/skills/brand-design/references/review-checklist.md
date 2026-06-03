@@ -9,6 +9,7 @@ Use this for brand-fit reviews before finalizing a design or implementation.
 - Text contrast is readable, especially mint on light backgrounds.
 - The design is recognizably `(ant)`, not a generic SaaS/template style with mint added.
 - UI remains usable and accessible; brand expression does not break hierarchy, controls, or responsive behavior.
+- No visible text, cards, labels, fixed controls, progress bars, footers, or browser/plugin overlays cover each other. Any overlap is a blocking brand-fit and usability issue.
 
 ## Brand Fit
 
@@ -27,6 +28,19 @@ Use this for brand-fit reviews before finalizing a design or implementation.
 - Dense operational screens stay scannable.
 - Responsive behavior preserves line breaks, labels, and control sizes.
 - Existing project components/tokens are reused where possible.
+- Fixed-position controls have reserved safe area and do not sit on top of readable content.
+- Grid and flex layouts with large headings constrain text (`min-width: 0`, max widths, and appropriate breakpoints) so content cannot draw into neighboring panels.
+
+## Presentation / Deck QA
+
+For HTML decks, slide presentations, and fixed-viewport reports:
+
+- Check every slide, not only the first one.
+- Check the longest heading and densest split layout at desktop and narrow/mobile widths.
+- Confirm controls, counters, and progress bars are outside the content area or have reserved content padding.
+- Confirm title/body copy fits without clipping or hiding behind footers.
+- Use direct slide URLs or query params for review when available, such as `?slide=6`.
+- If any slide needs emergency shrinking below readable size, rewrite/shorten the slide instead.
 
 ## Common Fixes
 
@@ -35,6 +49,8 @@ Use this for brand-fit reviews before finalizing a design or implementation.
 - Swap rounded badges for hard label strips.
 - Increase typographic contrast instead of adding decoration.
 - Move brand expression to hero, section headers, labels, and endorsement rather than every component.
+- Add a control rail/safe-area to fixed decks instead of floating controls over content.
+- Reduce or rewrite long slide headlines before relying on smaller type.
 
 ## Review Response Format
 

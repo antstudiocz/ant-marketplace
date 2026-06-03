@@ -20,7 +20,7 @@ Load the smallest useful set:
 
 - Brand primitives, colors, typography, logos, and source files: `references/brand-foundation.md`.
 - Layout language, expressive devices, photography, labels, and anti-patterns: `references/visual-language.md`.
-- Website/app UI patterns, components, motion, responsiveness, and implementation handoff: `references/digital-ui-patterns.md`.
+- Website/app UI patterns, slide decks, fixed-viewport layouts, components, motion, responsiveness, and implementation handoff: `references/digital-ui-patterns.md`.
 - Bundled logos, images, and source-manual lookup guidance: `references/asset-usage.md`.
 - Brand-fit QA and review format: `references/review-checklist.md`.
 - Exact public brand manual details when a decision needs source evidence: `references/source-ant-brand.md`.
@@ -39,7 +39,7 @@ For frontend implementation, also use `ant:frontend-best-practices`. For a new a
 4. Select the logo variant for the actual background and respect minimum size.
 5. Define a compact token set for the target project: colors, font stack, radius, spacing rhythm, line/border style, button style, and label style.
 6. Create or revise the design using existing project patterns where possible.
-7. Verify brand fit with `references/review-checklist.md` before final response.
+7. Verify brand fit and layout integrity with `references/review-checklist.md` before final response. For standalone HTML, slide decks, dashboards, landing pages, or other visual deliverables, render at least one desktop and one mobile/narrow viewport when tooling is available.
 
 ## Decision Rules
 
@@ -48,6 +48,8 @@ For frontend implementation, also use `ant:frontend-best-practices`. For a new a
 - Use labels as short bracketed emphasis markers, not as generic badges everywhere.
 - Use real brand assets when they communicate the brand or output type; do not add them as decoration when they compete with the user's task.
 - Preserve usability and accessibility. If a brand treatment weakens contrast, readability, or responsive behavior, adjust the treatment instead of accepting the defect.
+- Treat overlap as a failed design, not a polish issue. Text, cards, labels, controls, progress bars, fixed footers, and browser/plugin overlays must have explicit safe areas and must not cover each other.
+- For fixed-viewport slides or presentation-like pages, reserve a dedicated control rail/footer area, constrain grid children with `min-width: 0`, and use content-aware type sizing instead of scaling large text only from viewport width.
 - If Aktiv Grotesk EX is unavailable or licensing is unclear, state the limitation and use the closest approved fallback path instead of silently inventing a font.
 
 ## Boundaries
