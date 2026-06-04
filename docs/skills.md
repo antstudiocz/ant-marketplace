@@ -106,6 +106,22 @@ How it works:
 
 Use it for delivery operations around an already-scoped code change.
 
+## `merge-request`
+
+GitHub/GitLab Pull Request and Merge Request workflow for creating practical titles and descriptions from the current branch.
+
+How it works:
+
+- checks git status, branch, target branch, remote provider, diff, and recent commits before mutating delivery state;
+- asks which language to use for the PR/MR description every time;
+- uses `glab` for GitLab repositories and `gh` for GitHub repositories;
+- prefers Draft MR unless the user explicitly asks for ready/bez draft;
+- can commit, push, and create an MR/PR after context checks show the scope is clear;
+- uses a short Conventional Commit style title;
+- writes the description in the selected language with sections for what changed, why, chosen decisions, user and technical impact, UX walkthrough, technical testing, unverified items, and reviewer focus.
+
+Use it when the user asks to create or prepare an MR/PR and needs a structured practical description.
+
 ## `google-docs`
 
 Google Docs ingestion workflow for reading and extracting content from a Google Docs URL.
