@@ -46,7 +46,7 @@ Classify each cycle independently:
 
 The root remains dispatch-only in every cycle and every risk tier. It may read orchestration state and child reports, but it must not inspect application source files or perform implementation work.
 
-For persisted runs, record cycle and dispatch context in `state.json.metadata` without adding new enum values:
+For every orchestrated run, record cycle and dispatch context in `state.json.metadata` without adding new enum values:
 
 ```json
 {
@@ -72,23 +72,24 @@ If native nested delegation is unavailable, keep the same logical flow but flatt
 ## Lifecycle
 
 1. Git context and delivery setup.
-2. Risk-tier classification and cycle setup.
-3. Phase workspace setup for medium+ work.
-4. Intake and brainstorming.
-5. Codebase scouting when facts from the repo are needed before direction or planning.
-6. Post-scout clarification when scout findings expose user decisions.
-7. Architecture, debt, and feasibility challenge.
-8. Next-action approval before phase transitions.
-9. Rollout strategy approval for medium+ risky work.
-10. Execution mode approval for medium+ work: autonomous implementation mode or manual decision mode.
-11. Direction approval from the user when the selected tier requires it.
-12. Planning phase artifact with full phased roadmap when phased rollout is selected.
-13. Concise user-facing plan or dispatch summary, execution mode summary when applicable, and implementation approval.
-14. Delegated implementation: one bounded worker for `Low`, implementation lead for higher tiers.
-15. Optional multi-phase implementation under `phases/06-implementation/subphases/<NN-name>/...`.
-16. Optional parallel slice work under the implementation lead.
-17. Phase checkpoints and close/handoff gates.
-18. Integration, targeted checks, review, fix loop, and final evidence.
+2. Persistence bootstrap gate before any delegation, verification, delivery action, or long-running status report.
+3. Risk-tier classification and cycle setup.
+4. Structured run bootstrap for every orchestrated run; phase workspace setup for medium+ work.
+5. Intake and brainstorming.
+6. Codebase scouting when facts from the repo are needed before direction or planning.
+7. Post-scout clarification when scout findings expose user decisions.
+8. Architecture, debt, and feasibility challenge.
+9. Next-action approval before phase transitions.
+10. Rollout strategy approval for medium+ risky work.
+11. Execution mode approval for medium+ work: autonomous implementation mode or manual decision mode.
+12. Direction approval from the user when the selected tier requires it.
+13. Planning phase artifact with full phased roadmap when phased rollout is selected.
+14. Concise user-facing plan or dispatch summary, execution mode summary when applicable, and implementation approval.
+15. Delegated implementation: one bounded worker for `Low`, implementation lead for higher tiers.
+16. Optional multi-phase implementation under `phases/06-implementation/subphases/<NN-name>/...`.
+17. Optional parallel slice work under the implementation lead.
+18. Phase checkpoints and close/handoff gates.
+19. Integration, targeted checks, review, fix loop, and final evidence.
 
 Do not skip directly to root implementation. When this skill is active, root implementation is forbidden regardless of task size. Tiny, clear, low-risk changes still go through at least one child agent unless the user explicitly leaves orchestration mode.
 
@@ -109,6 +110,34 @@ Any later user request starts a new orchestration cycle or follow-up phase, incl
 These requests never authorize root manual implementation, debugging, polish, review-fix edits, docs touchups, formatting, or one-line changes. The root must classify the request, update artifacts, delegate needed work, verify evidence, and report back through the orchestration lifecycle.
 
 Follow-ups do not inherit the previous risk tier automatically. They inherit the run's context, approved constraints, relevant artifacts, delivery state, and must-not-assume notes. The root must classify the new cycle before deciding whether to use one bounded worker, an implementation lead, scout, plan writer, reviewer, or the full lifecycle.
+
+## Persistence Bootstrap Gate
+
+If orchestration is active and the next work will use subagents, delivery actions, verification, pipeline recovery, or more than one user-facing response, `.ant/orchestrator/<run>/state.json` and `.ant/orchestrator/<run>/events.jsonl` must exist before the first delegated, delivery, or verification action. If they do not exist, creating or reopening them is the next action.
+
+Until structured persistence exists, the root orchestrator must not:
+
+- spawn, message, wait for, interrupt, or replace child agents;
+- run verification or pipeline recovery;
+- push, create, update, or report MR/PR delivery status;
+- report long-running implementation status as if durable state exists.
+
+Before first delegation or delivery action, self-check:
+
+```text
+- Do I have an active orchestrator run path?
+- Does state.json exist and identify the current cycle?
+- Does events.jsonl record the current request or recovery checkpoint as durable context?
+- Are branch, target, MR/pipeline, active child, and delivery constraints recorded when relevant?
+```
+
+If any answer is no, create or update persistence first. Valid exceptions are limited to:
+
+- a pure answer with no implementation, delegation, verification, delivery, or long-running state;
+- the user explicitly declines filesystem persistence for this run;
+- the host cannot write files.
+
+When an exception applies, say `Persistence skipped because ...` in the user-facing response and include the reason in any available structured state or final handoff.
 
 The root may leave orchestration mode only when the user explicitly says both:
 
@@ -198,9 +227,9 @@ If any item is missing, the child must stop and ask its parent for clarification
 
 ## Post-Completion Follow-Up Protocol
 
-After the orchestrator reports completion, any user follow-up, correction, missed requirement, bug report, review note, cleanup request, polish request, tiny edit, post-delivery issue, new task, or "one more thing" reopens the orchestration lifecycle. The root must classify the follow-up, update phase artifacts when persistence is active, delegate the fix or change to a child agent, run or request targeted verification, and report evidence.
+After the orchestrator reports completion, any user follow-up, correction, missed requirement, bug report, review note, cleanup request, polish request, tiny edit, post-delivery issue, new task, or "one more thing" reopens the orchestration lifecycle. The root must classify the follow-up, update structured state and phase artifacts when present, delegate the fix or change to a child agent, run or request targeted verification, and report evidence.
 
-If persistence is active and `state.json.status` is `completed`, the root must reopen the persisted run before delegating or reporting active work:
+If structured state exists and `state.json.status` is `completed`, the root must reopen the persisted run before delegating or reporting active work:
 
 - assign a new `metadata.cycle` value such as `follow-up-001`, set `metadata.followUpOf` when the relationship is known, refresh `metadata.activeRiskTier`, and preserve `metadata.originalRiskTier`;
 - set `state.json.status` to the appropriate active state: `planning` when the follow-up needs direction or a revised plan, `implementing` when the requested change is approved and ready to execute, `reviewing` for a review-only follow-up, or `verifying` for a verification-only follow-up;
@@ -418,7 +447,9 @@ Do not stash, reset, move, overwrite, create/switch branches, create worktrees, 
 
 ## Context Persistence Gate
 
-For `Medium`, `High`, and `Critical` work, keep a concise local phase workspace under the repository so another session can continue after context compaction, reset, or handoff. Skip this only for `Low` tasks or when the user explicitly declines persistence.
+For every orchestrated run, keep a local ignored structured run under the repository so Orchestrator Console, another session, or a post-compact recovery can see the active lifecycle. Create or reopen `.ant/orchestrator/<run>/state.json` and `.ant/orchestrator/<run>/events.jsonl` before the first child delegation, including `Low` and other minimal delegated runs.
+
+For `Medium`, `High`, and `Critical` work, also keep concise markdown run and phase files so another session can continue after context compaction, reset, or handoff. For `Low` work, markdown may stay minimal or be omitted except for files that add real resume value; structured JSON/JSONL still remains required. Skip structured persistence only when the user explicitly declines filesystem persistence or the host cannot write files, and report that as a blocker or residual risk.
 
 Use a local ignored directory:
 
@@ -428,6 +459,8 @@ Use a local ignored directory:
   <YYYY-MM-DD-short-purpose>/
     index.md
     state.md
+    state.json
+    events.jsonl
     decisions.md
     handoff.md
     phases/
@@ -481,13 +514,13 @@ Use a local ignored directory:
         handoff.md
 ```
 
-Create only the phase folders needed for the run. Before creating files, ensure `.ant/orchestrator/` is ignored without changing tracked repo policy unless the user asks. Prefer `.git/info/exclude`; if that is unavailable, ask before editing `.gitignore`.
+Create only the phase folders needed for the run. For low-risk runs, the minimum filesystem footprint is the run directory plus `state.json` and `events.jsonl`; add markdown only when it improves resume or handoff value. Before creating files, ensure `.ant/orchestrator/` is ignored without changing tracked repo policy unless the user asks. Prefer `.git/info/exclude`; if that is unavailable, ask before editing `.gitignore`.
 
 All markdown artifacts created by the orchestration flow must stay under `.ant/orchestrator/`. The default plan artifact path is `.ant/orchestrator/<run>/phases/05-planning/implementation-plan.md`. Do not create root-level `implementation-plan.md`, `plan.md`, or ad hoc planning markdown unless the user explicitly asks for a tracked repository document. If resuming an older run that already has `.ant/orchestrator/<run>/implementation-plan.md`, keep it readable and link the canonical phase artifact from `index.md`.
 
-Phase artifacts are the source of truth; chat is only the UI. Before any user-facing phase transition, pause, stop, handoff, context reset, long-running status report, reviewer handoff, implementation approval request, or completion report, update the run state and current phase folder first.
+Structured run state is the source of truth; markdown phase artifacts are the human resume layer when active. Chat is only the UI. Before any user-facing phase transition, pause, stop, handoff, context reset, long-running status report, reviewer handoff, implementation approval request, or completion report, update `state.json` and `events.jsonl` first, then update the current phase folder when markdown persistence is active.
 
-Markdown artifacts are the human resume layer. For new runs, also maintain the machine-readable contract files documented in `plugins/ant/contracts/orchestrator-state/`:
+Markdown artifacts are the human resume layer. For every orchestrated run, maintain the machine-readable contract files documented in `plugins/ant/contracts/orchestrator-state/`:
 
 - `.ant/orchestrator/<run>/state.json` is the current snapshot for tools and dashboards.
 - `.ant/orchestrator/<run>/events.jsonl` is the append-only timeline, one valid event object per line.
@@ -497,7 +530,66 @@ Markdown artifacts are the human resume layer. For new runs, also maintain the m
 - Each active or planned agent should keep `shortLabel`, `intent`, `plannedWork`, and `doneDefinition` current in `state.json` so orchestration UIs can show what the agent is expected to do without scraping markdown. `shortLabel` is a 2-4 word graph label, `intent` is one concise sentence, `plannedWork` is a short bullet list, and `doneDefinition` is the completion condition for the parent.
 - The normalized status vocabularies from the contract are canonical for machine-readable state. If markdown wording differs, map it to the closest contract status instead of inventing a new enum value.
 
-When updating `state.md`, phase files, decisions, handoff, verification, or review artifacts, update `state.json` in the same checkpoint if the latest run, phase, agent, blocker, artifact, checkpoint, validation, or review state changed. Write `state.json` atomically where the host makes that practical: compose the full object first, then replace the previous snapshot.
+Minimum bootstrap before first child delegation:
+
+```json
+{
+  "schemaVersion": "1.0.0",
+  "runId": "<run-id>",
+  "workspaceRoot": "<absolute workspace root or null>",
+  "host": "codex",
+  "createdAt": "<UTC timestamp>",
+  "updatedAt": "<UTC timestamp>",
+  "status": "planning",
+  "currentPhaseId": "01-intake",
+  "preferredLanguage": "<cs-CZ|en>",
+  "agents": [
+    {
+      "id": "root",
+      "role": "root-orchestrator",
+      "status": "running",
+      "displayName": "Root Orchestrator",
+      "shortLabel": "Run coordination",
+      "intent": "Coordinate orchestration, delegate work, and keep run state current.",
+      "plannedWork": ["Bootstrap the run", "Classify risk", "Delegate the next step"],
+      "doneDefinition": "The run has verified evidence or a clear next step.",
+      "startedAt": "<UTC timestamp>",
+      "updatedAt": "<UTC timestamp>"
+    }
+  ],
+  "edges": [],
+  "phases": [
+    {
+      "id": "01-intake",
+      "title": "Intake",
+      "status": "in_progress",
+      "ownerAgentId": "root",
+      "startedAt": "<UTC timestamp>",
+      "completedAt": null,
+      "summary": "Run bootstrapped and risk classification is in progress.",
+      "artifactRefs": []
+    }
+  ],
+  "blockers": [],
+  "artifacts": [],
+  "checkpoints": [],
+  "metadata": {
+    "originalRiskTier": "<low|medium|high|critical>",
+    "activeRiskTier": "<low|medium|high|critical>",
+    "flowMode": "<single-delegated-worker|implementation-lead|scout-plan-implement-review|full-critical-lifecycle>",
+    "cycle": "initial-implementation",
+    "rootMode": "dispatch-only"
+  }
+}
+```
+
+Append the matching first `events.jsonl` line:
+
+```json
+{"schemaVersion":"1.0.0","eventId":"<UTC compact timestamp>-run-created","runId":"<run-id>","timestamp":"<UTC timestamp>","type":"run.created","actorAgentId":"root","phaseId":"01-intake","agentId":"root","severity":"info","message":"Orchestration run created","data":{"host":"codex"},"artifactRefs":[]}
+```
+
+When updating `state.md`, phase files, decisions, handoff, verification, or review artifacts, update `state.json` in the same checkpoint if the latest run, phase, agent, blocker, artifact, checkpoint, validation, or review state changed. When markdown is omitted for a low-risk run, update `state.json` and append `events.jsonl` directly for every durable lifecycle change. Write `state.json` atomically where the host makes that practical: compose the full object first, then replace the previous snapshot.
 
 Append an `events.jsonl` event when a durable lifecycle event occurs:
 
@@ -653,7 +745,7 @@ Add phase-specific files when relevant:
 
 ### Phase Close / Handoff Gate
 
-No phase is complete until its folder records:
+No phase is complete until `state.json` and `events.jsonl` record the latest run, phase, agent, blocker, validation, review, and delivery state. When markdown persistence is active, the phase folder must also record:
 
 - status: `active`, `blocked`, `paused`, `ready-for-next-phase`, or `closed`;
 - input: user messages, approved scope, parent prompt, relevant plan paths, and child reports used;
@@ -724,6 +816,8 @@ After any context compaction, resume, or suspected context loss, the root orches
 
 Before answering, editing, delegating, starting/replacing child agents, or reporting completion, inspect:
 
+- `.ant/orchestrator/<run>/state.json`;
+- `.ant/orchestrator/<run>/events.jsonl`;
 - `.ant/orchestrator/active.md`;
 - active run `index.md`;
 - active run `state.md`;
@@ -733,6 +827,8 @@ Before answering, editing, delegating, starting/replacing child agents, or repor
 - `phases/05-planning/implementation-plan.md` if present, or legacy root `implementation-plan.md` if resuming an old run;
 - current git branch and dirty state;
 - known child-agent handles/status if available.
+
+If `.ant/orchestrator/*` is missing or no active run can be identified, create a new `.ant/orchestrator/<YYYY-MM-DD-recovery>/` recovery run before continuing. Its `state.json` and first `events.jsonl` entries must record that state was reconstructed from available git status, MR/PR or pipeline evidence, user messages, and child-agent reports. Do not delegate, verify, push, create/update MR/PR, or report recovered status until this recovery run exists, unless filesystem persistence is explicitly declined or unavailable.
 
 Then reconstruct:
 
@@ -765,7 +861,7 @@ After compaction or suspected context loss, assume any previously spawned child 
 
 Recovery steps:
 
-1. Read `.ant/orchestrator/active.md`, active run `index.md`, `state.md`, run and phase `handoff.md`, and any `Active Children` sections.
+1. Read active run `state.json`, `events.jsonl`, `.ant/orchestrator/active.md`, active run `index.md`, `state.md`, run and phase `handoff.md`, and any `Active Children` sections. If structured state is missing, create or reopen a recovery run first.
 2. Identify known child agents: role, assigned scope, owned files/subsystems, expected checkpoint, last known status, and whether work may still be running.
 3. Poll or wait existing child agents if handles are available.
 4. If handles are unavailable, treat their write scopes as possibly active or partially changed.
@@ -1151,7 +1247,7 @@ Slice workers should not spawn further subagents by default. Keep the normal pro
 
 Status updates are push-first. Child agents must proactively report meaningful phase checkpoints to their parent. Parent agents should not poll by default because polling can interrupt active work and add coordination noise.
 
-For persisted runs, a checkpoint is not ready for user-facing transition until the owning phase artifacts are updated or the child has returned exact artifact updates for the parent to write.
+For every orchestrated run, a checkpoint is not ready for user-facing transition until `state.json` and `events.jsonl` are updated, and until the owning markdown phase artifacts are updated or the child has returned exact artifact updates for the parent to write when markdown persistence is active.
 
 Required child-to-parent checkpoints:
 
@@ -1227,9 +1323,9 @@ Use the smallest delegated workflow that can preserve quality:
 
 ```text
 Low:
-- root: git/delivery preflight, risk classification, next-action contract, structured metadata update when active.
+- root: git/delivery preflight, risk classification, next-action contract, structured run bootstrap, and metadata update.
 - child: one bounded implementation worker represented as `implementation-lead` with `metadata.workerKind = "bounded-low-worker"`.
-- no scout, plan writer, persisted phase tree, or reviewer by default.
+- no scout, plan writer, full markdown phase tree, or reviewer by default; `state.json` and `events.jsonl` are still required.
 - expected evidence: root cause, changed paths, targeted checks, residual risk, escalation decision.
 
 Medium:
@@ -1379,7 +1475,7 @@ Constraints:
 
 Create or update `.ant/orchestrator/<run>/phases/05-planning/implementation-plan.md` with a checklist-style plan covering delivery context, execution mode, decision policy, full phased roadmap when phased rollout is selected, phase artifact layout, close/handoff expectations, scenario-based definition of done, risk scenario matrix, architecture boundaries, legacy/debt decisions, contract-first details, concurrency plan, implementation checklist, validation checklist, reviewer focus, risks, assumptions, and open questions. If any blocking question remains, return `Needs clarification` instead of inventing an answer.
 
-Also update the planning phase artifacts when persistence is active: add approved decisions to run and phase `decisions.md`, plan path and implementation strategy to `state.md`, and phase close/next action to `phases/05-planning/handoff.md` plus run `handoff.md`.
+Also update the planning phase artifacts when markdown persistence is active: add approved decisions to run and phase `decisions.md`, plan path and implementation strategy to `state.md`, and phase close/next action to `phases/05-planning/handoff.md` plus run `handoff.md`. In all runs, update `state.json` and append durable events in `events.jsonl`.
 ```
 
 ## Implementation Lead Prompt
@@ -1408,7 +1504,7 @@ Root orchestrator guidance:
 <risk class, model tier guidance, suggested concurrency, boundaries, validation expectations>
 
 Orchestration state:
-<path to .ant/orchestrator/... when persistence is active; report artifact updates to the root instead of editing them unless explicitly delegated>
+<path to .ant/orchestrator/...; report artifact updates to the root instead of editing them unless explicitly delegated>
 
 Language:
 Respond in the run's `preferredLanguage` when provided; otherwise use the same language as the original user request.
@@ -1527,9 +1623,10 @@ The standing subagent authorization satisfies the explicit user permission requi
 
 The orchestrated implementation is not complete until:
 
-- the user approved the direction and implementation plan;
-- run-level `index.md`, `state.md`, and `decisions.md` are current for persisted runs;
-- every completed phase folder has current `phase.md`, `decisions.md`, `handoff.md`, and phase-specific evidence files;
+- the user approved the direction and implementation plan, unless the selected flow is a low-risk dispatch packet;
+- `state.json` and `events.jsonl` are current for every orchestrated run;
+- run-level `index.md`, `state.md`, and `decisions.md` are current when markdown persistence is active;
+- every completed markdown phase folder has current `phase.md`, `decisions.md`, `handoff.md`, and phase-specific evidence files;
 - the current phase close/handoff gate records status, input, work done, decisions, evidence, open questions, next phase handoff, files to read first, and must-not-assume notes;
 - execution mode and decision policy are recorded for medium+ work;
 - phased rollout work has an approved whole-roadmap plan before any phase implementation starts;

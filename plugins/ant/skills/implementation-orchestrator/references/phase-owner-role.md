@@ -2,9 +2,9 @@
 
 Use this internal reference for any role that owns a lifecycle phase or implementation subphase. The root orchestrator owns user-facing phases. The implementation lead owns `phases/06-implementation/` and any implementation subphases when the root delegates that artifact scope.
 
-Phase artifacts are the source of truth. Chat summaries are only UI. Before a phase transition, pause, stop, handoff, replacement worker, reviewer handoff, or completion report, update the artifacts first or report exact artifact updates to the parent that owns the files.
+Structured run state is the source of truth; markdown phase artifacts are the human resume layer when active. Chat summaries are only UI. Before a phase transition, pause, stop, handoff, replacement worker, reviewer handoff, or completion report, update `state.json` and `events.jsonl` first, then update markdown artifacts when active or report exact artifact updates to the parent that owns the files.
 
-For new persisted runs, markdown is the human resume layer and the machine-readable source lives beside it:
+For every orchestrated run, markdown is the human resume layer and the machine-readable source lives beside it:
 
 ```text
 .ant/orchestrator/<run>/state.json
@@ -17,7 +17,7 @@ If the run has `preferredLanguage` in `state.json`, write future user-facing pha
 
 ## Workspace Shape
 
-Use this structure for new medium+ runs:
+Use this structure for new medium+ runs. For `Low` runs, the minimum required structure is `.ant/orchestrator/<run>/state.json` plus `.ant/orchestrator/<run>/events.jsonl`; add markdown files only when they improve resume or handoff value.
 
 ```text
 .ant/orchestrator/

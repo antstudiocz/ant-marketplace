@@ -19,7 +19,7 @@ When the run's `state.json` includes `preferredLanguage`, treat it as the langua
 - Preserve the original goal, approved direction, implementation plan, non-goals, acceptance criteria, and constraints.
 - Preserve the approved execution mode, decision policy, escalation rules, and phased roadmap.
 - Preserve the phase workspace contract. Treat `phases/06-implementation/` and delegated subphase artifacts as the durable source of truth.
-- Preserve the machine-readable orchestration contract in `plugins/ant/contracts/orchestrator-state/` when the approved scope includes it. New run producers should write `.ant/orchestrator/<run>/state.json` snapshots and append `.ant/orchestrator/<run>/events.jsonl` events using UTC/Zulu timestamps and normalized contract statuses.
+- Preserve the machine-readable orchestration contract in `plugins/ant/contracts/orchestrator-state/` for every orchestrated run. Run producers should write `.ant/orchestrator/<run>/state.json` snapshots and append `.ant/orchestrator/<run>/events.jsonl` events using UTC/Zulu timestamps and normalized contract statuses, including low-risk/minimal delegated runs.
 - Read repo instructions, delivery context, dirty state, implementation plan, architecture boundaries, and relevant code paths before editing.
 - Read orchestration artifacts when the root provides them, especially `index.md`, `state.md`, `decisions.md`, current phase files, and `handoff.md`.
 - Respect approved branch/worktree, confirmed target branch, unrelated-change decision, and MR decisions. Do not switch branches, create worktrees, push, or create MRs unless the root orchestrator explicitly delegates that action after user approval.

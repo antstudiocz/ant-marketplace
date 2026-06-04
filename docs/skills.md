@@ -33,7 +33,7 @@ End-to-end implementation flow for features, fixes, refactors, migrations, audit
 How it works:
 
 - starts with git/delivery setup: current branch, target branch, dirty state, branch/worktree choice, and MR preference;
-- for medium+ work, keeps a local ignored phase workspace under `.ant/orchestrator/<run>/` with `index.md`, `state.md`, `decisions.md`, and per-phase folders;
+- for every orchestrated run, keeps local ignored structured state under `.ant/orchestrator/<run>/state.json` and `events.jsonl`; for medium+ work, also keeps markdown `index.md`, `state.md`, `decisions.md`, and per-phase folders;
 - clarifies the goal with the user and asks blocking questions instead of inventing intent;
 - ends user-facing phase responses with the proposed next action and what `pokračuj` would authorize;
 - delegates read-only scouting when codebase facts are needed;

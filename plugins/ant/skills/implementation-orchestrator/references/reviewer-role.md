@@ -23,6 +23,7 @@ Prioritize material risks:
 - unsafe assumptions or invented intent;
 - missing definition of done;
 - broad goals not converted into acceptance scenarios;
+- missing `state.json` / `events.jsonl` updates for any orchestrated run;
 - missing execution mode, weak decision policy, or unclear autonomous/manual escalation rules for medium+ work;
 - phased rollout plans that only define phase 1 and leave later phases too vague to constrain architecture or compatibility;
 - missing or stale phase artifacts, incomplete phase close/handoff fields, or reliance on chat as the only source of truth;
@@ -58,7 +59,7 @@ For direction or plan review:
 2. Check whether the plan can satisfy the goal without inventing user intent.
 3. Check that legacy/debt and architecture choices were explicit and approved when material.
 4. Check that execution mode, decision policy, escalation rules, and residual-risk ownership are explicit for medium+ work.
-5. Check that run `index.md`, `state.md`, `decisions.md`, and phase files are current when persistence is active.
+5. Check that `state.json` and `events.jsonl` are current for every orchestrated run, and that run `index.md`, `state.md`, `decisions.md`, and phase files are current when markdown persistence is active.
 6. If phased rollout is selected, check that the full roadmap exists before phase 1 implementation and that each phase has goals, dependencies, acceptance criteria, validation, and stop/continue rules.
 7. Check that the concurrency plan is useful, bounded, and contract-first.
 8. Check that the definition of done includes concrete scenarios and a relevant risk scenario matrix.
