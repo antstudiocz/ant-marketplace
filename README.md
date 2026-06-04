@@ -88,6 +88,7 @@ The app requires macOS 14 or newer and Xcode command line tools.
 | `/ant:frontend-best-practices` | `$frontend-best-practices` | React, Next.js, TypeScript, accessibility, forms, performance, responsive UI, i18n, skeletons, and composition |
 | `/ant:laravel-best-practices` | `$laravel-best-practices` | Laravel 12+ architecture, caching, performance, Eloquent, queues, and backend review |
 | `/ant:delivery-workflows` | `$delivery-workflows` | GitLab MR creation, merge conflicts, and delivery hygiene |
+| `/ant:merge-request` | `$merge-request` | GitHub/GitLab PR/MR creation with language choice and delivery checks |
 | `/ant:google-docs` | `$google-docs` | Read and extract content from Google Docs |
 | `/ant:asana-task-analyzer` | `$asana-task-analyzer` | Analyze Asana tasks for implementers |
 

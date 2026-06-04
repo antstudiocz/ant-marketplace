@@ -1,0 +1,4 @@
+interface:
+  display_name: "(ant) Merge Request"
+  short_description: "PR/MR delivery checks with language choice"
+  default_prompt: "Use $merge-request to create a structured PR/MR after asking which language to use."
