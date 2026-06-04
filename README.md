@@ -65,25 +65,13 @@ Orchestrator Console is a macOS app for visualizing `.ant/orchestrator/<run>/sta
 Install from release:
 
 1. Open the latest GitHub release.
-2. Download `Orchestrator-Console-<version>.pkg`.
-3. Open the installer and follow the prompts. It installs `Orchestrator Console.app` to `/Applications`.
+2. Download `Orchestrator-Console-<version>.dmg`.
+3. Open the DMG and drag `Orchestrator Console.app` to `Applications`.
 4. Launch the app and select the workspace repository you want to inspect.
 
-The release also includes `Orchestrator-Console-<version>.dmg` for users who prefer the drag-to-Applications package format.
+The free GitHub release build is not Developer ID signed or notarized, so macOS may warn that the app cannot be verified. If you trust this repository and want to open it anyway, try opening the app once, then use System Settings -> Privacy & Security -> Open Anyway.
 
 The app requires macOS 14 or newer.
-
-GitHub release artifacts must be signed and notarized before upload. Configure these repository secrets before running the Orchestrator Console release workflow:
-
-- `MACOS_APP_CERTIFICATE_P12_BASE64` - base64-encoded Developer ID Application `.p12`.
-- `MACOS_APP_CERTIFICATE_PASSWORD` - password for the Developer ID Application `.p12`.
-- `MACOS_CODE_SIGN_IDENTITY` - certificate common name, for example `Developer ID Application: Example, Inc. (TEAMID)`.
-- `MACOS_INSTALLER_CERTIFICATE_P12_BASE64` - base64-encoded Developer ID Installer `.p12`.
-- `MACOS_INSTALLER_CERTIFICATE_PASSWORD` - password for the Developer ID Installer `.p12`.
-- `MACOS_INSTALLER_SIGN_IDENTITY` - certificate common name, for example `Developer ID Installer: Example, Inc. (TEAMID)`.
-- `APPLE_ID` - Apple ID used for notarization.
-- `APPLE_TEAM_ID` - Apple Developer Team ID.
-- `APPLE_APP_SPECIFIC_PASSWORD` - app-specific password for `xcrun notarytool`.
 
 ## Available Skills
 
