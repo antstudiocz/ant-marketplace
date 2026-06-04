@@ -62,31 +62,28 @@ Do not route new orchestrator child agents to `gpt-5.4` or `gpt-5.3-codex`. If a
 
 Orchestrator Console is a macOS app for visualizing `.ant/orchestrator/<run>/state.json` and `events.jsonl` files created by the implementation orchestrator.
 
-Recommended install:
+Install from release:
 
 1. Open the latest GitHub release.
 2. Download `Orchestrator-Console-<version>.pkg`.
 3. Open the installer and follow the prompts. It installs `Orchestrator Console.app` to `/Applications`.
 4. Launch the app and select the workspace repository you want to inspect.
 
-Alternative manual install:
+The release also includes `Orchestrator-Console-<version>.dmg` for users who prefer the drag-to-Applications package format.
 
-1. Download `Orchestrator-Console-<version>.dmg`.
-2. Open the DMG and drag `Orchestrator Console.app` to `Applications`.
+The app requires macOS 14 or newer.
 
-Build and install from source:
+GitHub release artifacts must be signed and notarized before upload. Configure these repository secrets before running the Orchestrator Console release workflow:
 
-```bash
-./script/package_orchestrator_console.sh --install
-```
-
-Build a distributable DMG without installing:
-
-```bash
-./script/package_orchestrator_console.sh --package-only
-```
-
-The generated `.pkg`, `.dmg`, and `.app` files are written under `apps/orchestrator-console/dist/`. The app requires macOS 14 or newer. Release builds are unsigned unless `CODE_SIGN_IDENTITY` and `INSTALLER_SIGN_IDENTITY` are set in the packaging environment.
+- `MACOS_APP_CERTIFICATE_P12_BASE64` - base64-encoded Developer ID Application `.p12`.
+- `MACOS_APP_CERTIFICATE_PASSWORD` - password for the Developer ID Application `.p12`.
+- `MACOS_CODE_SIGN_IDENTITY` - certificate common name, for example `Developer ID Application: Example, Inc. (TEAMID)`.
+- `MACOS_INSTALLER_CERTIFICATE_P12_BASE64` - base64-encoded Developer ID Installer `.p12`.
+- `MACOS_INSTALLER_CERTIFICATE_PASSWORD` - password for the Developer ID Installer `.p12`.
+- `MACOS_INSTALLER_SIGN_IDENTITY` - certificate common name, for example `Developer ID Installer: Example, Inc. (TEAMID)`.
+- `APPLE_ID` - Apple ID used for notarization.
+- `APPLE_TEAM_ID` - Apple Developer Team ID.
+- `APPLE_APP_SPECIFIC_PASSWORD` - app-specific password for `xcrun notarytool`.
 
 ## Available Skills
 
