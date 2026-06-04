@@ -34,8 +34,13 @@ Options:
 
 Environment:
   ORCHESTRATOR_CONSOLE_VERSION  Version written to Info.plist and DMG name.
-  CODE_SIGN_IDENTITY            Optional Developer ID identity for codesign.
+  CODE_SIGN_IDENTITY            Optional Developer ID Application identity for codesign.
   INSTALLER_SIGN_IDENTITY       Optional Developer ID Installer identity for pkgbuild.
+  REQUIRE_SIGNING               Set to 1 to fail unless Developer ID signing identities are present.
+  NOTARIZE                      Set to 1 to notarize and staple the app, PKG, and DMG.
+  APPLE_ID                      Apple ID used by xcrun notarytool when NOTARIZE=1.
+  APPLE_TEAM_ID                 Apple Developer Team ID used by xcrun notarytool when NOTARIZE=1.
+  APPLE_APP_SPECIFIC_PASSWORD   App-specific password used by xcrun notarytool when NOTARIZE=1.
 USAGE
 }
 
@@ -71,10 +76,54 @@ DMG_NAME="Orchestrator-Console-$VERSION.dmg"
 DMG_PATH="$DIST_DIR/$DMG_NAME"
 PKG_NAME="Orchestrator-Console-$VERSION.pkg"
 PKG_PATH="$DIST_DIR/$PKG_NAME"
+APP_NOTARY_ZIP="$DIST_DIR/Orchestrator-Console-$VERSION-app-notary.zip"
+REQUIRE_SIGNING="${REQUIRE_SIGNING:-0}"
+NOTARIZE="${NOTARIZE:-0}"
 
 command -v swift >/dev/null
 command -v hdiutil >/dev/null
 command -v pkgbuild >/dev/null
+
+if [[ "$NOTARIZE" == "1" ]]; then
+  command -v xcrun >/dev/null
+fi
+
+fail() {
+  echo "error: $*" >&2
+  exit 1
+}
+
+if [[ "$REQUIRE_SIGNING" == "1" || "$NOTARIZE" == "1" ]]; then
+  [[ -n "${CODE_SIGN_IDENTITY:-}" ]] || fail "CODE_SIGN_IDENTITY is required for distributable builds."
+  [[ -n "${INSTALLER_SIGN_IDENTITY:-}" ]] || fail "INSTALLER_SIGN_IDENTITY is required for distributable builds."
+fi
+
+if [[ "$NOTARIZE" == "1" ]]; then
+  [[ -n "${APPLE_ID:-}" ]] || fail "APPLE_ID is required when NOTARIZE=1."
+  [[ -n "${APPLE_TEAM_ID:-}" ]] || fail "APPLE_TEAM_ID is required when NOTARIZE=1."
+  [[ -n "${APPLE_APP_SPECIFIC_PASSWORD:-}" ]] || fail "APPLE_APP_SPECIFIC_PASSWORD is required when NOTARIZE=1."
+fi
+
+notarytool_submit() {
+  local artifact="$1"
+  xcrun notarytool submit "$artifact" \
+    --apple-id "$APPLE_ID" \
+    --team-id "$APPLE_TEAM_ID" \
+    --password "$APPLE_APP_SPECIFIC_PASSWORD" \
+    --wait
+}
+
+sign_path() {
+  local identity="$1"
+  local path="$2"
+  local args=(--force --deep --options runtime --sign "$identity")
+
+  if [[ "$identity" != "-" ]]; then
+    args+=(--timestamp)
+  fi
+
+  codesign "${args[@]}" "$path"
+}
 
 cd "$APP_DIR"
 mkdir -p "$SWIFTPM_CACHE" "$CLANG_CACHE"
@@ -84,7 +133,7 @@ BUILD_DIR="$(swift build -c release --cache-path "$SWIFTPM_CACHE" --show-bin-pat
 BUILD_BINARY="$BUILD_DIR/$APP_NAME"
 RESOURCE_BUNDLE="$BUILD_DIR/OrchestratorConsole_OrchestratorConsole.bundle"
 
-rm -rf "$APP_BUNDLE" "$DMG_STAGING" "$DMG_PATH" "$PKG_PATH"
+rm -rf "$APP_BUNDLE" "$DMG_STAGING" "$DMG_PATH" "$PKG_PATH" "$APP_NOTARY_ZIP"
 mkdir -p "$APP_MACOS" "$APP_RESOURCES"
 cp "$BUILD_BINARY" "$APP_BINARY"
 chmod +x "$APP_BINARY"
@@ -132,7 +181,20 @@ printf "APPL????" >"$PKG_INFO"
 touch "$APP_BUNDLE"
 
 if [[ -n "${CODE_SIGN_IDENTITY:-}" ]]; then
-  codesign --force --deep --options runtime --timestamp --sign "$CODE_SIGN_IDENTITY" "$APP_BUNDLE"
+  sign_path "$CODE_SIGN_IDENTITY" "$APP_BUNDLE"
+else
+  sign_path "-" "$APP_BUNDLE"
+fi
+
+codesign --verify --deep --strict --verbose=2 "$APP_BUNDLE"
+
+if [[ "$NOTARIZE" == "1" ]]; then
+  ditto -c -k --keepParent "$APP_BUNDLE" "$APP_NOTARY_ZIP"
+  notarytool_submit "$APP_NOTARY_ZIP"
+  xcrun stapler staple "$APP_BUNDLE"
+  xcrun stapler validate "$APP_BUNDLE"
+  spctl --assess --type execute --verbose=4 "$APP_BUNDLE"
+  rm -f "$APP_NOTARY_ZIP"
 fi
 
 if [[ -n "${INSTALLER_SIGN_IDENTITY:-}" ]]; then
@@ -141,11 +203,29 @@ else
   pkgbuild --component "$APP_BUNDLE" --install-location /Applications "$PKG_PATH"
 fi
 
+if [[ "$NOTARIZE" == "1" ]]; then
+  notarytool_submit "$PKG_PATH"
+  xcrun stapler staple "$PKG_PATH"
+  xcrun stapler validate "$PKG_PATH"
+  spctl --assess --type install --verbose=4 "$PKG_PATH"
+fi
+
 mkdir -p "$DMG_STAGING"
 ditto "$APP_BUNDLE" "$DMG_STAGING/$BUNDLE_NAME.app"
 ln -s /Applications "$DMG_STAGING/Applications"
 hdiutil create -volname "$BUNDLE_NAME" -srcfolder "$DMG_STAGING" -ov -format UDZO "$DMG_PATH"
 rm -rf "$DMG_STAGING"
+
+if [[ -n "${CODE_SIGN_IDENTITY:-}" ]]; then
+  codesign --force --timestamp --sign "$CODE_SIGN_IDENTITY" "$DMG_PATH"
+fi
+
+if [[ "$NOTARIZE" == "1" ]]; then
+  notarytool_submit "$DMG_PATH"
+  xcrun stapler staple "$DMG_PATH"
+  xcrun stapler validate "$DMG_PATH"
+  spctl --assess --type open --verbose=4 "$DMG_PATH"
+fi
 
 if [[ "$MODE" == "install" ]]; then
   INSTALL_TARGET="/Applications/$BUNDLE_NAME.app"
