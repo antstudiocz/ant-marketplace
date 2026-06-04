@@ -26,14 +26,14 @@ usage() {
   cat >&2 <<USAGE
 usage: $0 [--package-only|--install]
 
-Builds Orchestrator Console as a release .app bundle, installer PKG, and drag-to-Applications DMG.
+Builds Orchestrator Console locally as a .app bundle, installer PKG, and drag-to-Applications DMG.
 
 Options:
   --package-only   Build the .app and DMG only (default).
   --install        Build the .app and DMG, then copy the app to /Applications.
 
 Environment:
-  ORCHESTRATOR_CONSOLE_VERSION  Version written to Info.plist and DMG name.
+  ORCHESTRATOR_CONSOLE_VERSION  Version written to Info.plist and local artifact names.
   CODE_SIGN_IDENTITY            Optional Developer ID Application identity for codesign.
   INSTALLER_SIGN_IDENTITY       Optional Developer ID Installer identity for pkgbuild.
   REQUIRE_SIGNING               Set to 1 to fail unless Developer ID signing identities are present.

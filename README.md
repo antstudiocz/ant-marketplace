@@ -62,16 +62,21 @@ Do not route new orchestrator child agents to `gpt-5.4` or `gpt-5.3-codex`. If a
 
 Orchestrator Console is a macOS app for visualizing `.ant/orchestrator/<run>/state.json` and `events.jsonl` files created by the implementation orchestrator.
 
-Install from release:
+Build and run locally:
 
-1. Open the latest GitHub release.
-2. Download `Orchestrator-Console-<version>.dmg`.
-3. Open the DMG and drag `Orchestrator Console.app` to `Applications`.
-4. Launch the app and select the workspace repository you want to inspect.
+```bash
+./script/build_and_run.sh run
+```
 
-The free GitHub release build is not Developer ID signed or notarized, so macOS may warn that the app cannot be verified. If you trust this repository and want to open it anyway, try opening the app once, then use System Settings -> Privacy & Security -> Open Anyway.
+Install locally to `/Applications`:
 
-The app requires macOS 14 or newer.
+```bash
+./script/package_orchestrator_console.sh --install
+```
+
+The local build writes generated files under `apps/orchestrator-console/dist/`. Because the app is built locally instead of downloaded from a release, macOS should not treat it as an internet-downloaded app. The generated app bundle is ad-hoc signed for local use.
+
+The app requires macOS 14 or newer and Xcode command line tools.
 
 ## Available Skills
 
