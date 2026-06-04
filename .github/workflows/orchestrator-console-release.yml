@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   package-macos:
-    name: Package macOS artifacts
+    name: Package macOS DMG
     runs-on: macos-14
 
     steps:
@@ -22,92 +22,18 @@ jobs:
         working-directory: apps/orchestrator-console
         run: swift test
 
-      - name: Validate signing secrets
-        env:
-          MACOS_APP_CERTIFICATE_P12_BASE64: ${{ secrets.MACOS_APP_CERTIFICATE_P12_BASE64 }}
-          MACOS_APP_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_APP_CERTIFICATE_PASSWORD }}
-          MACOS_CODE_SIGN_IDENTITY: ${{ secrets.MACOS_CODE_SIGN_IDENTITY }}
-          MACOS_INSTALLER_CERTIFICATE_P12_BASE64: ${{ secrets.MACOS_INSTALLER_CERTIFICATE_P12_BASE64 }}
-          MACOS_INSTALLER_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_INSTALLER_CERTIFICATE_PASSWORD }}
-          MACOS_INSTALLER_SIGN_IDENTITY: ${{ secrets.MACOS_INSTALLER_SIGN_IDENTITY }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-        run: |
-          missing=0
-          for name in \
-            MACOS_APP_CERTIFICATE_P12_BASE64 \
-            MACOS_APP_CERTIFICATE_PASSWORD \
-            MACOS_CODE_SIGN_IDENTITY \
-            MACOS_INSTALLER_CERTIFICATE_P12_BASE64 \
-            MACOS_INSTALLER_CERTIFICATE_PASSWORD \
-            MACOS_INSTALLER_SIGN_IDENTITY \
-            APPLE_ID \
-            APPLE_TEAM_ID \
-            APPLE_APP_SPECIFIC_PASSWORD
-          do
-            if [[ -z "${!name:-}" ]]; then
-              echo "::error::$name is required for signed and notarized macOS releases."
-              missing=1
-            fi
-          done
-          exit "$missing"
-
-      - name: Import Developer ID certificates
-        env:
-          MACOS_APP_CERTIFICATE_P12_BASE64: ${{ secrets.MACOS_APP_CERTIFICATE_P12_BASE64 }}
-          MACOS_APP_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_APP_CERTIFICATE_PASSWORD }}
-          MACOS_INSTALLER_CERTIFICATE_P12_BASE64: ${{ secrets.MACOS_INSTALLER_CERTIFICATE_P12_BASE64 }}
-          MACOS_INSTALLER_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_INSTALLER_CERTIFICATE_PASSWORD }}
-        run: |
-          KEYCHAIN_PATH="$RUNNER_TEMP/orchestrator-console-signing.keychain-db"
-          KEYCHAIN_PASSWORD="$(openssl rand -base64 32)"
-          APP_CERTIFICATE_PATH="$RUNNER_TEMP/developer-id-application.p12"
-          INSTALLER_CERTIFICATE_PATH="$RUNNER_TEMP/developer-id-installer.p12"
-
-          echo "$MACOS_APP_CERTIFICATE_P12_BASE64" | base64 -D > "$APP_CERTIFICATE_PATH"
-          echo "$MACOS_INSTALLER_CERTIFICATE_P12_BASE64" | base64 -D > "$INSTALLER_CERTIFICATE_PATH"
-
-          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
-          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
-          security import "$APP_CERTIFICATE_PATH" -k "$KEYCHAIN_PATH" -P "$MACOS_APP_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
-          security import "$INSTALLER_CERTIFICATE_PATH" -k "$KEYCHAIN_PATH" -P "$MACOS_INSTALLER_CERTIFICATE_PASSWORD" -T /usr/bin/pkgbuild
-          security list-keychains -d user -s "$KEYCHAIN_PATH"
-          security default-keychain -d user -s "$KEYCHAIN_PATH"
-          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
-
-          echo "KEYCHAIN_PATH=$KEYCHAIN_PATH" >> "$GITHUB_ENV"
-
-      - name: Build signed and notarized artifacts
-        env:
-          CODE_SIGN_IDENTITY: ${{ secrets.MACOS_CODE_SIGN_IDENTITY }}
-          INSTALLER_SIGN_IDENTITY: ${{ secrets.MACOS_INSTALLER_SIGN_IDENTITY }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-          REQUIRE_SIGNING: "1"
-          NOTARIZE: "1"
+      - name: Build unsigned DMG
         run: |
           if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
             export ORCHESTRATOR_CONSOLE_VERSION="${GITHUB_REF_NAME#v}"
           fi
           ./script/package_orchestrator_console.sh --package-only
 
-      - name: Delete temporary keychain
-        if: always()
-        run: |
-          if [[ -n "${KEYCHAIN_PATH:-}" && -f "$KEYCHAIN_PATH" ]]; then
-            security delete-keychain "$KEYCHAIN_PATH"
-          fi
-
       - name: Upload workflow artifact
         uses: actions/upload-artifact@v4
         with:
           name: Orchestrator-Console-macOS
-          path: |
-            apps/orchestrator-console/dist/Orchestrator-Console-*.pkg
-            apps/orchestrator-console/dist/Orchestrator-Console-*.dmg
+          path: apps/orchestrator-console/dist/Orchestrator-Console-*.dmg
           if-no-files-found: error
 
       - name: Upload release asset
@@ -116,5 +42,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \
-            || gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes "Orchestrator Console macOS installer."
-          gh release upload "$GITHUB_REF_NAME" apps/orchestrator-console/dist/Orchestrator-Console-*.pkg apps/orchestrator-console/dist/Orchestrator-Console-*.dmg --clobber
+            || gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes "Orchestrator Console macOS DMG. This free build is not Developer ID signed or notarized, so macOS may require Privacy & Security -> Open Anyway on first launch."
+          gh release upload "$GITHUB_REF_NAME" apps/orchestrator-console/dist/Orchestrator-Console-*.dmg --clobber
