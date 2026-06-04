@@ -72,28 +72,30 @@ UIs should treat these metadata fields as display hints. Existing `status`, `pha
 ## Required Flow
 
 1. **Git context and delivery setup** - inspect branch, dirty state, likely target branch, branch/worktree need, and merge request preference before planning implementation work.
-2. **Risk classification and cycle setup** - classify the current request or follow-up as `Low`, `Medium`, `High`, or `Critical`; record `activeRiskTier`, `flowMode`, `cycle`, and `rootMode: dispatch-only` in structured metadata when persistence is active.
-3. **Phase workspace setup** - for medium+ work, create or reopen a local ignored orchestration run with concise state, decisions, handoff, and only the phase folders needed for the selected tier.
-4. **Intake and brainstorming** - ask the fewest high-impact questions needed. Do not invent user intent.
-5. **Scout when needed** - delegate read-only codebase analysis to scout agents when architecture, feasibility, debt, contracts, or direction are unknown.
-6. **Post-scout clarification** - after scout findings, separate repo facts from user decisions and ask the user before turning unresolved decisions into a recommendation.
-7. **Challenge and recommend** - do not blindly agree; present better options with tradeoffs when evidence supports them.
-8. **Next-action approval** - every user-facing phase response says what the orchestrator wants to do next and waits when moving to planning or implementation.
-9. **Rollout strategy approval** - for medium+ refactors, migrations, data-model, reporting, or cross-stack work, present one-time/phased/minimal strategy options before detailed planning.
-10. **Execution mode approval** - before implementation planning for medium+ work, ask whether the user wants autonomous implementation mode or manual decision mode.
-11. **Direction approval** - get user approval for the conceptual path before detailed planning when the selected tier requires it.
-12. **Plan phase artifact** - create or update `.ant/orchestrator/<run>/phases/05-planning/implementation-plan.md` through the plan writer role for medium+ work when a concrete plan adds value or is required by risk.
-13. **Implementation approval** - summarize the plan or low-risk dispatch packet, execution mode when applicable, decision policy, and current phase detail, then wait for approval when the gate requires it.
-14. **Delegated implementation** - delegate implementation before editing app code. `Low` uses one bounded implementation worker; higher tiers use an implementation lead.
-15. **Multi-phase implementation when useful** - implementation may use `phases/06-implementation/subphases/<NN-name>/...` with roadmap, checkpoints, verification, review, and stop/continue rules.
-16. **Slice work when useful** - backend/frontend/data/test slices may run in parallel against explicit contracts.
-17. **Phase close and handoff** - before any user-facing transition, pause, stop, handoff, or completion report, update structured state and concise human artifacts.
-18. **Integration, review, verification, delivery** - implementation is done only after tier-appropriate checks, review/fix loop when required, evidence, and any approved merge request handoff.
+2. **Persistence bootstrap gate** - if orchestration is active and the work will use subagents, delivery actions, verification, or more than one response, `.ant/orchestrator/<run>/state.json` and `events.jsonl` must exist before the first delegated, delivery, or verification action. If they do not exist, creating or reopening them is the next action.
+3. **Risk classification and cycle setup** - classify the current request or follow-up as `Low`, `Medium`, `High`, or `Critical`; create or reopen the structured run state and record `activeRiskTier`, `flowMode`, `cycle`, and `rootMode: dispatch-only` in `state.json.metadata`.
+4. **Structured run bootstrap and phase workspace setup** - for every orchestrated run, create or reopen `.ant/orchestrator/<run>/state.json` and `events.jsonl` before the first child delegation; for medium+ work, also keep concise markdown state, decisions, handoff, and only the phase folders needed for the selected tier.
+5. **Intake and brainstorming** - ask the fewest high-impact questions needed. Do not invent user intent.
+6. **Scout when needed** - delegate read-only codebase analysis to scout agents when architecture, feasibility, debt, contracts, or direction are unknown.
+7. **Post-scout clarification** - after scout findings, separate repo facts from user decisions and ask the user before turning unresolved decisions into a recommendation.
+8. **Challenge and recommend** - do not blindly agree; present better options with tradeoffs when evidence supports them.
+9. **Next-action approval** - every user-facing phase response says what the orchestrator wants to do next and waits when moving to planning or implementation.
+10. **Rollout strategy approval** - for medium+ refactors, migrations, data-model, reporting, or cross-stack work, present one-time/phased/minimal strategy options before detailed planning.
+11. **Execution mode approval** - before implementation planning for medium+ work, ask whether the user wants autonomous implementation mode or manual decision mode.
+12. **Direction approval** - get user approval for the conceptual path before detailed planning when the selected tier requires it.
+13. **Plan phase artifact** - create or update `.ant/orchestrator/<run>/phases/05-planning/implementation-plan.md` through the plan writer role for medium+ work when a concrete plan adds value or is required by risk.
+14. **Implementation approval** - summarize the plan or low-risk dispatch packet, execution mode when applicable, decision policy, and current phase detail, then wait for approval when the gate requires it.
+15. **Delegated implementation** - delegate implementation before editing app code. `Low` uses one bounded implementation worker; higher tiers use an implementation lead.
+16. **Multi-phase implementation when useful** - implementation may use `phases/06-implementation/subphases/<NN-name>/...` with roadmap, checkpoints, verification, review, and stop/continue rules.
+17. **Slice work when useful** - backend/frontend/data/test slices may run in parallel against explicit contracts.
+18. **Phase close and handoff** - before any user-facing transition, pause, stop, handoff, or completion report, update structured state and concise human artifacts.
+19. **Integration, review, verification, delivery** - implementation is done only after tier-appropriate checks, review/fix loop when required, evidence, and any approved merge request handoff.
 
 ## Mandatory Gates
 
 - **Assumption gate:** classify uncertainty as blocking, repo-discoverable, or safe.
 - **Risk-tier gate:** every initial request, review fix, missed requirement, bug report, polish task, and post-completion follow-up must receive a fresh `Low` / `Medium` / `High` / `Critical` classification before dispatch. Follow-ups inherit context and constraints, not the previous risk tier.
+- **Persistence bootstrap gate:** if orchestration is active and the next work will use subagents, delivery actions, verification, or survive beyond the current response, an active `.ant/orchestrator/<run>/state.json` and `events.jsonl` must exist first. The root must not spawn, message, wait for, or replace child agents; run verification; push; create/update an MR/PR; recover a pipeline; or report long-running status until structured persistence is created or reopened. The only exceptions are a pure answer with no implementation/delegation/delivery, explicit user refusal of filesystem persistence, or an unwritable filesystem; record and report the reason when persistence is skipped.
 - **Subagent authorization gate:** follow the standing authorization in `references/lifecycle.md`; do not ask again for permission to use workflow-required subagents unless the action also needs a separate approval gate.
 - **Next-action contract gate:** every user-facing response must state the proposed next action, what user reply is needed, and what `pokračuj` would authorize; never treat a vague continue as approval for unstated implementation work.
 - **Root coordination-only gate:** the root orchestrator may inspect git/delivery state, orchestration references, `.ant/orchestrator/*`, and child-agent reports, but must not scout source files or implement app code directly.
@@ -105,11 +107,11 @@ UIs should treat these metadata fields as display hints. Existing `status`, `pha
 - **Pre-edit checklist gate:** before any child agent writes implementation files, it must have an approved plan path or explicit skip decision, exact user implementation approval, assigned write scope, validation expectation, and parent delegation message. For the root orchestrator, this checklist always fails for app/source/test/docs edits while orchestration is active.
 - **Structured source-of-truth gate:** `state.json` is the current snapshot and `events.jsonl` is the append-only event log. Markdown is a human resume/evidence layer and must not be the only place where current status, phase, agent relationships, blockers, decisions, or verification state exists.
 - **Curated markdown gate:** default user-facing markdown should stay concise and operational. Keep the primary surface to run `state.md`, `decisions.md`, `handoff.md`, the current/last `phase.md`, `review.md`, `verification.md`, the approved plan, and explicit agent outputs. Older phase/subphase files are audit archive and should be marked or organized as such.
-- **Phase close / handoff gate:** no phase is complete until `state.json` and `events.jsonl` are updated and the phase folder has a concise human resume with status, owner, work done, evidence, decisions, open questions, next handoff, files to read, and must-not-assume notes. Do not leave old `active`, `pending`, or `waiting` text in closed phase summaries unless it is explicitly labeled as historical.
+- **Phase close / handoff gate:** no phase is complete until `state.json` and `events.jsonl` are updated; when markdown persistence is active, the phase folder must also have a concise human resume with status, owner, work done, evidence, decisions, open questions, next handoff, files to read, and must-not-assume notes. Do not leave old `active`, `pending`, or `waiting` text in closed phase summaries unless it is explicitly labeled as historical.
 - **Markdown metadata gate:** new markdown artifacts should begin with a small YAML front matter block when practical: `type`, `phaseId`, `agentId`, `status`, `createdAt`, `updatedAt`, `canonical`, and optional `supersededBy`. Store timestamps in UTC/Zulu. UIs may use this metadata to separate current evidence from archive.
-- **Context persistence gate:** for medium+ work, keep concise local ignored run and phase files for decisions, findings, current phase, and handoff; never store secrets, raw logs, noisy transcripts, or repeated low-value boilerplate.
+- **Context persistence gate:** for every orchestrated run, keep a local ignored structured run under `.ant/orchestrator/<run>/` with current `state.json` and append-only `events.jsonl`; for medium+ work, also keep concise markdown run and phase files for decisions, findings, current phase, and handoff. Skip structured persistence only when the user explicitly declines filesystem persistence or the host cannot write files; report that as a blocker or residual risk. Never store secrets, raw logs, noisy transcripts, or repeated low-value boilerplate.
 - **Decision timestamp gate:** every new user decision recorded in run-level or phase `decisions.md` must include the full UTC/Zulu timestamp, for example `2026-05-26T14:03:12Z`, not date-only text. Store UTC in artifacts and let UIs render local time.
-- **Post-compact recovery gate:** after compaction, resume, or suspected context loss, rebuild orchestration state from `.ant/orchestrator/*`, git state, and child-agent reports before answering, delegating, editing, or reporting completion. Compaction does not cancel child agents.
+- **Post-compact recovery gate:** after compaction, resume, or suspected context loss, rebuild orchestration state from `.ant/orchestrator/*`, git state, and child-agent reports before answering, delegating, editing, or reporting completion. If no active structured run can be found, create a recovery run under `.ant/orchestrator/<YYYY-MM-DD-recovery>/` and record the reconstruction source before continuing. Compaction does not cancel child agents.
 - **Orchestration artifact location gate:** all markdown artifacts created by this orchestration flow belong under `.ant/orchestrator/`; never create root-level `implementation-plan.md` or ad hoc planning markdown unless the user explicitly asks for a tracked repository document.
 - **Post-scout clarification gate:** codebase facts cannot silently become product decisions; after scouting, ask the user about unresolved behavior, scope, rollout, data, validation, or architecture choices before issuing a final direction.
 - **Rollout strategy gate:** for broad or risky work, ask whether to proceed as one-time refactor, phased rollout, or compatibility-first minimal change before writing the final plan.
@@ -124,7 +126,7 @@ UIs should treat these metadata fields as display hints. Existing `status`, `pha
 - **Model routing gate:** the root model is selected by the user/session. When spawning child agents, route by role and risk: `gpt-5.5` / Claude Opus tier for implementation leads, decisions, architecture, review, and high-risk work; `gpt-5.4-mini` / Claude Sonnet tier for bounded small-medium work; `gpt-5.3-codex-spark` / Claude Haiku tier for tiny mechanical tasks. Do not use `gpt-5.4` or `gpt-5.3-codex` for new child-agent routing.
 - **Scenario-based definition of done gate:** convert broad goals into concrete acceptance and risk scenarios with validation or explicit residual risk.
 - **Contract-first gate:** for cross-stack work, define request/response shape, errors, permissions, cache behavior, time handling, UI states, and fixtures before parallel implementation.
-- **Machine-readable state gate:** new persisted orchestration runs should maintain `.ant/orchestrator/<run>/state.json` and `.ant/orchestrator/<run>/events.jsonl` according to `plugins/ant/contracts/orchestrator-state/`; markdown remains the human resume layer.
+- **Machine-readable state gate:** every orchestrated run should maintain `.ant/orchestrator/<run>/state.json` and `.ant/orchestrator/<run>/events.jsonl` according to `plugins/ant/contracts/orchestrator-state/`, including `Low` and minimal delegated runs; markdown remains the human resume layer and may be minimal for low-risk work.
 - **Preferred language gate:** when a run has `preferredLanguage`, future user-facing phase titles, agent summaries, agent graph labels, agent assignment fields, notes, checkpoints, markdown headings, event messages, and handoffs should use that language; supported values are `cs-CZ` and `en`. If no preference exists, infer it from the initial user request and fall back to `en`. Never rewrite historical orchestration text to match a changed preference.
 - **Evidence gate:** child-agent reports are claims until backed by tests, independent review, runtime checks, or explicitly accepted residual risk.
 - **Review/fix loop gate:** P0/P1/P2 findings block completion until fixed, verified, and re-reviewed or explicitly accepted by the user.
@@ -148,10 +150,10 @@ Before delegating or making a lifecycle decision:
 
 The work is not complete until:
 
-- user-approved direction and implementation plan exist under `.ant/orchestrator/<run>/phases/05-planning/`, unless the user explicitly requested a tracked repo document;
-- current cycle metadata records the selected risk tier and flow mode when structured persistence is active;
-- run-level `index.md`, `state.md`, and `decisions.md` are current for medium+ work, or persistence was explicitly skipped as unnecessary;
-- each completed phase folder has `phase.md`, `decisions.md`, `handoff.md`, and the phase-specific evidence files needed to resume elsewhere;
+- user-approved direction and implementation plan exist under `.ant/orchestrator/<run>/phases/05-planning/`, unless the selected flow is a low-risk dispatch packet or the user explicitly requested a tracked repo document;
+- current `state.json` records the selected risk tier and flow mode for the active cycle, and `events.jsonl` includes durable lifecycle events;
+- run-level `index.md`, `state.md`, and `decisions.md` are current for medium+ work, or markdown was intentionally omitted while structured state remains current;
+- each completed markdown phase folder has `phase.md`, `decisions.md`, `handoff.md`, and the phase-specific evidence files needed to resume elsewhere;
 - execution mode and decision policy are recorded for medium+ work;
 - phased rollout work has an approved whole-roadmap plan before any phase implementation starts;
 - git/delivery context and branch/worktree/MR decisions are recorded or explicitly declined;
