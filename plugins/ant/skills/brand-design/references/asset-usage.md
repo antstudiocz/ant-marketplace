@@ -22,7 +22,7 @@ Selection:
 
 Bundled font/download files:
 
-- `../assets/fonts/inter_font.zip`: full Inter font ZIP from the Visualbook export;
+- `../assets/fonts/inter/`: full Inter font files extracted from the Visualbook export;
 - `../assets/others/inter-regular.ttf`: Inter Regular;
 - `../assets/others/lexend-medium.ttf`: Lexend Medium from the export downloads;
 - `../assets/others/lexend-bold.ttf`: Lexend Bold from the export downloads;
