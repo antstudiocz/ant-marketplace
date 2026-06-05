@@ -622,16 +622,16 @@
             "aspect_ratio": 4.4138
         },
         {
-            "path": "assets/fonts/inter_font.zip",
+            "path": "assets/fonts/inter/",
             "type": "download",
-            "format": "zip",
+            "format": "directory",
             "description": "Stažení písma — „Inter“ — Stáhnout písmo",
             "section_title": "Inter",
-            "original_filename": "inter_font.zip",
+            "original_filename": "inter",
             "page_id": "pisma/modules/inter",
             "manual_section_id": "pisma",
             "manual_section_title": "Typografie",
-            "bytes": 9311376
+            "bytes": 18662696
         },
         {
             "path": "assets/images/img_obraz.png",
