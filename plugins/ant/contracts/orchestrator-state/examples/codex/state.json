@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "runId": "2026-05-26-orchestrator-console",
+  "runId": "2026-05-26-state-contract",
   "workspaceRoot": "/Users/matejcerny/Sites/lematodefuk-marketplace",
   "host": "codex",
   "createdAt": "2026-05-26T08:00:00Z",
@@ -34,7 +34,7 @@
       "shortLabel": "Implementation lead",
       "intent": "Implement the approved plan and coordinate verification.",
       "plannedWork": [
-        "Build the structured state contract and macOS console surface.",
+        "Build the structured state contract and validation surface.",
         "Spawn bounded slice workers when the implementation can be split safely.",
         "Run tests and report verification evidence."
       ],
@@ -84,7 +84,7 @@
     {
       "id": "plan",
       "kind": "markdown",
-      "path": ".ant/orchestrator/2026-05-26-orchestrator-console/phases/05-planning/implementation-plan.md",
+      "path": ".ant/orchestrator/2026-05-26-state-contract/phases/05-planning/implementation-plan.md",
       "title": "Implementation Plan",
       "phaseId": "05-planning",
       "agentId": "root",
@@ -93,7 +93,7 @@
     {
       "id": "implementation-phase",
       "kind": "markdown",
-      "path": ".ant/orchestrator/2026-05-26-orchestrator-console/phases/06-implementation/phase.md",
+      "path": ".ant/orchestrator/2026-05-26-state-contract/phases/06-implementation/phase.md",
       "title": "Implementation Phase",
       "phaseId": "06-implementation",
       "agentId": "implementation-lead",
@@ -120,6 +120,6 @@
     "cycle": "initial-implementation",
     "rootMode": "dispatch-only",
     "targetBranch": "origin/master",
-    "implementationBranch": "feature/orchestrator-console"
+    "implementationBranch": "feature/state-contract"
   }
 }

@@ -10,7 +10,7 @@ The orchestrator is a skeptical product/technical partner, not a passive task ru
 
 Respond in the run's `preferredLanguage` when provided; otherwise use the same language as the user's original request. Instruct every delegated scout, planner, implementation lead, slice worker, and reviewer to follow that same language rule. Keep command names, file paths, code identifiers, and fixed routing tokens such as `Needs clarification`, `Plan ready`, and `Minimal delegated implementation recommended` in their original form.
 
-For persisted orchestration runs, store the selected user-facing language as `preferredLanguage` in `.ant/orchestrator/<run>/state.json` when known. Supported values are `cs-CZ` and `en`, matching the Orchestrator Console language picker. When `preferredLanguage` is set, future user-facing event messages, checkpoints, summaries, phase titles, markdown headings, phase notes, handoffs, and delegated progress reports should use that language. Do not translate or rewrite historical events, checkpoints, notes, or artifacts after the preference changes. Fixed enum values, file paths, command names, code identifiers, and UTC/Zulu timestamps remain unchanged.
+For persisted orchestration runs, store the selected user-facing language as `preferredLanguage` in `.ant/orchestrator/<run>/state.json` when known. Supported values are `cs-CZ` and `en`. When `preferredLanguage` is set, future user-facing event messages, checkpoints, summaries, phase titles, markdown headings, phase notes, handoffs, and delegated progress reports should use that language. Do not translate or rewrite historical events, checkpoints, notes, or artifacts after the preference changes. Fixed enum values, file paths, command names, code identifiers, and UTC/Zulu timestamps remain unchanged.
 
 ## Default Hierarchy
 
@@ -447,7 +447,7 @@ Do not stash, reset, move, overwrite, create/switch branches, create worktrees, 
 
 ## Context Persistence Gate
 
-For every orchestrated run, keep a local ignored structured run under the repository so Orchestrator Console, another session, or a post-compact recovery can see the active lifecycle. Create or reopen `.ant/orchestrator/<run>/state.json` and `.ant/orchestrator/<run>/events.jsonl` before the first child delegation, including `Low` and other minimal delegated runs.
+For every orchestrated run, keep a local ignored structured run under the repository so another session, automation, or a post-compact recovery can see the active lifecycle. Create or reopen `.ant/orchestrator/<run>/state.json` and `.ant/orchestrator/<run>/events.jsonl` before the first child delegation, including `Low` and other minimal delegated runs.
 
 For `Medium`, `High`, and `Critical` work, also keep concise markdown run and phase files so another session can continue after context compaction, reset, or handoff. For `Low` work, markdown may stay minimal or be omitted except for files that add real resume value; structured JSON/JSONL still remains required. Skip structured persistence only when the user explicitly declines filesystem persistence or the host cannot write files, and report that as a blocker or residual risk.
 
