@@ -58,26 +58,6 @@ The root orchestrator's model is selected by the user/session. During orchestrat
 
 Do not route new orchestrator child agents to `gpt-5.4` or `gpt-5.3-codex`. If a smaller model hits ambiguity, conflicting evidence, contract changes, data/cache/permission risk, or review-level judgment, it must stop and escalate to `gpt-5.5` / Opus.
 
-## Optional Orchestrator Console
-
-Orchestrator Console is a macOS app for visualizing `.ant/orchestrator/<run>/state.json` and `events.jsonl` files created by the implementation orchestrator.
-
-Build and run locally:
-
-```bash
-./script/build_and_run.sh run
-```
-
-Install locally to `/Applications`:
-
-```bash
-./script/package_orchestrator_console.sh --install
-```
-
-The local build writes generated files under `apps/orchestrator-console/dist/`. Because the app is built locally instead of downloaded from a release, macOS should not treat it as an internet-downloaded app. The generated app bundle is ad-hoc signed for local use.
-
-The app requires macOS 14 or newer and Xcode command line tools.
-
 ## Available Skills
 
 | Claude Code Command | Codex Skill | Description |

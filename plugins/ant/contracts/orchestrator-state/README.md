@@ -61,7 +61,7 @@ User local time conversion belongs only in UI rendering.
 
 ## Preferred Language
 
-`state.json` may include top-level `preferredLanguage`. Supported values are `cs-CZ` and `en`, matching the Orchestrator Console language picker.
+`state.json` may include top-level `preferredLanguage`. Supported values are `cs-CZ` and `en`.
 
 This value is a forward-looking instruction and display hint:
 
