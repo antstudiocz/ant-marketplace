@@ -166,6 +166,7 @@ Slice workers are your children. They own a bounded part of the implementation, 
 
 For each slice worker, define:
 
+- an explicit note that the prompt is a precise assignment brief, not a forked conversation;
 - original goal and approved plan reference;
 - slice goal and acceptance criteria;
 - owned files/subsystems and forbidden areas;
@@ -176,6 +177,8 @@ For each slice worker, define:
 - what evidence to return.
 
 Slice workers must not spawn further subagents by default. Keep the tree shallow.
+
+Do not spawn slice workers by forking or steering the current conversation. Write a fresh task packet for each worker with only the relevant context, constraints, artifacts to read first, write scope, validation expectations, escalation conditions, and exact output format. If a slice needs prior discussion context, summarize the relevant decision in the packet or point to the orchestration artifact where it is recorded.
 
 Do not let slice workers negotiate product scope or architecture directly with each other. If a worker finds a contract mismatch, architecture issue, or legacy/debt decision, it reports to you. You decide whether to resolve it locally, adjust the slice briefs, or escalate to the root orchestrator.
 
@@ -341,6 +344,7 @@ Use this shape when spawning a slice worker:
 Use the slice worker role instructions from `references/slice-worker-role.md`.
 
 You are a slice worker under the implementation lead. Do not spawn subagents.
+This is a precise assignment brief, not a forked conversation. Use only the goal, approved plan, orchestration state, slice scope, contract, constraints, and artifacts named here. Do not infer requirements from missing chat history; ask the implementation lead when the brief is insufficient.
 
 Original goal:
 <goal>

@@ -113,6 +113,8 @@ For **each conflicted file**, spawn a subagent when available:
 ```
 Analyze the merge conflict in file {file_path} in the repository at {repo_path}.
 
+This is a precise assignment brief, not a forked conversation. Use only this file path, repository path, conflict inventory, and instructions as your operating context. Do not infer merge intent from missing chat history; derive intent from the conflicting code, dependencies, and tests.
+
 ## Tasks
 
 1. **Read the entire file** and understand its purpose, structure, and role in the project
