@@ -919,6 +919,28 @@ Use scout agents for:
 
 Scout outputs should include current behavior, relevant files/subsystems, architecture boundaries, debt findings, options, recommendation, risks, and follow-up questions.
 
+## Precise Delegation Prompt Gate
+
+When spawning or messaging any child agent, send a fresh assignment brief. Do not fork the active conversation, do not use steered-conversation mode, and do not paste the full chat transcript as context. The parent is responsible for selecting and compressing only the context the child needs.
+
+Every delegation prompt must include:
+
+- role and parent relationship;
+- model tier and escalation rule;
+- original user goal in one short paragraph;
+- specific task or decision the child owns;
+- approved scope, non-goals, and assumptions;
+- allowed reads, allowed writes, forbidden areas, and mutation/tool limits;
+- required files, artifacts, reports, or contracts to inspect first;
+- relevant constraints, including UTC/Zulu, package manager, delivery, dirty-state, permissions, cache, architecture, and validation constraints when applicable;
+- definition of done, validation expectations, and residual-risk reporting;
+- checkpoint expectations for longer work;
+- exact output format.
+
+Include prior chat content only as a concise `Relevant context` section, and only when it affects the child's task. Remove side discussions, stale decisions, raw logs, token-heavy transcripts, and unrelated user preferences. If the needed context cannot be summarized precisely, the parent must first write or update an orchestration artifact and pass that artifact path plus a short brief.
+
+The parent must not use child agents as generic memory dumps. A child should know what to answer, what not to touch, how to escalate, and what evidence to return without reconstructing the whole conversation.
+
 ## Post-Scout Clarification Gate
 
 After any scout returns, the root orchestrator must stop and classify the result before giving a final recommendation:
@@ -1370,6 +1392,10 @@ You are a bounded implementation worker under the (ant) orchestrator.
 Role in state.json: implementation-lead.
 Agent metadata: workerKind=bounded-low-worker.
 
+Delegation contract:
+- This is a precise assignment brief, not a forked conversation. Use only the goal, scope, constraints, and artifacts named here as your operating context.
+- Do not infer requirements from missing chat history. If the brief is insufficient, return `Decision needed` or `Escalation needed`.
+
 Scope:
 <one narrow request>
 
@@ -1425,6 +1451,7 @@ Use this prompt shape for read-only codebase scouting:
 Use the scout role instructions from `references/scout-role.md`.
 
 You are a read-only codebase scout for this (ant) implementation lifecycle. Do not edit files or run mutating commands.
+This is a precise assignment brief, not a forked conversation. Use only the goal, decision/question, constraints, and artifacts named here as your operating context. Do not infer requirements from missing chat history.
 
 Model routing: Codex `gpt-5.4-mini`, reasoning `low`/`medium`; Claude Code Sonnet tier with low/standard thinking. Use Codex `gpt-5.3-codex-spark` / Claude Haiku only for tiny mechanical discovery. Do not use Codex `gpt-5.4` or `gpt-5.3-codex`. Escalate to `gpt-5.5` / Claude Opus tier if the question needs architecture judgment, root-cause debugging, risk assessment, or product/contract decisions.
 
@@ -1487,6 +1514,7 @@ Use the implementation lead role instructions from `references/implementation-le
 Use the phase owner rules from `references/phase-owner-role.md` for implementation phase and subphase artifacts.
 
 You are the implementation lead for this approved plan. You are a child of the root orchestrator and own the implementation phase end-to-end.
+This is a precise assignment brief, not a forked conversation. Use only the goal, approved plan, delivery context, orchestration artifacts, constraints, and guidance named here as your operating context. Do not infer requirements from missing chat history; escalate unclear decisions to the root.
 
 Internal role note:
 You are not invoking a separate skill named `ant-implementation-orchestrator:implementation-lead`; these instructions are your role brief.
