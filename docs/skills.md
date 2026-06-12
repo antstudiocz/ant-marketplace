@@ -148,6 +148,24 @@ How it works:
 
 Use it when the user provides an Asana task and wants to understand what needs to be built or fixed.
 
+## `hermes-tweet`
+
+Hermes Tweet setup and operating guidance for X/Twitter workflows through the
+native Hermes Agent plugin.
+
+How it works:
+
+- verifies the Hermes Tweet install and tool visibility before use;
+- keeps `tweet_explore` as the first step for endpoint discovery;
+- uses `tweet_read` only for catalog-listed read-only endpoints after
+  `XQUIK_API_KEY` is configured in the Hermes runtime;
+- keeps `tweet_action` disabled unless the user explicitly needs account-changing
+  actions and the session has `HERMES_TWEET_ENABLE_ACTIONS=true`;
+- explains remote gateway setup without asking for key values in chat.
+
+Use it when a task needs Hermes Agent X/Twitter search, reads, monitoring,
+media, draws, or approval-gated account actions through Xquik.
+
 ## Internal References
 
 Files under `references/` are not public skills. They preserve detailed guidance from older narrow skills while keeping the public skill list small and easier for Claude Code and Codex to choose from.
