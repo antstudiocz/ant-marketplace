@@ -70,6 +70,7 @@ Do not route new orchestrator child agents to `gpt-5.4` or `gpt-5.3-codex`. If a
 | `/ant:delivery-workflows` | `$delivery-workflows` | GitLab MR creation, merge conflicts, and delivery hygiene |
 | `/ant:merge-request` | `$merge-request` | GitHub/GitLab PR/MR creation with language choice and delivery checks |
 | `/ant:google-docs` | `$google-docs` | Read and extract content from Google Docs |
+| `/ant:hermes-tweet` | `$hermes-tweet` | Install and operate Hermes Tweet for X/Twitter reads and approval-gated actions |
 | `/ant:asana-task-analyzer` | `$asana-task-analyzer` | Analyze Asana tasks for implementers |
 
 See [docs/skills.md](docs/skills.md) for a short explanation of how each skill works.

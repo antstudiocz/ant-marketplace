@@ -1,0 +1,4 @@
+interface:
+  display_name: "Hermes Tweet"
+  short_description: "Hermes Agent X/Twitter workflows through Xquik"
+  default_prompt: "Use $hermes-tweet to install, configure, and operate Hermes Tweet with read-first and approval-gated action workflows."
