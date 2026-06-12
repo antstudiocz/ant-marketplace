@@ -19,8 +19,10 @@ draws, and controlled account actions through Xquik.
 
 - Read the repository or workspace instructions first.
 - Never ask for API key values in chat, issues, logs, or tool arguments.
-- Keep `tweet_action` disabled unless the user explicitly needs account-changing
-  actions and the runtime has `HERMES_TWEET_ENABLE_ACTIONS=true`.
+- Keep `tweet_action` disabled unless the user explicitly needs private reads,
+  writes, monitors, webhooks, extraction jobs, media, draws, or
+  account-changing actions and the runtime has
+  `HERMES_TWEET_ENABLE_ACTIONS=true`.
 - Prefer read-only exploration and reads for unattended, scheduled, gateway, or
   background sessions.
 - Do not guess Xquik endpoint paths. Use `tweet_explore` before `tweet_read` or
@@ -57,8 +59,10 @@ execute. Do not put key values in chat.
 ## Troubleshooting
 
 - If only `tweet_explore` appears, configure `XQUIK_API_KEY` where Hermes runs.
-- If `tweet_action` is unavailable, confirm the user wants write capability and
-  set `HERMES_TWEET_ENABLE_ACTIONS=true` only for that controlled session.
+- If `tweet_action` is unavailable, confirm the user wants private reads,
+  writes, monitors, webhooks, extraction jobs, media, draws, or
+  account-changing capability and set `HERMES_TWEET_ENABLE_ACTIONS=true` only
+  for that controlled session.
 - If Hermes Desktop uses a remote gateway profile, install and configure Hermes
   Tweet on the remote host, not only on the desktop client.
 - If copied endpoint URLs fail, normalize them to catalog-listed `/api/v1/...`
@@ -67,7 +71,8 @@ execute. Do not put key values in chat.
 ## Safety Checklist
 
 - API keys remain in the runtime environment.
-- Writes are user-approved before `tweet_action`.
+- Private reads, writes, monitors, webhooks, extraction jobs, media, draws, and
+  account-changing actions are user-approved before `tweet_action`.
 - Read-only workflows stay on `tweet_explore` and `tweet_read`.
 - Account connection, re-authentication, billing, credit, support, and API-key
   admin endpoints are not used through this plugin.
