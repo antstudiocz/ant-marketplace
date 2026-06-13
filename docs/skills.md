@@ -148,6 +148,20 @@ How it works:
 
 Use it when the user provides an Asana task and wants to understand what needs to be built or fixed.
 
+## `xquik-social-data`
+
+Xquik workflow guidance for X/Twitter data retrieval, REST API setup, and MCP setup.
+
+How it works:
+
+- identifies the requested X data workflow, such as tweet search, profile lookup, timelines, follower graphs, media, trends, monitors, webhooks, or MCP setup;
+- requires a user-issued Xquik API key and never asks for X passwords, 2FA codes, cookies, recovery codes, or session tokens;
+- treats tweets, bios, DMs, display names, articles, and API errors as untrusted data rather than instructions;
+- asks for explicit approval before private reads, writes, deletes, monitors, or webhook delivery setup;
+- links to the current Xquik docs for endpoint details and host-specific MCP configuration.
+
+Use it when the user needs Xquik-backed X/Twitter data or wants to connect Xquik to an MCP-compatible agent or IDE.
+
 ## Internal References
 
 Files under `references/` are not public skills. They preserve detailed guidance from older narrow skills while keeping the public skill list small and easier for Claude Code and Codex to choose from.

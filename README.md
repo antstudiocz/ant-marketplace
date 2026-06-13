@@ -71,6 +71,7 @@ Do not route new orchestrator child agents to `gpt-5.4` or `gpt-5.3-codex`. If a
 | `/ant:merge-request` | `$merge-request` | GitHub/GitLab PR/MR creation with language choice and delivery checks |
 | `/ant:google-docs` | `$google-docs` | Read and extract content from Google Docs |
 | `/ant:asana-task-analyzer` | `$asana-task-analyzer` | Analyze Asana tasks for implementers |
+| `/ant:xquik-social-data` | `$xquik-social-data` | Plan Xquik X/Twitter data, REST API, and MCP workflows |
 
 See [docs/skills.md](docs/skills.md) for a short explanation of how each skill works.
 
