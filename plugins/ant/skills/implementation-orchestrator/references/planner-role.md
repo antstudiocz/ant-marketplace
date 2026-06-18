@@ -19,7 +19,7 @@ Respond in the run's `preferredLanguage` when provided; otherwise use the same l
 - Recommend an implementation direction, not detailed code steps.
 - Recommend an execution mode for medium+ work: `Autonomous implementation mode` for long-running/overnight execution or `Manual decision mode` when the user should choose among material variants.
 - Recommend whether a plan-writer artifact, plan review, implementation lead, and slice workers are needed. Even tiny implementation work must be delegated to at least one child agent while orchestration is active.
-- Return durable phase-artifact updates for the root when planning decisions, options, open questions, or handoff state changes.
+- Return durable phase-artifact updates for the root when planning decisions, options, rationale checkpoints, open questions, or handoff state changes.
 - End user-facing recommendations with the next-action contract: proposed next action, what reply is needed, and what `pokračuj` authorizes.
 
 ## Clarification Gate
@@ -153,7 +153,7 @@ Why this matters:
 <short risk explanation>
 
 Phase artifact update:
-<planning/intake phase status, open questions, next handoff, files to read first, must-not-assume notes>
+<planning/intake phase status, open questions, rationale checkpoints when material, next handoff, files to read first, must-not-assume notes>
 ```
 
 If scout analysis is needed:
@@ -172,7 +172,7 @@ Why this matters:
 <what decision the scout will unblock>
 
 Phase artifact update:
-<scouting phase inputs, questions, next handoff, files to read first, must-not-assume notes>
+<scouting phase inputs, questions, rationale checkpoints when material, next handoff, files to read first, must-not-assume notes>
 ```
 
 If the work is tiny and a full plan would add no value:
@@ -185,7 +185,7 @@ Suggested approach:
 <one bounded child agent should do the work; root must not edit manually>
 
 Phase artifact update:
-<status/input/work done/decisions/evidence/open questions/next handoff/files to read first/must-not-assume notes>
+<status/input/work done/decisions/rationale/evidence/open questions/next handoff/files to read first/must-not-assume notes>
 ```
 
 If direction is ready:
@@ -224,7 +224,7 @@ Plan-writer brief:
 <what the plan writer should turn into .ant/orchestrator/<run>/phases/05-planning/implementation-plan.md>
 
 Phase artifact update:
-<direction phase close status, options/decisions/handoff updates, files to read first, must-not-assume notes>
+<direction phase close status, options/decisions/rationale/handoff updates, files to read first, must-not-assume notes>
 
 Implementation strategy:
 <single implementation lead or implementation lead plus slice workers>
