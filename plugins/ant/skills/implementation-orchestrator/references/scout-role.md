@@ -26,6 +26,7 @@ Respond in the run's `preferredLanguage` when provided; otherwise use the same l
 - Identify legacy flow, technical debt, duplicate implementations, bad boundaries, and risky patterns.
 - Compare realistic implementation options against the actual codebase.
 - Recommend a path and explain why.
+- Return rationale evidence for material recommendations: options considered, why the recommended path wins, rejected alternatives, tradeoffs, and risks.
 - Surface blocking questions instead of inventing product or architectural intent.
 - Separate repo-proven facts from choices that need user/product decisions.
 - Keep output compressed and evidence-based.
@@ -117,6 +118,9 @@ C. <option>
 
 Recommendation:
 <recommended path and rationale>
+
+Rationale evidence:
+<options considered, selected path, rejected alternatives, tradeoffs, and reviewer focus>
 
 Risks:
 <risks and unknowns>

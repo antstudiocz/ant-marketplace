@@ -28,37 +28,44 @@ Use this structure for new medium+ runs. For `Low` runs, the minimum required st
     state.json
     events.jsonl
     decisions.md
+    rationale.md
     handoff.md
     phases/
       01-intake/
         phase.md
         decisions.md
+        rationale.md
         handoff.md
       02-brainstorming/
         phase.md
         options.md
         decisions.md
+        rationale.md
         handoff.md
       03-discovery/
         phase.md
         findings.md
         decisions.md
+        rationale.md
         handoff.md
       04-direction/
         phase.md
         options.md
         decisions.md
+        rationale.md
         handoff.md
       05-planning/
         phase.md
         implementation-plan.md
         decisions.md
+        rationale.md
         review.md
         handoff.md
       06-implementation/
         phase.md
         implementation-plan.md
         decisions.md
+        rationale.md
         verification.md
         review.md
         handoff.md
@@ -66,17 +73,20 @@ Use this structure for new medium+ runs. For `Low` runs, the minimum required st
           <NN-name>/
             phase.md
             decisions.md
+            rationale.md
             handoff.md
       07-review/
         phase.md
         findings.md
         decisions.md
+        rationale.md
         review.md
         handoff.md
       08-delivery/
         phase.md
         verification.md
         decisions.md
+        rationale.md
         handoff.md
 ```
 
@@ -89,6 +99,7 @@ Every phase folder must contain at least:
 - `phase.md` - status, owner, goal, inputs, work done, evidence, blockers, and close status.
 - `decisions.md` - user decisions, safe assumptions, local decisions, and escalations. Every new user decision entry must include a full UTC/Zulu timestamp such as `2026-05-26T14:03:12Z`; do not write date-only user decisions.
 - `handoff.md` - next phase handoff, files to read first, must-not-assume notes, open questions, active children, and next safe action.
+- `rationale.md` when the phase includes material options, tradeoffs, architecture/debt choices, rollout strategy, validation decisions, review-fix decisions, accepted residual risk, or rejected alternatives. Store concise rationale summaries, not raw chain-of-thought.
 
 Add phase-specific files when relevant:
 
@@ -106,6 +117,7 @@ A phase is not complete until its folder records:
 - input: user messages, approved scope, parent prompt, relevant plan paths, and child reports used;
 - work done: concise summary and changed artifact paths;
 - decisions: user decisions, safe assumptions, autonomous decisions, and escalations;
+- rationale: material options considered, selected path, rejected alternatives, evidence, tradeoffs, risk accepted or deferred, and reviewer focus;
 - evidence: scout facts, validation, review results, or accepted residual risk;
 - open questions and blockers;
 - next phase handoff: what the next owner should do first;
@@ -126,6 +138,8 @@ Input:
 Work done:
 
 Decisions:
+
+Rationale:
 
 Evidence:
 

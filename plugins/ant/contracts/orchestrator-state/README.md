@@ -17,8 +17,10 @@ The recommended markdown surface is intentionally small:
 
 - `state.md`: current human summary of the run.
 - `decisions.md`: user decisions with UTC/Zulu timestamps.
+- `rationale.md`: durable summaries of material decisions, options considered, rejected alternatives, evidence, tradeoffs, reviewer focus, and accepted or deferred risk.
 - `handoff.md`: next safe action and resume instructions.
 - `phases/<phase>/phase.md`: concise phase resume.
+- `phases/<phase>/rationale.md`: phase-local rationale checkpoints when material choices, rejected alternatives, or risk acceptance occurred.
 - `phases/<phase>/review.md`: final review findings and residual risk.
 - `phases/<phase>/verification.md`: final validation evidence.
 - `phases/05-planning/implementation-plan.md`: approved plan for medium+ implementation work.

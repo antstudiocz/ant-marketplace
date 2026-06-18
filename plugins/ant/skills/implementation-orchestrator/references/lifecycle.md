@@ -235,7 +235,7 @@ If structured state exists and `state.json.status` is `completed`, the root must
 - set `state.json.status` to the appropriate active state: `planning` when the follow-up needs direction or a revised plan, `implementing` when the requested change is approved and ready to execute, `reviewing` for a review-only follow-up, or `verifying` for a verification-only follow-up;
 - set `currentPhaseId` to the active lifecycle phase or create/select a follow-up implementation subphase under `phases/06-implementation/subphases/<NN-name>/...` when the change is implementation work;
 - append a `run.status_changed` event to `events.jsonl`, and append `phase.status_changed`, `checkpoint.created`, or `note.added` events when the phase, checkpoint, or durable note changed;
-- update run `state.md`, run `handoff.md`, and the relevant phase `phase.md` / `handoff.md` so the UI and a resumed session show that work is active again;
+- update run `state.md`, run `handoff.md`, run `rationale.md` when the follow-up changes material direction, and the relevant phase `phase.md` / `handoff.md` / `rationale.md` so the UI and a resumed session show that work is active again;
 - keep historical completion evidence intact. Do not rewrite old completion text; add a follow-up/reopened section or replace only the current-status section.
 
 Post-completion follow-ups never authorize root manual edits or debugging. They are handled as a new orchestration phase unless the user explicitly leaves orchestration mode and asks the root to work directly.
@@ -248,17 +248,21 @@ Primary markdown artifacts:
 
 - run-level `state.md`: short current summary, delivery state, verification state, residual risks, and next user decision;
 - run-level `decisions.md`: durable user decisions with full UTC/Zulu timestamps;
+- run-level `rationale.md`: durable rationale checkpoints for material decisions, rejected alternatives, evidence, tradeoffs, and accepted or deferred risk;
 - run-level `handoff.md`: the next safe action and files needed for resume;
 - current or final `phase.md`: concise phase resume;
+- current or final phase `rationale.md` when the phase contains material planning, architecture, debt, rollout, validation, review-fix, or delivery decisions;
 - `review.md` and `verification.md`: final findings, checks, blocked checks, and residual risk;
 - approved `implementation-plan.md` for medium+ implementation work;
 - explicit agent output files only when they contain evidence not already represented in `state.json` / `events.jsonl`.
 
 Archive markdown artifacts:
 
-- old phase and subphase `phase.md`, `handoff.md`, and `decisions.md` files after their phase is closed;
+- old phase and subphase `phase.md`, `handoff.md`, `decisions.md`, and `rationale.md` files after their phase is closed;
 - intermediate follow-up notes and worker-specific handoffs;
 - long planning detail that is no longer needed for the next action.
+
+Rationale artifacts store durable conclusions, not raw reasoning. A good rationale checkpoint answers: what was decided, which viable options were considered, why the selected path won, why rejected alternatives were rejected, what evidence supports the choice, what risk was accepted or deferred, and what a reviewer should verify. Do not store raw chain-of-thought, every speculative idea, or noisy debate transcripts.
 
 New markdown artifacts should start with concise YAML front matter when practical:
 
@@ -293,7 +297,7 @@ Default behavior:
 - acknowledge the new message promptly when the host allows, then continue coordinating the original task;
 - answer informational questions from known orchestration state, child checkpoints, plan artifacts, or recorded decisions without interrupting workers unnecessarily;
 - do not invent fresh repo facts from source files at the root; ask an active child for a checkpoint or spawn a bounded scout only when the answer requires repo investigation and does not overlap an active writer scope;
-- update the run and current phase `decisions.md`, `state.md`, or `handoff.md` when the new message changes durable decisions, assumptions, scope, blockers, or next actions;
+- update the run and current phase `decisions.md`, `rationale.md`, `state.md`, or `handoff.md` when the new message changes durable decisions, material rationale, assumptions, scope, blockers, or next actions;
 - preserve all existing next-action, approval, hard no-edit, branch/worktree, delivery, and root coordination-only gates.
 
 Classify each mid-flight message before acting:
@@ -462,37 +466,44 @@ Use a local ignored directory:
     state.json
     events.jsonl
     decisions.md
+    rationale.md
     handoff.md
     phases/
       01-intake/
         phase.md
         decisions.md
+        rationale.md
         handoff.md
       02-brainstorming/
         phase.md
         options.md
         decisions.md
+        rationale.md
         handoff.md
       03-discovery/
         phase.md
         findings.md
         decisions.md
+        rationale.md
         handoff.md
       04-direction/
         phase.md
         options.md
         decisions.md
+        rationale.md
         handoff.md
       05-planning/
         phase.md
         implementation-plan.md
         decisions.md
+        rationale.md
         review.md
         handoff.md
       06-implementation/
         phase.md
         implementation-plan.md
         decisions.md
+        rationale.md
         verification.md
         review.md
         handoff.md
@@ -500,17 +511,20 @@ Use a local ignored directory:
           <NN-name>/
             phase.md
             decisions.md
+            rationale.md
             handoff.md
       07-review/
         phase.md
         findings.md
         decisions.md
+        rationale.md
         review.md
         handoff.md
       08-delivery/
         phase.md
         verification.md
         decisions.md
+        rationale.md
         handoff.md
 ```
 
@@ -613,6 +627,7 @@ Write only durable context needed to resume:
 - phased rollout roadmap, current phase, phase dependencies, and stop/continue rules;
 - delivery context, branch/worktree/MR decisions, and dirty-state constraints;
 - open questions and user decisions;
+- material decision rationale, options considered, rejected alternatives, evidence, tradeoffs, reviewer focus, and accepted or deferred risk;
 - mid-flight user inputs that changed scope, assumptions, blockers, child instructions, or next actions;
 - repo facts from scouts in phase `findings.md`;
 - legacy/debt findings and approved path;
@@ -627,15 +642,16 @@ Do not write:
 - raw tool output, full diffs, noisy transcripts, or complete source files;
 - secrets, tokens, env values, cookies, credentials, private customer data, or production data dumps;
 - every intermediate thought or speculative idea;
+- raw chain-of-thought; write concise rationale summaries and evidence-backed conclusions instead;
 - content that would make the repo dirty unless the user approved tracked documentation.
 
 Update cadence:
 
 - after git/delivery setup: create/update `active.md`, run `index.md`, run `state.md`, and the current phase `phase.md`;
-- after user decisions: update run `decisions.md` and current phase `decisions.md`;
+- after user decisions: update run `decisions.md` and current phase `decisions.md`; when the decision has material alternatives, risk, or tradeoffs, also update run and phase `rationale.md`;
 - after mid-flight user inputs that affect scope, assumptions, active children, blockers, or next actions: update run and phase `decisions.md`, `state.md`, or `handoff.md` as appropriate;
 - after scouts: update `phases/03-discovery/findings.md` or the active phase's `findings.md`;
-- after direction, option, plan, implementation, review, verification, or delivery checkpoints: update the owning phase files plus run `state.md` and `handoff.md`;
+- after direction, option, plan, implementation, review, verification, or delivery checkpoints: update the owning phase files plus run `state.md` and `handoff.md`; update `rationale.md` when the checkpoint records a material choice, rejected path, risk acceptance, or reviewer focus;
 - after review/fix loops: update the relevant `review.md`, `verification.md`, `state.md`, and `handoff.md` with findings, fixes, targeted verification, re-review result, and residual risk;
 - before stopping, compacting, context reset, handing off, starting long-running child work, or reporting long-running status: update the current phase `handoff.md` and run `handoff.md` with active child-agent state.
 
@@ -667,6 +683,7 @@ Current phase:
 Canonical artifacts:
 - State: state.md
 - Decisions: decisions.md
+- Rationale: rationale.md
 - Handoff: handoff.md
 - Plan: phases/05-planning/implementation-plan.md
 
@@ -727,6 +744,34 @@ Risks / blockers:
 - <question, why it matters, recommended default>
 ```
 
+### `rationale.md`
+
+```md
+# Decision Rationale
+
+## Rationale Checkpoints
+
+### <UTC timestamp> - <decision or checkpoint>
+
+Context:
+
+Options considered:
+- <option and tradeoff>
+
+Selected direction:
+
+Why this direction:
+
+Rejected alternatives:
+- <alternative and why it was not chosen>
+
+Evidence:
+
+Risk accepted or deferred:
+
+Reviewer focus:
+```
+
 ### Phase Folder Minimum
 
 Every phase folder must contain at least:
@@ -734,6 +779,7 @@ Every phase folder must contain at least:
 - `phase.md` - status, owner, input, goal, work done, evidence, blockers, and close status.
 - `decisions.md` - user decisions, safe assumptions, local decisions, and escalations for this phase.
 - `handoff.md` - next phase handoff, files to read first, must-not-assume notes, open questions, active children, and next safe action.
+- `rationale.md` when the phase includes material options, tradeoffs, architecture/debt choices, rollout strategy, validation decisions, review-fix decisions, accepted residual risk, or rejected alternatives.
 
 Add phase-specific files when relevant:
 
@@ -751,6 +797,7 @@ No phase is complete until `state.json` and `events.jsonl` record the latest run
 - input: user messages, approved scope, parent prompt, relevant plan paths, and child reports used;
 - work done: concise summary and changed artifact paths;
 - decisions: user decisions, safe assumptions, autonomous decisions, and escalations;
+- rationale: material options considered, selected path, rejected alternatives, evidence, tradeoffs, risk accepted or deferred, and reviewer focus;
 - evidence: scout facts, validation, review results, or accepted residual risk;
 - open questions and blockers;
 - next phase handoff: what the next owner should do first;
@@ -775,6 +822,8 @@ Phase close status:
 Repo facts:
 
 User decisions made:
+
+Rationale checkpoints:
 
 Open questions:
 
@@ -822,8 +871,9 @@ Before answering, editing, delegating, starting/replacing child agents, or repor
 - active run `index.md`;
 - active run `state.md`;
 - `decisions.md`;
+- `rationale.md`;
 - `handoff.md`;
-- current phase `phase.md`, `decisions.md`, `handoff.md`, and phase-specific files;
+- current phase `phase.md`, `decisions.md`, `rationale.md`, `handoff.md`, and phase-specific files;
 - `phases/05-planning/implementation-plan.md` if present, or legacy root `implementation-plan.md` if resuming an old run;
 - current git branch and dirty state;
 - known child-agent handles/status if available.
@@ -861,7 +911,7 @@ After compaction or suspected context loss, assume any previously spawned child 
 
 Recovery steps:
 
-1. Read active run `state.json`, `events.jsonl`, `.ant/orchestrator/active.md`, active run `index.md`, `state.md`, run and phase `handoff.md`, and any `Active Children` sections. If structured state is missing, create or reopen a recovery run first.
+1. Read active run `state.json`, `events.jsonl`, `.ant/orchestrator/active.md`, active run `index.md`, `state.md`, run `decisions.md`, run `rationale.md`, run and phase `handoff.md`, current phase `decisions.md`, current phase `rationale.md`, and any `Active Children` sections. If structured state is missing, create or reopen a recovery run first.
 2. Identify known child agents: role, assigned scope, owned files/subsystems, expected checkpoint, last known status, and whether work may still be running.
 3. Poll or wait existing child agents if handles are available.
 4. If handles are unavailable, treat their write scopes as possibly active or partially changed.
@@ -1221,7 +1271,7 @@ The plan must be a practical checklist, not a vague essay. It should include:
 - reviewer focus;
 - risks, assumptions, and open questions.
 
-If the plan writer finds a blocking question, stop and ask the user before implementation. After plan updates, update `phases/05-planning/phase.md`, phase `decisions.md`, and phase `handoff.md`, then show the user a concise conceptual summary, execution mode, phase roadmap when relevant, decision policy, and current phase detail, not every file-level detail, and ask for explicit implementation approval.
+If the plan writer finds a blocking question, stop and ask the user before implementation. After plan updates, update `phases/05-planning/phase.md`, phase `decisions.md`, phase `rationale.md` for material choices, and phase `handoff.md`, then show the user a concise conceptual summary, execution mode, phase roadmap when relevant, decision policy, and current phase detail, not every file-level detail, and ask for explicit implementation approval.
 
 For `Medium`, `High`, and `Critical` work, broad approval phrases before the plan exists count as approval to create or refine the plan only. Do not delegate implementation until the user approves the concrete plan summary or explicitly approves skipping the plan artifact.
 
@@ -1502,7 +1552,7 @@ Constraints:
 
 Create or update `.ant/orchestrator/<run>/phases/05-planning/implementation-plan.md` with a checklist-style plan covering delivery context, execution mode, decision policy, full phased roadmap when phased rollout is selected, phase artifact layout, close/handoff expectations, scenario-based definition of done, risk scenario matrix, architecture boundaries, legacy/debt decisions, contract-first details, concurrency plan, implementation checklist, validation checklist, reviewer focus, risks, assumptions, and open questions. If any blocking question remains, return `Needs clarification` instead of inventing an answer.
 
-Also update the planning phase artifacts when markdown persistence is active: add approved decisions to run and phase `decisions.md`, plan path and implementation strategy to `state.md`, and phase close/next action to `phases/05-planning/handoff.md` plus run `handoff.md`. In all runs, update `state.json` and append durable events in `events.jsonl`.
+Also update the planning phase artifacts when markdown persistence is active: add approved decisions to run and phase `decisions.md`, material rationale checkpoints to run and phase `rationale.md`, plan path and implementation strategy to `state.md`, and phase close/next action to `phases/05-planning/handoff.md` plus run `handoff.md`. In all runs, update `state.json` and append durable events in `events.jsonl`.
 ```
 
 ## Implementation Lead Prompt
@@ -1564,6 +1614,22 @@ Use the reviewer role instructions from `references/reviewer-role.md`.
 
 You are reviewing this lifecycle stage. Do not edit files unless explicitly asked.
 
+Required review context bundle:
+- `.ant/orchestrator/<run>/state.json`
+- `.ant/orchestrator/<run>/events.jsonl`
+- run `index.md`
+- run `state.md`
+- run `decisions.md`
+- run `rationale.md` when present
+- run `handoff.md`
+- current phase `phase.md`
+- current phase `decisions.md`
+- current phase `rationale.md` when present or when material choices were made
+- current phase `handoff.md`
+- approved plan, scout findings, verification evidence, implementation/slice reports, and delivery context relevant to this review
+
+Do not review from the diff alone. If required context is missing, stale, or contradictory, report that as a finding or blocker before reviewing code.
+
 Original goal:
 <goal>
 
@@ -1579,6 +1645,7 @@ Focus:
 - target branch and unrelated-change decisions were followed;
 - execution mode, decision policy, phased roadmap, and stop/continue rules were explicit and followed;
 - required phase artifacts exist, are current, and satisfy the phase close/handoff gate before transition or completion;
+- rationale checkpoints exist for material decisions, rejected alternatives, accepted risks, and review-fix direction changes;
 - architecture boundaries and file placement;
 - security, permissions, tenant boundaries, and data safety;
 - legacy/debt handling;
@@ -1620,6 +1687,7 @@ Scout:
 Direction:
 Execution mode:
 Phase artifacts:
+Rationale:
 Plan artifact:
 Phased roadmap:
 Plan review:
@@ -1653,9 +1721,9 @@ The orchestrated implementation is not complete until:
 
 - the user approved the direction and implementation plan, unless the selected flow is a low-risk dispatch packet;
 - `state.json` and `events.jsonl` are current for every orchestrated run;
-- run-level `index.md`, `state.md`, and `decisions.md` are current when markdown persistence is active;
-- every completed markdown phase folder has current `phase.md`, `decisions.md`, `handoff.md`, and phase-specific evidence files;
-- the current phase close/handoff gate records status, input, work done, decisions, evidence, open questions, next phase handoff, files to read first, and must-not-assume notes;
+- run-level `index.md`, `state.md`, `decisions.md`, and `rationale.md` are current when markdown persistence is active;
+- every completed markdown phase folder has current `phase.md`, `decisions.md`, `handoff.md`, `rationale.md` when material choices occurred, and phase-specific evidence files;
+- the current phase close/handoff gate records status, input, work done, decisions, rationale for material choices, evidence, open questions, next phase handoff, files to read first, and must-not-assume notes;
 - execution mode and decision policy are recorded for medium+ work;
 - phased rollout work has an approved whole-roadmap plan before any phase implementation starts;
 - the plan defines done, scope, non-goals, contracts, architecture boundaries, and validation;

@@ -21,7 +21,7 @@ When the run's `state.json` includes `preferredLanguage`, treat it as the langua
 - Preserve the phase workspace contract. Treat `phases/06-implementation/` and delegated subphase artifacts as the durable source of truth.
 - Preserve the machine-readable orchestration contract in `plugins/ant/contracts/orchestrator-state/` for every orchestrated run. Run producers should write `.ant/orchestrator/<run>/state.json` snapshots and append `.ant/orchestrator/<run>/events.jsonl` events using UTC/Zulu timestamps and normalized contract statuses, including low-risk/minimal delegated runs.
 - Read repo instructions, delivery context, dirty state, implementation plan, architecture boundaries, and relevant code paths before editing.
-- Read orchestration artifacts when the root provides them, especially `index.md`, `state.md`, `decisions.md`, current phase files, and `handoff.md`.
+- Read orchestration artifacts when the root provides them, especially `index.md`, `state.md`, `decisions.md`, `rationale.md`, current phase files, and `handoff.md`.
 - Respect approved branch/worktree, confirmed target branch, unrelated-change decision, and MR decisions. Do not switch branches, create worktrees, push, or create MRs unless the root orchestrator explicitly delegates that action after user approval.
 - Confirm whether the plan is still valid after inspecting the real code.
 - Confirm whether autonomous or manual decision authority is active before resolving material variants.
@@ -31,6 +31,7 @@ When the run's `state.json` includes `preferredLanguage`, treat it as the langua
 - Define clear ownership, write boundaries, contracts, validation expectations, and non-goals for each slice worker.
 - Track child checkpoints without forwarding noisy logs to the root orchestrator.
 - Return durable run/phase artifact summaries after discovery, strategy, blockers, integration, review, and verification.
+- Return rationale checkpoint updates for material implementation decisions, rejected alternatives, deviations from the plan, review-fix direction changes, accepted or deferred risks, and reviewer focus. Store concise rationale summaries, not raw chain-of-thought.
 - Integrate all slices, reconcile contracts, and finish the implementation to a working state.
 - Identify root causes and real contracts before changing code.
 - Respect architecture boundaries and correct file placement.
@@ -153,6 +154,7 @@ Before closing a subphase, record or report:
 - inputs and files read first;
 - work done and changed paths;
 - decisions, escalations, and safe assumptions;
+- rationale for material choices, rejected alternatives, deviations, risk accepted or deferred, and reviewer focus;
 - verification and review evidence;
 - open questions, blockers, and residual risks;
 - next subphase handoff;
@@ -223,6 +225,7 @@ When orchestration persistence is active, include a `Persistence update` section
 Persistence update:
 State changes:
 Decisions:
+Rationale:
 Findings:
 Open questions:
 Active children:
@@ -397,6 +400,9 @@ Original goal:
 Approved plan:
 <.ant/orchestrator/<run>/phases/05-planning/implementation-plan.md path or summary>
 
+Review context bundle:
+<state.json/events.jsonl, run index/state/decisions/rationale/handoff, current phase phase/decisions/rationale/handoff, findings/options/verification/review artifacts, implementation and slice reports>
+
 Implementation strategy:
 <implementation lead only or slice workers>
 
@@ -408,6 +414,9 @@ Phased roadmap:
 
 Phase artifacts:
 <implementation phase/subphase close status and files updated>
+
+Rationale checkpoints:
+<material decisions, alternatives rejected, evidence, risks accepted/deferred, reviewer focus>
 
 Changed paths:
 <paths>
