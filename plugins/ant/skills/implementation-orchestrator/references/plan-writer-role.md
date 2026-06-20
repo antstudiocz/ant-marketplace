@@ -50,6 +50,7 @@ Normally create or update `.ant/orchestrator/<run>/phases/05-planning/implementa
 - goal;
 - non-goals;
 - approved decisions;
+- decision rationale, including material options considered, rejected alternatives, and why the selected path won;
 - execution mode and decision policy;
 - delivery context and MR preference;
 - phased roadmap when phased rollout is selected;
@@ -77,10 +78,11 @@ The plan is part of the planning phase, not a standalone root file. Keep these a
 - run `index.md` links to the canonical plan and current phase;
 - run `state.md` records plan status, execution mode, roadmap, and next action;
 - run and phase `decisions.md` record approved direction, execution mode, rollout strategy, and safe assumptions;
+- run and phase `rationale.md` record material tradeoffs, rejected alternatives, evidence, risk accepted or deferred, and reviewer focus;
 - `phases/05-planning/phase.md` records status, inputs, work done, evidence, blockers, and close status;
 - `phases/05-planning/handoff.md` records next phase handoff, files to read first, must-not-assume notes, open questions, and next safe action.
 
-Before reporting `Plan ready`, satisfy the phase close gate for planning or clearly mark the phase as `blocked` with the missing inputs. The planning phase is not complete until its folder has status, input, work done, decisions, evidence, open questions, next phase handoff, files to read first, and must-not-assume notes.
+Before reporting `Plan ready`, satisfy the phase close gate for planning or clearly mark the phase as `blocked` with the missing inputs. The planning phase is not complete until its folder has status, input, work done, decisions, rationale for material choices, evidence, open questions, next phase handoff, files to read first, and must-not-assume notes.
 
 ## Execution Mode And Phased Roadmap
 
@@ -115,6 +117,7 @@ If implementation itself needs multiple steps, define `phases/06-implementation/
 When the parent provides an orchestration state path, keep the plan consistent with it:
 
 - include approved user decisions from `decisions.md`;
+- include rationale checkpoints from `rationale.md` when available;
 - incorporate repo facts from phase `findings.md`;
 - preserve open questions and handoff constraints;
 - return a short artifact summary the root orchestrator can write to run `state.md`, run `handoff.md`, and the planning phase files.

@@ -30,7 +30,8 @@ Do not use Codex `gpt-5.4` or `gpt-5.3-codex`. If the assigned tier is too weak 
 - Report blockers, scope changes, contract mismatches, legacy/debt findings, and architecture issues upward.
 - Run targeted checks relevant to your slice when feasible.
 - Return changed paths, checks, assumptions, scenario evidence, risks, and remaining integration needs.
-- Return phase/subphase artifact updates when the slice changes status, decisions, evidence, blockers, or handoff state.
+- Return rationale updates for material slice decisions, rejected alternatives, architecture/debt tradeoffs, contract deviations, accepted or deferred risks, and reviewer focus.
+- Return phase/subphase artifact updates when the slice changes status, decisions, rationale, evidence, blockers, or handoff state.
 
 ## Boundaries
 
@@ -81,7 +82,7 @@ Checks:
 Risks / blockers:
 Decision needed:
 Artifact update:
-- Status/input/work done/decisions/evidence/open questions/next handoff/files to read first/must-not-assume notes
+- Status/input/work done/decisions/rationale/evidence/open questions/next handoff/files to read first/must-not-assume notes
 ```
 
 ## Legacy / Debt Escalation
@@ -133,6 +134,7 @@ Return:
 - implementation summary;
 - contract assumptions followed;
 - architecture placement decisions;
+- rationale updates for material choices, rejected alternatives, tradeoffs, and reviewer focus;
 - legacy/debt cleanup or escalations;
 - checks run and outcomes;
 - scenario evidence and residual risk;
