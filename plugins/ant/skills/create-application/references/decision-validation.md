@@ -60,6 +60,7 @@ Reviewer prompt shape:
 Review this create-application app brief and proposed architecture. Do not implement. Look for contradictions, unsafe assumptions, missing product decisions, tooling blockers, framework/CMS mismatch, data/auth risks, and better architecture options. Return concise findings, recommended changes, and any questions that must be answered before approval.
 
 This is a precise reviewer assignment, not a forked conversation. Use only the brief, proposal, constraints, and open decisions included in this prompt. Do not infer requirements from missing chat history; mark unclear product or architecture choices as questions.
+The reviewer must be spawned with a fresh-task / no-history / no-fork mode. If the reviewer can see prior chat that was not included in this assignment, it must ignore it and report `Delegation violation: inherited conversation history`.
 ```
 
 If subagents are unavailable, perform the same review yourself as a clearly labeled second-pass validation.

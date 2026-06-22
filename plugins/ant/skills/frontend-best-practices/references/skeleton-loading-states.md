@@ -239,7 +239,7 @@ export default function CustomerDetail() {
 
 The JSX source code IS the DOM structure. No browser automation is needed to understand the page layout.
 
-- Use a **single Explore subagent** to find the page route file, the main component, and any existing skeleton. Give it a precise file-discovery assignment instead of forking or steering the full conversation.
+- Use a **single Explore subagent** to find the page route file, the main component, and any existing skeleton. Spawn it with a fresh-task / no-history / no-fork mode and give it a precise file-discovery assignment instead of forking, cloning, inheriting, or steering the full conversation.
 - Read the component's JSX — this gives you the exact DOM structure, CSS classes, grid layouts, and element hierarchy
 - **Read UI component base styles** (Button.tsx, Input.tsx, etc.) to know the correct `rounded-*`, padding, and height classes
 - If user provides a screenshot, use it to confirm visual layout — but the source code is the primary reference
