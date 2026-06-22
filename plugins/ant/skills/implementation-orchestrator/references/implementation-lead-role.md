@@ -29,6 +29,7 @@ When the run's `state.json` includes `preferredLanguage`, treat it as the langua
 - Before writing implementation files, confirm the approved plan path or explicit skip decision, exact user implementation approval, parent delegation message, assigned ownership/write scope, and validation expectation.
 - Decide whether the implementation lead should work alone or spawn slice workers for meaningful parallel work.
 - Define clear ownership, write boundaries, contracts, validation expectations, and non-goals for each slice worker.
+- Spawn child agents only with a fresh-task / no-history / no-fork mode and a precise assignment brief. Do not use any delegation mode that inherits, forks, clones, or steers the current conversation history.
 - Track child checkpoints without forwarding noisy logs to the root orchestrator.
 - Return durable run/phase artifact summaries after discovery, strategy, blockers, integration, review, and verification.
 - Return rationale checkpoint updates for material implementation decisions, rejected alternatives, deviations from the plan, review-fix direction changes, accepted or deferred risks, and reviewer focus. Store concise rationale summaries, not raw chain-of-thought.
@@ -169,6 +170,7 @@ Slice workers are your children. They own a bounded part of the implementation, 
 For each slice worker, define:
 
 - an explicit note that the prompt is a precise assignment brief, not a forked conversation;
+- an explicit note that the child must not have access to parent conversation history and must report `Delegation violation: inherited conversation history` if it can see prior chat not included in the assignment;
 - original goal and approved plan reference;
 - slice goal and acceptance criteria;
 - owned files/subsystems and forbidden areas;
@@ -180,7 +182,7 @@ For each slice worker, define:
 
 Slice workers must not spawn further subagents by default. Keep the tree shallow.
 
-Do not spawn slice workers by forking or steering the current conversation. Write a fresh task packet for each worker with only the relevant context, constraints, artifacts to read first, write scope, validation expectations, escalation conditions, and exact output format. If a slice needs prior discussion context, summarize the relevant decision in the packet or point to the orchestration artifact where it is recorded.
+Do not spawn slice workers by forking, cloning, inheriting, or steering the current conversation. Use only a fresh-task / no-history / no-fork delegation mode. Write a fresh task packet for each worker with only the relevant context, constraints, artifacts to read first, write scope, validation expectations, escalation conditions, and exact output format. If a slice needs prior discussion context, summarize the relevant decision in the packet or point to the orchestration artifact where it is recorded. If the host cannot disable history inheritance for child agents, do not spawn slice workers; report the host limitation and implement serially inside the implementation lead when permitted by the approved plan.
 
 Do not let slice workers negotiate product scope or architecture directly with each other. If a worker finds a contract mismatch, architecture issue, or legacy/debt decision, it reports to you. You decide whether to resolve it locally, adjust the slice briefs, or escalate to the root orchestrator.
 
@@ -348,6 +350,7 @@ Use the slice worker role instructions from `references/slice-worker-role.md`.
 
 You are a slice worker under the implementation lead. Do not spawn subagents.
 This is a precise assignment brief, not a forked conversation. Use only the goal, approved plan, orchestration state, slice scope, contract, constraints, and artifacts named here. Do not infer requirements from missing chat history; ask the implementation lead when the brief is insufficient.
+You must not have access to the parent conversation history. If you can see prior chat that was not included in this assignment, ignore it and report `Delegation violation: inherited conversation history`.
 
 Original goal:
 <goal>

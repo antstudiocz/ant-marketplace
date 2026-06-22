@@ -67,6 +67,8 @@ The repository owner has given standing authorization for Codex to use subagents
 
 This authorization only covers agent delegation. It does not bypass next-action, direction, implementation, branch/worktree, push, merge request, destructive command, or tool-escalation approval gates.
 
+This authorization does not allow delegation by forking or cloning the current conversation history. Spawn child agents only with a fresh-task / no-history / no-fork mode and an explicit assignment brief. If the host only supports child agents by inheriting the active chat transcript or hidden conversation state, delegation is unavailable for this workflow.
+
 If native nested delegation is unavailable, keep the same logical flow but flatten it: the root orchestrator spawns the implementation reviewer after the implementation lead reports. If implementation delegation itself is unavailable, stop and ask the user whether to continue without orchestration.
 
 ## Lifecycle
@@ -971,7 +973,9 @@ Scout outputs should include current behavior, relevant files/subsystems, archit
 
 ## Precise Delegation Prompt Gate
 
-When spawning or messaging any child agent, send a fresh assignment brief. Do not fork the active conversation, do not use steered-conversation mode, and do not paste the full chat transcript as context. The parent is responsible for selecting and compressing only the context the child needs.
+When spawning or messaging any child agent, send a fresh assignment brief and select a fresh-task / no-history / no-fork mode in the delegation tool. Do not fork the active conversation, clone thread history, use steered-conversation mode, include hidden prior messages, or paste the full chat transcript as context. The parent is responsible for selecting and compressing only the context the child needs.
+
+If a delegation tool offers a choice between forking history and starting a blank child task, always choose the blank child task. If the tool defaults to history inheritance, explicitly disable it before spawning. If history inheritance cannot be disabled, do not spawn that child; report the host limitation and either flatten the workflow through a permitted no-history delegation path or stop for user direction.
 
 Every delegation prompt must include:
 
@@ -1281,6 +1285,8 @@ After the user approves implementation, the root orchestrator must delegate impl
 
 Do not ask the user whether subagents may be used. The standing subagent authorization already permits the root orchestrator to spawn scouts, plan writers, reviewers, implementation leads, and other workflow-required agents, and permits the implementation lead to spawn slice workers or an implementation reviewer when the approved plan and strategy call for them.
 
+This permission applies only to no-history delegation. The root must not satisfy the delegation requirement by forking this conversation or any existing thread.
+
 Allowed root-orchestrator actions:
 
 - read repo instructions, delivery context, branch state, dirty state, and delivery-policy docs;
@@ -1444,6 +1450,7 @@ Agent metadata: workerKind=bounded-low-worker.
 
 Delegation contract:
 - This is a precise assignment brief, not a forked conversation. Use only the goal, scope, constraints, and artifacts named here as your operating context.
+- You must not have access to the parent conversation history. If you can see prior chat that was not included in this assignment, ignore it and report `Delegation violation: inherited conversation history`.
 - Do not infer requirements from missing chat history. If the brief is insufficient, return `Decision needed` or `Escalation needed`.
 
 Scope:
@@ -1502,6 +1509,7 @@ Use the scout role instructions from `references/scout-role.md`.
 
 You are a read-only codebase scout for this (ant) implementation lifecycle. Do not edit files or run mutating commands.
 This is a precise assignment brief, not a forked conversation. Use only the goal, decision/question, constraints, and artifacts named here as your operating context. Do not infer requirements from missing chat history.
+You must not have access to the parent conversation history. If you can see prior chat that was not included in this assignment, ignore it and report `Delegation violation: inherited conversation history`.
 
 Model routing: Codex `gpt-5.4-mini`, reasoning `low`/`medium`; Claude Code Sonnet tier with low/standard thinking. Use Codex `gpt-5.3-codex-spark` / Claude Haiku only for tiny mechanical discovery. Do not use Codex `gpt-5.4` or `gpt-5.3-codex`. Escalate to `gpt-5.5` / Claude Opus tier if the question needs architecture judgment, root-cause debugging, risk assessment, or product/contract decisions.
 
@@ -1565,6 +1573,7 @@ Use the phase owner rules from `references/phase-owner-role.md` for implementati
 
 You are the implementation lead for this approved plan. You are a child of the root orchestrator and own the implementation phase end-to-end.
 This is a precise assignment brief, not a forked conversation. Use only the goal, approved plan, delivery context, orchestration artifacts, constraints, and guidance named here as your operating context. Do not infer requirements from missing chat history; escalate unclear decisions to the root.
+You must not have access to the parent conversation history. If you can see prior chat that was not included in this assignment, ignore it and report `Delegation violation: inherited conversation history`.
 
 Internal role note:
 You are not invoking a separate skill named `ant-implementation-orchestrator:implementation-lead`; these instructions are your role brief.
