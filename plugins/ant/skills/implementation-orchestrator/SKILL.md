@@ -89,7 +89,7 @@ UIs should treat these metadata fields as display hints. Existing `status`, `pha
 16. **Multi-phase implementation when useful** - implementation may use `phases/06-implementation/subphases/<NN-name>/...` with roadmap, checkpoints, verification, review, and stop/continue rules.
 17. **Slice work when useful** - backend/frontend/data/test slices may run in parallel against explicit contracts.
 18. **Phase close and handoff** - before any user-facing transition, pause, stop, handoff, or completion report, update structured state and concise human artifacts.
-19. **Integration, review, verification, delivery** - implementation is done only after tier-appropriate checks, review/fix loop when required, evidence, and any approved merge request handoff.
+19. **Integration, review, verification, delivery handoff** - implementation is done only after tier-appropriate checks, review/fix loop when required, evidence, and a concrete delivery handoff that says whether staging, commit, push, and merge request creation are recommended, blocked, or explicitly declined.
 
 ## Mandatory Gates
 
@@ -139,6 +139,7 @@ UIs should treat these metadata fields as display hints. Existing `status`, `pha
 - **Push-first status gate:** child agents push phase checkpoints to their parent; parent polling is a recovery tool, not the default.
 - **Mid-flight user input gate:** if the user sends new instructions, questions, corrections, or scope notes while child agents are active, preserve the current run by default, classify the input, answer from known state when possible, update run/phase artifacts, and forward material changes to the relevant child at a safe checkpoint or with an interrupt only when continuing would waste work or violate the user's latest direction.
 - **Writer recovery gate:** do not start an overlapping replacement writer until the silent writer is checkpointed or closed, partial work is understood, and the write scope is safe.
+- **Post-verification delivery handoff gate:** after implementation review and targeted verification pass, every user-facing completion or pause report must include `Done`, `Not done`, `Recommended next action`, and `What "pokračuj" authorizes`. If delivery is not yet performed, recommend the next delivery step explicitly, such as sanity-check dirty state, stage intended files, commit, push, and create or update an MR/PR. Do not wait for the user to ask "what next?".
 - **MR readiness gate:** before push or MR creation, confirm target branch, unrelated-change decision, conscious dirty state, latest relevant checks, review/fix status, and draft/ready intent.
 
 ## Loading References
@@ -171,4 +172,5 @@ The work is not complete until:
 - targeted verification ran or is explicitly blocked;
 - independent review passed or residual risks are explicit;
 - actionable review findings were fixed or intentionally accepted;
+- post-verification delivery handoff states what remains for staging, commit, push, MR/PR creation, merge, or release, and what exact user reply would authorize;
 - final evidence maps back to the definition of done.
