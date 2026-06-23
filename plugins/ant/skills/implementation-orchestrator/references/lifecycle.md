@@ -1666,6 +1666,26 @@ Focus:
 Return material findings ordered by severity, or say there are no material findings and list residual risks.
 ```
 
+## Post-Verification Delivery Handoff
+
+After implementation review and targeted verification pass, the root orchestrator must not stop at an implementation summary. Every user-facing completion, pause, or phase-transition report must include a concrete delivery handoff:
+
+```text
+Done:
+- <implemented and verified scope>
+
+Not done:
+- <delivery or residual work not performed>
+
+Recommended next action:
+- <the next delivery step the orchestrator recommends>
+
+What "pokračuj" authorizes:
+- <exact actions such as git status, stage intended files, commit, push, create/update MR/PR, or stop before merge/release>
+```
+
+If the work is verified but not staged, committed, pushed, or submitted as an MR/PR, recommend the delivery sequence explicitly. Do not wait for the user to ask "what next?" or "jaké jsou další kroky?". If any delivery decision is missing, say which decision is missing and what `pokračuj` would and would not authorize.
+
 ## Delivery And MR Readiness
 
 Delivery uses recorded decisions. It must not choose a target branch, draft/ready state, or unrelated-change handling by itself. If a required decision is missing, stop and ask the user.
@@ -1745,5 +1765,6 @@ The orchestrated implementation is not complete until:
 - avoidable legacy leftovers and technical debt were removed or explicitly approved;
 - architecture boundaries and file placement were checked;
 - unrelated user changes were preserved;
+- post-verification delivery handoff states what remains for staging, commit, push, MR/PR creation, merge, or release, and what exact user reply would authorize;
 - branch/worktree/MR decisions were followed, or delivery was explicitly declined;
 - final response states what changed, what was verified, and what could not be verified.
