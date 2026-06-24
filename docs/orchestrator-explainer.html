@@ -1,0 +1,1731 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="Fullscreen slide presentation explaining the logic of the (ant) implementation orchestrator plugin."
+    >
+    <title>(ant) orchestrator | slide explainer</title>
+    <style>
+      :root {
+        --black: #000;
+        --ink: #161616;
+        --body: #4d5358;
+        --muted: #878d96;
+        --line: #dde1e6;
+        --soft: #f4f4f4;
+        --page: #fafafa;
+        --surface: #fff;
+        --mint: #5bffc4;
+        --mint-soft: #d3fff5;
+        --radius: 10px;
+        --header-h: 74px;
+        --controls-h: 92px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        overflow: hidden;
+        background: var(--page);
+        color: var(--ink);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        letter-spacing: 0;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .skip-link {
+        position: fixed;
+        top: 14px;
+        left: 14px;
+        z-index: 50;
+        transform: translateY(-150%);
+        border: 1px solid var(--black);
+        border-radius: 6px;
+        background: var(--black);
+        color: #fff;
+        padding: 10px 14px;
+        text-decoration: none;
+      }
+
+      .skip-link:focus {
+        transform: translateY(0);
+        outline: 3px solid var(--mint);
+        outline-offset: 2px;
+      }
+
+      .deck {
+        height: 100dvh;
+        display: grid;
+        grid-template-rows: var(--header-h) minmax(0, 1fr) var(--controls-h);
+      }
+
+      .deck-header,
+      .deck-controls {
+        border-color: var(--line);
+        background: rgba(250, 250, 250, 0.94);
+        backdrop-filter: blur(18px);
+      }
+
+      .deck-header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 24px;
+        align-items: center;
+        padding: 0 clamp(18px, 4vw, 52px);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        min-width: 0;
+      }
+
+      .brand img {
+        width: 78px;
+        height: auto;
+        display: block;
+      }
+
+      .brand span {
+        color: var(--body);
+        font-size: 13px;
+        line-height: 1.2;
+      }
+
+      .slide-meta {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .slide-meta::before {
+        content: "";
+        width: 30px;
+        height: 8px;
+        background: var(--mint);
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        min-width: 0;
+      }
+
+      .language-toggle {
+        display: inline-flex;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        overflow: hidden;
+        background: #fff;
+      }
+
+      .language-button {
+        min-width: 42px;
+        border: 0;
+        background: transparent;
+        color: var(--muted);
+        padding: 8px 10px;
+        font-size: 12px;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+        cursor: pointer;
+      }
+
+      .language-button[aria-pressed="true"] {
+        background: var(--black);
+        color: #fff;
+      }
+
+      .language-button:focus-visible {
+        outline: 3px solid var(--mint);
+        outline-offset: -1px;
+      }
+
+      .stage {
+        position: relative;
+        min-width: 0;
+        min-height: 0;
+        overflow: hidden;
+      }
+
+      .slide {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        align-items: center;
+        gap: clamp(22px, 4vw, 54px);
+        padding: clamp(24px, 5vw, 76px);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(18px);
+        transition:
+          opacity 260ms ease,
+          transform 260ms ease,
+          visibility 260ms ease;
+      }
+
+      .slide.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0);
+      }
+
+      .slide.one-column {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: start;
+      }
+
+      .slide.two-column {
+        grid-template-columns: minmax(0, 0.9fr) minmax(340px, 0.85fr);
+      }
+
+      .slide.reverse {
+        grid-template-columns: minmax(340px, 0.85fr) minmax(0, 0.9fr);
+      }
+
+      .slide.dark {
+        background: var(--black);
+        color: #fff;
+      }
+
+      .slide.light {
+        background: var(--page);
+      }
+
+      .slide.mint {
+        background: var(--mint-soft);
+      }
+
+      .kicker {
+        display: inline-flex;
+        width: fit-content;
+        align-items: center;
+        gap: 10px;
+        color: currentColor;
+        font-size: 12px;
+        font-weight: 850;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .kicker::before {
+        content: "";
+        width: 22px;
+        height: 8px;
+        background: var(--mint);
+      }
+
+      .mint .kicker::before {
+        background: var(--black);
+      }
+
+      .copy {
+        display: grid;
+        gap: 28px;
+        min-width: 0;
+      }
+
+      .copy.compact {
+        gap: 18px;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1,
+      h2 {
+        max-width: 10.5ch;
+        font-size: 52px;
+        font-weight: 880;
+        letter-spacing: -0.035em;
+        line-height: 0.9;
+        overflow-wrap: anywhere;
+        hyphens: auto;
+        text-wrap: balance;
+      }
+
+      h3 {
+        font-size: 28px;
+        font-weight: 820;
+        letter-spacing: -0.03em;
+        line-height: 1;
+        text-wrap: balance;
+      }
+
+      .lead {
+        max-width: 760px;
+        color: var(--body);
+        font-size: 20px;
+        line-height: 1.42;
+        text-wrap: pretty;
+      }
+
+      .dark .lead {
+        color: #d8d8d8;
+      }
+
+      .mint .lead {
+        color: #16211e;
+      }
+
+      .huge-line {
+        display: block;
+        color: var(--muted);
+        font-size: 14px;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .hero-mark {
+        display: grid;
+        gap: 1px;
+        width: min(100%, 760px);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        overflow: hidden;
+        background: var(--line);
+      }
+
+      .hero-row {
+        display: grid;
+        grid-template-columns: minmax(120px, 0.34fr) minmax(0, 1fr);
+        gap: 24px;
+        align-items: center;
+        background: #fff;
+        padding: clamp(18px, 3vw, 28px);
+      }
+
+      .hero-row strong {
+        font-size: 16px;
+      }
+
+      .hero-row span {
+        color: var(--body);
+        font-size: 15px;
+        line-height: 1.45;
+      }
+
+      .slide.motion-slide {
+        grid-template-columns: minmax(240px, 0.36fr) minmax(0, 1fr);
+        padding-block: clamp(24px, 4vw, 52px);
+      }
+
+      .motion-slide h2 {
+        max-width: 8ch;
+      }
+
+      .motion-slide .lead {
+        max-width: 520px;
+      }
+
+      .motion-frame {
+        position: relative;
+        width: min(100%, 980px);
+        height: min(58vh, 540px);
+        min-height: 420px;
+        border: 1px solid #343a3f;
+        border-radius: 18px;
+        overflow: hidden;
+        background: #050505;
+      }
+
+      .dispatch-board {
+        position: absolute;
+        inset: clamp(18px, 2.6vw, 30px);
+        display: grid;
+        grid-template-columns: minmax(190px, 0.32fr) minmax(0, 1fr);
+        gap: clamp(18px, 2.4vw, 32px);
+        min-width: 0;
+      }
+
+      .dispatch-root {
+        align-self: center;
+        display: grid;
+        gap: 18px;
+        min-width: 0;
+        border: 1px solid var(--mint);
+        border-radius: 12px;
+        background: #000;
+        color: #fff;
+        padding: clamp(18px, 2vw, 24px);
+      }
+
+      .dispatch-label,
+      .dispatch-index,
+      .dispatch-state {
+        color: var(--mint);
+        font-size: 11px;
+        font-weight: 850;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .dispatch-root strong {
+        font-size: 30px;
+        line-height: 1;
+        letter-spacing: -0.035em;
+      }
+
+      .dispatch-root p,
+      .dispatch-main p {
+        color: #d8d8d8;
+        font-size: 14px;
+        line-height: 1.35;
+      }
+
+      .token-track {
+        position: relative;
+        height: 2px;
+        background: #343a3f;
+      }
+
+      .command-token {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 16px;
+        height: 16px;
+        border-radius: 999px;
+        background: var(--mint);
+        transform: translateY(-50%);
+      }
+
+      .slide.active .command-token {
+        animation: commandTravel 5800ms cubic-bezier(0.65, 0, 0.25, 1) infinite;
+      }
+
+      .role-stack {
+        position: relative;
+        display: grid;
+        grid-template-rows: repeat(5, minmax(72px, 1fr));
+        gap: 10px;
+        min-width: 0;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .role-stack::before {
+        content: "";
+        position: absolute;
+        top: 8%;
+        bottom: 8%;
+        left: -16px;
+        width: 1px;
+        background: #343a3f;
+      }
+
+      .dispatch-row {
+        position: relative;
+        display: grid;
+        grid-template-columns: 92px minmax(0, 1fr) 88px;
+        gap: 18px;
+        align-items: center;
+        min-width: 0;
+        border: 1px solid #343a3f;
+        border-radius: 10px;
+        background: #0f0f0f;
+        color: #fff;
+        padding: 14px 16px;
+      }
+
+      .dispatch-row::before {
+        content: "";
+        position: absolute;
+        left: -16px;
+        top: 50%;
+        width: 16px;
+        height: 1px;
+        background: #343a3f;
+      }
+
+      .slide.active .dispatch-row:not(.evidence) {
+        animation: rowPulse 740ms cubic-bezier(0.2, 0.9, 0.18, 1) both;
+        animation-delay: var(--delay, 0ms);
+      }
+
+      .dispatch-main {
+        display: grid;
+        gap: 5px;
+        min-width: 0;
+      }
+
+      .dispatch-main strong {
+        font-size: 22px;
+        line-height: 1;
+        letter-spacing: -0.03em;
+      }
+
+      .dispatch-state {
+        justify-self: end;
+        color: #878d96;
+      }
+
+      .dispatch-row.evidence {
+        border-color: var(--mint);
+        background: var(--mint);
+        color: var(--black);
+      }
+
+      .dispatch-row.evidence .dispatch-index,
+      .dispatch-row.evidence .dispatch-state,
+      .dispatch-row.evidence p {
+        color: var(--black);
+      }
+
+      @keyframes commandTravel {
+        0% {
+          left: 0;
+        }
+
+        78%,
+        100% {
+          left: calc(100% - 16px);
+        }
+      }
+
+      @keyframes rowPulse {
+        0%,
+        100% {
+          border-color: #343a3f;
+          background: #0f0f0f;
+        }
+
+        48% {
+          border-color: var(--mint);
+          background: #151515;
+        }
+      }
+
+      .risk-grid,
+      .artifact-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        overflow: hidden;
+        background: var(--line);
+      }
+
+      .risk-card,
+      .artifact-card {
+        display: grid;
+        gap: 18px;
+        min-height: 172px;
+        align-content: space-between;
+        background: #fff;
+        padding: clamp(20px, 3vw, 30px);
+      }
+
+      .risk-card.active {
+        background: var(--mint-soft);
+      }
+
+      .risk-card strong,
+      .artifact-card strong {
+        font-size: 24px;
+        letter-spacing: -0.03em;
+      }
+
+      .risk-card span,
+      .artifact-card span {
+        color: var(--body);
+        font-size: 15px;
+        line-height: 1.45;
+      }
+
+      .stack {
+        display: grid;
+        gap: 1px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        overflow: hidden;
+        background: var(--line);
+      }
+
+      .stack-row {
+        display: grid;
+        grid-template-columns: minmax(130px, 0.34fr) minmax(0, 1fr);
+        gap: 24px;
+        background: #fff;
+        padding: 20px 22px;
+      }
+
+      .stack-row strong {
+        font-size: 17px;
+      }
+
+      .stack-row span {
+        color: var(--body);
+        font-size: 15px;
+        line-height: 1.45;
+      }
+
+      .dark-panel {
+        display: grid;
+        gap: 1px;
+        border: 1px solid #343a3f;
+        border-radius: 18px;
+        overflow: hidden;
+        background: #343a3f;
+      }
+
+      .dark-row {
+        display: grid;
+        grid-template-columns: minmax(126px, 0.32fr) minmax(0, 1fr);
+        gap: 22px;
+        align-items: start;
+        background: #0f0f0f;
+        padding: clamp(18px, 3vw, 28px);
+      }
+
+      .dark-row strong {
+        color: #fff;
+        font-size: 18px;
+        letter-spacing: -0.02em;
+      }
+
+      .dark-row span {
+        color: #d8d8d8;
+        font-size: 16px;
+        line-height: 1.45;
+      }
+
+      .deck-controls {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: 18px;
+        align-items: center;
+        padding: 16px clamp(18px, 4vw, 52px);
+        border-top: 1px solid var(--line);
+      }
+
+      .button-group {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .control-button {
+        min-width: 44px;
+        min-height: 44px;
+        border: 1px solid var(--black);
+        border-radius: 999px;
+        background: transparent;
+        color: var(--black);
+        padding: 0 14px;
+        font-size: 14px;
+        font-weight: 850;
+        cursor: pointer;
+        transition:
+          transform 180ms ease,
+          background-color 180ms ease,
+          color 180ms ease;
+      }
+
+      .control-button.primary {
+        background: var(--black);
+        color: #fff;
+        padding-inline: 18px;
+      }
+
+      .control-button:hover {
+        transform: translateY(-1px);
+      }
+
+      .control-button:active {
+        transform: translateY(0);
+      }
+
+      .control-button:focus-visible,
+      .dot:focus-visible {
+        outline: 3px solid var(--mint);
+        outline-offset: 3px;
+      }
+
+      .progress {
+        display: grid;
+        gap: 12px;
+        min-width: 0;
+      }
+
+      .progress-line {
+        height: 2px;
+        background: var(--line);
+      }
+
+      .progress-fill {
+        width: 0%;
+        height: 100%;
+        background: var(--black);
+        transition: width 220ms ease;
+      }
+
+      .dots {
+        display: grid;
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .dot {
+        height: 8px;
+        border: 0;
+        border-radius: 999px;
+        background: var(--line);
+        cursor: pointer;
+      }
+
+      .dot.active {
+        background: var(--black);
+      }
+
+      .counter {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      @media (min-width: 780px) {
+        h1,
+        h2 {
+          font-size: 86px;
+        }
+
+        .motion-slide h2 {
+          font-size: 72px;
+        }
+
+        h3 {
+          font-size: 36px;
+        }
+
+        .lead {
+          font-size: 24px;
+        }
+      }
+
+      @media (min-width: 1260px) {
+        h1,
+        h2 {
+          font-size: 104px;
+        }
+
+        .motion-slide h2 {
+          font-size: 86px;
+        }
+
+        h3 {
+          font-size: 44px;
+        }
+
+        .lead {
+          font-size: 30px;
+        }
+      }
+
+      @media (min-width: 901px) and (max-width: 1120px) {
+        .slide.motion-slide {
+          grid-template-columns: minmax(220px, 0.34fr) minmax(0, 1fr);
+          gap: 28px;
+          padding: 36px;
+        }
+
+        .motion-slide h2 {
+          font-size: 64px;
+        }
+
+        .motion-slide .lead {
+          max-width: 360px;
+          font-size: 22px;
+          line-height: 1.35;
+        }
+
+        .motion-frame {
+          width: 100%;
+          height: min(70vh, 560px);
+          min-height: 0;
+        }
+
+        .dispatch-board {
+          inset: 18px;
+          grid-template-columns: minmax(170px, 0.31fr) minmax(0, 1fr);
+          gap: 16px;
+        }
+
+        .dispatch-root {
+          gap: 14px;
+          padding: 18px;
+        }
+
+        .dispatch-root strong {
+          font-size: 26px;
+        }
+
+        .dispatch-root p,
+        .dispatch-main p {
+          font-size: 13px;
+          line-height: 1.32;
+        }
+
+        .dispatch-label,
+        .dispatch-index,
+        .dispatch-state {
+          font-size: 10px;
+          white-space: nowrap;
+        }
+
+        .role-stack {
+          grid-template-rows: repeat(5, minmax(62px, 1fr));
+          gap: 8px;
+        }
+
+        .dispatch-row {
+          grid-template-columns: 82px minmax(0, 1fr) 56px;
+          gap: 12px;
+          padding: 12px 14px;
+        }
+
+        .dispatch-main strong {
+          font-size: 20px;
+          line-height: 0.98;
+        }
+      }
+
+      @media (min-width: 901px) and (max-width: 1120px) and (max-height: 700px) {
+        .slide.motion-slide {
+          padding-block: 24px;
+        }
+
+        .motion-slide h2 {
+          font-size: 58px;
+        }
+
+        .motion-slide .lead {
+          font-size: 20px;
+        }
+
+        .motion-frame {
+          height: calc(100dvh - var(--header-h) - var(--controls-h) - 48px);
+        }
+
+        .dispatch-board {
+          inset: 14px;
+        }
+
+        .dispatch-row {
+          padding-block: 10px;
+        }
+      }
+
+      @media (max-width: 900px) {
+        :root {
+          --header-h: 74px;
+          --controls-h: 128px;
+        }
+
+        body {
+          overflow: auto;
+        }
+
+        .deck {
+          min-height: 100dvh;
+          height: auto;
+          grid-template-rows: var(--header-h) minmax(calc(100dvh - var(--header-h) - var(--controls-h)), auto) var(--controls-h);
+        }
+
+        .deck-header {
+          grid-template-columns: 1fr;
+          align-content: center;
+          gap: 4px;
+          padding-block: 10px;
+        }
+
+        .slide-meta {
+          display: none;
+        }
+
+        .header-actions {
+          justify-self: start;
+        }
+
+        .stage {
+          min-height: calc(100dvh - var(--header-h) - var(--controls-h));
+        }
+
+        .slide,
+        .slide.two-column,
+        .slide.reverse,
+        .slide.motion-slide {
+          grid-template-columns: 1fr;
+          align-content: start;
+          overflow-y: auto;
+        }
+
+        h1,
+        h2 {
+          max-width: 9ch;
+          font-size: 54px;
+        }
+
+        .lead {
+          font-size: 19px;
+        }
+
+        .motion-frame {
+          min-height: 620px;
+          aspect-ratio: auto;
+        }
+
+        .motion-frame {
+          height: auto;
+          min-height: 0;
+        }
+
+        .dispatch-board {
+          position: relative;
+          inset: auto;
+          grid-template-columns: 1fr;
+          padding: 18px;
+          gap: 16px;
+        }
+
+        .dispatch-root {
+          align-self: stretch;
+        }
+
+        .role-stack {
+          grid-template-rows: none;
+        }
+
+        .role-stack::before,
+        .dispatch-row::before {
+          display: none;
+        }
+
+        .dispatch-row {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+
+        .dispatch-state {
+          justify-self: start;
+        }
+
+        .risk-grid,
+        .artifact-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .deck-controls {
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+
+        .counter {
+          justify-self: start;
+        }
+      }
+
+      @media (max-width: 620px) {
+        .hero-row,
+        .stack-row {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+
+        .dark-row {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 1ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+          transition-duration: 1ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#stage">Skip to slides</a>
+    <div class="deck">
+      <header class="deck-header">
+        <div class="brand">
+          <img src="../assets/logo.svg" alt="(ant)">
+          <span>implementation orchestrator<br>single-responsibility slides</span>
+        </div>
+        <div class="header-actions">
+          <div class="language-toggle" aria-label="Language">
+            <button class="language-button" type="button" data-lang="en" aria-pressed="true">EN</button>
+            <button class="language-button" type="button" data-lang="cs" aria-pressed="false">CS</button>
+          </div>
+          <div class="slide-meta" aria-hidden="true">
+            <span id="meta-title">premise</span>
+          </div>
+        </div>
+      </header>
+
+      <main id="stage" class="stage" tabindex="-1">
+        <section class="slide one-column light active" data-title="premise" aria-labelledby="slide-1-title">
+          <div class="copy">
+            <span class="kicker">orchestration logic</span>
+            <h1 id="slide-1-title">One root. One responsibility.</h1>
+            <p class="lead">
+              The orchestrator is not a visual map of everything at once. It is a chain
+              of clear decisions that moves work from request to verified outcome.
+            </p>
+          </div>
+        </section>
+
+        <section class="slide two-column light" data-title="root role" aria-labelledby="slide-2-title">
+          <div class="copy">
+            <span class="kicker">root</span>
+            <h2 id="slide-2-title">Root directs. It does not write.</h2>
+            <p class="lead">
+              Root keeps user context, decisions, approvals, and evidence.
+              Source code and changes belong to delegated roles.
+            </p>
+          </div>
+          <div class="hero-mark" aria-label="What root owns">
+            <div class="hero-row">
+              <strong>Communication</strong>
+              <span>asks for decisions that cannot be safely inferred from the repository.</span>
+            </div>
+            <div class="hero-row">
+              <strong>Gates</strong>
+              <span>guards persistence, risk tier, approval, and delivery rules.</span>
+            </div>
+            <div class="hero-row">
+              <strong>Evidence</strong>
+              <span>does not accept a worker report as done without verification or review.</span>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="slide motion-slide dark"
+          data-title="dispatch"
+          data-duration="9000"
+          aria-labelledby="slide-3-title"
+        >
+          <div class="copy">
+            <span class="kicker">lifecycle</span>
+            <h2 id="slide-3-title">Root sends the token.</h2>
+            <p class="lead">
+              Planner branches the work, scout reads the repo, lead implements,
+              and reviewer sends fixes back into the loop.
+            </p>
+          </div>
+          <div class="motion-frame" aria-label="Animated dispatch across orchestration phases">
+            <div class="dispatch-board">
+              <div class="dispatch-root">
+                <span class="dispatch-label">root command</span>
+                <strong>Orchestrator</strong>
+                <p>Context, approval, and evidence standard stay with root.</p>
+                <div class="token-track" aria-hidden="true">
+                  <i class="command-token"></i>
+                </div>
+              </div>
+              <ol class="role-stack" aria-label="Dispatch lifecycle sequence">
+                <li class="dispatch-row" style="--delay: 220ms">
+                  <span class="dispatch-index">01 plan</span>
+                  <div class="dispatch-main">
+                    <strong>Plan writer</strong>
+                    <p>scenarios, gates, risks</p>
+                  </div>
+                  <span class="dispatch-state">route</span>
+                </li>
+                <li class="dispatch-row" style="--delay: 760ms">
+                  <span class="dispatch-index">02 scout</span>
+                  <div class="dispatch-main">
+                    <strong>Scout</strong>
+                    <p>repo facts without writes</p>
+                  </div>
+                  <span class="dispatch-state">read</span>
+                </li>
+                <li class="dispatch-row" style="--delay: 1300ms">
+                  <span class="dispatch-index">03 lead</span>
+                  <div class="dispatch-main">
+                    <strong>Implementation lead</strong>
+                    <p>bounded slices and integration</p>
+                  </div>
+                  <span class="dispatch-state">build</span>
+                </li>
+                <li class="dispatch-row" style="--delay: 1840ms">
+                  <span class="dispatch-index">04 review</span>
+                  <div class="dispatch-main">
+                    <strong>Reviewer</strong>
+                    <p>findings route fixes back</p>
+                  </div>
+                  <span class="dispatch-state">loop</span>
+                </li>
+                <li class="dispatch-row evidence" style="--delay: 2380ms">
+                  <span class="dispatch-index">05 lock</span>
+                  <div class="dispatch-main">
+                    <strong>Evidence locked</strong>
+                    <p>handoff opens only after verification</p>
+                  </div>
+                  <span class="dispatch-state">done</span>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide two-column light" data-title="risk tiers" aria-labelledby="slide-4-title">
+          <div class="copy">
+            <span class="kicker">routing</span>
+            <h2 id="slide-4-title">Risk chooses the team.</h2>
+            <p class="lead">
+              Speed does not come from bypassing rules. It comes from choosing
+              the smallest delegated setup that is still safe for the cycle.
+            </p>
+          </div>
+          <div class="risk-grid" aria-label="Risk tier dispatch">
+            <div class="risk-card active">
+              <strong>Low</strong>
+              <span>one bounded worker, minimum ceremony.</span>
+            </div>
+            <div class="risk-card">
+              <strong>Medium</strong>
+              <span>implementation lead; scout or reviewer only when risk appears.</span>
+            </div>
+            <div class="risk-card">
+              <strong>High</strong>
+              <span>scout, plan, lead, and reviewer.</span>
+            </div>
+            <div class="risk-card">
+              <strong>Critical</strong>
+              <span>full lifecycle, strong validation, re-review discipline.</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide two-column light" data-title="planning" aria-labelledby="slide-5-title">
+          <div class="copy">
+            <span class="kicker">before code</span>
+            <h2 id="slide-5-title">Facts first. Plan second.</h2>
+            <p class="lead">
+              Scout separates repository truth from user decisions. Plan writer
+              turns that into a commitment that can be reviewed and verified.
+            </p>
+          </div>
+          <div class="stack" aria-label="Planning artifacts">
+            <div class="stack-row">
+              <strong>Scout report</strong>
+              <span>current behavior, contracts, legacy debt, options, and blocking questions.</span>
+            </div>
+            <div class="stack-row">
+              <strong>Direction</strong>
+              <span>recommendation with tradeoffs, not blind acceptance of the first idea.</span>
+            </div>
+            <div class="stack-row">
+              <strong>Plan</strong>
+              <span>acceptance scenarios, rollout, validation, and decision policy.</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide reverse dark" data-title="implementation" aria-labelledby="slide-6-title">
+          <div class="dark-panel" aria-label="Implementation lead responsibilities">
+            <div class="dark-row">
+              <strong>Reads code</strong>
+              <span>checks the plan against the real repository state, not against an assumption.</span>
+            </div>
+            <div class="dark-row">
+              <strong>Splits work</strong>
+              <span>creates bounded slices only where a clear contract exists.</span>
+            </div>
+            <div class="dark-row">
+              <strong>Integrates</strong>
+              <span>combines the result, runs targeted checks, and prepares the evidence trail.</span>
+            </div>
+          </div>
+          <div class="copy">
+            <span class="kicker">delegated implementation</span>
+            <h2 id="slide-6-title">Lead owns the change.</h2>
+            <p class="lead">
+              Even a small follow-up stays delegated while orchestration is active.
+              Root-cause fixes beat workarounds and suppressed errors.
+            </p>
+          </div>
+        </section>
+
+        <section class="slide two-column light" data-title="review loop" aria-labelledby="slide-7-title">
+          <div class="copy">
+            <span class="kicker">review / fix</span>
+            <h2 id="slide-7-title">Done is not a worker claim.</h2>
+            <p class="lead">
+              Reviewer does not start with the diff alone. It reads run context,
+              plan, reports, checks, and looks for P0/P1/P2 risks that block completion.
+            </p>
+          </div>
+          <div class="stack" aria-label="Review loop">
+            <div class="stack-row">
+              <strong>Finding</strong>
+              <span>scope mismatch, contract break, missing tests, or weak evidence.</span>
+            </div>
+            <div class="stack-row">
+              <strong>Fix</strong>
+              <span>lead fixes the root cause and adds targeted verification.</span>
+            </div>
+            <div class="stack-row">
+              <strong>Re-review</strong>
+              <span>P0/P1/P2 closes only after fix, verification, and re-review.</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide two-column light" data-title="state" aria-labelledby="slide-8-title">
+          <div class="copy">
+            <span class="kicker">durable state</span>
+            <h2 id="slide-8-title">State is not chat.</h2>
+            <p class="lead">
+              The orchestrator is resumable because current truth lives in
+              structured artifacts. Markdown is a human layer, not the only source.
+            </p>
+          </div>
+          <div class="artifact-grid" aria-label="Orchestrator artifacts">
+            <div class="artifact-card">
+              <strong>state.json</strong>
+              <span>current snapshot of run, cycle, role, phase, and blockers.</span>
+            </div>
+            <div class="artifact-card">
+              <strong>events.jsonl</strong>
+              <span>append-only log of decisions, spawns, checkpoints, and review.</span>
+            </div>
+            <div class="artifact-card">
+              <strong>handoff.md</strong>
+              <span>short resume layer for continuation after pause or compaction.</span>
+            </div>
+            <div class="artifact-card">
+              <strong>delivery handoff</strong>
+              <span>what is done, what is not, checks, risks, and what authorizes continuation.</span>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="deck-controls" aria-label="Presentation controls">
+        <div class="button-group">
+          <button id="prev" class="control-button" type="button" aria-label="Previous slide">←</button>
+          <button id="play" class="control-button primary" type="button" aria-pressed="false">Play</button>
+          <button id="next" class="control-button" type="button" aria-label="Next slide">→</button>
+        </div>
+        <div class="progress">
+          <div class="progress-line" aria-hidden="true">
+            <div id="progress-fill" class="progress-fill"></div>
+          </div>
+          <div id="dots" class="dots" role="group" aria-label="Slide selection"></div>
+        </div>
+        <div id="counter" class="counter" aria-live="polite">01 / 08</div>
+      </footer>
+    </div>
+
+    <script>
+      const translations = {
+        en: {
+          documentTitle: "(ant) orchestrator | slide explainer",
+          description: "Fullscreen slide presentation explaining the logic of the (ant) implementation orchestrator plugin.",
+          controls: "Presentation controls",
+          dots: "Slide selection",
+          dotLabel: "Show slide {index}: {title}",
+          next: "Next slide",
+          play: "Play",
+          pause: "Pause",
+          previous: "Previous slide",
+          slides: {
+            premise: "premise",
+            "root role": "root role",
+            dispatch: "dispatch",
+            "risk tiers": "risk tiers",
+            planning: "planning",
+            implementation: "implementation",
+            "review loop": "review loop",
+            state: "state"
+          },
+          text: {
+            ".skip-link": "Skip to slides",
+            "[aria-labelledby='slide-1-title'] .kicker": "orchestration logic",
+            "#slide-1-title": "One root. One responsibility.",
+            "#slide-1-title + .lead": "The orchestrator is not a visual map of everything at once. It is a chain of clear decisions that moves work from request to verified outcome.",
+            "[aria-labelledby='slide-2-title'] .kicker": "root",
+            "#slide-2-title": "Root directs. It does not write.",
+            "#slide-2-title + .lead": "Root keeps user context, decisions, approvals, and evidence. Source code and changes belong to delegated roles.",
+            ".hero-row:nth-child(1) strong": "Communication",
+            ".hero-row:nth-child(1) span": "asks for decisions that cannot be safely inferred from the repository.",
+            ".hero-row:nth-child(2) strong": "Gates",
+            ".hero-row:nth-child(2) span": "guards persistence, risk tier, approval, and delivery rules.",
+            ".hero-row:nth-child(3) strong": "Evidence",
+            ".hero-row:nth-child(3) span": "does not accept a worker report as done without verification or review.",
+            "[aria-labelledby='slide-3-title'] .kicker": "lifecycle",
+            "#slide-3-title": "Root sends the token.",
+            "#slide-3-title + .lead": "Planner branches the work, scout reads the repo, lead implements, and reviewer sends fixes back into the loop.",
+            ".dispatch-label": "root command",
+            ".dispatch-root strong": "Orchestrator",
+            ".dispatch-root p": "Context, approval, and evidence standard stay with root.",
+            ".dispatch-row:nth-child(1) .dispatch-index": "01 plan",
+            ".dispatch-row:nth-child(1) .dispatch-main strong": "Plan writer",
+            ".dispatch-row:nth-child(1) .dispatch-main p": "scenarios, gates, risks",
+            ".dispatch-row:nth-child(1) .dispatch-state": "route",
+            ".dispatch-row:nth-child(2) .dispatch-index": "02 scout",
+            ".dispatch-row:nth-child(2) .dispatch-main strong": "Scout",
+            ".dispatch-row:nth-child(2) .dispatch-main p": "repo facts without writes",
+            ".dispatch-row:nth-child(2) .dispatch-state": "read",
+            ".dispatch-row:nth-child(3) .dispatch-index": "03 lead",
+            ".dispatch-row:nth-child(3) .dispatch-main strong": "Implementation lead",
+            ".dispatch-row:nth-child(3) .dispatch-main p": "bounded slices and integration",
+            ".dispatch-row:nth-child(3) .dispatch-state": "build",
+            ".dispatch-row:nth-child(4) .dispatch-index": "04 review",
+            ".dispatch-row:nth-child(4) .dispatch-main strong": "Reviewer",
+            ".dispatch-row:nth-child(4) .dispatch-main p": "findings route fixes back",
+            ".dispatch-row:nth-child(4) .dispatch-state": "loop",
+            ".dispatch-row:nth-child(5) .dispatch-index": "05 lock",
+            ".dispatch-row:nth-child(5) .dispatch-main strong": "Evidence locked",
+            ".dispatch-row:nth-child(5) .dispatch-main p": "handoff opens only after verification",
+            ".dispatch-row:nth-child(5) .dispatch-state": "done",
+            "[aria-labelledby='slide-4-title'] .kicker": "routing",
+            "#slide-4-title": "Risk chooses the team.",
+            "#slide-4-title + .lead": "Speed does not come from bypassing rules. It comes from choosing the smallest delegated setup that is still safe for the cycle.",
+            ".risk-card:nth-child(1) strong": "Low",
+            ".risk-card:nth-child(1) span": "one bounded worker, minimum ceremony.",
+            ".risk-card:nth-child(2) strong": "Medium",
+            ".risk-card:nth-child(2) span": "implementation lead; scout or reviewer only when risk appears.",
+            ".risk-card:nth-child(3) strong": "High",
+            ".risk-card:nth-child(3) span": "scout, plan, lead, and reviewer.",
+            ".risk-card:nth-child(4) strong": "Critical",
+            ".risk-card:nth-child(4) span": "full lifecycle, strong validation, re-review discipline.",
+            "[aria-labelledby='slide-5-title'] .kicker": "before code",
+            "#slide-5-title": "Facts first. Plan second.",
+            "#slide-5-title + .lead": "Scout separates repository truth from user decisions. Plan writer turns that into a commitment that can be reviewed and verified.",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(1) strong": "Scout report",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(1) span": "current behavior, contracts, legacy debt, options, and blocking questions.",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(2) strong": "Direction",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(2) span": "recommendation with tradeoffs, not blind acceptance of the first idea.",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(3) strong": "Plan",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(3) span": "acceptance scenarios, rollout, validation, and decision policy.",
+            "[aria-labelledby='slide-6-title'] .kicker": "delegated implementation",
+            "#slide-6-title": "Lead owns the change.",
+            "#slide-6-title + .lead": "Even a small follow-up stays delegated while orchestration is active. Root-cause fixes beat workarounds and suppressed errors.",
+            ".dark-row:nth-child(1) strong": "Reads code",
+            ".dark-row:nth-child(1) span": "checks the plan against the real repository state, not against an assumption.",
+            ".dark-row:nth-child(2) strong": "Splits work",
+            ".dark-row:nth-child(2) span": "creates bounded slices only where a clear contract exists.",
+            ".dark-row:nth-child(3) strong": "Integrates",
+            ".dark-row:nth-child(3) span": "combines the result, runs targeted checks, and prepares the evidence trail.",
+            "[aria-labelledby='slide-7-title'] .kicker": "review / fix",
+            "#slide-7-title": "Done is not a worker claim.",
+            "#slide-7-title + .lead": "Reviewer does not start with the diff alone. It reads run context, plan, reports, checks, and looks for P0/P1/P2 risks that block completion.",
+            "[aria-labelledby='slide-7-title'] .stack-row:nth-child(1) strong": "Finding",
+            "[aria-labelledby='slide-7-title'] .stack-row:nth-child(1) span": "scope mismatch, contract break, missing tests, or weak evidence.",
+            "[aria-labelledby='slide-7-title'] .stack-row:nth-child(2) strong": "Fix",
+            "[aria-labelledby='slide-7-title'] .stack-row:nth-child(2) span": "lead fixes the root cause and adds targeted verification.",
+            "[aria-labelledby='slide-7-title'] .stack-row:nth-child(3) strong": "Re-review",
+            "[aria-labelledby='slide-7-title'] .stack-row:nth-child(3) span": "P0/P1/P2 closes only after fix, verification, and re-review.",
+            "[aria-labelledby='slide-8-title'] .kicker": "durable state",
+            "#slide-8-title": "State is not chat.",
+            "#slide-8-title + .lead": "The orchestrator is resumable because current truth lives in structured artifacts. Markdown is a human layer, not the only source.",
+            ".artifact-card:nth-child(1) strong": "state.json",
+            ".artifact-card:nth-child(1) span": "current snapshot of run, cycle, role, phase, and blockers.",
+            ".artifact-card:nth-child(2) strong": "events.jsonl",
+            ".artifact-card:nth-child(2) span": "append-only log of decisions, spawns, checkpoints, and review.",
+            ".artifact-card:nth-child(3) strong": "handoff.md",
+            ".artifact-card:nth-child(3) span": "short resume layer for continuation after pause or compaction.",
+            ".artifact-card:nth-child(4) strong": "delivery handoff",
+            ".artifact-card:nth-child(4) span": "what is done, what is not, checks, risks, and what authorizes continuation."
+          },
+          attrs: {
+            ".hero-mark": { "aria-label": "What root owns" },
+            ".motion-frame": { "aria-label": "Animated dispatch across orchestration phases" },
+            ".role-stack": { "aria-label": "Dispatch lifecycle sequence" },
+            ".risk-grid": { "aria-label": "Risk tier dispatch" },
+            "[aria-labelledby='slide-5-title'] .stack": { "aria-label": "Planning artifacts" },
+            ".dark-panel": { "aria-label": "Implementation lead responsibilities" },
+            "[aria-labelledby='slide-7-title'] .stack": { "aria-label": "Review loop" },
+            ".artifact-grid": { "aria-label": "Orchestrator artifacts" },
+            ".deck-controls": { "aria-label": "Presentation controls" },
+            "#dots": { "aria-label": "Slide selection" },
+            ".language-toggle": { "aria-label": "Language" }
+          }
+        },
+        cs: {
+          documentTitle: "(ant) orchestrátor | slide explainer",
+          description: "Fullscreen slide prezentace vysvětlující logiku (ant) implementation orchestrator pluginu.",
+          controls: "Ovládání prezentace",
+          dots: "Výběr slidu",
+          dotLabel: "Zobrazit slide {index}: {title}",
+          next: "Další slide",
+          play: "Přehrát",
+          pause: "Pozastavit",
+          previous: "Předchozí slide",
+          slides: {
+            premise: "premisa",
+            "root role": "role rootu",
+            dispatch: "dispatch",
+            "risk tiers": "riziko",
+            planning: "plánování",
+            implementation: "implementace",
+            "review loop": "review loop",
+            state: "stav"
+          },
+          text: {
+            ".skip-link": "Přeskočit na slidy",
+            "[aria-labelledby='slide-1-title'] .kicker": "logika orchestrace",
+            "#slide-1-title": "Jeden root. Jedna odpovědnost.",
+            "#slide-1-title + .lead": "Orchestrátor není vizuální mapa všeho najednou. Je to sada jasných rozhodnutí, která posouvají práci od zadání k ověřenému výsledku.",
+            "[aria-labelledby='slide-2-title'] .kicker": "root",
+            "#slide-2-title": "Root řídí, nepíše.",
+            "#slide-2-title + .lead": "Root drží uživatelský kontext, rozhodnutí, schválení a důkazy. Zdrojový kód a změny patří delegovaným rolím.",
+            ".hero-row:nth-child(1) strong": "Komunikace",
+            ".hero-row:nth-child(1) span": "ptá se na rozhodnutí, která nejdou bezpečně zjistit z repa.",
+            ".hero-row:nth-child(2) strong": "Gates",
+            ".hero-row:nth-child(2) span": "hlídá persistence, risk tier, approval a delivery pravidla.",
+            ".hero-row:nth-child(3) strong": "Evidence",
+            ".hero-row:nth-child(3) span": "nebere worker report jako hotovo bez ověření nebo review.",
+            "[aria-labelledby='slide-3-title'] .kicker": "lifecycle",
+            "#slide-3-title": "Root vysílá token.",
+            "#slide-3-title + .lead": "Planner rozvětví práci, scout čte repo, lead implementuje a reviewer vrací fix zpět do smyčky.",
+            ".dispatch-label": "root command",
+            ".dispatch-root strong": "Orchestrator",
+            ".dispatch-root p": "Kontext, approval a evidence standard zůstávají u rootu.",
+            ".dispatch-row:nth-child(1) .dispatch-index": "01 plán",
+            ".dispatch-row:nth-child(1) .dispatch-main strong": "Plan writer",
+            ".dispatch-row:nth-child(1) .dispatch-main p": "scénáře, gates, rizika",
+            ".dispatch-row:nth-child(1) .dispatch-state": "route",
+            ".dispatch-row:nth-child(2) .dispatch-index": "02 scout",
+            ".dispatch-row:nth-child(2) .dispatch-main strong": "Scout",
+            ".dispatch-row:nth-child(2) .dispatch-main p": "repo fakta bez zápisu",
+            ".dispatch-row:nth-child(2) .dispatch-state": "read",
+            ".dispatch-row:nth-child(3) .dispatch-index": "03 lead",
+            ".dispatch-row:nth-child(3) .dispatch-main strong": "Implementation lead",
+            ".dispatch-row:nth-child(3) .dispatch-main p": "bounded slices a integrace",
+            ".dispatch-row:nth-child(3) .dispatch-state": "build",
+            ".dispatch-row:nth-child(4) .dispatch-index": "04 review",
+            ".dispatch-row:nth-child(4) .dispatch-main strong": "Reviewer",
+            ".dispatch-row:nth-child(4) .dispatch-main p": "finding vrací fix zpět do změny",
+            ".dispatch-row:nth-child(4) .dispatch-state": "loop",
+            ".dispatch-row:nth-child(5) .dispatch-index": "05 lock",
+            ".dispatch-row:nth-child(5) .dispatch-main strong": "Evidence locked",
+            ".dispatch-row:nth-child(5) .dispatch-main p": "handoff je povolený až po ověření",
+            ".dispatch-row:nth-child(5) .dispatch-state": "done",
+            "[aria-labelledby='slide-4-title'] .kicker": "routing",
+            "#slide-4-title": "Riziko určuje sestavu.",
+            "#slide-4-title + .lead": "Rychlost nevzniká obejitím pravidel. Vzniká výběrem nejmenší delegované sestavy, která je pro daný cyklus ještě bezpečná.",
+            ".risk-card:nth-child(1) strong": "Low",
+            ".risk-card:nth-child(1) span": "jeden bounded worker, minimum ceremony.",
+            ".risk-card:nth-child(2) strong": "Medium",
+            ".risk-card:nth-child(2) span": "implementation lead; scout nebo reviewer jen při riziku.",
+            ".risk-card:nth-child(3) strong": "High",
+            ".risk-card:nth-child(3) span": "scout, plán, lead a reviewer.",
+            ".risk-card:nth-child(4) strong": "Critical",
+            ".risk-card:nth-child(4) span": "plný lifecycle, silná validace, re-review discipline.",
+            "[aria-labelledby='slide-5-title'] .kicker": "před kódem",
+            "#slide-5-title": "Nejdřív fakta, potom plán.",
+            "#slide-5-title + .lead": "Scout oddělí repo-pravdu od uživatelských rozhodnutí. Plan writer z toho udělá závazek, který jde reviewnout a ověřit.",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(1) strong": "Scout report",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(1) span": "aktuální chování, kontrakty, legacy dluh, možnosti a blocking questions.",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(2) strong": "Direction",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(2) span": "doporučení s tradeoffs, ne slepé přijetí prvního nápadu.",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(3) strong": "Plan",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(3) span": "acceptance scénáře, rollout, validation a decision policy.",
+            "[aria-labelledby='slide-6-title'] .kicker": "delegovaná implementace",
+            "#slide-6-title": "Lead vlastní změny.",
+            "#slide-6-title + .lead": "I malý follow-up zůstává delegovaný, pokud je orchestrace aktivní. Root-cause fix má přednost před workaroundem a potlačením chyb.",
+            ".dark-row:nth-child(1) strong": "Čte kód",
+            ".dark-row:nth-child(1) span": "ověřuje plán proti reálnému stavu repozitáře, ne proti předpokladu.",
+            ".dark-row:nth-child(2) strong": "Dělí práci",
+            ".dark-row:nth-child(2) span": "vytváří bounded slices jen tam, kde existuje jasný kontrakt.",
+            ".dark-row:nth-child(3) strong": "Integruje",
+            ".dark-row:nth-child(3) span": "spojuje výsledek, spouští cílené kontroly a připraví evidence trail.",
+            "[aria-labelledby='slide-7-title'] .kicker": "review / fix",
+            "#slide-7-title": "Hotovo není worker claim.",
+            "#slide-7-title + .lead": "Reviewer nezačíná samotným diffem. Čte kontext běhu, plán, reporty, ověření a hledá P0/P1/P2 rizika, která blokují dokončení.",
+            "[aria-labelledby='slide-7-title'] .stack-row:nth-child(1) strong": "Finding",
+            "[aria-labelledby='slide-7-title'] .stack-row:nth-child(1) span": "scope mismatch, contract break, missing tests nebo slabá evidence.",
+            "[aria-labelledby='slide-7-title'] .stack-row:nth-child(2) strong": "Fix",
+            "[aria-labelledby='slide-7-title'] .stack-row:nth-child(2) span": "lead opraví root cause a doplní cílené ověření.",
+            "[aria-labelledby='slide-7-title'] .stack-row:nth-child(3) strong": "Re-review",
+            "[aria-labelledby='slide-7-title'] .stack-row:nth-child(3) span": "P0/P1/P2 je zavřené až po fixu, ověření a re-review.",
+            "[aria-labelledby='slide-8-title'] .kicker": "durable state",
+            "#slide-8-title": "Stav není chat.",
+            "#slide-8-title + .lead": "Orchestrátor je obnovitelný, protože aktuální pravda žije ve strukturovaných artefaktech. Markdown je lidská vrstva, ne jediný zdroj.",
+            ".artifact-card:nth-child(1) strong": "state.json",
+            ".artifact-card:nth-child(1) span": "aktuální snapshot běhu, cyklu, role, fáze a blockerů.",
+            ".artifact-card:nth-child(2) strong": "events.jsonl",
+            ".artifact-card:nth-child(2) span": "append-only log rozhodnutí, spawnů, checkpointů a review.",
+            ".artifact-card:nth-child(3) strong": "handoff.md",
+            ".artifact-card:nth-child(3) span": "stručný resume layer pro pokračování po pauze nebo compactu.",
+            ".artifact-card:nth-child(4) strong": "delivery handoff",
+            ".artifact-card:nth-child(4) span": "co je hotovo, co není, checks, rizika a co autorizuje pokračování."
+          },
+          attrs: {
+            ".hero-mark": { "aria-label": "Co root vlastní" },
+            ".motion-frame": { "aria-label": "Animovaný dispatch mezi orchestration fázemi" },
+            ".role-stack": { "aria-label": "Sekvence dispatch lifecycle" },
+            ".risk-grid": { "aria-label": "Risk tier dispatch" },
+            "[aria-labelledby='slide-5-title'] .stack": { "aria-label": "Planning artifacts" },
+            ".dark-panel": { "aria-label": "Odpovědnosti implementation leada" },
+            "[aria-labelledby='slide-7-title'] .stack": { "aria-label": "Review loop" },
+            ".artifact-grid": { "aria-label": "Orchestrator artifacts" },
+            ".deck-controls": { "aria-label": "Ovládání prezentace" },
+            "#dots": { "aria-label": "Výběr slidu" },
+            ".language-toggle": { "aria-label": "Jazyk" }
+          }
+        }
+      };
+
+      const slides = [...document.querySelectorAll(".slide")];
+      const dots = document.querySelector("#dots");
+      const counter = document.querySelector("#counter");
+      const progressFill = document.querySelector("#progress-fill");
+      const metaTitle = document.querySelector("#meta-title");
+      const playButton = document.querySelector("#play");
+      const languageButtons = [...document.querySelectorAll(".language-button")];
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      let currentLanguage = "en";
+      let current = 0;
+      let playing = false;
+      let timer = null;
+
+      slides.forEach((slide, index) => {
+        const dot = document.createElement("button");
+        dot.className = "dot";
+        dot.type = "button";
+        dot.addEventListener("click", () => {
+          pause();
+          showSlide(index);
+        });
+        dots.appendChild(dot);
+      });
+
+      const dotButtons = [...document.querySelectorAll(".dot")];
+
+      function translate(key) {
+        return translations[currentLanguage][key] || translations.en[key] || key;
+      }
+
+      function slideTitle(slide) {
+        return translations[currentLanguage].slides[slide.dataset.title] || slide.dataset.title;
+      }
+
+      function applyLanguage(lang, persist = true) {
+        currentLanguage = translations[lang] ? lang : "en";
+        const dictionary = translations[currentLanguage];
+
+        document.documentElement.lang = currentLanguage;
+        document.title = dictionary.documentTitle;
+        document.querySelector("meta[name='description']").setAttribute("content", dictionary.description);
+
+        Object.entries(dictionary.text).forEach(([selector, value]) => {
+          document.querySelectorAll(selector).forEach((element) => {
+            element.textContent = value;
+          });
+        });
+
+        Object.entries(dictionary.attrs).forEach(([selector, attrs]) => {
+          document.querySelectorAll(selector).forEach((element) => {
+            Object.entries(attrs).forEach(([name, value]) => element.setAttribute(name, value));
+          });
+        });
+
+        languageButtons.forEach((button) => {
+          button.setAttribute("aria-pressed", String(button.dataset.lang === currentLanguage));
+        });
+
+        document.querySelector("#prev").setAttribute("aria-label", translate("previous"));
+        document.querySelector("#next").setAttribute("aria-label", translate("next"));
+        renderPlayButton();
+        updateDotLabels();
+        updateCounterAndMeta();
+
+        if (persist) {
+          window.localStorage.setItem("orchestratorExplainerLanguage", currentLanguage);
+        }
+      }
+
+      function updateDotLabels() {
+        dotButtons.forEach((dot, index) => {
+          dot.setAttribute(
+            "aria-label",
+            translate("dotLabel")
+              .replace("{index}", String(index + 1))
+              .replace("{title}", slideTitle(slides[index]))
+          );
+        });
+      }
+
+      function updateCounterAndMeta() {
+        const visible = String(current + 1).padStart(2, "0");
+        const total = String(slides.length).padStart(2, "0");
+        counter.textContent = `${visible} / ${total}`;
+        metaTitle.textContent = slideTitle(slides[current]);
+        progressFill.style.width = `${((current + 1) / slides.length) * 100}%`;
+      }
+
+      function renderPlayButton() {
+        playButton.textContent = playing ? translate("pause") : translate("play");
+        playButton.setAttribute("aria-pressed", String(playing));
+      }
+
+      function initialLanguage() {
+        const saved = window.localStorage.getItem("orchestratorExplainerLanguage");
+        return translations[saved] ? saved : "en";
+      }
+
+      function resetSlideMotion(slide, active) {
+        slide.querySelectorAll("svg").forEach((svg) => {
+          if (typeof svg.pauseAnimations !== "function") return;
+          if (active && !prefersReducedMotion) {
+            svg.unpauseAnimations();
+            svg.setCurrentTime(0);
+          } else {
+            svg.pauseAnimations();
+          }
+        });
+      }
+
+      function scheduleNext() {
+        if (!playing) return;
+        if (timer) window.clearTimeout(timer);
+
+        const duration = Number(slides[current].dataset.duration || 5200);
+        timer = window.setTimeout(() => showSlide(current + 1), duration);
+      }
+
+      function showSlide(index) {
+        current = (index + slides.length) % slides.length;
+        slides.forEach((slide, slideIndex) => {
+          const active = slideIndex === current;
+          slide.classList.toggle("active", active);
+          slide.toggleAttribute("aria-hidden", !active);
+          resetSlideMotion(slide, active);
+        });
+
+        dotButtons.forEach((dot, dotIndex) => {
+          dot.classList.toggle("active", dotIndex === current);
+        });
+
+        updateCounterAndMeta();
+        scheduleNext();
+      }
+
+      function play() {
+        if (playing) return;
+        playing = true;
+        renderPlayButton();
+        scheduleNext();
+      }
+
+      function pause() {
+        playing = false;
+        renderPlayButton();
+        if (timer) {
+          window.clearTimeout(timer);
+          timer = null;
+        }
+      }
+
+      languageButtons.forEach((button) => {
+        button.addEventListener("click", () => applyLanguage(button.dataset.lang));
+      });
+
+      document.querySelector("#prev").addEventListener("click", () => {
+        pause();
+        showSlide(current - 1);
+      });
+
+      document.querySelector("#next").addEventListener("click", () => {
+        pause();
+        showSlide(current + 1);
+      });
+
+      playButton.addEventListener("click", () => {
+        if (playing) pause();
+        else play();
+      });
+
+      window.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowLeft") {
+          pause();
+          showSlide(current - 1);
+        }
+
+        if (event.key === "ArrowRight") {
+          pause();
+          showSlide(current + 1);
+        }
+
+        if (event.key === "Home") {
+          pause();
+          showSlide(0);
+        }
+
+        if (event.key === "End") {
+          pause();
+          showSlide(slides.length - 1);
+        }
+
+        if (event.key === " ") {
+          event.preventDefault();
+          if (playing) pause();
+          else play();
+        }
+      });
+
+      function initialSlideIndex() {
+        const params = new URLSearchParams(window.location.search);
+        const querySlide = Number(params.get("slide"));
+        const hashSlide = Number(window.location.hash.match(/^#slide-(\d+)$/)?.[1]);
+        const requested = querySlide || hashSlide;
+
+        if (Number.isInteger(requested) && requested >= 1 && requested <= slides.length) {
+          return requested - 1;
+        }
+
+        return 0;
+      }
+
+      applyLanguage(initialLanguage(), false);
+      showSlide(initialSlideIndex());
+    </script>
+  </body>
+</html>
