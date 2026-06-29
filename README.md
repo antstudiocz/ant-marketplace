@@ -35,6 +35,12 @@ Project install:
 bunx codex-marketplace add antstudiocz/ant-marketplace/plugins/ant --plugin --project
 ```
 
+### Implementation Orchestrator Explainer
+
+See the interactive slide explainer for the orchestration lifecycle, root role, delegated subagents, review loop, and durable state:
+
+[orchestrator-explainer.vercel.app](https://orchestrator-explainer.vercel.app/)
+
 ### Codex Subagent Depth
 
 For the full implementation orchestrator hierarchy, Codex must allow spawned agents to spawn child agents:
