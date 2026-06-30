@@ -2,13 +2,33 @@
   <img src="assets/logo.svg" alt="(ant)" width="200">
 </p>
 
-<h3 align="center">Skills for Claude Code and Codex</h3>
+<h3 align="center">Workflow skills for Claude Code and Codex</h3>
 
-## Claude Code Installation
+<p align="center">
+  <a href="#first-steps">First steps</a> ·
+  <a href="#quick-install">Install</a> ·
+  <a href="#choose-a-skill">Skills</a> ·
+  <a href="#orchestrator">Orchestrator</a> ·
+  <a href="#docs">Docs</a>
+</p>
+
+The `(ant)` marketplace gives Claude Code and Codex shared workflows for planning, implementation orchestration, delivery, frontend, Laravel, brand design, Google Docs, and Asana task analysis.
+
+## First Steps
+
+1. Install the plugin for your assistant: [Claude Code](#claude-code) or [Codex](#codex).
+2. Reload Claude Code or restart/open a new Codex session.
+3. Pick the skill that matches the task from [Choose a Skill](#choose-a-skill).
+4. For new product or app ideas, start with `create-application`.
+5. For implementation work that needs planning, subagents, review, and delivery, start with `implementation-orchestrator`.
+
+## Quick Install
+
+### Claude Code
 
 Inside Claude Code:
 
-```
+```text
 /plugin marketplace add antstudiocz/ant-marketplace
 /plugin install ant@ant-marketplace
 /reload-plugins
@@ -21,7 +41,7 @@ claude plugin marketplace add antstudiocz/ant-marketplace --scope user
 claude plugin install ant@ant-marketplace --scope user
 ```
 
-## Codex Installation
+### Codex
 
 Global install:
 
@@ -35,102 +55,105 @@ Project install:
 bunx codex-marketplace add antstudiocz/ant-marketplace/plugins/ant --plugin --project
 ```
 
-## AI-Assisted Installation Prompts
+Want an assistant to do the installation for you? Use the prompts in [docs/install.md](docs/install.md).
 
-If you want an AI coding assistant to install the plugin for you, paste the relevant prompt into a new Claude Code or Codex session.
+## Choose a Skill
 
-### Claude Code Prompt
+Use the narrowest skill that matches the work. If the task will become a multi-step implementation, use `implementation-orchestrator` first and let it delegate the right specialist roles.
 
-```text
-Install the (ant) Claude Code plugin from antstudiocz/ant-marketplace for my user account.
+### Planning And Delivery
 
-Use these commands:
-claude plugin marketplace add antstudiocz/ant-marketplace --scope user
-claude plugin install ant@ant-marketplace --scope user
+- **Create applications**
+  - Claude Code: `/ant:create-application`
+  - Codex: `$create-application`
+  - Use for: new apps, MVPs, prototypes, internal tools, dashboards, and major app surfaces before implementation.
+- **Implementation orchestrator**
+  - Claude Code: `/ant:implementation-orchestrator`
+  - Codex: `$implementation-orchestrator`
+  - Use for: goal clarification, planning, subagents, review, verification, and delivery.
+- **Merge requests**
+  - Claude Code: `/ant:merge-request`
+  - Codex: `$merge-request`
+  - Use for: practical GitHub/GitLab PRs or MRs with structured descriptions.
+- **Delivery workflows**
+  - Claude Code: `/ant:delivery-workflows`
+  - Codex: `$delivery-workflows`
+  - Use for: GitLab delivery workflows, merge conflicts, and delivery hygiene.
 
-After installation, verify that the plugin is available. If Claude Code needs a reload, tell me to run /reload-plugins. Do not modify the current repository.
-```
+### Engineering And Design
 
-### Codex Prompt
+- **Frontend best practices**
+  - Claude Code: `/ant:frontend-best-practices`
+  - Codex: `$frontend-best-practices`
+  - Use for: React, Next.js, TypeScript, accessibility, forms, performance, responsive UI, i18n, skeletons, and composition.
+- **Laravel best practices**
+  - Claude Code: `/ant:laravel-best-practices`
+  - Codex: `$laravel-best-practices`
+  - Use for: Laravel 12+ architecture, caching, performance, Eloquent, queues, UTC time handling, and backend review.
+- **Brand design**
+  - Claude Code: `/ant:brand-design`
+  - Codex: `$brand-design`
+  - Use for: websites, apps, decks, documents, and visuals against the `(ant)` brand.
 
-```text
-Install the (ant) Codex plugin globally from antstudiocz/ant-marketplace/plugins/ant.
+### Content And Intake
 
-Use this command:
-bunx codex-marketplace add antstudiocz/ant-marketplace/plugins/ant --plugin --global
+- **Google Docs**
+  - Claude Code: `/ant:google-docs`
+  - Codex: `$google-docs`
+  - Use for: reading and extracting content from Google Docs.
+- **Asana task analyzer**
+  - Claude Code: `/ant:asana-task-analyzer`
+  - Codex: `$asana-task-analyzer`
+  - Use for: Asana goals, requirements, blockers, and implementation context.
 
-After installation, verify that the plugin is available and tell me whether I need to restart Codex or open a new session. Do not modify the current repository.
-```
+See [docs/skills.md](docs/skills.md) for the full skill guide.
 
-### Implementation Orchestrator Explainer
+## Orchestrator
 
-See the interactive slide explainer for the orchestration lifecycle, root role, delegated subagents, review loop, and durable state:
+Use `implementation-orchestrator` when the work should be driven end to end rather than answered as a one-off edit. It owns the run shape: git context, clarification, planning, delegated subagents, review loops, validation, and delivery handoff.
 
-[orchestrator-explainer.vercel.app](https://orchestrator-explainer.vercel.app/)
-
-### Codex Subagent Depth
-
-For the full implementation orchestrator hierarchy, Codex must allow spawned agents to spawn child agents:
+For the full Codex subagent hierarchy, add this to `~/.codex/config.toml`:
 
 ```toml
 [agents]
 max_depth = 2
 ```
 
-Add this to your Codex config at `~/.codex/config.toml`, then restart Codex or open a new session. Without this setting, the orchestrator can still run in a flattened mode, but the implementation lead cannot spawn slice workers or reviewers itself.
+Then restart Codex or open a new session. Without this setting, the orchestrator can still work in a flatter mode.
 
-### Implementation Orchestrator Model Routing
+More detail:
 
-The root orchestrator's model is selected by the user/session. During orchestration, route child agents by role and risk:
+- [Orchestrator setup](docs/orchestrator.md)
+- [Interactive lifecycle explainer](https://orchestrator-explainer.vercel.app/)
+- [Structured state contract](plugins/ant/contracts/orchestrator-state/README.md)
 
-| Work class | Codex model | Codex reasoning | Claude Code tier | Use for |
-|------------|-------------|-----------------|------------------|---------|
-| Decision, lead, review, high-risk | `gpt-5.5` | `high` / `xhigh` | Opus | implementation lead, architecture, root-cause debugging, review, security, billing, tenant/data risk |
-| Bounded small-medium work | `gpt-5.4-mini` | `low` / `medium` | Sonnet | read-only scouting, clearly scoped implementation slices, non-mutating checks |
-| Tiny mechanical work | `gpt-5.3-codex-spark` | `medium` | Haiku | renames, copy/text edits, metadata updates, isolated low-risk changes |
+## Docs
 
-Do not route new orchestrator child agents to `gpt-5.4` or `gpt-5.3-codex`. If a smaller model hits ambiguity, conflicting evidence, contract changes, data/cache/permission risk, or review-level judgment, it must stop and escalate to `gpt-5.5` / Opus.
+The README is intentionally short. Longer guides live in `docs/` and can be mirrored into GitHub Wiki if the marketplace grows.
 
-## Available Skills
-
-| Claude Code Command | Codex Skill | Description |
-|---------------------|-------------|-------------|
-| `/ant:create-application` | `$create-application` | Clarify a new app or app surface, compare TypeScript-only and Docker paths, and hand off to orchestration |
-| `/ant:implementation-orchestrator` | `$implementation-orchestrator` | Guide implementation from brainstorming to verified delivery |
-| `/ant:brand-design` | `$brand-design` | Design and review websites, apps, decks, documents, and visuals against the (ant) brand |
-| `/ant:frontend-best-practices` | `$frontend-best-practices` | React, Next.js, TypeScript, accessibility, forms, performance, responsive UI, i18n, skeletons, and composition |
-| `/ant:laravel-best-practices` | `$laravel-best-practices` | Laravel 12+ architecture, caching, performance, Eloquent, queues, and backend review |
-| `/ant:delivery-workflows` | `$delivery-workflows` | GitLab MR creation, merge conflicts, and delivery hygiene |
-| `/ant:merge-request` | `$merge-request` | GitHub/GitLab PR/MR creation with language choice and delivery checks |
-| `/ant:google-docs` | `$google-docs` | Read and extract content from Google Docs |
-| `/ant:asana-task-analyzer` | `$asana-task-analyzer` | Analyze Asana tasks for implementers |
-
-See [docs/skills.md](docs/skills.md) for a short explanation of how each skill works.
+- [Installation guide](docs/install.md) - manual install, AI-assisted install prompts, and updates.
+- [Skill guide](docs/skills.md) - what each public skill does and when to use it.
+- [Orchestrator setup](docs/orchestrator.md) - subagent depth, model routing, and state contract links.
+- [Orchestrator slide deck](docs/index.html) - visual explainer for the orchestrator lifecycle.
 
 ## Update
 
 Claude Code:
 
-```
+```text
 /plugin marketplace update ant-marketplace
 /plugin update ant@ant-marketplace
 /reload-plugins
 ```
 
-Or from a terminal:
-
-```bash
-claude plugin update ant@ant-marketplace
-```
-
-Codex: rerun the same `codex-marketplace add` command with the same scope (`--global` or `--project`). Restart Codex or open a new session so the updated skills are loaded.
+Codex: rerun the same `codex-marketplace add` command with the same scope (`--global` or `--project`), then restart Codex or open a new session.
 
 ## Contributing
 
-1. Create a folder in `plugins/ant/skills/your-skill-name/` with a `SKILL.md` file for a new public workflow
-2. Prefer adding detailed topic guidance under an existing skill's `references/` folder when it belongs to an umbrella skill
-3. Do not add same-name command aliases; Claude Code discovers skills directly from `skills/*/SKILL.md`
-4. Open a PR
+1. Create a folder in `plugins/ant/skills/your-skill-name/` with a `SKILL.md` file for a new public workflow.
+2. Prefer adding detailed topic guidance under an existing skill's `references/` folder when it belongs to an umbrella skill.
+3. Do not add same-name command aliases; Claude Code discovers skills directly from `skills/*/SKILL.md`.
+4. Validate manifests and docs before opening a PR.
 
 ---
 
