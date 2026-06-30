@@ -35,6 +35,33 @@ Project install:
 bunx codex-marketplace add antstudiocz/ant-marketplace/plugins/ant --plugin --project
 ```
 
+## AI-Assisted Installation Prompts
+
+If you want an AI coding assistant to install the plugin for you, paste the relevant prompt into a new Claude Code or Codex session.
+
+### Claude Code Prompt
+
+```text
+Install the (ant) Claude Code plugin from antstudiocz/ant-marketplace for my user account.
+
+Use these commands:
+claude plugin marketplace add antstudiocz/ant-marketplace --scope user
+claude plugin install ant@ant-marketplace --scope user
+
+After installation, verify that the plugin is available. If Claude Code needs a reload, tell me to run /reload-plugins. Do not modify the current repository.
+```
+
+### Codex Prompt
+
+```text
+Install the (ant) Codex plugin globally from antstudiocz/ant-marketplace/plugins/ant.
+
+Use this command:
+bunx codex-marketplace add antstudiocz/ant-marketplace/plugins/ant --plugin --global
+
+After installation, verify that the plugin is available and tell me whether I need to restart Codex or open a new session. Do not modify the current repository.
+```
+
 ### Implementation Orchestrator Explainer
 
 See the interactive slide explainer for the orchestration lifecycle, root role, delegated subagents, review loop, and durable state:
