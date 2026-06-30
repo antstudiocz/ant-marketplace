@@ -86,7 +86,7 @@ The contract is intentionally host-neutral. Host-specific details belong in `met
 
 ## Risk-Tier Dispatch Metadata
 
-The orchestrator may use a lighter or heavier delegated workflow per request while keeping the same stable schema. Do not add new enum values for risk tiers or flow modes. Store dispatch details in `state.json.metadata` and child-agent metadata:
+The orchestrator may use a lighter or heavier delegated workflow per request while keeping the same stable schema. Do not add new enum values for risk tiers, flow modes, planning cadence, phase policies, commit strategies, delivery preferences, or pipeline policies. Store dispatch and run-contract details in `state.json.metadata` and child-agent metadata:
 
 ```json
 {
@@ -96,7 +96,13 @@ The orchestrator may use a lighter or heavier delegated workflow per request whi
     "flowMode": "single-delegated-worker",
     "cycle": "follow-up-003",
     "followUpOf": "initial-implementation",
-    "rootMode": "dispatch-only"
+    "rootMode": "dispatch-only",
+    "planningCadence": "full-plan-before-implementation",
+    "phaseApprovalPolicy": "auto-continue-after-verified-phase",
+    "commitStrategy": "verified-phase-commits",
+    "deliveryPreference": "draft-mr-after-verification",
+    "pipelinePolicy": "watch-after-mr",
+    "postImplementationActions": ["review", "verification", "commit", "push", "draft_mr", "pipeline_check"]
   },
   "agents": [
     {
@@ -120,6 +126,12 @@ Recommended values:
 - `cycle`: stable current cycle id such as `initial-implementation`, `review-fix-001`, `follow-up-002`, or `delivery`.
 - `followUpOf`: optional cycle id this cycle follows.
 - `rootMode`: should be `dispatch-only` for this orchestrator.
+- `planningCadence`: display hint such as `minimal-dispatch`, `full-plan-before-implementation`, or `full-roadmap-current-phase-detail`.
+- `phaseApprovalPolicy`: display hint such as `manual-after-each-phase`, `auto-continue-after-verified-phase`, or `full-workstream-autonomous`.
+- `commitStrategy`: display hint such as `no-commits`, `final-verified-commit`, `verified-phase-commits`, or `explicit-wip-checkpoint-commits`.
+- `deliveryPreference`: display hint such as `stop-after-verification`, `commit-only`, `push-after-verification`, `draft-mr-after-verification`, `ready-mr-after-verification`, or `ask-before-delivery`.
+- `pipelinePolicy`: display hint such as `do-not-check`, `check-once`, `watch-after-push`, `watch-after-mr`, or `recover-in-scope-failures`.
+- `postImplementationActions`: optional ordered list of intended post-implementation actions such as `review`, `verification`, `commit`, `push`, `draft_mr`, `ready_mr`, `pipeline_check`, or `pipeline_watch`.
 
 Consumers should treat these fields as optional display hints. Current run state still comes from top-level `status`, `currentPhaseId`, `agents`, `edges`, `phases`, `blockers`, `artifacts`, and `checkpoints`.
 

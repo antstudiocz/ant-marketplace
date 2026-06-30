@@ -12,7 +12,8 @@ Write the plan in the run's `preferredLanguage` when provided; otherwise use the
 
 - Convert the approved direction into a checklist-style implementation plan.
 - Preserve user decisions, constraints, non-goals, and acceptance criteria.
-- Preserve delivery decisions: current branch/worktree, confirmed target branch, dirty-state constraints, unrelated-change decision, branch/worktree choice, and MR preference.
+- Preserve run startup contract decisions: planning cadence, phase approval policy, commit strategy, delivery/MR preference, pipeline/watch policy, approval envelope, and stop conditions.
+- Preserve delivery decisions: current branch/worktree, confirmed target branch, dirty-state constraints, unrelated-change decision, branch/worktree choice, commit strategy, MR preference, and pipeline policy.
 - Preserve execution mode: `Autonomous implementation mode` or `Manual decision mode`, including decision policy and escalation rules.
 - Preserve orchestration artifact context when provided: current phase, prior user decisions, open questions, scout facts, and handoff constraints.
 - Incorporate scout findings and codebase evidence.
@@ -40,6 +41,7 @@ Return `Needs clarification` instead of writing a final plan when missing inform
 - unrelated-change handling when dirty files are outside scope;
 - rollout, compatibility, or deployment risk.
 - execution mode, decision policy, or escalation rules for medium+ work.
+- planning cadence, phase approval policy, commit strategy, delivery/MR preference, pipeline/watch policy, approval envelope, or stop conditions when they affect autonomy, validation, or delivery.
 
 Do not ask the user about details discoverable from the repo. Use provided scout findings or request a bounded scout from the parent instead of doing your own implementation scouting.
 
@@ -51,8 +53,9 @@ Normally create or update `.ant/orchestrator/<run>/phases/05-planning/implementa
 - non-goals;
 - approved decisions;
 - decision rationale, including material options considered, rejected alternatives, and why the selected path won;
+- run startup contract, including planning cadence, phase approval policy, commit strategy, delivery/MR/pipeline policy, approval envelope, and stop conditions;
 - execution mode and decision policy;
-- delivery context and MR preference;
+- delivery context, commit strategy, MR preference, and pipeline policy;
 - phased roadmap when phased rollout is selected;
 - phase workspace layout and close/handoff rules;
 - definition of done;
@@ -76,8 +79,8 @@ Use checkboxes for executable implementation and validation steps.
 The plan is part of the planning phase, not a standalone root file. Keep these artifacts current when the parent delegates write access, or return exact updates for the root orchestrator to write:
 
 - run `index.md` links to the canonical plan and current phase;
-- run `state.md` records plan status, execution mode, roadmap, and next action;
-- run and phase `decisions.md` record approved direction, execution mode, rollout strategy, and safe assumptions;
+- run `state.md` records plan status, execution mode, phase approval policy, commit strategy, delivery policy, roadmap, and next action;
+- run and phase `decisions.md` record approved direction, run startup contract, execution mode, rollout strategy, and safe assumptions;
 - run and phase `rationale.md` record material tradeoffs, rejected alternatives, evidence, risk accepted or deferred, and reviewer focus;
 - `phases/05-planning/phase.md` records status, inputs, work done, evidence, blockers, and close status;
 - `phases/05-planning/handoff.md` records next phase handoff, files to read first, must-not-assume notes, open questions, and next safe action.
@@ -85,6 +88,17 @@ The plan is part of the planning phase, not a standalone root file. Keep these a
 Before reporting `Plan ready`, satisfy the phase close gate for planning or clearly mark the phase as `blocked` with the missing inputs. The planning phase is not complete until its folder has status, input, work done, decisions, rationale for material choices, evidence, open questions, next phase handoff, files to read first, and must-not-assume notes.
 
 ## Execution Mode And Phased Roadmap
+
+Include a `Run startup contract` section whenever the parent provides or needs these decisions:
+
+- planning cadence;
+- phase approval policy;
+- commit strategy;
+- delivery/MR/pipeline policy;
+- approval envelope;
+- stop conditions that return to the user.
+
+If a needed run startup contract decision is missing, return `Needs clarification` instead of silently creating repeated phase-by-phase prompts or silently continuing through delivery.
 
 For `Medium`, `High`, and `Critical` work, include an `Execution mode` section:
 
@@ -106,11 +120,14 @@ If `Phased rollout` is selected, include a `Phased roadmap` section before the i
 - contract, compatibility, migration, or rollback expectations;
 - validation and evidence expectations;
 - whether the implementation lead may continue automatically after checkpoint;
+- whether a verified phase/milestone commit should be created after phase close;
 - stop conditions requiring user input.
 
 The current phase should have detailed executable checklist items. Later phases may be coarser, but they must be specific enough to preserve architecture direction and prevent incompatible phase 1 decisions.
 
 If implementation itself needs multiple steps, define `phases/06-implementation/subphases/<NN-name>/...` in the plan. Each subphase needs a goal, inputs, dependencies, acceptance evidence, verification, review expectation when relevant, and stop/continue rule.
+
+For every phase or subphase, state whether the implementation lead may continue automatically after the checkpoint, whether a milestone commit is expected, and what conditions stop the run for user input.
 
 ## Orchestration Artifacts
 
@@ -231,13 +248,16 @@ Conceptual summary for user:
 <short summary suitable for root orchestrator to show the user>
 
 Delivery:
-<branch/worktree/confirmed target/unrelated-change/MR summary>
+<branch/worktree/confirmed target/unrelated-change/commit/MR/pipeline summary>
 
 Implementation strategy:
 <single implementation lead or slice workers>
 
 Execution mode:
 <autonomous/manual mode, decision policy, escalation rules>
+
+Run startup contract:
+<planning cadence, phase approval policy, commit strategy, delivery/MR/pipeline policy, stop conditions>
 
 Phased roadmap:
 <all phases, current phase detail, stop/continue rules, or not applicable>

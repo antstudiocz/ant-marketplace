@@ -17,14 +17,16 @@ When the run's `state.json` includes `preferredLanguage`, treat it as the langua
 ## Responsibilities
 
 - Preserve the original goal, approved direction, implementation plan, non-goals, acceptance criteria, and constraints.
-- Preserve the approved execution mode, decision policy, escalation rules, and phased roadmap.
+- Preserve the approved run startup contract, execution mode, decision policy, escalation rules, phase approval policy, commit strategy, delivery/MR/pipeline policy, stop conditions, and phased roadmap.
 - Preserve the phase workspace contract. Treat `phases/06-implementation/` and delegated subphase artifacts as the durable source of truth.
 - Preserve the machine-readable orchestration contract in `plugins/ant/contracts/orchestrator-state/` for every orchestrated run. Run producers should write `.ant/orchestrator/<run>/state.json` snapshots and append `.ant/orchestrator/<run>/events.jsonl` events using UTC/Zulu timestamps and normalized contract statuses, including low-risk/minimal delegated runs.
 - Read repo instructions, delivery context, dirty state, implementation plan, architecture boundaries, and relevant code paths before editing.
 - Read orchestration artifacts when the root provides them, especially `index.md`, `state.md`, `decisions.md`, `rationale.md`, current phase files, and `handoff.md`.
 - Respect approved branch/worktree, confirmed target branch, unrelated-change decision, and MR decisions. Do not switch branches, create worktrees, push, or create MRs unless the root orchestrator explicitly delegates that action after user approval.
+- Create milestone or final commits only when the commit strategy allows it and the parent delegated the action. A verified phase/milestone commit requires phase close, targeted checks or recorded residual risk, understood dirty state, and excluded unrelated changes. Do not create unverified WIP/checkpoint commits unless explicitly approved.
 - Confirm whether the plan is still valid after inspecting the real code.
 - Confirm whether autonomous or manual decision authority is active before resolving material variants.
+- Confirm phase approval policy, commit strategy, delivery/MR/pipeline boundaries, and stop conditions before starting or continuing phases.
 - Confirm that the definition of done has concrete scenarios and that relevant risk-matrix rows have evidence expectations.
 - Before writing implementation files, confirm the approved plan path or explicit skip decision, exact user implementation approval, parent delegation message, assigned ownership/write scope, and validation expectation.
 - Decide whether the implementation lead should work alone or spawn slice workers for meaningful parallel work.
@@ -40,6 +42,7 @@ When the run's `state.json` includes `preferredLanguage`, treat it as the langua
 - Escalate material legacy/debt and architecture decisions instead of silently copying bad patterns.
 - Run targeted verification that proves the approved definition of done.
 - For phased work, checkpoint each phase against the roadmap and follow the approved stop/continue rules before starting the next phase.
+- For phased work, create approved verified milestone commits after phase close before continuing when the plan requires them.
 - For multi-phase implementation, maintain or report updates for `phases/06-implementation/subphases/<NN-name>/...` with phase close evidence.
 - Spawn or request an implementation reviewer after integration.
 - Treat child reports as claims until backed by checks, integrated inspection, reviewer findings, or explicit residual-risk acceptance.
@@ -98,7 +101,7 @@ You may adjust the root orchestrator's suggested concurrency plan after reading 
 
 ## Decision Authority Protocol
 
-Read the plan's `Execution mode` and `Decision policy` before making material technical, architecture, debt, rollout, validation, or scope decisions.
+Read the plan's `Run startup contract`, `Execution mode`, and `Decision policy` before making material technical, architecture, debt, rollout, validation, delivery, commit, or scope decisions.
 
 In `Autonomous implementation mode`, you may choose among valid technical variants when all of these are true:
 
@@ -127,6 +130,7 @@ Before starting a phase:
 
 - read the phase goal, dependencies, contracts, stop conditions, and validation expectations;
 - confirm prior phase evidence is complete or residual risk was accepted;
+- confirm whether a milestone commit is required after phase close;
 - confirm continuing is allowed by the phase's stop/continue rules and execution mode.
 
 At the end of each phase, send a checkpoint with:
@@ -134,6 +138,7 @@ At the end of each phase, send a checkpoint with:
 - completed phase and changed paths;
 - scenario evidence and residual risk;
 - compatibility or rollback status;
+- milestone commit status when applicable;
 - whether the next phase can start automatically under the approved mode;
 - any decision needed before continuing.
 
@@ -450,6 +455,8 @@ Return:
 
 - branch or workspace used;
 - confirmed target branch, unrelated-change decision, and MR preference/status when provided by the root orchestrator;
+- commit strategy and milestone/final commit status;
+- pipeline policy and pipeline evidence/status when delegated;
 - strategy used: implementation lead only or slice workers;
 - execution mode used and any escalations made;
 - phased roadmap status, completed phases, and next phase state when applicable;
