@@ -76,22 +76,23 @@ If native nested delegation is unavailable, keep the same logical flow but flatt
 1. Git context and delivery setup.
 2. Persistence bootstrap gate before any delegation, verification, delivery action, or long-running status report.
 3. Risk-tier classification and cycle setup.
-4. Structured run bootstrap for every orchestrated run; phase workspace setup for medium+ work.
-5. Intake and brainstorming.
-6. Codebase scouting when facts from the repo are needed before direction or planning.
-7. Post-scout clarification when scout findings expose user decisions.
-8. Architecture, debt, and feasibility challenge.
-9. Next-action approval before phase transitions.
-10. Rollout strategy approval for medium+ risky work.
-11. Execution mode approval for medium+ work: autonomous implementation mode or manual decision mode.
-12. Direction approval from the user when the selected tier requires it.
-13. Planning phase artifact with full phased roadmap when phased rollout is selected.
-14. Concise user-facing plan or dispatch summary, execution mode summary when applicable, and implementation approval.
-15. Delegated implementation: one bounded worker for `Low`, implementation lead for higher tiers.
-16. Optional multi-phase implementation under `phases/06-implementation/subphases/<NN-name>/...`.
-17. Optional parallel slice work under the implementation lead.
-18. Phase checkpoints and close/handoff gates.
-19. Integration, targeted checks, review, fix loop, and final evidence.
+4. Run startup contract before detailed planning or implementation dispatch.
+5. Structured run bootstrap for every orchestrated run; phase workspace setup for medium+ work.
+6. Intake and brainstorming.
+7. Codebase scouting when facts from the repo are needed before direction or planning.
+8. Post-scout clarification when scout findings expose user decisions.
+9. Architecture, debt, and feasibility challenge.
+10. Next-action approval or recorded approval envelope before phase transitions.
+11. Rollout strategy approval for medium+ risky work.
+12. Execution mode approval for medium+ work: autonomous implementation mode or manual decision mode.
+13. Direction approval from the user when the selected tier requires it.
+14. Planning phase artifact with full phased roadmap when phased rollout is selected.
+15. Concise user-facing plan or dispatch summary, execution mode, phase approval policy, commit strategy, delivery policy, and implementation approval.
+16. Delegated implementation: one bounded worker for `Low`, implementation lead for higher tiers.
+17. Optional multi-phase implementation under `phases/06-implementation/subphases/<NN-name>/...`.
+18. Optional parallel slice work under the implementation lead.
+19. Phase checkpoints, milestone commits when approved, and close/handoff gates.
+20. Integration, targeted checks, review, fix loop, final evidence, and delivery handoff.
 
 Do not skip directly to root implementation. When this skill is active, root implementation is forbidden regardless of task size. Tiny, clear, low-risk changes still go through at least one child agent unless the user explicitly leaves orchestration mode.
 
@@ -361,8 +362,25 @@ Rules:
 - `Pokračuj` after brainstorming means continue brainstorming, scout, or prepare a direction, not write code.
 - `Pokračuj` after direction approval means create or refine the plan artifact, not implement.
 - `Pokračuj` after plan summary may start implementation only if the message clearly said "Next I will delegate implementation to an implementation lead" and the user confirmed. Do not phrase the contract as root editing code.
+- `Pokračuj` may authorize a multi-step workstream only when the previous assistant message explicitly defined an approval envelope: phases or milestones, stop conditions, verification standard, commit strategy, delivery boundaries, and what still requires user approval.
 - If there are blocking questions, ask them and stop. Do not spawn plan writer, implementation lead, or write code while waiting.
 - If the next action is broad, split it into a single bounded next action and say what will remain for later.
+
+### Approval Envelope
+
+Use an approval envelope when the user wants the orchestrator to continue through multiple planned steps without stopping after every phase. The envelope must be explicit enough that a later agent can enforce it from artifacts, not from memory.
+
+An approval envelope must include:
+
+- approved phases, milestones, or the whole implementation workstream;
+- phase approval policy: `manual-after-each-phase`, `auto-continue-after-verified-phase`, or `full-workstream-autonomous`;
+- stop conditions that always return to the user, such as failed checks, material scope change, product behavior choice, destructive data behavior, security/permission risk, delivery target change, or unapproved residual risk;
+- verification standard for each phase or milestone;
+- milestone commit strategy, including whether commits are allowed after verified phases, only at the end, never, or as explicitly approved WIP/checkpoint commits;
+- delivery boundary: no delivery, commit only, push, draft MR, ready MR, pipeline watch/recovery, or ask before delivery;
+- what exact reply starts the approved workstream.
+
+Within an approval envelope, `pokračuj` authorizes only the named workstream and only until a stop condition is hit. It never authorizes merge/release unless merge/release is explicitly listed and approved.
 
 For user-facing updates during long work, keep the same contract but use a status form:
 
@@ -421,7 +439,9 @@ Record:
 - whether the current branch is acceptable for this task;
 - branch/worktree choice;
 - unrelated-change decision: include, exclude, leave aside, or ask again before delivery;
-- merge request preference: none, create after verification, create draft after verification, or ask again at the end.
+- commit strategy: no commits, final verified commit, verified phase/milestone commits, explicitly approved WIP/checkpoint commits, or ask before commit;
+- merge request preference: none, create after verification, create draft after verification, create ready MR after verification, or ask again at the end;
+- pipeline/watch preference: do not watch, check latest status once, watch after MR/push, recover failures when in scope, or ask before pipeline work.
 
 Treat `main`, `master`, `develop`, `staging`, `production`, `release/*`, and repo default branches as shared/protected unless repo instructions say otherwise. Treat a purpose-named non-default branch such as `feature/<short-purpose>`, `fix/<short-purpose>`, `refactor/<short-purpose>`, or `chore/<short-purpose>` as acceptable only when it matches the current task or the user confirms it.
 
@@ -434,9 +454,11 @@ Ask the user before implementation when:
 - dirty files are unrelated or unknown;
 - dirty files overlap the likely implementation scope;
 - a worktree would reduce risk for parallel, large, experimental, or dirty-worktree work;
-- the user has not said whether a merge request should be created after verification.
+- the user has not said whether commits should be created after verified phases, only at the end, or not at all;
+- the user has not said whether a merge request should be created after verification;
+- the user has not said whether to check/watch/recover the pipeline after push or MR creation.
 
-Recommended default: create a purpose-named branch from the target branch for normal implementation, use a worktree for risky/parallel work or when the current workspace has unrelated dirty changes, and create a draft MR only after implementation, review, and verification pass if the user requested an MR.
+Recommended default: create a purpose-named branch from the target branch for normal implementation, use a worktree for risky/parallel work or when the current workspace has unrelated dirty changes, create commits only after verified phases or final verification when the user approved commits, and create a draft MR only after implementation, review, and verification pass if the user requested an MR.
 
 Do not invent the target branch. If it cannot be found from repo configuration or instructions, ask. The root may recommend a target, but planning and delivery must use the user-confirmed target stored in run or phase decisions.
 
@@ -449,7 +471,39 @@ Unrelated dirty changes require an explicit decision before implementation and a
 
 Broad user phrases such as "push everything", "ship it", or "include all changes" do not override this gate when unrelated or unknown changes exist. List the files or path groups and ask for an explicit include/exclude/leave-aside decision.
 
-Do not stash, reset, move, overwrite, create/switch branches, create worktrees, push, or create MRs without explicit user approval. If dirty changes are unrelated, record them and avoid touching them. Use the repository's required MR tool when known, such as `glab` for GitLab.
+Do not stash, reset, move, overwrite, create/switch branches, create worktrees, commit, push, create MRs, or watch/recover pipelines without explicit user approval or a recorded approval envelope. If dirty changes are unrelated, record them and avoid touching them. Use the repository's required MR tool when known, such as `glab` for GitLab.
+
+## Run Startup Contract Gate
+
+Before detailed planning, plan-writing, or implementation dispatch, establish the run contract whenever the answer changes scope, autonomy, delivery, validation, or risk. Do not impose an arbitrary question count limit. Ask every material blocking question needed for a high-quality plan, grouped by topic when there are many. Do not ask the user for repo-discoverable facts; send scouts for those.
+
+Record the contract in `state.json.metadata`, `decisions.md`, and the current phase handoff when applicable. Suggested metadata keys are display hints, not schema enums:
+
+```json
+{
+  "planningCadence": "full-plan-before-implementation",
+  "phaseApprovalPolicy": "auto-continue-after-verified-phase",
+  "commitStrategy": "verified-phase-commits",
+  "deliveryPreference": "draft-mr-after-verification",
+  "pipelinePolicy": "watch-after-mr",
+  "postImplementationActions": ["review", "verification", "commit", "push", "draft_mr", "pipeline_check"]
+}
+```
+
+Ask about these areas when they are not already explicit:
+
+- clarification depth: ask all material blocking questions now, or let the orchestrator scout repo facts first and return decision questions after evidence;
+- planning cadence: minimal dispatch, full plan before implementation, or full roadmap plus detailed current phase;
+- phase approval policy: manual approval after each phase, auto-continue after each verified phase, or full-workstream autonomous until a stop condition;
+- execution mode: autonomous implementation mode or manual decision mode for material variants;
+- commit strategy: no commits, one final verified commit, verified phase/milestone commits, or explicitly approved WIP/checkpoint commits;
+- delivery preference: stop after verification, commit only, push, draft MR, ready MR, or ask before delivery;
+- pipeline policy: do not check, check once, watch after MR/push, or recover in-scope failures;
+- stop conditions: failed checks, unverified residual risk, scope/contract/architecture change, product decision, data/security/permission risk, dirty-state surprise, delivery target change, or pipeline failure.
+
+Recommended default when the user has not chosen: full plan before implementation, auto-continue after verified phases only when the plan and stop conditions are explicit, verified phase/milestone commits only after passing targeted checks or recorded residual risk, draft MR after final verification if MR delivery is desired, pipeline check/watch after MR, and no merge/release without separate approval.
+
+Do not let a missing run contract silently degrade into repeated "should I continue?" prompts after each phase. If the user wants manual control, record `manual-after-each-phase`; otherwise create a clear approval envelope and continue until a stop condition.
 
 ## Context Persistence Gate
 
@@ -594,7 +648,12 @@ Minimum bootstrap before first child delegation:
     "activeRiskTier": "<low|medium|high|critical>",
     "flowMode": "<single-delegated-worker|implementation-lead|scout-plan-implement-review|full-critical-lifecycle>",
     "cycle": "initial-implementation",
-    "rootMode": "dispatch-only"
+    "rootMode": "dispatch-only",
+    "planningCadence": "<minimal-dispatch|full-plan-before-implementation|full-roadmap-current-phase-detail>",
+    "phaseApprovalPolicy": "<manual-after-each-phase|auto-continue-after-verified-phase|full-workstream-autonomous>",
+    "commitStrategy": "<no-commits|final-verified-commit|verified-phase-commits|explicit-wip-checkpoint-commits>",
+    "deliveryPreference": "<stop-after-verification|commit-only|push-after-verification|draft-mr-after-verification|ready-mr-after-verification|ask-before-delivery>",
+    "pipelinePolicy": "<do-not-check|check-once|watch-after-push|watch-after-mr|recover-in-scope-failures>"
   }
 }
 ```
@@ -625,9 +684,10 @@ Do not parse free-form markdown as the primary machine source when `state.json` 
 Write only durable context needed to resume:
 
 - original goal and current phase;
+- run startup contract: planning cadence, phase approval policy, execution mode, commit strategy, delivery/MR preference, pipeline/watch policy, and stop conditions;
 - execution mode, decision policy, and autonomous/manual escalation rules;
 - phased rollout roadmap, current phase, phase dependencies, and stop/continue rules;
-- delivery context, branch/worktree/MR decisions, and dirty-state constraints;
+- delivery context, branch/worktree/commit/MR/pipeline decisions, and dirty-state constraints;
 - open questions and user decisions;
 - material decision rationale, options considered, rejected alternatives, evidence, tradeoffs, reviewer focus, and accepted or deferred risk;
 - mid-flight user inputs that changed scope, assumptions, blockers, child instructions, or next actions;
@@ -713,6 +773,12 @@ Delivery:
 Definition of done:
 
 Execution mode:
+
+Phase approval policy:
+
+Commit strategy:
+
+Post-implementation delivery:
 
 Phased roadmap:
 
@@ -935,7 +1001,7 @@ The root must not overwrite partial work or hand the same write scope to another
 
 Start by asking: "Can we define the intended outcome without inventing user intent?"
 
-In brainstorming or unclear tasks, do not produce a final implementation plan yet. Ask at most 1-3 high-impact questions per round. Each question should include a recommended/default answer, why it is recommended, and what changes if the user chooses differently.
+In brainstorming or unclear tasks, do not produce a final implementation plan yet. Ask every material blocking question needed to produce a high-quality plan. Do not cap the number of questions. If there are many, group them by topic and keep each question concrete. Each question should include a recommended/default answer, why it is recommended, and what changes if the user chooses differently.
 
 Ask about:
 
@@ -946,7 +1012,8 @@ Ask about:
 - data to create, update, migrate, delete, or preserve;
 - error, empty, loading, rollback, and edge-case behavior;
 - compatibility, rollout, deadline, and deployment constraints;
-- validation that would convince the user the work is done.
+- validation that would convince the user the work is done;
+- planning cadence, phase approval policy, execution mode, commit strategy, delivery preference, MR intent, pipeline/watch policy, and stop conditions.
 
 Classify uncertainty before proceeding:
 
@@ -1004,7 +1071,7 @@ After any scout returns, the root orchestrator must stop and classify the result
 - `Safe assumptions`: low-risk defaults that are conventional, reversible, and explicitly stated.
 - `Preliminary direction`: a tentative recommendation based on facts and assumptions.
 
-If any `User decisions` remain, ask the user 1-3 high-impact questions before presenting a final direction or plan. Each question must include a recommended/default answer, why it is recommended, and what changes if the user chooses differently.
+If any `User decisions` remain, ask every material blocking question before presenting a final direction or plan. Do not cap the number of questions. Group questions by topic when needed, and include a recommended/default answer, why it is recommended, and what changes if the user chooses differently.
 
 The orchestrator may briefly summarize scout facts and a tentative direction, but it must label it as tentative:
 
@@ -1068,6 +1135,17 @@ Autonomous mode does not permit silent scope expansion. Stop and ask the user be
 
 Manual mode does not lower the analysis bar. Scouts and reviewers should still collect evidence and recommend a path; the difference is that the root orchestrator asks the user to choose among material valid options instead of selecting one autonomously.
 
+## Commit Strategy Gate
+
+Before implementation starts, record whether commits are part of the run contract:
+
+1. `No commits`: leave changes unstaged/uncommitted until the user asks.
+2. `Final verified commit`: create one commit only after implementation, review, and targeted verification pass.
+3. `Verified phase/milestone commits`: create a commit after each approved phase or major milestone only when the phase is closed, targeted checks passed or residual risk is explicitly recorded, and unrelated changes are excluded.
+4. `Explicit WIP/checkpoint commits`: create checkpoint commits before full verification only when the user explicitly accepts that they may represent incomplete or partially verified work.
+
+Recommended default: `Verified phase/milestone commits` for phased work when the user wants a clean recovery/review history, otherwise `Final verified commit`. Never create an unverified WIP commit just because a phase took a long time. If a phase cannot be verified, stop and ask whether to defer the commit, commit with recorded residual risk, or continue without committing.
+
 ## Phased Roadmap Gate
 
 When `Phased rollout` is selected, the plan must cover the whole roadmap before implementation of phase 1 starts. Do not write a detailed plan for only the first phase and begin implementation while later phases remain undefined.
@@ -1080,11 +1158,12 @@ The roadmap must include every planned phase, even if later phases are intention
 - contract, compatibility, migration, or rollback expectations;
 - validation and evidence expectations;
 - whether the implementation lead may continue automatically after the phase checkpoint;
+- whether a verified phase/milestone commit should be created after phase close;
 - stop conditions that require user input before the next phase.
 
 The current phase should have an executable checklist. Later phases may use coarser checklist items, but they must be concrete enough to preserve architecture direction and prevent incompatible phase 1 decisions.
 
-In autonomous mode, the implementation lead may continue from one approved phase to the next after recording a checkpoint and satisfying that phase's stop/continue rules. In manual mode, phase transitions that involve a material choice must return to the user with options and a recommendation.
+In autonomous mode, the implementation lead may continue from one approved phase to the next after recording a checkpoint, satisfying that phase's stop/continue rules, and creating any approved verified milestone commit. In manual mode, phase transitions that involve a material choice must return to the user with options and a recommendation.
 
 Implementation itself may be multi-phase. Use `phases/06-implementation/subphases/<NN-name>/...` when the approved implementation needs separable foundation, contract, UI, data, verification, cleanup, or provider migration work. Each implementation subphase must have the minimum phase files, roadmap checkpoint, verification expectations, review status when applicable, and an explicit stop/continue rule before the next subphase starts.
 
@@ -1260,7 +1339,8 @@ After the user approves the direction, spawn a `plan-writer` to create or update
 The plan must be a practical checklist, not a vague essay. It should include:
 
 - goal and non-goals;
-- delivery context and branch/worktree/MR decisions;
+- run startup contract: planning cadence, phase approval policy, commit strategy, delivery preference, MR intent, pipeline policy, and stop conditions;
+- delivery context and branch/worktree/commit/MR/pipeline decisions;
 - execution mode and decision policy;
 - full phased roadmap when phased rollout is selected;
 - phase artifact layout and close/handoff expectations;
@@ -1275,7 +1355,7 @@ The plan must be a practical checklist, not a vague essay. It should include:
 - reviewer focus;
 - risks, assumptions, and open questions.
 
-If the plan writer finds a blocking question, stop and ask the user before implementation. After plan updates, update `phases/05-planning/phase.md`, phase `decisions.md`, phase `rationale.md` for material choices, and phase `handoff.md`, then show the user a concise conceptual summary, execution mode, phase roadmap when relevant, decision policy, and current phase detail, not every file-level detail, and ask for explicit implementation approval.
+If the plan writer finds a blocking question, stop and ask the user before implementation. After plan updates, update `phases/05-planning/phase.md`, phase `decisions.md`, phase `rationale.md` for material choices, and phase `handoff.md`, then show the user a concise conceptual summary, execution mode, phase approval policy, commit strategy, delivery/MR/pipeline policy, phase roadmap when relevant, decision policy, and current phase detail, not every file-level detail, and ask for explicit implementation approval or approval envelope.
 
 For `Medium`, `High`, and `Critical` work, broad approval phrases before the plan exists count as approval to create or refine the plan only. Do not delegate implementation until the user approves the concrete plan summary or explicitly approves skipping the plan artifact.
 
@@ -1292,7 +1372,7 @@ Allowed root-orchestrator actions:
 - read repo instructions, delivery context, branch state, dirty state, and delivery-policy docs;
 - spawn scouts, plan writer, reviewers, and implementation lead;
 - create or switch to a purpose-named branch/worktree when explicitly requested;
-- create a merge request after verified implementation when explicitly requested;
+- create approved verified milestone commits, push, create a merge request, or watch/recover pipelines only when explicitly requested or covered by the recorded approval envelope;
 - update the conversation tracker;
 - create or update orchestration run and phase artifacts under `.ant/orchestrator/<run>/`.
 
@@ -1301,7 +1381,7 @@ Forbidden root-orchestrator actions:
 - implementing feature/fix code directly;
 - reading application source/test/docs files to scout implementation facts;
 - self-assigning backend/frontend/test slices;
-- mutating app state beyond explicit branch/worktree, merge request, or `.ant/orchestrator/` plan-artifact setup;
+- mutating app state beyond explicit branch/worktree, commit, push, merge request, pipeline, or `.ant/orchestrator/` plan-artifact setup;
 - treating review fixes, debugging, or polish as root-owned work after implementation;
 - silently continuing without delegation when this skill is active.
 
@@ -1401,13 +1481,13 @@ Use the smallest delegated workflow that can preserve quality:
 
 ```text
 Low:
-- root: git/delivery preflight, risk classification, next-action contract, structured run bootstrap, and metadata update.
+- root: git/delivery preflight, run startup contract when needed, risk classification, next-action contract or approval envelope, structured run bootstrap, and metadata update.
 - child: one bounded implementation worker represented as `implementation-lead` with `metadata.workerKind = "bounded-low-worker"`.
 - no scout, plan writer, full markdown phase tree, or reviewer by default; `state.json` and `events.jsonl` are still required.
 - expected evidence: root cause, changed paths, targeted checks, residual risk, escalation decision.
 
 Medium:
-- root: git/delivery, risk classification, short direction/acceptance summary, metadata update.
+- root: git/delivery, run startup contract, risk classification, short direction/acceptance summary, metadata update.
 - child: one implementation lead that performs discovery, implementation, targeted verification, and escalation.
 - scout only when direction, architecture, contract, or repo facts are unclear before implementation.
 - reviewer when behavior, contract, tests, cache, permissions, data, or worker uncertainty creates material risk.
@@ -1418,7 +1498,7 @@ High:
 - reviewer required before done.
 
 Critical:
-- root: explicit user decisions, plan review when useful, approved rollout/decision policy, delivery gates.
+- root: explicit user decisions, run startup contract, plan review when useful, approved rollout/decision policy, commit strategy, and delivery gates.
 - child: strong implementation lead, slice workers only with stable contracts.
 - strong validation, reviewer, fix loop, and re-review for P0/P1/P2 fixes.
 ```
@@ -1496,7 +1576,7 @@ Prefer one implementation lead by default. Use parallel slice workers only when 
 
 Codex has a native `/plan` slash command that switches the active conversation into plan mode and can take an inline prompt. Use native Plan mode when the user explicitly starts the task in Plan mode or asks you to plan before execution. A skill or plugin should not assume it can programmatically switch collaboration modes for the current thread.
 
-If native Plan mode is active and `request_user_input` is available, use native Codex clarification UI for blocking questions instead of asking only in chat. Ask only the top 1-3 blocking questions in one round, include recommended/default choices first, and explain the tradeoff in each option.
+If native Plan mode is active and `request_user_input` is available, use native Codex clarification UI for blocking questions where the UI fits. If the UI can only ask a small number of questions per round, ask additional rounds or continue in chat; do not drop material questions because of UI limits. Put recommended/default choices first and explain the tradeoff in each option.
 
 If native Plan mode is not active, ask staged clarification in chat or delegate to a planner/plan-writer when codebase planning is needed.
 
@@ -1517,7 +1597,7 @@ Original user goal:
 <goal>
 
 Delivery context:
-<current branch/worktree, confirmed target branch, dirty state summary, unrelated-change decision, branch/worktree decision, MR preference>
+<current branch/worktree, confirmed target branch, dirty state summary, unrelated-change decision, branch/worktree decision, commit strategy, MR preference, pipeline policy>
 
 Decision or question to support:
 <specific question>
@@ -1550,7 +1630,7 @@ Approved direction:
 <direction and user decisions>
 
 Delivery context:
-<current branch/worktree, confirmed target branch, dirty state summary, unrelated-change decision, branch/worktree decision, MR preference>
+<current branch/worktree, confirmed target branch, dirty state summary, unrelated-change decision, branch/worktree decision, commit strategy, MR preference, pipeline policy>
 
 Scout findings:
 <summaries or links>
@@ -1558,7 +1638,10 @@ Scout findings:
 Constraints:
 <repo/user constraints>
 
-Create or update `.ant/orchestrator/<run>/phases/05-planning/implementation-plan.md` with a checklist-style plan covering delivery context, execution mode, decision policy, full phased roadmap when phased rollout is selected, phase artifact layout, close/handoff expectations, scenario-based definition of done, risk scenario matrix, architecture boundaries, legacy/debt decisions, contract-first details, concurrency plan, implementation checklist, validation checklist, reviewer focus, risks, assumptions, and open questions. If any blocking question remains, return `Needs clarification` instead of inventing an answer.
+Run startup contract:
+<planning cadence, phase approval policy, commit strategy, delivery/MR/pipeline policy, stop conditions, approval envelope if already approved>
+
+Create or update `.ant/orchestrator/<run>/phases/05-planning/implementation-plan.md` with a checklist-style plan covering the run startup contract, delivery context, execution mode, decision policy, full phased roadmap when phased rollout is selected, milestone commit rules, phase artifact layout, close/handoff expectations, scenario-based definition of done, risk scenario matrix, architecture boundaries, legacy/debt decisions, contract-first details, concurrency plan, implementation checklist, validation checklist, reviewer focus, risks, assumptions, and open questions. If any blocking question remains, return `Needs clarification` instead of inventing an answer.
 
 Also update the planning phase artifacts when markdown persistence is active: add approved decisions to run and phase `decisions.md`, material rationale checkpoints to run and phase `rationale.md`, plan path and implementation strategy to `state.md`, and phase close/next action to `phases/05-planning/handoff.md` plus run `handoff.md`. In all runs, update `state.json` and append durable events in `events.jsonl`.
 ```
@@ -1585,10 +1668,13 @@ Approved implementation plan:
 <.ant/orchestrator/<run>/phases/05-planning/implementation-plan.md content or path>
 
 Delivery context:
-<current branch/worktree, confirmed target branch, dirty state summary, unrelated-change decision, approved branch/worktree setup, MR preference>
+<current branch/worktree, confirmed target branch, dirty state summary, unrelated-change decision, approved branch/worktree setup, commit strategy, MR preference, pipeline policy>
 
 Root orchestrator guidance:
 <risk class, model tier guidance, suggested concurrency, boundaries, validation expectations>
+
+Run startup contract:
+<planning cadence, phase approval policy, approval envelope, commit strategy, post-implementation actions, MR/pipeline boundaries, and stop conditions>
 
 Orchestration state:
 <path to .ant/orchestrator/...; report artifact updates to the root instead of editing them unless explicitly delegated>
@@ -1599,6 +1685,7 @@ Respond in the run's `preferredLanguage` when provided; otherwise use the same l
 Responsibilities:
 - Confirm the implementation strategy after reading the real code.
 - Confirm execution mode, decision policy, escalation rules, and phased roadmap before resolving variants or starting a new phase.
+- Follow the approved phase approval policy and commit strategy; create milestone commits only after verified phase/milestone close or explicit residual-risk approval.
 - Confirm implementation phase/subphase artifact ownership and close-gate expectations before starting work.
 - Run the implementation lead on Codex `gpt-5.5` with `high` reasoning by default, or `xhigh` for security, billing, tenant/data-loss, migrations, broad architecture, or critical root-cause debugging. On Claude Code, use Opus tier with high/max practical thinking.
 - Use Codex `gpt-5.4-mini` / Claude Sonnet only for bounded small-medium child slices with approved contracts and no unresolved decisions.
@@ -1650,9 +1737,9 @@ Delivery context:
 
 Focus:
 - correctness and acceptance criteria;
-- delivery setup was respected and no branch/worktree/MR action happened without approval;
+- delivery setup was respected and no branch/worktree/commit/push/MR/pipeline action happened without approval;
 - target branch and unrelated-change decisions were followed;
-- execution mode, decision policy, phased roadmap, and stop/continue rules were explicit and followed;
+- run startup contract, execution mode, decision policy, phase approval policy, commit strategy, phased roadmap, and stop/continue rules were explicit and followed;
 - required phase artifacts exist, are current, and satisfy the phase close/handoff gate before transition or completion;
 - rationale checkpoints exist for material decisions, rejected alternatives, accepted risks, and review-fix direction changes;
 - architecture boundaries and file placement;
@@ -1681,12 +1768,12 @@ Recommended next action:
 - <the next delivery step the orchestrator recommends>
 
 What "pokračuj" authorizes:
-- <exact actions such as git status, stage intended files, commit, push, create/update MR/PR, or stop before merge/release>
+- <exact actions such as git status, stage intended files, create a verified milestone/final commit, push, create/update MR/PR, watch/check pipeline, recover in-scope failures, or stop before merge/release>
 ```
 
-If the work is verified but not staged, committed, pushed, or submitted as an MR/PR, recommend the delivery sequence explicitly. Do not wait for the user to ask "what next?" or "jaké jsou další kroky?". If any delivery decision is missing, say which decision is missing and what `pokračuj` would and would not authorize.
+If the work is verified but not staged, committed, pushed, submitted as an MR/PR, or checked against the requested pipeline policy, recommend the delivery sequence explicitly. Do not wait for the user to ask "what next?" or "jaké jsou další kroky?". If any delivery decision is missing, say which decision is missing and what `pokračuj` would and would not authorize.
 
-## Delivery And MR Readiness
+## Delivery, MR, And Pipeline Readiness
 
 Delivery uses recorded decisions. It must not choose a target branch, draft/ready state, or unrelated-change handling by itself. If a required decision is missing, stop and ask the user.
 
@@ -1699,7 +1786,9 @@ Before staging, committing, pushing, or creating/updating an MR, verify:
 - only intended files are staged or included;
 - latest relevant checks are recorded, or skipped checks have reasons;
 - review/fix loop status is passed, or residual risks were explicitly accepted;
+- commit strategy is recorded, and phase/milestone commits happen only after closed verified phases or explicit residual-risk approval;
 - MR preference is recorded: none, draft, ready, or ask;
+- pipeline/watch preference is recorded before watching or recovering pipeline failures;
 - MR title/description accurately distinguish implemented scope, verification, and residual risk.
 
 If the user says "push everything", "ship it", or equivalent while unrelated or unknown changes remain, show the risky path groups and ask for an explicit include/exclude/leave-aside decision before delivery.
@@ -1712,9 +1801,12 @@ For longer work, keep a lightweight status tracker in the conversation:
 Goal:
 Delivery:
 Intake:
+Run contract:
 Scout:
 Direction:
 Execution mode:
+Phase approval:
+Commit strategy:
 Phase artifacts:
 Rationale:
 Plan artifact:
@@ -1726,6 +1818,7 @@ Integration:
 Implementation review:
 Fix loop:
 Verification:
+Pipeline:
 Risks:
 ```
 
@@ -1749,11 +1842,13 @@ The standing subagent authorization satisfies the explicit user permission requi
 The orchestrated implementation is not complete until:
 
 - the user approved the direction and implementation plan, unless the selected flow is a low-risk dispatch packet;
+- the run startup contract records planning cadence, phase approval policy, commit strategy, delivery/MR/pipeline preference, and stop conditions when applicable;
 - `state.json` and `events.jsonl` are current for every orchestrated run;
 - run-level `index.md`, `state.md`, `decisions.md`, and `rationale.md` are current when markdown persistence is active;
 - every completed markdown phase folder has current `phase.md`, `decisions.md`, `handoff.md`, `rationale.md` when material choices occurred, and phase-specific evidence files;
 - the current phase close/handoff gate records status, input, work done, decisions, rationale for material choices, evidence, open questions, next phase handoff, files to read first, and must-not-assume notes;
 - execution mode and decision policy are recorded for medium+ work;
+- milestone commit strategy was followed, with commits created only after verified phase/milestone close or explicit residual-risk approval;
 - phased rollout work has an approved whole-roadmap plan before any phase implementation starts;
 - the plan defines done, scope, non-goals, contracts, architecture boundaries, and validation;
 - an implementation lead, not the root orchestrator, owned implementation;
@@ -1765,6 +1860,6 @@ The orchestrated implementation is not complete until:
 - avoidable legacy leftovers and technical debt were removed or explicitly approved;
 - architecture boundaries and file placement were checked;
 - unrelated user changes were preserved;
-- post-verification delivery handoff states what remains for staging, commit, push, MR/PR creation, merge, or release, and what exact user reply would authorize;
+- post-verification delivery handoff states what remains for staging, commit, push, MR/PR creation, pipeline checking/recovery, merge, or release, and what exact user reply would authorize;
 - branch/worktree/MR decisions were followed, or delivery was explicitly declined;
 - final response states what changed, what was verified, and what could not be verified.

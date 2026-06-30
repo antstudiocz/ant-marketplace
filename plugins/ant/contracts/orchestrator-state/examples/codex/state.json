@@ -119,6 +119,12 @@
     "flowMode": "scout-plan-implement-review",
     "cycle": "initial-implementation",
     "rootMode": "dispatch-only",
+    "planningCadence": "full-plan-before-implementation",
+    "phaseApprovalPolicy": "auto-continue-after-verified-phase",
+    "commitStrategy": "verified-phase-commits",
+    "deliveryPreference": "draft-mr-after-verification",
+    "pipelinePolicy": "watch-after-mr",
+    "postImplementationActions": ["review", "verification", "commit", "push", "draft_mr", "pipeline_check"],
     "targetBranch": "origin/master",
     "implementationBranch": "feature/state-contract"
   }

@@ -24,6 +24,7 @@ Prioritize material risks:
 - missing definition of done;
 - broad goals not converted into acceptance scenarios;
 - missing `state.json` / `events.jsonl` updates for any orchestrated run;
+- missing run startup contract for planning cadence, phase approval policy, commit strategy, delivery/MR/pipeline preference, or stop conditions when those choices affect autonomy or delivery;
 - missing execution mode, weak decision policy, or unclear autonomous/manual escalation rules for medium+ work;
 - phased rollout plans that only define phase 1 and leave later phases too vague to constrain architecture or compatibility;
 - missing or stale phase artifacts, incomplete phase close/handoff fields, or reliance on chat as the only source of truth;
@@ -75,7 +76,7 @@ Required when available, and mandatory when markdown persistence is active:
 - approved `phases/05-planning/implementation-plan.md` for medium+ work;
 - relevant `findings.md`, `options.md`, `verification.md`, and `review.md`;
 - implementation lead and slice reports for implementation review;
-- confirmed delivery context: target branch, dirty-state constraints, unrelated-change decision, and MR preference.
+- confirmed delivery context: target branch, dirty-state constraints, unrelated-change decision, commit strategy, MR preference, and pipeline policy.
 
 If a required artifact is missing, stale, contradictory, or unavailable, report that explicitly before reviewing code. Treat missing context as:
 
@@ -88,7 +89,7 @@ For direction or plan review:
 1. Read the required review context bundle, then the original goal, user decisions, rationale checkpoints, scout findings, direction, assumptions, implementation plan, and validation plan.
 2. Check whether the plan can satisfy the goal without inventing user intent.
 3. Check that legacy/debt and architecture choices were explicit and approved when material.
-4. Check that execution mode, decision policy, escalation rules, and residual-risk ownership are explicit for medium+ work.
+4. Check that run startup contract, execution mode, decision policy, escalation rules, phase approval policy, commit strategy, and residual-risk ownership are explicit for medium+ work.
 5. Check that `state.json` and `events.jsonl` are current for every orchestrated run, and that run `index.md`, `state.md`, `decisions.md`, `rationale.md`, and phase files are current when markdown persistence is active.
 6. If phased rollout is selected, check that the full roadmap exists before phase 1 implementation and that each phase has goals, dependencies, acceptance criteria, validation, and stop/continue rules.
 7. Check that the concurrency plan is useful, bounded, and contract-first.
@@ -102,7 +103,7 @@ For implementation review:
 2. Inspect the diff and directly adjacent contracts.
 3. Trace real execution paths for risky behavior.
 4. Check integrated behavior, not only isolated slices.
-5. Check whether the implementation stayed within the approved execution mode, decision policy, phased roadmap, implementation subphases, and stop/continue rules.
+5. Check whether the implementation stayed within the approved run startup contract, execution mode, decision policy, phase approval policy, commit strategy, phased roadmap, implementation subphases, and stop/continue rules.
 6. Check that implementation phase/subphase artifacts contain status, inputs, work done, decisions, rationale, evidence, open questions, next handoff, files to read first, and must-not-assume notes before completion.
 7. Verify architecture boundaries and file placement.
 8. Verify contract consistency across backend/frontend/data/tests.

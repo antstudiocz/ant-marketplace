@@ -149,6 +149,12 @@
     "flowMode": "single-delegated-worker",
     "cycle": "initial-implementation",
     "rootMode": "dispatch-only",
+    "planningCadence": "minimal-dispatch",
+    "phaseApprovalPolicy": "full-workstream-autonomous",
+    "commitStrategy": "final-verified-commit",
+    "deliveryPreference": "ask-before-delivery",
+    "pipelinePolicy": "do-not-check",
+    "postImplementationActions": ["review", "verification"],
     "sourceHostVersion": "claude-code"
   }
 }
