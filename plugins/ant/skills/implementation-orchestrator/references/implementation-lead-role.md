@@ -32,6 +32,7 @@ When the run's `state.json` includes `preferredLanguage`, treat it as the langua
 - Confirm that the definition of done has concrete scenarios and that relevant risk-matrix rows have evidence expectations.
 - Before writing implementation files, confirm the approved plan path or explicit skip decision, exact user implementation approval, parent delegation message, assigned ownership/write scope, and validation expectation.
 - Decide whether the implementation lead should work alone or spawn slice workers for meaningful parallel work.
+- Decide whether task-scoped execution is useful for the approved plan. When it is, read `references/task-scoped-execution.md` and use file-based task briefs, worker reports, review packages, task-level review verdicts, and task progress tracking.
 - Define clear ownership, write boundaries, contracts, validation expectations, and non-goals for each slice worker.
 - Spawn child agents only with a fresh-task / no-history / no-fork mode and a precise assignment brief. Do not use any delegation mode that inherits, forks, clones, or steers the current conversation history.
 - Track child checkpoints without forwarding noisy logs to the root orchestrator.
@@ -101,6 +102,37 @@ Use slice workers when:
 - the parallel work is likely to reduce total time or improve coverage.
 
 You may adjust the root orchestrator's suggested concurrency plan after reading the code, but you must explain the reason in your first checkpoint.
+
+Use task-scoped execution when:
+
+- the approved plan has multiple separable tasks;
+- each task can be implemented, verified, and reviewed independently;
+- task-level artifacts will make review, compaction recovery, or long-running execution safer;
+- a worker would be harmed by receiving the whole chat or whole plan instead of a curated task packet.
+
+Do not use task-scoped execution when:
+
+- a single bounded worker checkpoint is enough;
+- task boundaries would be artificial microtasks;
+- one continuous implementation thread is safer than separate task handoffs.
+
+Task-scoped execution and slice workers can coexist, but do not duplicate the same boundary. Use task-scoped execution for serial reviewable plan units, and slice workers for parallel backend/frontend/data/test ownership when contracts are explicit and write sets do not overlap.
+
+## Task-Scoped Execution Protocol
+
+When using task-scoped execution:
+
+1. Read `references/task-scoped-execution.md`.
+2. Run the pre-flight plan scan before dispatching the first task.
+3. Create or request task artifacts under `.ant/orchestrator/<run>/phases/06-implementation/tasks/<NN-task-name>/`.
+4. Give each worker a curated task brief, not the full chat history or unrelated plan sections.
+5. Require the worker to write a report file and return only a short status response.
+6. Create or request a review package for task review when there is a meaningful diff to inspect.
+7. Ask the reviewer for separate `Spec compliance` and `Engineering quality` verdicts.
+8. Fix and re-review blocking task findings before marking the task complete, unless the user explicitly accepts residual risk.
+9. Update or report task progress for `state.json.metadata.taskScopedExecution` and linked artifacts after every task status change.
+
+Task workers must receive all relevant know-how for their task: goal, approved decisions, contracts, non-goals, owned files, forbidden areas, validation, escalation rules, and artifact paths. They should not receive raw conversation history or unrelated historical alternatives.
 
 ## Decision Authority Protocol
 
@@ -321,19 +353,21 @@ Map final evidence back to scenarios. If a scenario cannot be verified, report t
 2. Confirm the approved delivery context still matches the current branch/worktree and dirty state.
 3. Confirm execution mode, decision policy, escalation rules, and phased roadmap.
 4. Confirm strategy: implementation lead only or slice workers.
-5. Send a discovery/strategy checkpoint before editing if the work is non-trivial.
-6. If using slice workers, spawn them with disjoint ownership and contract briefs.
-7. While slices run, do non-overlapping coordination or integration preparation.
-8. Integrate slice outputs, reconcile contracts, and fix mismatches.
-9. Remove obsolete paths and avoid leaving parallel old/new implementations unless explicitly approved.
-10. Add or update tests when risk justifies it.
-11. Run targeted verification.
-12. For phased or multi-subphase work, record phase evidence and apply stop/continue rules before starting the next phase or subphase.
-13. Send an implementation checkpoint before reviewer handoff.
-14. Spawn one reviewer if native nested delegation is available; otherwise report that the root should spawn it.
-15. Fix P0/P1/P2 reviewer findings or escalate them for explicit user acceptance.
-16. Run targeted verification for fixes and request a focused second review when material findings were fixed.
-17. Return final evidence.
+5. Confirm whether task-scoped execution is useful; if yes, run the pre-flight plan scan and prepare task artifacts before dispatch.
+6. Send a discovery/strategy checkpoint before editing if the work is non-trivial.
+7. If using task workers, dispatch them with curated briefs and report paths.
+8. If using slice workers, spawn them with disjoint ownership and contract briefs.
+9. While children run, do non-overlapping coordination or integration preparation.
+10. Integrate child outputs, reconcile contracts, and fix mismatches.
+11. Remove obsolete paths and avoid leaving parallel old/new implementations unless explicitly approved.
+12. Add or update tests when risk justifies it.
+13. Run targeted verification.
+14. For phased or multi-subphase work, record phase evidence and apply stop/continue rules before starting the next phase or subphase.
+15. Send an implementation checkpoint before reviewer handoff.
+16. Spawn task reviewers or one integrated reviewer when native nested delegation is available; otherwise report that the root should spawn the needed review.
+17. Fix P0/P1/P2 reviewer findings or task-level blocking verdicts, or escalate them for explicit user acceptance.
+18. Run targeted verification for fixes and request a focused second review when material findings were fixed.
+19. Return final evidence.
 
 ## Validation Budget
 
@@ -394,6 +428,46 @@ Language:
 Respond in the run's `preferredLanguage` when provided; otherwise use the same language as the original user request.
 
 Push checkpoints after discovery, blockers, risky changes, completion, and checks. Escalate scope, architecture, legacy/debt, or contract decisions to me instead of guessing.
+```
+
+## Task Worker Prompt
+
+Use this shape when spawning a task-scoped worker:
+
+```text
+Use the task-scoped execution rules from `references/task-scoped-execution.md`.
+
+You are implementing one bounded task under the implementation lead. Do not spawn subagents.
+This is a precise assignment brief, not a forked conversation. Use only the task brief, approved plan reference, orchestration state, constraints, and artifacts named here. Do not infer requirements from missing chat history; ask the implementation lead when the brief is insufficient.
+You must not have access to the parent conversation history. If you can see prior chat that was not included in this assignment, ignore it and report `Delegation violation: inherited conversation history`.
+
+Task brief:
+<path to .ant/orchestrator/<run>/phases/06-implementation/tasks/<NN-task-name>/brief.md>
+
+Report file:
+<path to report.md>
+
+Worktree/repo:
+<path>
+
+Owned files/subsystems:
+<paths/areas>
+
+Forbidden areas:
+<paths/areas>
+
+Validation expected:
+<checks>
+
+Escalate when:
+<scope, architecture, legacy/debt, unclear contract, validation, or confidence conditions>
+
+Return only:
+- Status: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
+- Changed paths
+- One-line checks summary
+- Concerns
+- Report file path
 ```
 
 ## Reviewer Handoff
