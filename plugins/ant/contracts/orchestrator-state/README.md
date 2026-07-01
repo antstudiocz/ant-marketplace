@@ -131,7 +131,9 @@ Recommended values:
 - `commitStrategy`: display hint such as `no-commits`, `final-verified-commit`, `verified-phase-commits`, or `explicit-wip-checkpoint-commits`.
 - `deliveryPreference`: display hint such as `stop-after-verification`, `commit-only`, `push-after-verification`, `draft-mr-after-verification`, `ready-mr-after-verification`, or `ask-before-delivery`.
 - `pipelinePolicy`: display hint such as `do-not-check`, `check-once`, `watch-after-push`, `watch-after-mr`, or `recover-in-scope-failures`.
-- `postImplementationActions`: optional ordered list of intended post-implementation actions such as `review`, `verification`, `commit`, `push`, `draft_mr`, `ready_mr`, `pipeline_check`, or `pipeline_watch`.
+- `browserValidationPolicy`: display hint such as `skip`, `high-risk-ui-only`, `changed-ui-flows`, or `ask-before-browser-validation`.
+- `browserValidationToolPreference`: optional ordered list such as `codex-in-app-browser`, `connected-browser-extension`, `playwright`, or `repo-browser-runner`.
+- `postImplementationActions`: optional ordered list of intended post-implementation actions such as `review`, `verification`, `browser_validation`, `commit`, `push`, `draft_mr`, `ready_mr`, `pipeline_check`, or `pipeline_watch`.
 
 Consumers should treat these fields as optional display hints. Current run state still comes from top-level `status`, `currentPhaseId`, `agents`, `edges`, `phases`, `blockers`, `artifacts`, and `checkpoints`.
 

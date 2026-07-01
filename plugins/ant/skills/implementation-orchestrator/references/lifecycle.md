@@ -69,7 +69,7 @@ This authorization only covers agent delegation. It does not bypass next-action,
 
 This authorization does not allow delegation by forking or cloning the current conversation history. Spawn child agents only with a fresh-task / no-history / no-fork mode and an explicit assignment brief. If the host only supports child agents by inheriting the active chat transcript or hidden conversation state, delegation is unavailable for this workflow.
 
-If native nested delegation is unavailable, keep the same logical flow but flatten it: the root orchestrator spawns the implementation reviewer after the implementation lead reports. If implementation delegation itself is unavailable, stop and ask the user whether to continue without orchestration.
+If native nested delegation is unavailable, keep the same logical flow but flatten it: the root orchestrator spawns the implementation reviewer after the implementation lead reports. If implementation delegation itself is unavailable, stop and report the blocker. Do not ask the user to let the root implement inside the active orchestrated run; the safe options are to start a clean no-history implementation thread/task, fix the delegation environment, or pause the run.
 
 ## Lifecycle
 
@@ -94,7 +94,26 @@ If native nested delegation is unavailable, keep the same logical flow but flatt
 19. Phase checkpoints, milestone commits when approved, and close/handoff gates.
 20. Integration, targeted checks, review, fix loop, final evidence, and delivery handoff.
 
-Do not skip directly to root implementation. When this skill is active, root implementation is forbidden regardless of task size. Tiny, clear, low-risk changes still go through at least one child agent unless the user explicitly leaves orchestration mode.
+Do not skip directly to root implementation. When this skill is active, root implementation is forbidden regardless of task size. Tiny, clear, low-risk changes still go through at least one child agent.
+
+## Planning-To-Delivery Flow
+
+The default interaction model is a planning loop followed by an autonomous delivery loop, not a sequence of user-driven micro-steps.
+
+During planning, the root orchestrator should:
+
+- gather repo facts through scouts instead of reading application source itself;
+- ask every blocking user question with recommended/default answers and tradeoffs;
+- ask follow-up questions only when the answers reveal new blocking decisions;
+- finalize a concrete plan artifact once no blocking questions remain;
+- summarize that plan, the approval envelope, stop conditions, delivery policy, and validation standard;
+- ask the user whether to start implementation.
+
+After implementation approval, the root orchestrator should delegate to an implementation lead and keep the work moving through implementation, review, fix loops, targeted verification, approved commits, MR/PR preparation, and pipeline policy until the approved envelope is complete or a stop condition is hit.
+
+Stop conditions include: failed checks that cannot be fixed in scope, unapproved residual risk, material scope/architecture/contract changes, product decisions outside the decision policy, data/security/permission risk, dirty-state surprises, target-branch or delivery-policy changes, and pipeline failures outside the approved recovery policy.
+
+The root remains dispatch-only for the entire flow. Liveness comes from a clear approval envelope and delegated execution, not from the root doing implementation work.
 
 ## Sticky Orchestrator Role
 
@@ -142,18 +161,20 @@ If any answer is no, create or update persistence first. Valid exceptions are li
 
 When an exception applies, say `Persistence skipped because ...` in the user-facing response and include the reason in any available structured state or final handoff.
 
-The root may leave orchestration mode only when the user explicitly says both:
+The root may stop advancing this lifecycle only when the user explicitly says both:
 
 1. they do not want orchestration/subagents for the next work; and
 2. they want the root agent to do the work directly.
 
-Examples that are explicit enough:
+Examples that are explicit enough to end the active orchestration lifecycle before starting separate direct work:
 
 - "Teď nepoužívej orchestraci, udělej to přímo ty."
 - "Opusť orchestration mode a implementuj to sám."
 - "Nechci subagenty, chci direct Codex implementaci."
 
-Everything else defaults to orchestration and delegation. The root must not suggest leaving orchestration merely because the follow-up is small, obvious, faster to do manually, or already understood.
+Everything else defaults to orchestration and delegation. The root must not suggest ending orchestration merely because the follow-up is small, obvious, faster to do manually, or already understood.
+
+Do not present root-direct implementation as the normal fallback for a failed orchestrated run. If this run cannot spawn no-history implementation agents, report the delegation blocker and recommend a clean no-history implementation task or environment fix. A separate non-orchestrated request can be handled outside this lifecycle only after the mode switch is explicit and the active orchestrated run is recorded as blocked, paused, or closed rather than completed by root work.
 
 ## Root Coordination-Only Guard
 
@@ -183,7 +204,7 @@ User phrases such as "udělej to", "rovnou udělej změny", "oprav to", "zapracu
 
 When repo facts are needed, the root must spawn one or more scout agents with bounded questions and make decisions from their reports. When implementation work is needed, the root must use at least one child agent even for a one-line change. If subagent delegation is unavailable, stop and report that orchestration cannot continue normally; do not silently do the scout or implementation locally.
 
-Unless the user explicitly says they do not want orchestration and want root-direct work, the root must delegate.
+While the orchestrated run is active, the root must delegate.
 
 ## Hard No-Edit Gate
 
@@ -241,7 +262,7 @@ If structured state exists and `state.json.status` is `completed`, the root must
 - update run `state.md`, run `handoff.md`, run `rationale.md` when the follow-up changes material direction, and the relevant phase `phase.md` / `handoff.md` / `rationale.md` so the UI and a resumed session show that work is active again;
 - keep historical completion evidence intact. Do not rewrite old completion text; add a follow-up/reopened section or replace only the current-status section.
 
-Post-completion follow-ups never authorize root manual edits or debugging. They are handled as a new orchestration phase unless the user explicitly leaves orchestration mode and asks the root to work directly.
+Post-completion follow-ups never authorize root manual edits or debugging. They are handled as a new orchestration phase unless the user explicitly ends this lifecycle; ending the lifecycle does not make root-direct work part of the completed orchestrated run.
 
 ## Markdown Artifact Policy
 
@@ -358,6 +379,7 @@ Rules:
 - `Pokračuj` authorizes only the next action explicitly stated in the previous assistant message.
 - `Pokračuj` never authorizes implementation unless the previous assistant message explicitly said the next action is starting implementation and asked for implementation approval.
 - Even when `pokračuj` or an explicit implementation approval authorizes implementation, it authorizes root delegation to an implementation lead, not root manual edits.
+- When the previous assistant message defined and the user approved a full approval envelope, `pokračuj` means continue that approved envelope until completion or the next recorded stop condition. Do not stop after every verified phase just to ask for another generic continue.
 - For `Medium`, `High`, and `Critical` work, implementation approval must refer to a concrete existing plan, not only a broad direction or idea.
 - `Pokračuj` after brainstorming means continue brainstorming, scout, or prepare a direction, not write code.
 - `Pokračuj` after direction approval means create or refine the plan artifact, not implement.
@@ -381,6 +403,8 @@ An approval envelope must include:
 - what exact reply starts the approved workstream.
 
 Within an approval envelope, `pokračuj` authorizes only the named workstream and only until a stop condition is hit. It never authorizes merge/release unless merge/release is explicitly listed and approved.
+
+The envelope should be written so another root session can enforce it from `.ant/orchestrator/<run>/state.json`, `decisions.md`, and the approved plan without reading the chat history. If the envelope is ambiguous, stop and clarify before implementation rather than falling back to phase-by-phase prompting.
 
 For user-facing updates during long work, keep the same contract but use a status form:
 
@@ -486,7 +510,9 @@ Record the contract in `state.json.metadata`, `decisions.md`, and the current ph
   "commitStrategy": "verified-phase-commits",
   "deliveryPreference": "draft-mr-after-verification",
   "pipelinePolicy": "watch-after-mr",
-  "postImplementationActions": ["review", "verification", "commit", "push", "draft_mr", "pipeline_check"]
+  "browserValidationPolicy": "ui-flows-when-tooling-available",
+  "browserValidationToolPreference": ["codex-in-app-browser", "connected-browser-extension", "playwright"],
+  "postImplementationActions": ["review", "verification", "browser_validation", "commit", "push", "draft_mr", "pipeline_check"]
 }
 ```
 
@@ -499,11 +525,45 @@ Ask about these areas when they are not already explicit:
 - commit strategy: no commits, one final verified commit, verified phase/milestone commits, or explicitly approved WIP/checkpoint commits;
 - delivery preference: stop after verification, commit only, push, draft MR, ready MR, or ask before delivery;
 - pipeline policy: do not check, check once, watch after MR/push, or recover in-scope failures;
+- browser validation policy: skip browser testing, test only high-risk UI paths, test every changed user-facing UI flow, or ask before browser validation;
+- browser validation tool preference: Codex in-app browser when available, then a connected Chrome/Claude browser extension when available, then repo-supported Playwright or another browser runner, otherwise record the check as blocked with the missing capability;
 - stop conditions: failed checks, unverified residual risk, scope/contract/architecture change, product decision, data/security/permission risk, dirty-state surprise, delivery target change, or pipeline failure.
 
-Recommended default when the user has not chosen: full plan before implementation, auto-continue after verified phases only when the plan and stop conditions are explicit, verified phase/milestone commits only after passing targeted checks or recorded residual risk, draft MR after final verification if MR delivery is desired, pipeline check/watch after MR, and no merge/release without separate approval.
+Recommended default when the user has not chosen: full plan before implementation, auto-continue after verified phases only when the plan and stop conditions are explicit, verified phase/milestone commits only after passing targeted checks or recorded residual risk, draft MR after final verification if MR delivery is desired, pipeline check/watch after MR, autonomous browser validation for changed user-facing UI flows when a suitable browser tool is available, and no merge/release without separate approval.
 
 Do not let a missing run contract silently degrade into repeated "should I continue?" prompts after each phase. If the user wants manual control, record `manual-after-each-phase`; otherwise create a clear approval envelope and continue until a stop condition.
+
+When the user asks for "od A až do Z", "autonomně", "bez vodění za ručičku", "včetně MR", "včetně code review", or similar, translate that into an explicit contract instead of treating it as permission for root manual work:
+
+- planning cadence: final plan before implementation;
+- phase approval policy: auto-continue after verified phases or full-workstream autonomous, depending on risk;
+- execution mode: autonomous implementation mode with escalation rules;
+- commit strategy: verified milestone commits if commits are approved;
+- delivery preference: MR/PR after final verification when requested;
+- pipeline policy: check or watch after MR/PR when requested;
+- browser validation policy: test changed user-facing UI flows autonomously when a suitable browser tool is available;
+- stop conditions: failed or unfixable checks, material scope or product decision, unsafe data/security/permission risk, delivery target change, and unapproved residual risk.
+
+After recording that contract and finalizing the plan artifact, the next user approval should start delegated implementation. It should not restart another planning negotiation unless new blocking decisions appear.
+
+## Browser Validation Gate
+
+When a change affects visible UI, navigation, forms, interactive states, charts, dashboards, responsive layout, or browser-only behavior, the plan should include browser validation unless the user explicitly declines it or the environment cannot support it.
+
+The orchestrator should ask about browser validation during the run startup contract when it affects validation cost or autonomy. Use this default recommendation:
+
+```text
+Doporučuji zahrnout autonomní browser validation pro změněné UI flow. Použiju nejlepší dostupný nástroj: Codex in-app browser, pokud je dostupný; jinak připojenou Chrome/Claude browser extension; jinak repo-supported Playwright nebo jiný browser runner. Pokud žádný browser nástroj nebude dostupný, zaznamenám check jako blocked a uvedu residual risk.
+```
+
+Browser validation tool selection:
+
+1. Codex in-app browser, when available for localhost, preview URLs, screenshots, interaction, and visual inspection.
+2. Connected Chrome/Claude browser extension, when the work depends on an existing logged-in browser state or extension-backed browser control.
+3. Repo-supported Playwright or equivalent browser automation, when available through project scripts or installed tooling.
+4. Manual residual-risk report, only when no browser automation surface is available or the required app state cannot be reached safely.
+
+Browser validation should be scenario-based, not a vague "opened page" check. Record the tested URL/state, viewport when relevant, interactions performed, assertions or observations, screenshots when useful, failures, and residual risk. Do not invent passing browser evidence when the tool is unavailable.
 
 ## Context Persistence Gate
 
@@ -1359,6 +1419,8 @@ If the plan writer finds a blocking question, stop and ask the user before imple
 
 For `Medium`, `High`, and `Critical` work, broad approval phrases before the plan exists count as approval to create or refine the plan only. Do not delegate implementation until the user approves the concrete plan summary or explicitly approves skipping the plan artifact.
 
+Once the concrete plan summary and approval envelope are approved, do not ask the user to re-approve the same scope at each phase boundary. The implementation lead should continue through the approved roadmap, reviews, verification, and delivery policy until the plan is complete or a stop condition requires escalation.
+
 ## Delegation Gate
 
 After the user approves implementation, the root orchestrator must delegate implementation to an `implementation lead` before any implementation files are edited. The root orchestrator must not create migrations, schemas, UI components, API routes, tests, fixtures, generated files, docs updates outside `.ant/orchestrator/*`, or app code locally.
@@ -1366,6 +1428,8 @@ After the user approves implementation, the root orchestrator must delegate impl
 Do not ask the user whether subagents may be used. The standing subagent authorization already permits the root orchestrator to spawn scouts, plan writers, reviewers, implementation leads, and other workflow-required agents, and permits the implementation lead to spawn slice workers or an implementation reviewer when the approved plan and strategy call for them.
 
 This permission applies only to no-history delegation. The root must not satisfy the delegation requirement by forking this conversation or any existing thread.
+
+Each child assignment is a fresh task packet. The root must specify the goal, scope, non-goals, artifacts to read, allowed reads/writes, validation expectations, escalation rules, and output format. The child should not need the chat transcript to understand its job.
 
 Allowed root-orchestrator actions:
 
@@ -1385,7 +1449,9 @@ Forbidden root-orchestrator actions:
 - treating review fixes, debugging, or polish as root-owned work after implementation;
 - silently continuing without delegation when this skill is active.
 
-The root must not implement directly, including tiny follow-up edits. If the user explicitly chooses to leave orchestration mode, stop using this lifecycle and make that mode switch clear in the conversation before any manual implementation work begins.
+The root must not implement directly, including tiny follow-up edits. If the user explicitly chooses to stop using orchestration, stop this lifecycle, record the active orchestrated run as blocked/paused/closed as appropriate, and make the mode switch clear before any separate non-orchestrated work begins.
+
+If no-history implementation delegation is unavailable, mark the run blocked or paused with the exact host limitation and recommend a clean no-history implementation task/thread. Do not ask for permission to have the root implement the active orchestrated run as a convenience fallback.
 
 ## Implementation Lead Model
 
