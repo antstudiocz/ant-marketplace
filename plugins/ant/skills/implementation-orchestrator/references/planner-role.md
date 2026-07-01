@@ -19,6 +19,7 @@ Respond in the run's `preferredLanguage` when provided; otherwise use the same l
 - Recommend an implementation direction, not detailed code steps.
 - Recommend an execution mode for medium+ work: `Autonomous implementation mode` for long-running/overnight execution or `Manual decision mode` when the user should choose among material variants.
 - Recommend or ask for phase approval policy, commit strategy, delivery/MR preference, pipeline/watch policy, and stop conditions when they affect autonomy, validation, or delivery.
+- When the user wants end-to-end delivery, translate that into an explicit approval envelope instead of repeated phase-by-phase prompts.
 - Recommend whether a plan-writer artifact, plan review, implementation lead, and slice workers are needed. Even tiny implementation work must be delegated to at least one child agent while orchestration is active.
 - Return durable phase-artifact updates for the root when planning decisions, options, rationale checkpoints, open questions, or handoff state changes.
 - End user-facing recommendations with the next-action contract: proposed next action, what reply is needed, and what `pokračuj` authorizes.
@@ -96,9 +97,32 @@ For any work where phase transitions, commits, MR creation, push, or pipeline wo
 - `Commit strategy`: no commits, one final verified commit, verified phase/milestone commits, or explicitly approved WIP/checkpoint commits.
 - `Delivery/MR policy`: stop after verification, commit only, push, draft MR, ready MR, or ask before delivery.
 - `Pipeline policy`: do not check, check once, watch after MR/push, or recover in-scope failures.
+- `Browser validation policy`: whether user-facing UI changes should be tested autonomously in a browser, using the best available browser automation surface.
 - `Stop conditions`: failed checks, unverified residual risk, scope/contract/architecture change, product decision, data/security/permission risk, dirty-state surprise, delivery target change, or pipeline failure.
 
-Recommended default: full plan before implementation, auto-continue after verified phases only when stop conditions are explicit, verified phase/milestone commits for phased work, draft MR after final verification when delivery is desired, pipeline check/watch after MR, and no merge/release without separate approval.
+Recommended default: full plan before implementation, auto-continue after verified phases only when stop conditions are explicit, verified phase/milestone commits for phased work, draft MR after final verification when delivery is desired, pipeline check/watch after MR, browser validation for user-facing UI changes when a suitable tool is available, and no merge/release without separate approval.
+
+If the user says they do not want to hand-hold the agent, wants work "od A až do Z", or wants implementation including MR/review/tests, recommend this default envelope unless repo evidence makes it unsafe:
+
+- final plan before implementation;
+- autonomous implementation mode after plan approval;
+- auto-continue after verified phases inside the approved roadmap;
+- verified milestone commits only if commit approval is included;
+- MR/PR preparation after final verification if delivery is requested;
+- pipeline check/watch according to the approved policy;
+- autonomous browser validation for user-facing UI changes when a suitable tool is available;
+- stop only for blocker questions, failed checks that cannot be fixed in scope, material scope/product decisions, unsafe data/security/permission risk, delivery target changes, or unapproved residual risk.
+
+This does not authorize root implementation. It authorizes the root to keep delegating no-history child agents inside the approved envelope.
+
+When browser validation may matter, ask or recommend:
+
+```text
+Browser validation:
+Recommended answer: test user-facing UI flows autonomously in a browser when tooling is available.
+Tool preference: Codex in-app browser first when available; otherwise a connected Chrome/Claude browser extension if available; otherwise repo-supported Playwright/browser automation; otherwise record browser validation as blocked and include the exact missing tool.
+If different: skip browser validation and rely on automated tests/review, with residual visual/interaction risk recorded.
+```
 
 ## Challenge Duty
 

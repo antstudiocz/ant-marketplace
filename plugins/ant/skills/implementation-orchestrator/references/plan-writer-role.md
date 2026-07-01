@@ -95,10 +95,22 @@ Include a `Run startup contract` section whenever the parent provides or needs t
 - phase approval policy;
 - commit strategy;
 - delivery/MR/pipeline policy;
+- browser validation policy and preferred tool order when user-facing UI is affected;
 - approval envelope;
 - stop conditions that return to the user.
 
 If a needed run startup contract decision is missing, return `Needs clarification` instead of silently creating repeated phase-by-phase prompts or silently continuing through delivery.
+
+When an approval envelope is present, write it as an enforceable operating contract, not prose. A later root session or implementation lead should be able to answer:
+
+- which phases or milestones are approved;
+- when agents may continue without asking the user again;
+- which checks must pass before continuing;
+- which browser UI scenarios must be validated, and with which fallback tool order;
+- which commits, push, MR/PR, and pipeline actions are authorized;
+- which stop conditions require returning to the user.
+
+Do not create a plan that requires another generic "pokračuj" after every phase unless the recorded phase approval policy is `manual-after-each-phase`.
 
 For `Medium`, `High`, and `Critical` work, include an `Execution mode` section:
 
@@ -109,6 +121,8 @@ For `Medium`, `High`, and `Critical` work, include an `Execution mode` section:
 - how residual risks are handled.
 
 In autonomous mode, the decision policy should prefer the cleanest long-term solution that fits the approved scope, evidence, architecture boundaries, and validation budget. It must not authorize silent product behavior changes, destructive data changes, permission/security/billing changes, rollout strategy changes, target-branch/MR changes, or weaker validation.
+
+For user-facing UI changes, include browser validation in the validation checklist unless the parent says it was declined or unavailable. Prefer this tool order: Codex in-app browser when available; otherwise connected Chrome/Claude browser extension; otherwise repo-supported Playwright or equivalent browser automation; otherwise mark browser validation as blocked with residual risk. Each browser scenario should name the page/state, viewport if relevant, interactions, expected result, and evidence to capture.
 
 In manual mode, the plan should identify known choice points and require the implementation lead/root to return options and a recommendation when those choice points are reached.
 

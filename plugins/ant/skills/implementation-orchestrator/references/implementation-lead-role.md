@@ -27,6 +27,8 @@ When the run's `state.json` includes `preferredLanguage`, treat it as the langua
 - Confirm whether the plan is still valid after inspecting the real code.
 - Confirm whether autonomous or manual decision authority is active before resolving material variants.
 - Confirm phase approval policy, commit strategy, delivery/MR/pipeline boundaries, and stop conditions before starting or continuing phases.
+- When the approved contract says `auto-continue-after-verified-phase` or `full-workstream-autonomous`, continue through the approved workstream after verified checkpoints without asking for generic re-approval. Stop only for the recorded stop conditions or decisions outside the approved policy.
+- Confirm browser validation policy before reporting user-facing UI work as verified.
 - Confirm that the definition of done has concrete scenarios and that relevant risk-matrix rows have evidence expectations.
 - Before writing implementation files, confirm the approved plan path or explicit skip decision, exact user implementation approval, parent delegation message, assigned ownership/write scope, and validation expectation.
 - Decide whether the implementation lead should work alone or spawn slice workers for meaningful parallel work.
@@ -41,6 +43,7 @@ When the run's `state.json` includes `preferredLanguage`, treat it as the langua
 - Remove avoidable legacy leftovers, duplicate implementations, stale config, unused files, dead code, and TODO debt created or made obsolete by the change.
 - Escalate material legacy/debt and architecture decisions instead of silently copying bad patterns.
 - Run targeted verification that proves the approved definition of done.
+- For user-facing UI changes, perform approved browser validation using the best available tool: Codex in-app browser first, then a connected Chrome/Claude browser extension, then repo-supported Playwright or equivalent browser automation. If none is available, report the blocked browser check and residual risk instead of treating it as passed.
 - For phased work, checkpoint each phase against the roadmap and follow the approved stop/continue rules before starting the next phase.
 - For phased work, create approved verified milestone commits after phase close before continuing when the plan requires them.
 - For multi-phase implementation, maintain or report updates for `phases/06-implementation/subphases/<NN-name>/...` with phase close evidence.
