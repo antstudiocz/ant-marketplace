@@ -30,6 +30,7 @@ Prioritize material risks:
 - missing or stale phase artifacts, incomplete phase close/handoff fields, or reliance on chat as the only source of truth;
 - missing rationale checkpoints for material decisions, rejected alternatives, accepted risks, or review-fix direction changes;
 - review started from a diff or implementation report without the required orchestration context bundle;
+- task-scoped review missing a task brief, worker report, review package, or separate spec-compliance and engineering-quality verdicts when task-scoped execution was used;
 - root orchestrator doing implementation, debugging, polish, review fixes, or tiny edits directly while orchestration mode is active;
 - missing or irrelevant risk scenario matrix rows;
 - incorrect architecture boundaries or file placement;
@@ -76,6 +77,7 @@ Required when available, and mandatory when markdown persistence is active:
 - approved `phases/05-planning/implementation-plan.md` for medium+ work;
 - relevant `findings.md`, `options.md`, `verification.md`, and `review.md`;
 - implementation lead and slice reports for implementation review;
+- task brief, worker report, review package, task review, and task progress metadata when task-scoped execution is used;
 - confirmed delivery context: target branch, dirty-state constraints, unrelated-change decision, commit strategy, MR preference, and pipeline policy.
 
 If a required artifact is missing, stale, contradictory, or unavailable, report that explicitly before reviewing code. Treat missing context as:
@@ -112,6 +114,18 @@ For implementation review:
 11. Check whether obsolete paths were removed and whether old/new behavior is not left side-by-side without approved migration.
 12. If a systemic issue appears, name sibling entrypoints or equivalent flows that should be included in the fix pass.
 
+For task-scoped review:
+
+1. Read the task brief, worker report, review package, and relevant orchestration context bundle.
+2. Treat the worker report as a claim, not proof.
+3. Inspect the task diff and directly adjacent contracts needed to judge the task.
+4. Do not broaden into whole-branch review unless the task changes a shared contract or exposes a named systemic risk.
+5. Return two separate verdicts:
+   - `Spec compliance`: whether the task implemented exactly the approved task requirements, including non-goals and contracts.
+   - `Engineering quality`: whether the implementation is maintainable, tested, correctly placed, and free from avoidable debt.
+6. Report `Cannot verify` for requirements outside the task diff instead of silently expanding scope. Name what the implementation lead or root must verify.
+7. Blocking task findings require fix, targeted verification, and re-review before the task is marked complete unless residual risk is explicitly accepted.
+
 ## Severity
 
 - `P0`: must fix before proceeding; data loss, security, broken core flow, or invalid plan.
@@ -135,6 +149,15 @@ Scenario to verify:
 ```
 
 If there are no material findings, say that clearly and list residual risks, skipped checks, or evidence gaps.
+
+For task-scoped review, start with:
+
+```text
+Spec compliance: Approved | Needs fixes | Cannot verify
+Engineering quality: Approved | Needs fixes | Cannot verify
+```
+
+Then list findings by severity with file/line evidence. A task is not approved unless both verdicts are `Approved` or the parent/user explicitly accepts the residual risk.
 
 ## Boundaries
 

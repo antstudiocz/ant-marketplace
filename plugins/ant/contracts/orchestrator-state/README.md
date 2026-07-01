@@ -102,7 +102,27 @@ The orchestrator may use a lighter or heavier delegated workflow per request whi
     "commitStrategy": "verified-phase-commits",
     "deliveryPreference": "draft-mr-after-verification",
     "pipelinePolicy": "watch-after-mr",
-    "postImplementationActions": ["review", "verification", "commit", "push", "draft_mr", "pipeline_check"]
+    "postImplementationActions": ["review", "verification", "commit", "push", "draft_mr", "pipeline_check"],
+    "taskScopedExecution": {
+      "enabled": true,
+      "tasks": [
+        {
+          "id": "01-api-contract",
+          "title": "API contract",
+          "status": "reviewing",
+          "ownerAgentId": "implementation-lead",
+          "briefPath": ".ant/orchestrator/example/phases/06-implementation/tasks/01-api-contract/brief.md",
+          "reportPath": ".ant/orchestrator/example/phases/06-implementation/tasks/01-api-contract/report.md",
+          "reviewPackagePath": ".ant/orchestrator/example/phases/06-implementation/tasks/01-api-contract/review-package.diff",
+          "reviewPath": ".ant/orchestrator/example/phases/06-implementation/tasks/01-api-contract/review.md",
+          "specCompliance": "pending",
+          "engineeringQuality": "pending",
+          "checksSummary": "Targeted API tests pending review",
+          "residualRisks": [],
+          "nextAction": "task review"
+        }
+      ]
+    }
   },
   "agents": [
     {
@@ -134,6 +154,7 @@ Recommended values:
 - `browserValidationPolicy`: display hint such as `skip`, `high-risk-ui-only`, `changed-ui-flows`, or `ask-before-browser-validation`.
 - `browserValidationToolPreference`: optional ordered list such as `codex-in-app-browser`, `connected-browser-extension`, `playwright`, or `repo-browser-runner`.
 - `postImplementationActions`: optional ordered list of intended post-implementation actions such as `review`, `verification`, `browser_validation`, `commit`, `push`, `draft_mr`, `ready_mr`, `pipeline_check`, or `pipeline_watch`.
+- `taskScopedExecution`: optional task progress view for implementation plans split into reviewable tasks. Keep it as metadata or linked artifacts; do not add new enum values. Recommended task fields are `id`, `title`, `status`, `ownerAgentId`, `briefPath`, `reportPath`, `reviewPackagePath`, `reviewPath`, `specCompliance`, `engineeringQuality`, `checksSummary`, `residualRisks`, and `nextAction`.
 
 Consumers should treat these fields as optional display hints. Current run state still comes from top-level `status`, `currentPhaseId`, `agents`, `edges`, `phases`, `blockers`, `artifacts`, and `checkpoints`.
 

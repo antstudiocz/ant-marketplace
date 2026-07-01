@@ -18,6 +18,7 @@ This is the only public orchestration skill. Internal roles live in `references/
 - `references/phase-owner-role.md` - shared phase workspace and close-gate rules.
 - `references/plan-writer-role.md` - `.ant/orchestrator/<run>/phases/05-planning/implementation-plan.md` checklist role.
 - `references/implementation-lead-role.md` - implementation sub-orchestrator role.
+- `references/task-scoped-execution.md` - optional implementation-phase task brief, report, review package, and task ledger discipline.
 - `references/slice-worker-role.md` - bounded backend/frontend/data/test slice worker role.
 - `references/reviewer-role.md` - plan and integrated implementation reviewer role.
 
@@ -29,6 +30,7 @@ Root Orchestrator
 ├── Plan Writer role
 ├── Plan Reviewer role, high-risk only
 └── Implementation Lead role
+    ├── Task-scoped worker/reviewer loop, optional
     ├── Slice Worker role(s), optional
     └── Implementation Reviewer role
 ```
@@ -102,10 +104,11 @@ UIs should treat these metadata fields as display hints. Existing `status`, `pha
 14. **Plan phase artifact** - create or update `.ant/orchestrator/<run>/phases/05-planning/implementation-plan.md` through the plan writer role for medium+ work when a concrete plan adds value or is required by risk.
 15. **Implementation approval** - summarize the plan or low-risk dispatch packet, execution mode, phase approval policy, commit strategy, delivery/MR/pipeline policy, decision policy, and current phase detail, then wait for approval when the gate requires it.
 16. **Delegated implementation** - delegate implementation before editing app code. `Low` uses one bounded implementation worker; higher tiers use an implementation lead.
-17. **Multi-phase implementation when useful** - implementation may use `phases/06-implementation/subphases/<NN-name>/...` with roadmap, checkpoints, verification, review, milestone commits when approved, and stop/continue rules.
-18. **Slice work when useful** - backend/frontend/data/test slices may run in parallel against explicit contracts.
-19. **Phase close and handoff** - before any user-facing transition, pause, stop, handoff, milestone commit, or completion report, update structured state and concise human artifacts.
-20. **Integration, review, verification, delivery handoff** - implementation is done only after tier-appropriate checks, review/fix loop when required, evidence, and a concrete delivery handoff that says whether staging, commit, push, merge request creation, and pipeline watching are recommended, blocked, or explicitly declined.
+17. **Task-scoped execution when useful** - implementation may split approved work into reviewable tasks with file-based briefs, worker reports, review packages, task verdicts, and progress recorded in orchestrator state.
+18. **Multi-phase implementation when useful** - implementation may use `phases/06-implementation/subphases/<NN-name>/...` with roadmap, checkpoints, verification, review, milestone commits when approved, and stop/continue rules.
+19. **Slice work when useful** - backend/frontend/data/test slices may run in parallel against explicit contracts.
+20. **Phase close and handoff** - before any user-facing transition, pause, stop, handoff, milestone commit, or completion report, update structured state and concise human artifacts.
+21. **Integration, review, verification, delivery handoff** - implementation is done only after tier-appropriate checks, review/fix loop when required, evidence, and a concrete delivery handoff that says whether staging, commit, push, merge request creation, and pipeline watching are recommended, blocked, or explicitly declined.
 
 ## Mandatory Gates
 
@@ -139,6 +142,7 @@ UIs should treat these metadata fields as display hints. Existing `status`, `pha
 - **Execution mode gate:** for medium+ work, record whether implementation will run in autonomous implementation mode or manual decision mode before detailed plan writing. Autonomous mode lets agents choose among technical variants using code evidence and the approved decision policy; manual mode requires user choice when valid variants remain.
 - **Phased roadmap gate:** when phased rollout is selected, the plan must cover the whole roadmap before phase 1 starts. Later phases may be less detailed, but each phase needs goals, dependencies, acceptance criteria, compatibility/rollback expectations, validation expectations, and stop/continue rules.
 - **Multi-phase implementation gate:** implementation may be split under `phases/06-implementation/subphases/<NN-name>/...`; each subphase must have a roadmap checkpoint, verification evidence, review status when applicable, and explicit stop/continue rule before the next subphase starts.
+- **Task-scoped execution gate:** when an approved plan has separable reviewable tasks, the implementation lead should consider `references/task-scoped-execution.md`. Use file-based task briefs, worker reports, review packages, separate spec-compliance and engineering-quality verdicts, and task progress recorded in `.ant/orchestrator/<run>/state.json` metadata or linked artifacts. Do not use this gate for tiny edits where it adds coordination cost without evidence value.
 - **Milestone commit gate:** if the user approves commits after phases or major milestones, commit only after the phase/milestone is closed, targeted checks passed or residual risk is explicitly recorded, dirty state is understood, and unrelated changes are excluded. Never create unverified WIP commits unless the user explicitly approved checkpoint commits with residual risk.
 - **Git/delivery gate:** record current branch, dirty state, target branch, branch/worktree decision, unrelated-change decision, commit strategy, merge request preference, and pipeline/watch preference; never create/switch branches, worktrees, commit, push, create MRs, or watch/recover pipelines without explicit approval or a recorded approval envelope.
 - **Target branch intake gate:** recommend a target branch when possible, but store the user-confirmed target before planning or delivery; delivery must stop if no confirmed target exists.
@@ -167,6 +171,7 @@ Before delegating or making a lifecycle decision:
 
 - Read `references/lifecycle.md` for the complete protocol.
 - Read only the role reference needed for the next delegation.
+- Read `references/task-scoped-execution.md` before task-scoped implementation, task-level review, or task ledger decisions.
 - Include the relevant role instructions in the subagent prompt. Do not tell subagents to use a separate public skill for planner/scout/reviewer/etc.; those roles are internal references, not invocable skills.
 - Prompt subagents with a precise assignment packet only. Use a fresh-task / no-history / no-fork tool mode. Do not fork, steer, paste, expose, or rely on the full conversation transcript as the child context.
 - Never prompt a child with fake skill names such as `ant-implementation-orchestrator:planner`, `ant-implementation-orchestrator:scout`, or `ant-implementation-orchestrator:reviewer`. If the host cannot load references for a child, paste the needed role instructions or a concise role brief into the child prompt.

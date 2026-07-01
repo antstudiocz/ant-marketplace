@@ -89,10 +89,11 @@ If native nested delegation is unavailable, keep the same logical flow but flatt
 14. Planning phase artifact with full phased roadmap when phased rollout is selected.
 15. Concise user-facing plan or dispatch summary, execution mode, phase approval policy, commit strategy, delivery policy, and implementation approval.
 16. Delegated implementation: one bounded worker for `Low`, implementation lead for higher tiers.
-17. Optional multi-phase implementation under `phases/06-implementation/subphases/<NN-name>/...`.
-18. Optional parallel slice work under the implementation lead.
-19. Phase checkpoints, milestone commits when approved, and close/handoff gates.
-20. Integration, targeted checks, review, fix loop, final evidence, and delivery handoff.
+17. Optional task-scoped execution for separable reviewable tasks, using file-based briefs, worker reports, review packages, task verdicts, and task progress in orchestrator state.
+18. Optional multi-phase implementation under `phases/06-implementation/subphases/<NN-name>/...`.
+19. Optional parallel slice work under the implementation lead.
+20. Phase checkpoints, milestone commits when approved, and close/handoff gates.
+21. Integration, targeted checks, review, fix loop, final evidence, and delivery handoff.
 
 Do not skip directly to root implementation. When this skill is active, root implementation is forbidden regardless of task size. Tiny, clear, low-risk changes still go through at least one child agent.
 
@@ -1227,6 +1228,30 @@ In autonomous mode, the implementation lead may continue from one approved phase
 
 Implementation itself may be multi-phase. Use `phases/06-implementation/subphases/<NN-name>/...` when the approved implementation needs separable foundation, contract, UI, data, verification, cleanup, or provider migration work. Each implementation subphase must have the minimum phase files, roadmap checkpoint, verification expectations, review status when applicable, and an explicit stop/continue rule before the next subphase starts.
 
+## Task-Scoped Execution Gate
+
+When an approved implementation plan contains separable tasks that can be implemented, verified, and reviewed independently, the implementation lead should consider `references/task-scoped-execution.md`.
+
+Use task-scoped execution for tasks where file-based handoffs reduce context noise, improve review quality, or make compaction recovery safer. Store task artifacts under the implementation phase, for example:
+
+```text
+.ant/orchestrator/<run>/phases/06-implementation/tasks/<NN-task-name>/
+  brief.md
+  report.md
+  review-package.diff
+  review.md
+```
+
+Before dispatching the first task, run a pre-flight scan for plan contradictions, missing shared contracts, bad task boundaries, unapproved temporary breakage, and plan instructions that would force weak tests, TODO debt, duplicated logic, suppressed errors, or avoidable legacy preservation.
+
+Task workers receive curated task packets, not raw chat history or unrelated plan detail. Their brief must include all relevant know-how for the task: goal, approved decisions, scope, non-goals, contracts, owned files, forbidden areas, validation, escalation rules, and report path.
+
+Task review must return two verdicts: `Spec compliance` and `Engineering quality`. A task is not complete unless both verdicts are approved, or residual risk is explicitly accepted after targeted verification.
+
+Track task progress in `state.json.metadata.taskScopedExecution` or linked artifacts rather than adding new schema enum values. Append durable events for task artifacts, checkpoints, validation, and review findings when task state changes.
+
+Do not use task-scoped execution for tiny low-risk edits when it adds coordination cost without evidence value.
+
 ## Model Tier Routing
 
 The root orchestrator's own model is selected externally by the user/session. This skill does not override the root model. The root orchestrator owns model-tier selection for direct child agents. The implementation lead owns model-tier selection for its children within root guidance.
@@ -1385,6 +1410,7 @@ Risky claims require independent proof. Examples: permission safety, data scope 
 Review/fix loop rules:
 
 - P0/P1/P2 findings block completion.
+- In task-scoped execution, `Spec compliance: Needs fixes` or `Engineering quality: Needs fixes` blocks task completion until fixed, verified, and re-reviewed or explicitly accepted as residual risk.
 - The implementation lead must fix or escalate each actionable finding.
 - After fixes, run targeted verification for the changed behavior.
 - Run a second focused review for the fixed findings when the original reviewer found P0/P1/P2 or when the fix changed contracts, data, permissions, external writes, or architecture boundaries.
@@ -1719,6 +1745,7 @@ When the user approves implementation, spawn an implementation lead before editi
 ```text
 Use the implementation lead role instructions from `references/implementation-lead-role.md`.
 Use the phase owner rules from `references/phase-owner-role.md` for implementation phase and subphase artifacts.
+Use `references/task-scoped-execution.md` when the approved plan contains separable reviewable tasks.
 
 You are the implementation lead for this approved plan. You are a child of the root orchestrator and own the implementation phase end-to-end.
 This is a precise assignment brief, not a forked conversation. Use only the goal, approved plan, delivery context, orchestration artifacts, constraints, and guidance named here as your operating context. Do not infer requirements from missing chat history; escalate unclear decisions to the root.
@@ -1753,6 +1780,7 @@ Responsibilities:
 - Confirm execution mode, decision policy, escalation rules, and phased roadmap before resolving variants or starting a new phase.
 - Follow the approved phase approval policy and commit strategy; create milestone commits only after verified phase/milestone close or explicit residual-risk approval.
 - Confirm implementation phase/subphase artifact ownership and close-gate expectations before starting work.
+- Decide whether task-scoped execution is useful; if so, prepare task briefs, reports, review packages, task review verdicts, and task progress updates before marking tasks complete.
 - Run the implementation lead on Codex `gpt-5.5` with `high` reasoning by default, or `xhigh` for security, billing, tenant/data-loss, migrations, broad architecture, or critical root-cause debugging. On Claude Code, use Opus tier with high/max practical thinking.
 - Use Codex `gpt-5.4-mini` / Claude Sonnet only for bounded small-medium child slices with approved contracts and no unresolved decisions.
 - Use Codex `gpt-5.3-codex-spark` / Claude Haiku only for tiny mechanical child tasks.

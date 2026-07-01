@@ -24,6 +24,7 @@ Write the plan in the run's `preferredLanguage` when provided; otherwise use the
 - Define the full phased roadmap when phased rollout is selected, before any phase implementation can begin.
 - Define phase artifact layout and close/handoff expectations so another AI session can resume the work.
 - Define a concurrency plan for the implementation lead.
+- Define task-scoped execution when it adds evidence value: task boundaries, task briefs, worker reports, review packages, task-level review verdicts, and task progress tracking.
 - Define validation and evidence requirements.
 - Ask blocking questions instead of inventing missing intent.
 
@@ -65,6 +66,7 @@ Normally create or update `.ant/orchestrator/<run>/phases/05-planning/implementa
 - architecture boundaries;
 - legacy/debt decisions;
 - contract-first details;
+- task-scoped execution plan when useful;
 - concurrency plan;
 - implementation checklist;
 - validation checklist;
@@ -73,6 +75,33 @@ Normally create or update `.ant/orchestrator/<run>/phases/05-planning/implementa
 - risks and open questions.
 
 Use checkboxes for executable implementation and validation steps.
+
+## Task-Scoped Execution Planning
+
+Use `references/task-scoped-execution.md` when an implementation plan contains separable tasks that benefit from task-level handoff and review.
+
+Before writing the implementation checklist, do a pre-flight plan scan for:
+
+- contradictions between tasks, shared contracts, non-goals, and validation;
+- task order that creates unapproved temporary breakage;
+- instructions that would force weak tests, duplicated logic, TODO debt, suppressed errors, or avoidable legacy preservation;
+- missing contracts for parallel backend/frontend or producer/consumer work;
+- task boundaries that are too broad or too small to review meaningfully.
+
+If this scan finds a material issue, return `Needs clarification` with the exact conflict, recommended correction, and why it matters. Do not hide the issue in the implementation checklist.
+
+When task-scoped execution is useful, include a `Task-scoped execution` section with:
+
+- task ids and titles;
+- task scope and non-goals;
+- owned files/subsystems and forbidden overlap;
+- prerequisite contracts or prior tasks;
+- validation expectation;
+- task review expectation: `Spec compliance` and `Engineering quality`;
+- required artifacts: `brief.md`, `report.md`, optional `review-package.diff`, and `review.md`;
+- task progress fields to record in `state.json.metadata.taskScopedExecution` or linked artifacts.
+
+Do not force task-scoped execution for tiny low-risk work. For small changes, explain that one bounded delegated worker checkpoint is enough.
 
 ## Phase Artifact Requirements
 

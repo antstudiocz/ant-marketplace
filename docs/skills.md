@@ -46,6 +46,7 @@ How it works:
 - challenges weak approaches with code evidence and asks for direction approval;
 - creates an `.ant/orchestrator/<run>/phases/05-planning/implementation-plan.md` checklist through a plan writer;
 - delegates implementation to an implementation lead, which may use `phases/06-implementation/subphases/` and slice workers for parallel backend/frontend/data/test work;
+- can use task-scoped execution for separable plan tasks: curated task briefs, worker report files, review packages, separate spec-compliance and engineering-quality verdicts, and task progress in orchestrator state;
 - remains coordination-only after completion, including follow-up debugging, review fixes, polish, tiny edits, and post-delivery issues;
 - finishes with integration, targeted validation, review/fix loops, and final evidence.
 
