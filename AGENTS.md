@@ -19,6 +19,12 @@ plugins/ant/
 assets/               # Shared README and branding assets
 ```
 
+## Pull Requests
+
+- Always use the `ant:merge-request` / `$merge-request` skill when preparing, creating, or updating a PR/MR.
+- Write PR/MR titles in Conventional Commit style and keep PR/MR descriptions in English by default, unless the user explicitly requests another language.
+- Use the Merge Request skill's structured description format, including the short summary at the top, the `---` separator, validation notes, and reviewer focus.
+
 ## Adding a New Skill
 
 Prefer a new public skill only for a distinct workflow or domain entrypoint. If the topic belongs under frontend, Laravel, delivery, or orchestration, add it as a reference under the existing umbrella skill instead.
