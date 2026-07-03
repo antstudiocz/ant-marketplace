@@ -102,13 +102,19 @@ docs(skills): add merge request workflow
 
 ## MR Description
 
-Write the description in the selected language. Be concrete and operational, not marketing-oriented. Separate user walkthrough from technical validation.
+Write the description in the selected language. Be concrete and operational, not marketing-oriented. The description must start with a short plain-language summary of what was actually done, then a horizontal rule, then the detailed structured sections. Separate user walkthrough from technical validation.
 
 Use these sections. Translate section headings for other selected languages while preserving the meaning.
 
 ### Czech
 
 ````markdown
+## Stručně
+
+- ...
+
+---
+
 ## Co se změnilo
 
 - ...
@@ -152,6 +158,12 @@ Use these sections. Translate section headings for other selected languages whil
 ### English
 
 ````markdown
+## Summary
+
+- ...
+
+---
+
 ## What changed
 
 - ...
@@ -194,6 +206,8 @@ Use these sections. Translate section headings for other selected languages whil
 
 ### Description Guidance
 
+- In "Summary" / "Stručně", write 1-3 short bullets for a non-technical reviewer. Say what was actually delivered in plain language. Avoid implementation details, file names, recovery history, and vague process wording.
+- Put `---` directly after the summary section so the quick summary is visually separated from the detailed review notes.
 - In "What changed" / "Co se změnilo", summarize the actual diff by behavior and touched areas, not only file names.
 - In "Why" / "Proč", connect the change to the user problem, task, regression, workflow need, or technical debt visible from context.
 - In "Why this approach" / "Proč je to řešené takhle", explain concrete decisions, tradeoffs, and why the implementation shape is appropriate.
