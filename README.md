@@ -119,11 +119,13 @@ Codex installations may allow a deeper subagent hierarchy with this setting in `
 max_depth = 2
 ```
 
-Then restart Codex or open a new session. The orchestrator also works without nested delegation by dispatching a flatter agent graph.
+Then restart Codex or open a new session. The orchestrator also works without nested delegation by dispatching a flatter agent graph. If the active host cannot provide any writer-capable native delegation, the orchestrator stops before tracked edits instead of falling back to root writes.
 
-The shared workflow routes by Strong, Balanced, and Fast capabilities, while each host selects from its current model catalog. Reasoning is reassessed during work: it increases when ambiguity, risk, or failures broaden and decreases for bounded deterministic segments. During implementation it runs targeted checks after coherent phases; the full suite runs once on the final tree before delivery.
+The shared workflow routes by Strong, Balanced, and Fast capabilities, while each host selects from its current model catalog. Reasoning is reassessed during work: it increases when ambiguity, risk, or failures broaden and decreases for bounded deterministic segments. During implementation it runs targeted checks after coherent phases; after the final tracked mutation and review, the full suite runs once on the final tree before completion and, when requested, delivery.
 
-Approval covers the stable plan rather than every phase. A tiny mechanical step inside that plan uses a compact cycle without duplicate approval. If the user adds materially new functionality mid-flight, only the affected writes pause for discovery, brainstorming, deeper analysis, a delta-plan, and approval; unaffected work continues.
+Approval covers the stable plan rather than every phase. A tiny mechanical step inside that plan uses a compact cycle without duplicate approval. Related material changes received during the same active segment are batched into one affected-scope discovery, brainstorming, deeper analysis, delta-plan, and approval at the next safe boundary; only affected writes pause while unaffected work continues. Urgent stop and safety corrections apply immediately.
+
+Delivery handoffs use the identifier visible in the active host: Claude Code invokes `/ant:merge-request` and `/ant:delivery-workflows`; Codex invokes `$merge-request` and `$delivery-workflows`.
 
 More detail:
 

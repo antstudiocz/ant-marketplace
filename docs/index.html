@@ -1022,7 +1022,8 @@
             <h2 id="slide-2-title">Root directs. It does not write.</h2>
             <p class="lead">
               Root keeps user context, routing, progress, and delivery intent.
-              Source code and changes belong to delegated roles.
+              Source code and changes belong to delegated roles. Without a native delegated writer,
+              work blocks before tracked edits.
             </p>
           </div>
           <div class="hero-mark" aria-label="What root owns">
@@ -1231,7 +1232,7 @@
             </div>
             <div class="artifact-card">
               <strong>Live user input</strong>
-              <span>new functionality replans only affected scope while independent work continues.</span>
+              <span>related material changes share one affected-scope replan at the next safe boundary.</span>
             </div>
             <div class="artifact-card">
               <strong>Targeted checks</strong>
@@ -1239,7 +1240,7 @@
             </div>
             <div class="artifact-card">
               <strong>One final suite</strong>
-              <span>runs on the exact final tree before delivery.</span>
+              <span>runs after review on the exact final tree before completion and optional delivery.</span>
             </div>
           </div>
         </section>
@@ -1290,7 +1291,7 @@
             "#slide-1-title + .lead": "The orchestrator is not a visual map of everything at once. It is a chain of clear decisions that moves work from request to verified outcome.",
             "[aria-labelledby='slide-2-title'] .kicker": "root",
             "#slide-2-title": "Root directs. It does not write.",
-            "#slide-2-title + .lead": "Root keeps user context, routing, progress, and delivery intent. Source code and changes belong to delegated roles.",
+            "#slide-2-title + .lead": "Root keeps user context, routing, progress, and delivery intent. Source code and changes belong to delegated roles. Without a native delegated writer, work blocks before tracked edits.",
             ".hero-row:nth-child(1) strong": "Communication",
             ".hero-row:nth-child(1) span": "asks for decisions that cannot be safely inferred from the repository.",
             ".hero-row:nth-child(2) strong": "Scale",
@@ -1367,11 +1368,11 @@
             ".artifact-card:nth-child(1) strong": "Adaptive reasoning",
             ".artifact-card:nth-child(1) span": "escalates for uncertainty and de-escalates for deterministic segments.",
             ".artifact-card:nth-child(2) strong": "Live user input",
-            ".artifact-card:nth-child(2) span": "new functionality replans only affected scope while independent work continues.",
+            ".artifact-card:nth-child(2) span": "related material changes share one affected-scope replan at the next safe boundary.",
             ".artifact-card:nth-child(3) strong": "Targeted checks",
             ".artifact-card:nth-child(3) span": "run after coherent implementation phases, not after every edit.",
             ".artifact-card:nth-child(4) strong": "One final suite",
-            ".artifact-card:nth-child(4) span": "runs on the exact final tree before delivery."
+            ".artifact-card:nth-child(4) span": "runs after review on the exact final tree before completion and optional delivery."
           },
           attrs: {
             ".hero-mark": { "aria-label": "What root owns" },
@@ -1414,7 +1415,7 @@
             "#slide-1-title + .lead": "Orchestrátor není vizuální mapa všeho najednou. Je to sada jasných rozhodnutí, která posouvají práci od zadání k ověřenému výsledku.",
             "[aria-labelledby='slide-2-title'] .kicker": "root",
             "#slide-2-title": "Root řídí, nepíše.",
-            "#slide-2-title + .lead": "Root drží uživatelský kontext, routing, průběh a delivery záměr. Zdrojový kód a změny patří delegovaným rolím.",
+            "#slide-2-title + .lead": "Root drží uživatelský kontext, routing, průběh a delivery záměr. Zdrojový kód a změny patří delegovaným rolím. Bez nativního writera se práce zastaví před tracked změnami.",
             ".hero-row:nth-child(1) strong": "Komunikace",
             ".hero-row:nth-child(1) span": "ptá se na rozhodnutí, která nejdou bezpečně zjistit z repa.",
             ".hero-row:nth-child(2) strong": "Rozsah",
@@ -1491,11 +1492,11 @@
             ".artifact-card:nth-child(1) strong": "Adaptivní reasoning",
             ".artifact-card:nth-child(1) span": "eskaluje při nejistotě a zlevňuje deterministické části.",
             ".artifact-card:nth-child(2) strong": "Průběžné zprávy",
-            ".artifact-card:nth-child(2) span": "nová funkcionalita přeplánuje jen dotčený scope, nezávislá práce pokračuje.",
+            ".artifact-card:nth-child(2) span": "související materiální změny sdílí jeden replan dotčeného scope na nejbližší bezpečné hranici.",
             ".artifact-card:nth-child(3) strong": "Cílené kontroly",
             ".artifact-card:nth-child(3) span": "běží po ucelených fázích, ne po každé editaci.",
             ".artifact-card:nth-child(4) strong": "Jedna finální suite",
-            ".artifact-card:nth-child(4) span": "běží na přesně finálním stromu před delivery."
+            ".artifact-card:nth-child(4) span": "běží po review na přesně finálním stromu před dokončením a případným delivery."
           },
           attrs: {
             ".hero-mark": { "aria-label": "Co root vlastní" },

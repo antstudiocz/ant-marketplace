@@ -25,15 +25,16 @@ assets/               # Shared README and branding assets
 - Keep the shared workflow host-neutral. Route by `strong`, `balanced`, and `fast` capabilities; put current Codex or Claude model names only in user documentation as non-binding examples.
 - Require read-only repository discovery, a proportional implementation plan, and explicit user approval before every tracked implementation. For new or materially changed behavior, also require user-needs brainstorming, all material non-repo-discoverable questions, and deeper technical analysis before the plan.
 - Treat an approved `create-application` brief or user-supplied concrete plan as product input, not automatic write authorization. The orchestrator must verify it against the repository, prepare the implementation plan, and obtain approval; do not repeat approval for every phase inside the stable plan.
+- Keep the root coordination-only while `implementation-orchestrator` is active. If no writer-capable native delegation is available, stop before tracked edits and report a blocker; never fall back to root writes or imply independent review.
 - Reassess reasoning during execution. Escalate when ambiguity, risk, conflicts, or failures broaden; de-escalate at safe boundaries for deterministic mechanical work.
-- Run targeted checks after coherent implementation phases. Run the broad/full suite once on the final tree before delivery, and refresh it only after a later relevant mutation.
-- Mid-flight status/questions and details within approved behavior must not pause work. Materially new functionality requires an affected-scope discovery, brainstorming, analysis, delta-plan, and explicit approval cycle; pause only affected writes while unrelated work continues.
-- `merge-request` exclusively owns PR/MR creation and updates. `delivery-workflows` owns merge-conflict resolution only; do not add aliases or forwarding bridges between them.
+- Run targeted checks after coherent implementation phases. After the final tracked mutation and required review, run the broad/full suite once on the final tree before completion and optional delivery; refresh it only after a later relevant mutation.
+- Mid-flight status/questions and details within approved behavior must not pause work. Batch related material changes or corrections received during the same active segment into one affected-scope discovery, brainstorming, analysis, delta-plan, and explicit approval cycle at the next safe boundary; pause only affected writes while unrelated work continues, and never delay an urgent stop or safety correction.
+- Invoke plugin skills through their host-visible identifiers: Claude Code `/ant:merge-request` and Codex `$merge-request` exclusively own PR/MR creation and updates; Claude Code `/ant:delivery-workflows` and Codex `$delivery-workflows` own merge-conflict resolution only. Do not add aliases or forwarding bridges between them.
 - When a clean breaking redesign is approved, remove obsolete paths and documentation instead of retaining parallel behavior.
 
 ## Pull Requests
 
-- Always use the `ant:merge-request` / `$merge-request` skill when preparing, creating, or updating a PR/MR.
+- Always use the host-visible `/ant:merge-request` (Claude Code) or `$merge-request` (Codex) skill when preparing, creating, or updating a PR/MR.
 - Write PR/MR titles in Conventional Commit style and keep PR/MR descriptions in English by default, unless the user explicitly requests another language.
 - Use the Merge Request skill's structured description format, including the short summary at the top, the `---` separator, validation notes, and reviewer focus.
 - Write every new or updated PR/MR description as a snapshot of the final diff from the target branch merge base to final `HEAD`. Do not narrate intermediate commits, abandoned attempts, or artifacts that were added and later removed unless they remain relevant to migration or reviewer truth.

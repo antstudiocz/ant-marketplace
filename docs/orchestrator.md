@@ -38,7 +38,7 @@ The workflow deliberately stays small:
 | Multi-file or moderately uncertain | One implementation lead, optional scout or reviewer |
 | Architecture, security, data, migrations, or broad contracts | Scouts as needed, one lead, disjoint slices, independent reviewer |
 
-Claude Code and Codex may use different delegation trees. If nested agents are unavailable, the root dispatches the same bounded work directly. The acceptance criteria and review bar stay the same.
+Claude Code and Codex may use different delegation trees. If nested agents are unavailable, the root dispatches the same bounded work directly. If no writer-capable native delegation is available at all, the root remains coordination-only and stops before tracked edits with a blocker. The acceptance criteria and review bar stay the same.
 
 For Codex, nested lead/worker delegation can use:
 
@@ -74,7 +74,7 @@ Model choice, reasoning effort, permissions, and delivery authority remain separ
 
 ## Messages During Implementation
 
-You can continue messaging the orchestrator while it works. Status questions and details within approved behavior do not stop work. Materially new functionality starts a discovery, brainstorming, deeper-analysis, delta-plan, and approval cycle for the affected scope; only affected writes pause while independent work continues. The entire run stops only for an explicit global stop/replacement or a genuinely blocking contradiction or safety issue.
+You can continue messaging the orchestrator while it works. Status questions and details within approved behavior do not stop work. Related material changes or corrections received during the same active segment are batched into one discovery, brainstorming, deeper-analysis, consolidated delta-plan, and approval cycle for the affected scope at the next safe boundary; only affected writes pause while independent work continues. An urgent stop or safety correction applies immediately. The entire run stops only for an explicit global stop/replacement or a genuinely blocking contradiction or safety issue.
 
 Codex steering/queue controls and Claude Code message delivery are host-specific transport details; both follow the same behavior above.
 
@@ -82,10 +82,10 @@ Codex steering/queue controls and Claude Code message delivery are host-specific
 
 During implementation, the orchestrator runs checks targeted to each coherent phase. It does not run `FullTestSuite` or every repository check after each edit or small task.
 
-At the final pre-delivery boundary it runs the repository's full suite once on the exact final tree. If a later relevant edit occurs, it reruns the impacted check and refreshes the final suite once. For this marketplace, the two Claude plugin validations are the final broad suite.
+After the final tracked mutation and required review, it runs the repository's full suite once on the exact final tree before declaring the implementation complete, whether or not delivery was requested. When delivery is requested, the same run is the final pre-delivery suite. A later relevant edit invalidates it: the orchestrator reruns the impacted check and refreshes the final suite once. For this marketplace, the two Claude plugin validations are the final broad suite.
 
 ## Delivery
 
-The orchestrator performs only the delivery actions the user requested. `merge-request` is the sole PR/MR creation and update workflow and rebuilds descriptions from the target merge base to final `HEAD`; `delivery-workflows` is only for merge conflicts. Merge, Draft-to-ready conversion, tag, publish, and release are never implied by commit, push, or PR creation.
+The orchestrator performs only the delivery actions the user requested. For PR/MR creation and updates it invokes the host-visible skill identifier: Claude Code `/ant:merge-request` or Codex `$merge-request`. For merge conflicts it uses Claude Code `/ant:delivery-workflows` or Codex `$delivery-workflows` only. Merge, Draft-to-ready conversion, tag, publish, and release are never implied by commit, push, or PR creation.
 
 The final report includes the changed areas, checks run, unverified items, and current commit/PR/MR state.

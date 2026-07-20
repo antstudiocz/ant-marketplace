@@ -48,7 +48,7 @@ Rules:
 - One implementation lead owns the final integrated result. A small task may use the same agent as its sole writer.
 - Parallelize only independent work with disjoint write scopes and a stable shared contract. Keep a slot available for review or recovery when capacity is tight.
 - If nested delegation is unavailable, the root dispatches the same bounded roles directly. Outcome and review quality matter more than matching an agent tree.
-- If delegation is unavailable, report the limitation and use the safest host-supported execution shape; do not pretend independent review occurred.
+- If no writer-capable native delegation is available, stop before any tracked edit and report the blocker. The root remains coordination-only while this skill is active; it never becomes the fallback writer, and it must not pretend independent review occurred.
 
 ## 3. Route By Capability
 
@@ -123,32 +123,15 @@ Briefly acknowledge new input and classify it by effect:
 - **Correction to approved behavior:** redirect or pause only the impacted work, reassess affected edits and checks, and when the correction is material obtain explicit approval of a delta-plan before affected writes resume. Independent work continues.
 - **Explicit stop, replacement request, or blocking contradiction:** stop the affected work; stop the whole run only when the instruction or safety issue is global.
 
+Batch multiple related material changes or corrections received during the same active segment. At the next safe boundary, handle them through one affected-scope discovery, brainstorming, deeper analysis, consolidated delta-plan, and explicit approval instead of one cycle per message. Keep unaffected work moving. Do not defer an urgent stop, safety correction, or instruction that makes continuing unsafe.
+
 Use the host's available transport. Codex may steer an active agent or queue input; Claude Code may deliver follow-up messages through different controls. Those are implementation details. If an active worker cannot be redirected safely, obtain a checkpoint and apply the change at the next dispatch boundary. Never ignore new user input, but do not turn every message into a global pause.
 
 ### Recovery
 
 When an agent becomes silent or interrupted, first request or recover its latest checkpoint and inspect the actual git diff. Reassign overlapping writes only after the prior writer is known to be stopped or its scope is safely handed off. Do not add a lease protocol or assume that elapsed time proves abandonment.
 
-## 6. Validate Proportionately
-
-During implementation:
-
-- After a coherent task or phase, run only checks relevant to the behavior changed in that unit.
-- Group edits before testing when they are part of one behavior change.
-- After a review fix, rerun the check affected by that fix.
-- Do not run `FullTestSuite`, an equivalent repository-wide suite, or every available validator after each edit, file, worker, or minor task.
-- Respect repository restrictions such as forbidden build commands or required package managers.
-
-At the final pre-delivery boundary:
-
-1. Confirm the intended diff and that unrelated files are excluded.
-2. Run the repository's full suite once on the exact final tree when such a suite exists.
-3. If the repository has no named full suite, use its broadest normal validation command or plugin validation as the final suite.
-4. If a relevant mutation happens afterward, rerun the impacted targeted check and refresh the final suite once on the new final tree.
-
-Do not add a new test framework just to test instruction text. Lightweight syntax, link, manifest, discovery, and plugin validation are enough for an instruction-only plugin unless the repository already provides more.
-
-## 7. Review And Fix
+## 6. Review And Fix
 
 Review depth follows risk:
 
@@ -158,12 +141,33 @@ Review depth follows risk:
 
 Findings should name severity, evidence, impact, and the required correction. Send fixes back to an implementation owner, run the affected targeted checks, and re-review the changed area. Do not repeat the entire review process for unrelated settled code unless a fix changes its assumptions.
 
+## 7. Validate Proportionately
+
+During implementation:
+
+- After a coherent task or phase, run only checks relevant to the behavior changed in that unit.
+- Group edits before testing when they are part of one behavior change.
+- After a review fix, rerun the check affected by that fix.
+- Do not run `FullTestSuite`, an equivalent repository-wide suite, or every available validator after each edit, file, worker, or minor task.
+- Respect repository restrictions such as forbidden build commands or required package managers.
+
+At the final completion boundary, after the final tracked mutation and required review:
+
+1. Confirm the intended diff and that unrelated files are excluded.
+2. Run the repository's full suite once on the exact final tree when such a suite exists.
+3. If the repository has no named full suite, use its broadest normal validation command or plugin validation as the final suite.
+4. If a relevant mutation happens afterward, rerun the impacted targeted check and refresh the final suite once on the new final tree.
+
+This completion gate applies whether or not delivery was requested. When PR/MR or other delivery is requested, the same successful run is the final pre-delivery suite.
+
+Do not add a new test framework just to test instruction text. Lightweight syntax, link, manifest, discovery, and plugin validation are enough for an instruction-only plugin unless the repository already provides more.
+
 ## 8. Deliver
 
 Before delivery, verify branch, target, final diff, validation results, and the exact actions requested by the user. Stage only in-scope files and follow repository commit/push rules.
 
-- Use `ant:merge-request` for every PR/MR create or update action. Pass it the verified summary, checks, target, language/readiness choices already supplied by the user, and unresolved risks.
-- Use `ant:delivery-workflows` only for merge-conflict resolution and related recovery.
+- For every PR/MR create or update action, invoke the plugin skill through its host-visible identifier: Claude Code `/ant:merge-request` or Codex `$merge-request`. Pass it the verified summary, checks, target, language/readiness choices already supplied by the user, and unresolved risks.
+- For merge-conflict resolution and related recovery, use Claude Code `/ant:delivery-workflows` or Codex `$delivery-workflows` only.
 - A request to commit and push does not imply merge, Draft-to-ready conversion, tagging, publishing, or release unless the user says so.
 
 Finish with the delivered commit/PR/MR state, checks run, and anything that remains unverified. Keep the report concise enough to scan once.

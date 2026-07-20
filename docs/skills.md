@@ -40,13 +40,14 @@ How it works:
 - presents a concrete implementation plan and obtains explicit approval before dispatching any tracked writer;
 - treats approval as covering the stable plan rather than requesting it again before every phase;
 - chooses a proportional shape: one writer for simple work, one lead plus optional scout/reviewer for standard work, and independent review for high-risk work;
+- keeps root coordination-only and stops before tracked edits when no writer-capable native delegation is available;
 - routes children by Strong, Balanced, and Fast capabilities instead of hardcoded model names;
 - reassesses reasoning while work is active, escalating for new ambiguity or risk and lowering it at safe deterministic boundaries;
 - delegates all tracked edits and keeps write scopes disjoint when work is parallel;
-- accepts mid-flight status and approved-behavior details without stopping work; materially new functionality repeats the planning cycle only for the affected scope while unaffected work continues;
+- accepts mid-flight status and approved-behavior details without stopping work; batches related material changes from the same active segment into one affected-scope planning and approval cycle at the next safe boundary while unaffected work continues;
 - runs checks targeted to coherent implementation phases instead of repeatedly running the full suite;
-- runs one full suite on the final tree before delivery and refreshes it once only if a later relevant edit occurs;
-- uses `merge-request` for PR/MR creation or updates and `delivery-workflows` only for merge conflicts;
+- runs one full suite after the final mutation and required review, before completion and optional delivery, and refreshes it once only if a later relevant edit occurs;
+- invokes `/ant:merge-request` and `/ant:delivery-workflows` in Claude Code or `$merge-request` and `$delivery-workflows` in Codex for their respective PR/MR and merge-conflict responsibilities;
 - finishes with changed areas, checks run, unverified items, and delivery state.
 
 Use it when the user wants a task driven from idea to working, verified implementation.
