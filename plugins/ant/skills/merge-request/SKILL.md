@@ -5,11 +5,11 @@ description: "Create GitLab/GitHub merge requests or pull requests with a practi
 
 # Merge Request
 
-**Announce at start:** "Zkontroluju git kontext a zeptám se na jazyk PR/MR popisu."
+**Announce at start:** Say you will inspect the git context and prepare the PR/MR in the selected language.
 
 Use this skill to turn the current branch changes into a GitLab Merge Request or GitHub Pull Request with a concise Conventional Commit title and a concrete description in the user's chosen language. Treat "merch request" in user wording as "merge request/MR".
 
-This skill is the sole owner of PR/MR creation and update behavior. It owns provider detection, description language, Draft/ready intent, title, description, confirmation, and the provider CLI commands. Other skills may collect evidence or forward a request, but must not maintain an alternate creation workflow.
+This skill is the sole owner of PR/MR creation and update behavior. It owns provider detection, description language, Draft/ready intent, title, description, confirmation, and the provider CLI commands. Other skills may supply verified context, but must not maintain an alternate creation workflow.
 
 ## Baseline
 
@@ -19,50 +19,8 @@ This skill is the sole owner of PR/MR creation and update behavior. It owns prov
 - Use `glab` for GitLab repositories and `gh` for GitHub repositories. Detect the provider from `git remote -v`.
 - Do not add `Generated with...`, `Co-Authored-By`, or similar footer lines to commits or MR descriptions.
 - Do not force-push, reset, or rewrite history unless the user explicitly asks and the risk is clear.
-- Ask which language to use for every direct PR/MR invocation. A canonical handoff may satisfy this gate only when it records the user's explicit language choice.
-- Resolve authorization separately for `commit`, `push`, and `mr`. A request or approval for PR/MR creation never authorizes staging, committing, or pushing by implication.
-
-## Invocation Modes
-
-### Direct invocation
-
-Run the complete workflow below. Ask for the description language even when the conversation language seems obvious.
-
-### Canonical orchestrator handoff
-
-Accept an orchestrator delivery handoff manifest and consume only fields that are present. A handoff may contain:
-
-```yaml
-workspace: /absolute/repository/path
-branch: feature/example
-targetBranch: main
-provider: gitlab # optional observed hint; verify from the remote
-intent: create # create or update
-mr:
-  language: en # explicit user choice; cs-CZ, en, or another named language
-  readiness: draft # draft or ready
-  titleIntent: "feat(scope): concise outcome" # optional intent, not final title
-  existingUrl: null # required for a specific update when discovery is ambiguous
-evidence:
-  summary: []
-  changes: []
-  why: []
-  approach: []
-  impact: []
-  walkthrough: []
-  technicalChecks: []
-  unverified: []
-  reviewerFocus: []
-authorization:
-  approvalId: approval-example
-  digest: sha256:...
-  eventId: event-example
-  artifactRef: null
-```
-
-The manifest is a handoff, not authority and not a replacement for repository inspection. Verify workspace, branch, target, remote provider, diff, validation evidence, and any authorization pointer before mutating git or calling a provider. Never invent omitted values.
-
-If `mr.language` records an explicit user choice, the language gate is already satisfied; do not ask again. Otherwise use the normal language question. Respect an explicit `mr.readiness`; otherwise default to Draft. A verified immutable approval may cover the PR/MR action, but metadata or the manifest alone never does. Missing, invalid, revoked, expired, or out-of-scope approval evidence is a stop requiring fresh approval.
+- Ask which language to use unless the user already chose it in the current task or the orchestrator passes that explicit choice.
+- Treat commit, push, PR/MR creation, Draft-to-ready conversion, merge, and release as distinct delivery actions. Perform only the actions the user requested.
 
 ## Workflow
 
@@ -80,18 +38,18 @@ If `mr.language` records an explicit user choice, the language gate is already s
    ```
 
 2. Detect the provider from the remote URL. Use GitLab only for a GitLab remote and GitHub only for a GitHub remote. If the remote is missing, unsupported, or ambiguous, stop and ask instead of guessing.
-3. Determine target branch from explicit user instruction, a verified canonical handoff, existing upstream/MR, or `origin` HEAD. If still ambiguous, ask before creating or updating the PR/MR.
-4. Resolve the PR/MR description language before drafting the title/body. A canonical handoff with an explicit user-selected language satisfies this gate. Otherwise use native question UI if available or ask directly in chat. Offer at least:
+3. Determine target branch from explicit user instruction, existing upstream/PR/MR, or `origin` HEAD. If still ambiguous, ask before creating or updating the PR/MR.
+4. Resolve the PR/MR description language before drafting the title/body. Reuse an explicit choice from the current task; otherwise use native question UI if available or ask directly in chat. Offer at least:
    - Czech
    - English
    - Another language, where the user names the language
-5. Identify whether there are unstaged, staged, committed-but-unpushed, and unrelated changes. If committing is needed, propose exactly which files belong in the commit and a short Conventional Commit message, then resolve an explicit `commit` authorization before staging or committing.
-6. Inspect the diff enough to understand what changed, why, technical decisions, user impact, and validation gaps. Treat handoff evidence as a lead and verify it against the repository; do not generate the PR/MR from filenames or unverified manifest claims only.
+5. Identify whether there are unstaged, staged, committed-but-unpushed, and unrelated changes. If committing is needed but was not requested, propose exactly which files and commit message would be used before acting.
+6. Inspect the diff enough to understand what changed, why, technical decisions, user impact, and validation gaps. Verify any orchestrator summary against the repository; do not generate the PR/MR from filenames alone.
 7. Run targeted validation appropriate to the change when feasible. Do not run project-disallowed commands.
 8. Draft the final title, description, target, provider, and Draft/ready state. For an update, inspect the existing PR/MR first and identify exactly which fields will change.
-9. Present the complete preview and get confirmation for the exact `mr` create/update action. A current explicit user instruction or a verified immutable approval covering `mr` can satisfy this gate; a delivery preference, chat summary, or handoff manifest alone cannot.
-10. Resolve `push` independently before pushing, even when `mr` is already authorized. Check branch/upstream and remote target; if no upstream exists, use `git push -u origin <branch>` only after the separate `push` authorization is recorded.
-11. Re-resolve `mr` authorization immediately before the provider command. Create or update through `glab` or `gh` using the commands in this skill. Use Draft unless the user explicitly selected ready.
+9. Present the complete preview unless the user already requested the exact title/body/update and readiness. Do not add an unnecessary second confirmation for settled choices.
+10. Push only when requested, after checking branch, upstream, and remote target. If no upstream exists, use `git push -u origin <branch>`.
+11. Create or update through `glab` or `gh`. Use Draft unless the user explicitly selected ready.
 12. Return the PR/MR URL and a short summary of what was created or updated.
 
 ## Confirmation
@@ -107,11 +65,11 @@ Before the provider command, show:
 - full description preview or the exact fields being updated;
 - validation gaps and unrelated-worktree warnings.
 
-Offer `Create/update as Draft`, `Create/update as ready`, `Edit title`, `Edit description`, and `Cancel` when no earlier exact instruction settles those choices. This confirmation covers only the `mr` provider action. Any required `commit` or `push` action needs its own explicit authorization and preview. The confirmation and its authorization evidence belong to this skill; a forwarding skill must not pre-confirm an independently generated title or description.
+Offer `Create/update as Draft`, `Create/update as ready`, `Edit title`, `Edit description`, and `Cancel` when the user's current instructions have not already settled those choices. Do not treat PR/MR intent as permission to merge or release.
 
 ## Language Selection
 
-Always ask the language question for direct invocation, even when the current conversation language is obvious. The only no-repeat case is a canonical handoff that records the user's explicit language choice.
+Ask the language question when the user has not already selected a language for this PR/MR. Never infer it only from the conversation language, but do not ask twice after a clear answer.
 
 Recommended wording:
 
@@ -134,7 +92,7 @@ Keep the Conventional Commit title in English unless the repository convention o
 
 ## Commit And Push Rules
 
-- If the user asks "udělej MR" and there are no commits or no remote branch yet, the request authorizes only the PR/MR action. Ask separately before staging/committing and before pushing, after the context check shows exactly what each action affects.
+- If the user asks only to prepare or create a PR/MR and commits or a remote branch are missing, explain the required commit/push actions and obtain the missing intent before performing them. A request such as "do it completely, including push" already settles those actions.
 - If unrelated files are present, stage only MR-relevant files explicitly or ask the user to split scope.
 - Use a Conventional Commit message: `feat(scope): short summary`, `fix(scope): short summary`, `refactor(scope): short summary`, `docs(scope): short summary`, `test(scope): short summary`, or `chore(scope): short summary`.
 - Keep commit and MR titles short, factual, lower-case after the colon, without a trailing period.

@@ -33,25 +33,17 @@ End-to-end implementation flow for features, fixes, refactors, migrations, audit
 
 How it works:
 
-- starts with git/delivery setup: current branch, target branch, dirty state, branch/worktree choice, and MR preference;
-- for every orchestrated run, keeps local ignored structured state under `.ant/orchestrator/<run>/state.json` and `events.jsonl`; for medium+ work, also keeps markdown `index.md`, `state.md`, `decisions.md`, and per-phase folders;
-- clarifies the goal with the user and asks blocking questions instead of inventing intent;
-- ends user-facing phase responses with the proposed next action and what `pokračuj` would authorize;
-- delegates read-only scouting when codebase facts are needed;
-- after scouting, asks the user about unresolved product, data, rollout, validation, or architecture decisions before finalizing direction;
-- asks for one-time refactor vs phased rollout vs minimal compatibility strategy on broad or risky work;
-- asks for autonomous implementation mode vs manual decision mode on medium+ work before detailed planning;
-- requires a whole-roadmap phased plan before implementing phase 1 when phased rollout is selected;
-- treats `state.json` and `events.jsonl` as machine source of truth; concise phase artifacts are the human resume layer and are updated alongside structured state before transitions, pauses, handoffs, or completion reports;
-- preflights the current host, classifies every bounded child task `low|medium|high`, and routes by required capabilities with adaptive reasoning translated by the active host adapter;
-- records canonical and translated requested reasoning separately from host-observed actual values; selector support without observable application keeps actual `unknown`;
-- uses flattened, foreground, browser-unavailable, or other explicit degraded modes when a preferred capability is missing, without weakening acceptance or pretending evidence exists;
-- challenges weak approaches with code evidence and asks for direction approval;
-- creates an `.ant/orchestrator/<run>/phases/05-planning/implementation-plan.md` checklist through a plan writer;
-- delegates implementation to an implementation lead, which may use `phases/06-implementation/subphases/` and slice workers for parallel backend/frontend/data/test work;
-- can use task-scoped execution for separable plan tasks: curated task briefs, worker report files, review packages, separate spec-compliance and engineering-quality verdicts, and task progress in orchestrator state;
-- remains coordination-only after completion, including follow-up debugging, review fixes, polish, tiny edits, and post-delivery issues;
-- finishes with integration, targeted validation, review/fix loops, and final evidence.
+- inspects repository instructions, git state, relevant code, and validation commands before asking questions or editing;
+- asks only for unresolved choices that materially change behavior, architecture, safety, scope, or delivery;
+- chooses a proportional shape: one writer for simple work, one lead plus optional scout/reviewer for standard work, and independent review for high-risk work;
+- routes children by Strong, Balanced, and Fast capabilities instead of hardcoded model names;
+- reassesses reasoning while work is active, escalating for new ambiguity or risk and lowering it at safe deterministic boundaries;
+- delegates all tracked edits and keeps write scopes disjoint when work is parallel;
+- accepts mid-flight status, corrections, and additive requests without pausing unaffected work;
+- runs checks targeted to coherent implementation phases instead of repeatedly running the full suite;
+- runs one full suite on the final tree before delivery and refreshes it once only if a later relevant edit occurs;
+- uses `merge-request` for PR/MR creation or updates and `delivery-workflows` only for merge conflicts;
+- finishes with changed areas, checks run, unverified items, and delivery state.
 
 Use it when the user wants a task driven from idea to working, verified implementation.
 
@@ -98,17 +90,17 @@ Use it for Laravel implementation, refactoring, performance work, caching work, 
 
 ## `delivery-workflows`
 
-Git delivery workflows for resolving merge conflicts with repository context. The legacy create-MR entrypoint remains as a deprecated compatibility bridge to `merge-request`.
+Git delivery workflow for resolving merge conflicts with repository context.
 
 How it works:
 
 - inspects branch and dirty state before mutating git state;
-- loads conflict-resolution guidance or forwards a legacy PR/MR request unchanged to `merge-request`;
+- loads focused conflict-resolution guidance;
 - preserves unrelated user changes;
-- preserves conflict-resolution ownership but does not duplicate provider, language, title, description, confirmation, or PR/MR command logic;
-- validates changes before push/MR handoff.
+- understands both sides before choosing the resolved behavior;
+- validates the affected areas before completing the conflict operation.
 
-Use it for merge-conflict and delivery-hygiene operations around an already-scoped code change. Invoke `merge-request` directly for PR/MR creation or updates.
+Use it for merge-conflict resolution. Invoke `merge-request` directly for every PR/MR creation or update.
 
 ## `merge-request`
 
@@ -117,11 +109,11 @@ GitHub/GitLab Pull Request and Merge Request workflow for creating practical tit
 How it works:
 
 - checks git status, branch, target branch, remote provider, diff, and recent commits before mutating delivery state;
-- asks which language to use for every direct PR/MR invocation;
-- consumes canonical orchestrator handoff evidence and reuses an explicitly user-selected language without asking twice;
+- asks which language to use unless the current task already contains an explicit choice;
+- verifies any orchestrator summary against the repository instead of requiring a handoff schema;
 - uses `glab` for GitLab repositories and `gh` for GitHub repositories;
 - prefers Draft MR unless the user explicitly asks for ready/bez draft;
-- resolves commit, push, and PR/MR authorization independently after context checks show the exact scope; requesting an MR never implies staging, committing, or pushing;
+- performs only the commit, push, PR/MR, readiness, merge, or release actions the user requested;
 - uses a short Conventional Commit style title;
 - writes the description in the selected language with sections for what changed, why, chosen decisions, user and technical impact, UX walkthrough, technical testing, unverified items, and reviewer focus.
 - owns the final preview/confirmation and all `glab`/`gh` create or update commands.

@@ -78,7 +78,7 @@ Use the narrowest skill that matches the work. If the task will become a multi-s
 - **Delivery workflows**
   - Claude Code: `/ant:delivery-workflows`
   - Codex: `$delivery-workflows`
-  - Use for: merge conflicts and delivery hygiene. Its legacy create-MR entrypoint forwards to `merge-request`.
+  - Use for: contextual merge-conflict resolution. Use `merge-request` directly for PR/MR creation or updates.
 
 ### Engineering And Design
 
@@ -110,7 +110,7 @@ See [docs/skills.md](docs/skills.md) for the full skill guide.
 
 ## Orchestrator
 
-Use `implementation-orchestrator` when the work should be driven end to end rather than answered as a one-off edit. It owns the run shape: git context, clarification, planning, delegated subagents, review loops, validation, and delivery handoff.
+Use `implementation-orchestrator` when work should be driven end to end rather than answered as a one-off edit. It discovers repository facts, clarifies only blocking choices, delegates tracked edits, reviews in proportion to risk, validates the final result, and performs requested delivery actions.
 
 Codex installations may allow a deeper subagent hierarchy with this setting in `~/.codex/config.toml`:
 
@@ -119,14 +119,14 @@ Codex installations may allow a deeper subagent hierarchy with this setting in `
 max_depth = 2
 ```
 
-Then restart Codex or open a new session. The orchestrator still preflights the capabilities actually available in the current session; it uses a flatter route when nesting is unavailable or unverified. It classifies each delegated task `low|medium|high` and lets the active host adapter translate that requested reasoning tier through fresh runtime capabilities. Claude Code and Codex aim for the same planning, review, authorization, and evidence outcomes, but may use different delegation graphs, reasoning controls, and degraded modes.
+Then restart Codex or open a new session. The orchestrator also works without nested delegation by dispatching a flatter agent graph.
+
+The shared workflow routes by Strong, Balanced, and Fast capabilities, while each host selects from its current model catalog. Reasoning is reassessed during work: it increases when ambiguity, risk, or failures broaden and decreases for bounded deterministic segments. During implementation it runs targeted checks after coherent phases; the full suite runs once on the final tree before delivery. New user messages update only the affected work unless they explicitly stop or replace the whole request.
 
 More detail:
 
 - [Orchestrator setup](docs/orchestrator.md)
-- [9.2.0 compatibility and release-candidate notes](docs/releases/9.2.0.md)
-- [Interactive lifecycle explainer](https://orchestrator-explainer.vercel.app/)
-- [Structured state contract](plugins/ant/contracts/orchestrator-state/README.md)
+- [10.0 release notes](docs/releases/10.0.0.md)
 
 ## Docs
 
@@ -134,7 +134,7 @@ The README is intentionally short. Longer guides live in `docs/` and can be mirr
 
 - [Installation guide](docs/install.md) - manual install, AI-assisted install prompts, and updates.
 - [Skill guide](docs/skills.md) - what each public skill does and when to use it.
-- [Orchestrator setup](docs/orchestrator.md) - subagent depth, model routing, and state contract links.
+- [Orchestrator setup](docs/orchestrator.md) - execution shape, capability routing, adaptive reasoning, messages, validation, and delivery.
 - [Orchestrator slide deck](docs/index.html) - visual explainer for the orchestrator lifecycle.
 
 ## Update

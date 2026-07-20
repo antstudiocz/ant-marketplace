@@ -1,8 +1,0 @@
-{
-  "traceId": "synthetic-follow-up", "fixtureAt": "2026-07-20T09:00:06Z",
-  "questions": [],
-  "events": [{ "type": "run.status_changed" }, { "type": "checkpoint.created" }],
-  "actions": [{ "type": "reclassify-risk" }],
-  "state": { "metadata": { "cycle": "review-fix-001", "followUpOf": "initial-implementation", "activeRiskTier": "high" } },
-  "adjudication": { "status": "spec-expected" }
-}

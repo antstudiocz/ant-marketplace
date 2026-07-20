@@ -1,4 +1,4 @@
 interface:
   display_name: "(ant) Implementation Orchestrator"
-  short_description: "Plan, phase, implement, verify, and deliver with explicit run controls"
-  default_prompt: "Use $implementation-orchestrator to preflight this runtime, plan, delegate, verify, review, and hand off only the approved delivery actions."
+  short_description: "Coordinate proportional implementation, review, validation, and delivery"
+  default_prompt: "Use $implementation-orchestrator to inspect the repository, choose a proportional agent shape, adapt reasoning during work, validate the final result, and perform only the requested delivery actions."

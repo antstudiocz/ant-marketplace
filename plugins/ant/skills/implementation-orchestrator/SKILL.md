@@ -1,51 +1,42 @@
 ---
 user-invocable: true
 name: implementation-orchestrator
-description: Use for end-to-end implementation work from git and runtime discovery through clarification, planning, delegated implementation, independent review, verification, and optional delivery.
+description: Use for end-to-end implementation work that benefits from repository discovery, proportional planning, delegated implementation, review, verification, and optional delivery.
 ---
 
 # Implementation Orchestrator
 
-**Announce at start:** Say you are using the implementation orchestrator to coordinate a durable, delegated implementation workflow.
+**Announce at start:** Say you are using the implementation orchestrator and will keep the workflow proportional to the task.
 
-Use this skill for features, fixes, refactors, migrations, audits, and remediation that should end in verified implementation. For a new application or app-like surface, start with `ant:create-application` when available, then hand the approved brief here.
+Use this skill for features, fixes, refactors, migrations, and remediation that should end in a verified implementation. For a new application or major app-like surface, start with `ant:create-application` when available and hand the approved brief here.
 
-## Core Invariants
+## Operating Contract
 
-- Root is user-facing and dispatch-only. It may inspect git/delivery state and orchestration artifacts, but it does not inspect application implementation files or make implementation edits.
-- Every implementation, follow-up, review fix, debugging change, and polish edit is delegated through a verified fresh-context path.
-- `references/lifecycle.md` alone owns lifecycle order and gates.
-- `state.json` and `events.jsonl` under `.ant/orchestrator/<run-id>/` are the machine source of truth. Markdown is a concise human resume layer.
-- Before first delegation, preflight current host capabilities. Unknown is recorded as `unknown`, never guessed.
-- Host-neutral routing asks for capabilities, never fixed model slugs. Requested and host-observed actual values remain distinct.
-- Every delegated packet is classified `low`, `medium`, or `high` under the adaptive reasoning policy; adapters translate the requested tier through current host capabilities.
-- Mutation and delivery fail closed under `references/policies/approval-policy.md`; metadata and prompt memory are never authorization.
-- Completion requires scenario-linked evidence and the review manifest defined under `references/policies/`.
-- Store timestamps in UTC/Zulu. Convert to local time only in UI rendering.
+- The root orchestrator is the user-facing coordinator. It inspects repository instructions and git/delivery context, delegates implementation work, integrates reports, and keeps the user informed. It does not make tracked implementation edits while this skill is active.
+- Keep the process proportional. A small change normally needs one implementation agent; add scouts, slices, or an independent reviewer only when scope or risk justifies them.
+- Use the host's native planning, delegation, messaging, and recovery features. Do not create a custom orchestration runtime, state schema, event log, lease system, migration layer, or generated evaluator.
+- Investigate the root cause before editing. Discover repository facts before asking the user and ask only questions whose answers materially change the result.
+- Route agents by required capability, not by a model name embedded in shared instructions. Model and reasoning selection must work in both Claude Code and Codex.
+- Reassess reasoning during the work. Escalate for new ambiguity, risk, contradictions, or repeated failures; de-escalate for bounded deterministic segments. Avoid rapid tier switching.
+- Validate coherent work units with the smallest relevant checks. Run the repository's full suite once on the final tree before delivery, not after every edit or task.
+- Treat user messages during implementation as live input. Status questions and additive non-conflicting changes do not stop unaffected work; replan only the impacted scope unless the user explicitly replaces or stops the task.
+- `ant:merge-request` is the only owner of PR/MR creation and updates. `ant:delivery-workflows` owns merge-conflict resolution only.
+- Preserve unrelated user changes and obey repository-specific package, validation, branch, and delivery rules.
 
-## Lazy Reference Loading
+## Proportional Flow
 
-Read `references/lifecycle.md` first, then load only what the next action needs:
+1. Inspect instructions, git state, the relevant code path, and available validation commands.
+2. Clarify only unresolved product, safety, scope, or delivery decisions.
+3. Choose the smallest useful execution shape and route agents by capability.
+4. Plan in enough detail to remove implementation ambiguity; use a short plan for broad or risky work.
+5. Delegate all tracked edits to one implementation owner, adding disjoint slice workers only when useful.
+6. Run targeted checks after coherent phases, review in proportion to risk, and fix the root cause of findings.
+7. Run one final full validation on the final tree, then perform only the delivery actions the user requested.
 
-| Next action | Load |
-|---|---|
-| terminology or transition decision | `references/policies/vocabulary.md`, `references/policies/approval-policy.md` |
-| first delegation, complexity classification, or host/surface change | `references/policies/reasoning-policy.md`, `references/runtime/capability-routing.md`, then the detected host adapter |
-| planning or implementation delegation | the matching `references/*-role.md` and `references/templates/task-packet.md` |
-| task-scoped work | `references/task-scoped-execution.md` |
-| validation, review, or completion | `references/policies/evidence-policy.md`, `references/policies/review-manifest.md`, reviewer card, review template |
-| phase close or delivery | matching template plus approval policy |
+## Reference Loading
 
-Do not load every role, template, and host adapter up front.
+Read `references/lifecycle.md` before the first delegation or implementation decision. It is the single internal reference for workflow shape, routing, adaptive reasoning, user messages, validation, review, recovery, and delivery. Do not look for additional orchestrator role cards, templates, contracts, or evaluators.
 
-## High-Level Flow
+## Completion
 
-1. Recover or bootstrap the run and discover repository, git, delivery, and runtime facts.
-2. Ask all and only unresolved user-owned blocking questions, grouped without an arbitrary cap or repeats.
-3. Classify cycle risk, challenge weak directions, and obtain strategy/direction decisions.
-4. Create and review a concrete plan when risk warrants it.
-5. Persist a scoped approval, then delegate implementation using capability routing.
-6. Integrate, validate scenarios, independently review, fix findings, and re-review as required.
-7. Close with evidence and an explicit delivery handoff; delivery itself remains separately authorized.
-
-Follow `references/lifecycle.md` for exact transitions, stop conditions, recovery, and completion criteria.
+Finish with a concise summary of the outcome, changed areas, checks run, anything not verified, and delivery state. Do not claim success from an agent report alone; confirm it against the final repository state and validation evidence.

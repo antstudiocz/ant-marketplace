@@ -1,262 +1,150 @@
 # Implementation Lifecycle
 
-This file is the normative owner for lifecycle ordering, gates, phase transitions, liveness, recovery, and completion. Shared terminology, authorization, evidence, review inputs, routing, host mechanics, and prompt shapes are owned by their linked references and are not redefined here.
+This is the orchestrator's only internal reference. Apply it with the repository instructions and the capabilities actually available in the current Claude Code or Codex session.
 
-## Required Owners
+## 1. Establish Scope
 
-- vocabulary: `policies/vocabulary.md`
-- authorization: `policies/approval-policy.md`
-- evidence: `policies/evidence-policy.md`
-- adaptive reasoning: `policies/reasoning-policy.md`
-- review input: `policies/review-manifest.md`
-- capability preflight/routing: `runtime/capability-routing.md`
-- host mechanics: `runtime/hosts/codex.md` or `runtime/hosts/claude-code.md`
-- responsibilities: matching `*-role.md`
-- task discipline: `task-scoped-execution.md`
-- output shapes: `templates/*.md`
-- machine contract: `plugins/ant/contracts/orchestrator-state/`
+Before editing:
 
-## Role And Ownership Invariants
+1. Read repository instructions and inspect the current branch, worktree, relevant diff, and validation commands.
+2. Separate in-scope changes from unrelated or ambiguous dirty files. Preserve anything the user did not place in scope.
+3. Inspect the relevant code path or delegate a read-only scout. Do not ask the user for facts that can be discovered safely.
+4. Restate the goal, acceptance criteria, non-goals, and material risks in compact form.
+5. Ask only for unresolved choices that would materially change behavior, architecture, data safety, external effects, or delivery.
 
-Root owns user communication, run-level orchestration artifacts, phase transitions, approval resolution, and dispatch. Root may read repository instructions, git/delivery state, `.ant/orchestrator/*`, and child reports. Root must not inspect application implementation files for implementation facts or edit source, tests, docs, configuration, or generated files while this lifecycle is active.
+An explicit request to implement or fix something authorizes the scoped repository edits normally required for that request. It does not silently authorize destructive operations, force-pushes, merges, releases, or unrelated cleanup. Respect any narrower repository or host permission boundary.
 
-Implementation workers own bounded write scopes. One path/subsystem has one active writer. Scouts and reviewers are read-only unless a separate implementation assignment explicitly grants writes. Children report to their parent; only root addresses the user.
+Do not create orchestration state files, schemas, event logs, approval artifacts, leases, or migration readers. Use the host's built-in plan/task state and concise user-facing checkpoints. After compaction or resume, reconstruct truth from the conversation summary, current git state, child reports, and fresh inspection.
 
-Using this skill authorizes workflow-required delegation through a verified fresh-context mechanism; do not ask again merely to use a scout, planner, lead, worker, or reviewer. Classify each bounded packet and request its reasoning tier through `policies/reasoning-policy.md`. This does not authorize edits, delivery, destructive actions, permission escalation, or another action governed by the approval policy.
+## 2. Choose The Smallest Useful Shape
 
-Orchestration remains active for follow-ups after completion. A follow-up creates or reopens a cycle and is delegated. Root-direct work is allowed only after the user explicitly ends orchestration and the active run is durably paused, blocked, cancelled, or closed.
+Use risk and uncertainty, not task size alone:
 
-## Phase Order
+| Shape | Typical use | Agents |
+|---|---|---|
+| Simple | Local, reversible, well-understood change | One implementation owner |
+| Standard | Multi-file or cross-component work with moderate integration risk | One implementation lead; optional scout or reviewer |
+| High assurance | Architecture, security, permissions, data, migrations, public contracts, broad refactors, or conflicting evidence | Read-only scouts as needed, one implementation lead, disjoint slice workers, independent reviewer |
 
-Use only the phases needed by the risk tier, but preserve this order:
+Rules:
 
-1. intake and recovery;
-2. repository/runtime discovery;
-3. clarification and direction;
-4. planning and plan review when required;
-5. approval resolution;
-6. delegated implementation and integration;
-7. validation, review, fix, and re-review;
-8. phase close and delivery handoff.
+- Do not spawn one agent per file, phase-owner agents, or agents whose only job is process bookkeeping.
+- One implementation lead owns the final integrated result. A small task may use the same agent as its sole writer.
+- Parallelize only independent work with disjoint write scopes and a stable shared contract. Keep a slot available for review or recovery when capacity is tight.
+- If nested delegation is unavailable, the root dispatches the same bounded roles directly. Outcome and review quality matter more than matching an agent tree.
+- If delegation is unavailable, report the limitation and use the safest host-supported execution shape; do not pretend independent review occurred.
 
-Low-risk work may compress phases into a bounded worker packet. It does not skip structured persistence, capability preflight, authorization, delegation, or evidence.
+## 3. Route By Capability
 
-## 1. Intake, Persistence, And Recovery
+Shared instructions use three capability tiers:
 
-Before delegation, verification, delivery, or work expected to span responses:
+| Tier | Use for |
+|---|---|
+| Strong | Architecture, ambiguous root-cause work, security/data/permission decisions, migrations, integration ownership, and independent review |
+| Balanced | Normal implementation, integration, and repository investigation with bounded ambiguity |
+| Fast | Exact searches, read-heavy discovery, deterministic transformations, and other narrow mechanical work |
 
-- identify or create `.ant/orchestrator/<run-id>/state.json` and `events.jsonl`;
-- validate them against contract `1.0.0` when they already exist;
-- record current cycle, risk hint, `rootMode: dispatch-only`, phase, branch/target, and known ownership using existing fields/metadata;
-- create concise markdown only when it improves human resume value;
-- append durable events with UTC/Zulu timestamps.
+Choose from models and controls the active host actually exposes. Never make a shared workflow depend on a fixed model identifier. If the preferred tier is unavailable, use the strongest safe available route and state the limitation when it affects confidence. Never silently downgrade judgment-critical work merely to save cost or latency.
 
-Valid persistence exceptions are a pure answer, explicit user refusal, or an unwritable filesystem. Report the exception and do not pretend durable recovery exists.
+Model tier and reasoning effort are related but separate. Select an initial reasoning level that fits the bounded assignment, then reassess it during execution:
 
-After resume, compaction, host change, or suspected context loss, reconstruct from structured state, events, current git state, linked artifacts, and child checkpoints before answering or acting. Treat possibly active writers as active until verified closed or safely checkpointed. Never start an overlapping replacement writer.
+Escalate when:
 
-If no trustworthy run can be recovered, create a recovery run and record its evidence sources before delegation or delivery.
+- evidence conflicts or the root cause remains unclear;
+- scope crosses an unexpected contract or subsystem boundary;
+- validation fails in a new way or repeated attempts do not converge;
+- security, permissions, data integrity, concurrency, migration, or external side effects appear;
+- the agent must choose between materially different architectures or adjudicate review findings.
 
-## 2. Repository, Git, And Runtime Discovery
+De-escalate when:
 
-Discover facts before asking the user:
+- the decision is settled and the remaining segment is narrow and deterministic;
+- work is a mechanical application of an already verified pattern;
+- the next check has a precise expected result and small regression surface.
 
-- repository instructions, current branch/worktree, dirty paths, remote/default target candidates, provider policy, and available validation commands;
-- in-scope, unrelated, and unknown dirty changes;
-- runtime capability snapshot from `runtime/capability-routing.md` and exactly one detected host adapter;
-- implementation facts through a read-only scout when root cannot safely determine them from delivery metadata.
+Do not switch tiers for every small fluctuation. Require a material change in task character, keep the stronger setting through the uncertain segment, and reconsider at the next safe boundary. If the host cannot change a running agent's model or reasoning in place, steer the active agent when possible or apply the new tier to the next bounded dispatch. Codex and Claude Code may expose different controls; preserve these semantics rather than forcing identical mechanics.
 
-Runtime preflight occurs before the first child. It is non-mutating and records unknown instead of assumptions. Persist the artifact pointer and display summary in compatible metadata.
+## 4. Delegate Clear Work
 
-The first delegation is gated on the complete audit trail owned by `runtime/capability-routing.md`: capability artifact, `metadata.runtime` pointer/summary, and a routing-decision record with requested, actual/unknown, fallbacks, `evidenceSource`, and observation time. If any required surface is missing, stop before child dispatch instead of reconstructing route truth from a prompt or checkpoint.
+Every assignment should contain only what the agent needs:
 
-Record startup discovery as evidence records from `policies/evidence-policy.md`; later plans, reviews, and final handoffs reference the same ids instead of restating stronger claims.
+- goal and observable acceptance criteria;
+- relevant repository context and constraints;
+- allowed write scope and explicit non-goals;
+- important decisions already made;
+- expected targeted checks;
+- conditions that require escalation;
+- required report: changes, checks, unresolved risks, and unexpected findings.
 
-Repository discovery does not choose product behavior, target branch, unrelated-change handling, commit strategy, MR intent, pipeline recovery, browser side effects, or delivery authorization for the user.
+Role boundaries:
 
-## 3. Cycle Risk And Startup Questions
+- **Scout:** read-only; returns concise code evidence, likely root cause, options, and open questions.
+- **Implementation lead:** owns tracked edits, integration, targeted checks, and the final implementation report. It may request slices or review.
+- **Slice worker:** owns one disjoint bounded write scope and reports back to the lead; it does not redefine shared contracts.
+- **Reviewer:** independent and normally read-only; checks requirement fit, correctness, regressions, architecture, negative cases, and validation gaps.
 
-Classify every initial request and follow-up independently:
+Pass relevant specialist-skill guidance into assignments when frontend, Laravel, brand, delivery, or another domain requires it. Do not assume a child will discover internal references by itself.
 
-- `Low`: narrow local behavior, no shared contract or material risk;
-- `Medium`: bounded feature/fix with behavior, test, or contract judgment;
-- `High`: cross-stack, public contract, cache, migration, provider, broad refactor, or multiple writers;
-- `Critical`: security, auth, billing, tenancy, destructive data, irreversible migration, compliance, or production-customer risk.
+## 5. Execute And Adapt
 
-Escalate immediately when discovered scope exceeds the tier. Risk is a routing input, not authorization.
+The implementation owner should:
 
-After repo/runtime discovery, ask only unresolved user-owned blockers. Ask every blocker needed; do not cap question count. Group questions into the fewest practical rounds and ask another round only when an answer or new evidence creates a new blocker. Never repeat an already explicit decision.
+1. Verify the assigned plan against the real code before writing.
+2. Fix the root cause, removing obsolete paths when the approved direction is a clean replacement.
+3. Keep edits inside the assigned scope and flag unrelated dirty state immediately.
+4. Run targeted checks at meaningful boundaries, not after each file save.
+5. Report unexpected complexity early so routing, reasoning, scope, or the plan can be adjusted.
 
-User-owned blockers may include:
+### Mid-flight user messages
 
-- intended behavior, success, non-goals, compatibility, rollout, data preservation, permissions, and acceptance risk;
-- planning cadence and one-time/phased/minimal strategy;
-- autonomous or manual decision mode;
-- phase continuation policy and stop conditions;
-- confirmed target branch and unrelated-change handling;
-- commit, delivery, MR language/intent, pipeline check/recovery, and browser validation policy.
+Briefly acknowledge new input and classify it by effect:
 
-Use `templates/startup-contract.md` for the display summary. Its metadata copy is not authorization.
+- **Status or question:** answer without stopping the active implementation.
+- **Additive, non-conflicting change:** add it to the appropriate current or upcoming work; unaffected work continues.
+- **Correction to part of the task:** redirect or pause only the impacted work, reassess affected edits and checks, and continue independent work.
+- **Explicit stop, replacement request, or blocking contradiction:** stop the affected work; stop the whole run only when the instruction or safety issue is global.
 
-## 4. Direction And Planning
+Use the host's available transport. Codex may steer an active agent or queue input; Claude Code may deliver follow-up messages through different controls. Those are implementation details. If an active worker cannot be redirected safely, obtain a checkpoint and apply the change at the next dispatch boundary. Never ignore new user input, but do not turn every message into a global pause.
 
-Use scouts when architecture, current behavior, contracts, debt, or feasibility are repo-discoverable. After scouting, separate:
+### Recovery
 
-- repo facts;
-- safe reversible assumptions;
-- user-owned decisions;
-- tentative recommendation.
+When an agent becomes silent or interrupted, first request or recover its latest checkpoint and inspect the actual git diff. Reassign overlapping writes only after the prior writer is known to be stopped or its scope is safely handed off. Do not add a lease protocol or assume that elapsed time proves abandonment.
 
-Do not turn current code structure into desired product intent. Challenge a requested path when evidence shows a cleaner or safer long-term path; present scope, tradeoffs, and recommendation.
+## 6. Validate Proportionately
 
-For medium+ migration, data-model, public-contract, provider, reporting, or broad-refactor work, obtain an explicit rollout choice: one-time clean refactor, phased rollout, or compatibility-first minimal change. A phased plan covers the full roadmap before phase 1 implementation.
+During implementation:
 
-Use a plan writer for medium+ work or whenever contracts, phases, acceptance scenarios, risk scenarios, or concurrency need durable detail. Plan review is required for high/critical work and when scope/authorization/data safety is uncertain.
+- After a coherent task or phase, run only checks relevant to the behavior changed in that unit.
+- Group edits before testing when they are part of one behavior change.
+- After a review fix, rerun the check affected by that fix.
+- Do not run `FullTestSuite`, an equivalent repository-wide suite, or every available validator after each edit, file, worker, or minor task.
+- Respect repository restrictions such as forbidden build commands or required package managers.
 
-The plan must name:
+At the final pre-delivery boundary:
 
-- goal, non-goals, approved decisions, architecture/contract boundaries, and debt disposition;
-- startup contract and decision authority;
-- full roadmap and stop/continue rules when phased;
-- task/write ownership and concurrency boundaries;
-- definition-of-done and applicable risk scenarios;
-- validation, evidence, review, rollback, and delivery boundaries.
+1. Confirm the intended diff and that unrelated files are excluded.
+2. Run the repository's full suite once on the exact final tree when such a suite exists.
+3. If the repository has no named full suite, use its broadest normal validation command or plugin validation as the final suite.
+4. If a relevant mutation happens afterward, rerun the impacted targeted check and refresh the final suite once on the new final tree.
 
-If a material blocker remains, return to clarification. Do not hide it as an assumption.
+Do not add a new test framework just to test instruction text. Lightweight syntax, link, manifest, discovery, and plugin validation are enough for an instruction-only plugin unless the repository already provides more.
 
-## 5. Approval Resolution
+## 7. Review And Fix
 
-Before the first implementation edit and before each delivery action, resolve authorization through `policies/approval-policy.md`.
+Review depth follows risk:
 
-Implementation may start only when the child has:
+- Simple work: the implementation owner performs a focused self-review against acceptance criteria and the diff.
+- Standard work: add an independent reviewer when integration, regressions, or uncertainty justify it.
+- High-assurance work: independent review is required before final validation.
 
-- approved plan path or explicit low-risk plan-skip decision;
-- authoritative approval covering `edit`, scope, cycle/phase boundary, and stop conditions;
-- parent delegation packet and exact write ownership;
-- validation/evidence expectations.
+Findings should name severity, evidence, impact, and the required correction. Send fixes back to an implementation owner, run the affected targeted checks, and re-review the changed area. Do not repeat the entire review process for unrelated settled code unless a fix changes its assumptions.
 
-For medium/high/critical work, broad enthusiasm before a concrete plan is approval to continue planning, not to edit. An approval envelope may cover multiple verified phases, but only its named actions and boundaries.
+## 8. Deliver
 
-The resolver runs again after resume/compaction/cross-host handoff and before commit, push, MR, pipeline recovery, merge, or release. Metadata never substitutes for it.
+Before delivery, verify branch, target, final diff, validation results, and the exact actions requested by the user. Stage only in-scope files and follow repository commit/push rules.
 
-## 6. Capability-Based Delegation
+- Use `ant:merge-request` for every PR/MR create or update action. Pass it the verified summary, checks, target, language/readiness choices already supplied by the user, and unresolved risks.
+- Use `ant:delivery-workflows` only for merge-conflict resolution and related recovery.
+- A request to commit and push does not imply merge, Draft-to-ready conversion, tagging, publishing, or release unless the user says so.
 
-Route every child through `runtime/capability-routing.md` and the active host adapter. Use role/risk capability needs, never a hardcoded model name.
-
-Required delegation properties:
-
-- verified fresh/no-history context;
-- a curated packet from `templates/task-packet.md`;
-- one owner and explicit allowed/forbidden paths;
-- required capabilities and safe fallback policy;
-- requested versus actual route evidence;
-- a persisted capability-artifact ref and routing-decision `evidenceSource`;
-- checkpoint, validation, escalation, and output contract.
-
-If history isolation is unsupported or unknown, do not spawn that child. If nesting is insufficient, flatten under root. On flat hosts, an implementation lead requests slices/review and root dispatches them while the lead keeps integration ownership.
-
-Use the smallest sufficient workflow:
-
-- Low: one bounded implementation worker represented by an implementation-lead role;
-- Medium: one implementation lead; scout/reviewer only when evidence or risk requires;
-- High: scout/plan writer as needed, implementation lead, bounded slices, independent reviewer;
-- Critical: explicit plan review, strong implementation lead, bounded ownership, strong validation, independent review and re-review.
-
-Do not create artificial microtasks. Parallel work requires disjoint write scopes and a stable shared contract.
-
-## 7. Implementation, Tasks, And Checkpoints
-
-Implementation lead confirms the plan against real code before writing, owns integration, and escalates material divergence. It may use task-scoped execution only when tasks have meaningful independent implementation/validation/review boundaries.
-
-For task-scoped work, follow `task-scoped-execution.md`. For each task, use a brief, report, optional focused diff/range, and two-verdict review. Track task progress in compatible metadata or linked artifacts without new contract enums.
-
-Status is push-first. Use `templates/checkpoint.md` after discovery, before broad/risky changes, on blockers or contract divergence, after task/slice completion, before review, after fixes, and after validation. Parent polling is recovery, not normal flow.
-
-Before replacing a silent writer:
-
-1. request a checkpoint;
-2. attempt safe interrupt only when the host supports it and continuing is unsafe;
-3. verify the writer is closed or obtain its partial-work report;
-4. audit the partial diff and reassign ownership explicitly.
-
-No timeout alone proves a worker is stuck.
-
-## 8. Validation, Review, And Fix Loop
-
-Use evidence records from `policies/evidence-policy.md`. Map every applicable acceptance/risk scenario to evidence or a named residual risk. Worker reports remain claims until supported.
-
-Before review, assemble `policies/review-manifest.md`; use `templates/review-handoff.md` only for formatting. Missing required context produces `Cannot verify` or a finding, never silent approval.
-
-The reviewer is independent and normally read-only. It checks requirement fit, authorization boundaries, architecture/contracts, behavior, negative cases, tests, evidence freshness, obsolete paths, and avoidable debt.
-
-P0/P1/P2 or either task verdict `Needs fixes` blocks completion. Assign fixes to an implementation writer, run targeted validation, and re-review material findings. Finding-specific residual-risk acceptance must satisfy the approval policy.
-
-For user-facing browser behavior, validate named scenarios on an available preflighted surface. If unavailable, record blocked evidence and residual risk.
-
-## 9. Phase Close And Handoff
-
-Before a transition, pause, compaction, replacement, milestone commit, completion report, or delivery:
-
-- update `state.json` and append schema-valid events;
-- update concise phase/run markdown when active;
-- record status, inputs, work, decisions/rationale refs, evidence, findings, blockers, active ownership, next action, files to read first, and must-not-assume notes;
-- use `templates/phase-close.md` for the shape.
-
-A phase cannot close with stale structured state, missing required evidence, overlapping/unknown writer ownership, unresolved blocking findings, or a stop condition requiring user input.
-
-Within a valid approval envelope, auto-continue after a verified phase when its continuation policy allows. Do not ask for generic re-approval after each micro-step.
-
-## 10. Delivery Readiness
-
-Delivery is not implicit in implementation completion. Resolve authorization for each approved action and follow repository tooling/policy. MR creation content/provider flow is owned by `ant:merge-request`.
-
-Before staging/commit/push/MR/pipeline work, verify:
-
-- current branch/worktree and confirmed target;
-- intended paths and unrelated-change decision;
-- latest relevant evidence and review status;
-- commit strategy and phase/milestone close;
-- exact authorized delivery actions and stop conditions;
-- MR draft/ready/language intent and pipeline policy.
-
-Use `templates/delivery-handoff.md`. Always distinguish done from not done, recommend one next action, and state exactly what `pokračuj` would authorize after it is durably recorded. Merge and release require explicit authorization and never follow from generic delivery approval.
-
-## Mid-Flight User Input
-
-Treat new user input as authoritative without assuming the run is cancelled.
-
-- status question: answer from durable checkpoints;
-- clarification/addendum inside scope: record and forward safely;
-- material scope/behavior/contract/risk change: pause affected work, checkpoint writers, revise plan/approval;
-- urgent correction: interrupt only when the host supports safe interruption;
-- unrelated task: queue a new cycle unless the user asks to switch;
-- cancel/pause: stop new dispatch, checkpoint active writers, preserve partial work.
-
-Do not let a child continue into newly unapproved scope.
-
-## User-Facing Next Action
-
-Every non-final root response names:
-
-```text
-Proposed next action:
-User input needed:
-What `pokračuj` would authorize after recording approval:
-```
-
-State one bounded next action or the exact approved envelope. Never imply that `pokračuj` authorizes unstated edits or delivery.
-
-## Completion Criteria
-
-The run is complete only when:
-
-- structured state/events are current and schema-compatible;
-- startup decisions and authoritative approval evidence are resolvable;
-- implementation was delegated through verified fresh context with route evidence;
-- write ownership is closed and unrelated changes preserved;
-- approved plan/low-risk packet and architecture/contracts were followed or deviations approved;
-- definition-of-done and applicable risk scenarios map to sufficient evidence;
-- required review manifest was available and review passed;
-- blocking findings were fixed, validated, and re-reviewed or validly accepted;
-- residual risks and blocked checks are explicit;
-- final handoff distinguishes implementation from delivery and names the next authorized action.
+Finish with the delivered commit/PR/MR state, checks run, and anything that remains unverified. Keep the report concise enough to scan once.

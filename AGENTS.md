@@ -19,6 +19,16 @@ plugins/ant/
 assets/               # Shared README and branding assets
 ```
 
+## Orchestrator Maintenance
+
+- Keep `implementation-orchestrator` instruction-only: one public `SKILL.md` and one concise `references/lifecycle.md`. Do not add a custom runtime, persisted state contract, event log, lease protocol, compatibility reader, generated validator, or synthetic eval framework.
+- Keep the shared workflow host-neutral. Route by `strong`, `balanced`, and `fast` capabilities; put current Codex or Claude model names only in user documentation as non-binding examples.
+- Reassess reasoning during execution. Escalate when ambiguity, risk, conflicts, or failures broaden; de-escalate at safe boundaries for deterministic mechanical work.
+- Run targeted checks after coherent implementation phases. Run the broad/full suite once on the final tree before delivery, and refresh it only after a later relevant mutation.
+- Mid-flight user status/questions and additive non-conflicting changes must not pause unaffected work. Replan only impacted work unless the user explicitly stops or replaces the whole request.
+- `merge-request` exclusively owns PR/MR creation and updates. `delivery-workflows` owns merge-conflict resolution only; do not add aliases or forwarding bridges between them.
+- When a clean breaking redesign is approved, remove obsolete paths and documentation instead of retaining parallel behavior.
+
 ## Pull Requests
 
 - Always use the `ant:merge-request` / `$merge-request` skill when preparing, creating, or updating a PR/MR.
@@ -134,6 +144,8 @@ Commands are optional Claude aliases. Do not create a command with the same name
 Rerun the Codex install command for `antstudiocz/ant-marketplace/plugins/ant`.
 
 ## Testing Locally
+
+During implementation, run only checks affected by the current coherent change. Treat the two plugin validations below as the final repository-wide suite and run them once against the final tree; rerun them only if a later relevant edit invalidates the result.
 
 Claude Code:
 ```
