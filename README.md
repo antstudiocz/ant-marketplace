@@ -20,7 +20,7 @@ The `(ant)` marketplace gives Claude Code and Codex shared workflows for plannin
 2. Reload Claude Code or restart/open a new Codex session.
 3. Pick the skill that matches the task from [Choose a Skill](#choose-a-skill).
 4. For new product or app ideas, start with `create-application`.
-5. For implementation work that needs planning, subagents, review, and delivery, start with `implementation-orchestrator`.
+5. For implementation work, start with `implementation-orchestrator` so repository discovery and an approved plan happen before code changes, with brainstorming for new behavior.
 
 ## Quick Install
 
@@ -70,15 +70,15 @@ Use the narrowest skill that matches the work. If the task will become a multi-s
 - **Implementation orchestrator**
   - Claude Code: `/ant:implementation-orchestrator`
   - Codex: `$implementation-orchestrator`
-  - Use for: goal clarification, planning, subagents, review, verification, and delivery.
+  - Use for: repository discovery, user-needs brainstorming, approved implementation planning, subagents, review, verification, and delivery.
 - **Merge requests**
   - Claude Code: `/ant:merge-request`
   - Codex: `$merge-request`
-  - Use for: practical GitHub/GitLab PRs or MRs with structured descriptions.
+  - Use for: the canonical GitHub/GitLab PR/MR workflow, with descriptions rebuilt from the target merge base to final `HEAD`.
 - **Delivery workflows**
   - Claude Code: `/ant:delivery-workflows`
   - Codex: `$delivery-workflows`
-  - Use for: GitLab delivery workflows, merge conflicts, and delivery hygiene.
+  - Use for: contextual merge-conflict resolution. Use `merge-request` directly for PR/MR creation or updates.
 
 ### Engineering And Design
 
@@ -110,22 +110,27 @@ See [docs/skills.md](docs/skills.md) for the full skill guide.
 
 ## Orchestrator
 
-Use `implementation-orchestrator` when the work should be driven end to end rather than answered as a one-off edit. It owns the run shape: git context, clarification, planning, delegated subagents, review loops, validation, and delivery handoff.
+Use `implementation-orchestrator` when work should be driven end to end rather than answered as a one-off edit. Every implementation starts with read-only repository discovery and a proportional plan that the user approves before any tracked writer starts. New or materially changed behavior also adds user-needs brainstorming, all material questions, and deeper technical analysis before that plan.
 
-For the full Codex subagent hierarchy, add this to `~/.codex/config.toml`:
+Codex installations may allow a deeper subagent hierarchy with this setting in `~/.codex/config.toml`:
 
 ```toml
 [agents]
 max_depth = 2
 ```
 
-Then restart Codex or open a new session. Without this setting, the orchestrator can still work in a flatter mode.
+Then restart Codex or open a new session. The orchestrator also works without nested delegation by dispatching a flatter agent graph. If the active host cannot provide any writer-capable native delegation, the orchestrator stops before tracked edits instead of falling back to root writes.
+
+The shared workflow routes by Strong, Balanced, and Fast capabilities, while each host selects from its current model catalog. Reasoning is reassessed during work: it increases when ambiguity, risk, or failures broaden and decreases for bounded deterministic segments. During implementation it runs targeted checks after coherent phases; after the final tracked mutation and review, the full suite runs once on the final tree before completion and, when requested, delivery.
+
+Approval covers the stable plan rather than every phase. A tiny mechanical step inside that plan uses a compact cycle without duplicate approval. Related material changes received during the same active segment are batched into one affected-scope discovery, brainstorming, deeper analysis, delta-plan, and approval at the next safe boundary; only affected writes pause while unaffected work continues. Urgent stop and safety corrections apply immediately.
+
+Delivery handoffs use the identifier visible in the active host: Claude Code invokes `/ant:merge-request` and `/ant:delivery-workflows`; Codex invokes `$merge-request` and `$delivery-workflows`.
 
 More detail:
 
 - [Orchestrator setup](docs/orchestrator.md)
-- [Interactive lifecycle explainer](https://orchestrator-explainer.vercel.app/)
-- [Structured state contract](plugins/ant/contracts/orchestrator-state/README.md)
+- [10.0 release notes](docs/releases/10.0.0.md)
 
 ## Docs
 
@@ -133,7 +138,7 @@ The README is intentionally short. Longer guides live in `docs/` and can be mirr
 
 - [Installation guide](docs/install.md) - manual install, AI-assisted install prompts, and updates.
 - [Skill guide](docs/skills.md) - what each public skill does and when to use it.
-- [Orchestrator setup](docs/orchestrator.md) - subagent depth, model routing, and state contract links.
+- [Orchestrator setup](docs/orchestrator.md) - execution shape, capability routing, adaptive reasoning, messages, validation, and delivery.
 - [Orchestrator slide deck](docs/index.html) - visual explainer for the orchestrator lifecycle.
 
 ## Update

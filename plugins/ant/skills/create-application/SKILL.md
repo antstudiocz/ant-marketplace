@@ -14,7 +14,7 @@ Use this skill as the product and architecture intake layer for new application 
 
 Do not implement application code directly from this skill.
 
-Create the app brief, make the architecture recommendation, get user approval, then invoke `ant:implementation-orchestrator` with the approved handoff. The orchestrator owns git setup, planning depth, subagent strategy, implementation, review, verification, and delivery.
+Create the app brief, make the architecture recommendation, get user approval, then invoke `ant:implementation-orchestrator` with the approved handoff. Brief approval can satisfy product brainstorming, but it does not authorize tracked edits: the orchestrator verifies repository facts, prepares a concrete implementation plan, and obtains approval before writing. The orchestrator then owns subagent strategy, implementation, review, verification, and delivery.
 
 ## Reference Selection
 
@@ -35,7 +35,7 @@ Load only the references needed for the current conversation. For a user who is 
 
 1. Ask the requester to choose their technical level: beginner/non-technical, intermediate, or advanced.
 2. Adapt all follow-up questions, explanations, and recommendations to that level.
-3. Ask at most 3 grouped questions in the first round. Continue only when answers expose a real blocker or contradiction.
+3. Ask in digestible grouped rounds. Continue until every material decision that cannot be discovered from the repository or environment is answered; do not impose a fixed question count. Record safe assumptions only for non-material details.
 4. Clarify the application goal, users, workflows, data, integrations, authentication, deployment, expected lifetime, and whether this is standalone or part of an existing product.
 5. Check the requester's local development environment, especially whether they can run Git, Docker, and at least one TypeScript-capable package manager/runtime path such as Bun or Node/npm. When the host provides shell access to the same machine/workspace, inspect this directly before asking the requester.
 6. Ask enough product and technical questions to avoid unsupported assumptions. For internal or admin apps, explicitly clarify authorization, database, data ownership, auditability, and deployment.
@@ -58,7 +58,7 @@ Load only the references needed for the current conversation. For a user who is 
 15. Explain the tradeoff in a few concrete sentences, especially when avoiding overengineering or rejecting a too-simple frontend-only shape.
 16. Produce an application brief with acceptance criteria and explicit non-goals.
 17. Ask the user to approve the implementation path, architecture, framework/CMS choice, and brief before coding.
-18. After approval, invoke `ant:implementation-orchestrator` and pass the handoff from `references/orchestrator-handoff.md`.
+18. After approval, invoke `ant:implementation-orchestrator` and pass the handoff from `references/orchestrator-handoff.md`. The orchestrator must still verify the repository, prepare the implementation plan, and obtain explicit approval before tracked edits.
 
 ## Boundaries
 

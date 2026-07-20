@@ -1,4 +1,4 @@
 interface:
   display_name: "(ant) Delivery Workflows"
-  short_description: "GitLab MR creation and conflict resolution"
-  default_prompt: "Use $delivery-workflows for this delivery task. Load the matching reference and answer in my language."
+  short_description: "Context-aware merge-conflict resolution"
+  default_prompt: "Use $delivery-workflows only to resolve merge conflicts. Use $merge-request separately for PR/MR creation or updates."

@@ -1021,8 +1021,9 @@
             <span class="kicker">root</span>
             <h2 id="slide-2-title">Root directs. It does not write.</h2>
             <p class="lead">
-              Root keeps user context, decisions, approvals, and evidence.
-              Source code and changes belong to delegated roles.
+              Root keeps user context, routing, progress, and delivery intent.
+              Source code and changes belong to delegated roles. Without a native delegated writer,
+              work blocks before tracked edits.
             </p>
           </div>
           <div class="hero-mark" aria-label="What root owns">
@@ -1031,8 +1032,8 @@
               <span>asks for decisions that cannot be safely inferred from the repository.</span>
             </div>
             <div class="hero-row">
-              <strong>Gates</strong>
-              <span>guards persistence, risk tier, approval, and delivery rules.</span>
+              <strong>Scale</strong>
+              <span>chooses the smallest agent shape that can complete the work safely.</span>
             </div>
             <div class="hero-row">
               <strong>Evidence</strong>
@@ -1051,8 +1052,8 @@
             <span class="kicker">lifecycle</span>
             <h2 id="slide-3-title">Root sends the token.</h2>
             <p class="lead">
-              Planner branches the work, scout reads the repo, lead implements,
-              and reviewer sends fixes back into the loop.
+              Root discovers the repository, brainstorms with the user, and presents a plan.
+              Explicit approval releases tracked implementation work.
             </p>
           </div>
           <div class="motion-frame" aria-label="Animated dispatch across orchestration phases">
@@ -1060,49 +1061,49 @@
               <div class="dispatch-root">
                 <span class="dispatch-label">root command</span>
                 <strong>Orchestrator</strong>
-                <p>Context, approval, and evidence standard stay with root.</p>
+                <p>User context, routing, progress, and delivery stay with root.</p>
                 <div class="token-track" aria-hidden="true">
                   <i class="command-token"></i>
                 </div>
               </div>
               <ol class="role-stack" aria-label="Dispatch lifecycle sequence">
                 <li class="dispatch-row" style="--delay: 220ms">
-                  <span class="dispatch-index">01 plan</span>
+                  <span class="dispatch-index">01 discover</span>
                   <div class="dispatch-main">
-                    <strong>Plan writer</strong>
-                    <p>scenarios, gates, risks</p>
-                  </div>
-                  <span class="dispatch-state">route</span>
-                </li>
-                <li class="dispatch-row" style="--delay: 760ms">
-                  <span class="dispatch-index">02 scout</span>
-                  <div class="dispatch-main">
-                    <strong>Scout</strong>
-                    <p>repo facts without writes</p>
+                    <strong>Read-only discovery</strong>
+                    <p>repository inspection, facts, and contracts</p>
                   </div>
                   <span class="dispatch-state">read</span>
                 </li>
-                <li class="dispatch-row" style="--delay: 1300ms">
-                  <span class="dispatch-index">03 lead</span>
+                <li class="dispatch-row" style="--delay: 760ms">
+                  <span class="dispatch-index">02 brainstorm</span>
                   <div class="dispatch-main">
-                    <strong>Implementation lead</strong>
-                    <p>bounded slices and integration</p>
+                    <strong>Root + user</strong>
+                    <p>goal, workflow, edges, tradeoffs</p>
                   </div>
-                  <span class="dispatch-state">build</span>
+                  <span class="dispatch-state">decide</span>
+                </li>
+                <li class="dispatch-row" style="--delay: 1300ms">
+                  <span class="dispatch-index">03 approve</span>
+                  <div class="dispatch-main">
+                    <strong>Implementation plan</strong>
+                    <p>concrete steps and validation</p>
+                  </div>
+                  <span class="dispatch-state">gate</span>
                 </li>
                 <li class="dispatch-row" style="--delay: 1840ms">
-                  <span class="dispatch-index">04 review</span>
+                  <span class="dispatch-index">04 build</span>
                   <div class="dispatch-main">
-                    <strong>Reviewer</strong>
-                    <p>findings route fixes back</p>
+                    <strong>Implementation lead</strong>
+                    <p>approved scope and integration</p>
                   </div>
-                  <span class="dispatch-state">loop</span>
+                  <span class="dispatch-state">write</span>
                 </li>
                 <li class="dispatch-row evidence" style="--delay: 2380ms">
-                  <span class="dispatch-index">05 lock</span>
+                  <span class="dispatch-index">05 verify</span>
                   <div class="dispatch-main">
-                    <strong>Evidence locked</strong>
-                    <p>handoff opens only after verification</p>
+                    <strong>Review + final suite</strong>
+                    <p>verify the exact final tree</p>
                   </div>
                   <span class="dispatch-state">done</span>
                 </li>
@@ -1114,28 +1115,28 @@
         <section class="slide two-column light" data-title="risk tiers" aria-labelledby="slide-4-title">
           <div class="copy">
             <span class="kicker">routing</span>
-            <h2 id="slide-4-title">Risk chooses the team.</h2>
+            <h2 id="slide-4-title">Complexity chooses the shape.</h2>
             <p class="lead">
               Speed does not come from bypassing rules. It comes from choosing
-              the smallest delegated setup that is still safe for the cycle.
+              the smallest delegated setup that is still safe for the work.
             </p>
           </div>
-          <div class="risk-grid" aria-label="Risk tier dispatch">
+          <div class="risk-grid" aria-label="Execution shapes">
             <div class="risk-card active">
-              <strong>Low</strong>
-              <span>one bounded worker, minimum ceremony.</span>
+              <strong>Simple</strong>
+              <span>compact discovery and plan; one writer after approval.</span>
             </div>
             <div class="risk-card">
-              <strong>Medium</strong>
-              <span>implementation lead; scout or reviewer only when risk appears.</span>
+              <strong>Standard</strong>
+              <span>one lead; scout or reviewer only when useful.</span>
             </div>
             <div class="risk-card">
-              <strong>High</strong>
-              <span>scout, plan, lead, and reviewer.</span>
+              <strong>High assurance</strong>
+              <span>scouts as needed, one lead, and independent review.</span>
             </div>
             <div class="risk-card">
-              <strong>Critical</strong>
-              <span>full lifecycle, strong validation, re-review discipline.</span>
+              <strong>No bookkeeping</strong>
+              <span>no phase owners, per-file agents, or custom runtime.</span>
             </div>
           </div>
         </section>
@@ -1143,24 +1144,24 @@
         <section class="slide two-column light" data-title="planning" aria-labelledby="slide-5-title">
           <div class="copy">
             <span class="kicker">before code</span>
-            <h2 id="slide-5-title">Facts first. Plan second.</h2>
+            <h2 id="slide-5-title">Discover. Brainstorm. Plan. Approve.</h2>
             <p class="lead">
-              Scout separates repository truth from user decisions. Plan writer
-              turns that into a commitment that can be reviewed and verified.
+              Every implementation gets pre-write discovery, a plan, and approval. New behavior
+              adds user-needs brainstorming and deeper analysis before that plan.
             </p>
           </div>
-          <div class="stack" aria-label="Planning artifacts">
+          <div class="stack" aria-label="Planning inputs">
             <div class="stack-row">
-              <strong>Scout report</strong>
-              <span>current behavior, contracts, legacy debt, options, and blocking questions.</span>
+              <strong>Discovery</strong>
+              <span>current behavior, contracts, dependencies, obsolete paths, and risks.</span>
             </div>
             <div class="stack-row">
-              <strong>Direction</strong>
-              <span>recommendation with tradeoffs, not blind acceptance of the first idea.</span>
+              <strong>Brainstorming</strong>
+              <span>goal, users, workflow, edge cases, non-goals, options, and tradeoffs.</span>
             </div>
             <div class="stack-row">
-              <strong>Plan</strong>
-              <span>acceptance scenarios, rollout, validation, and decision policy.</span>
+              <strong>Approved plan</strong>
+              <span>concrete steps, acceptance, and validation; tracked writers wait for approval.</span>
             </div>
           </div>
         </section>
@@ -1184,8 +1185,8 @@
             <span class="kicker">delegated implementation</span>
             <h2 id="slide-6-title">Lead owns the change.</h2>
             <p class="lead">
-              Even a small follow-up stays delegated while orchestration is active.
-              Root-cause fixes beat workarounds and suppressed errors.
+              The lead receives an approved implementation contract and verifies it against
+              the code. Root-cause fixes beat workarounds and suppressed errors.
             </p>
           </div>
         </section>
@@ -1195,8 +1196,8 @@
             <span class="kicker">review / fix</span>
             <h2 id="slide-7-title">Done is not a worker claim.</h2>
             <p class="lead">
-              Reviewer does not start with the diff alone. It reads run context,
-              plan, reports, checks, and looks for P0/P1/P2 risks that block completion.
+              Reviewer does not start with the diff alone. It reads the goal,
+              relevant context, reports, checks, and risks that can block completion.
             </p>
           </div>
           <div class="stack" aria-label="Review loop">
@@ -1210,36 +1211,36 @@
             </div>
             <div class="stack-row">
               <strong>Re-review</strong>
-              <span>P0/P1/P2 closes only after fix, verification, and re-review.</span>
+              <span>a blocking finding closes only after fix, verification, and focused re-review.</span>
             </div>
           </div>
         </section>
 
-        <section class="slide two-column light" data-title="state" aria-labelledby="slide-8-title">
+        <section class="slide two-column light" data-title="adaptation" aria-labelledby="slide-8-title">
           <div class="copy">
-            <span class="kicker">durable state</span>
-            <h2 id="slide-8-title">State is not chat.</h2>
+            <span class="kicker">adaptive execution</span>
+            <h2 id="slide-8-title">The workflow changes with the work.</h2>
             <p class="lead">
-              The orchestrator is resumable because current truth lives in
-              structured artifacts. Markdown is a human layer, not the only source.
+              Native host controls keep the process responsive without a custom runtime.
+              New complexity, user input, and validation results change only what they affect.
             </p>
           </div>
-          <div class="artifact-grid" aria-label="Orchestrator artifacts">
+          <div class="artifact-grid" aria-label="Adaptive orchestration rules">
             <div class="artifact-card">
-              <strong>state.json</strong>
-              <span>current snapshot of run, cycle, role, phase, and blockers.</span>
+              <strong>Adaptive reasoning</strong>
+              <span>escalates for uncertainty and de-escalates for deterministic segments.</span>
             </div>
             <div class="artifact-card">
-              <strong>events.jsonl</strong>
-              <span>append-only log of decisions, spawns, checkpoints, and review.</span>
+              <strong>Live user input</strong>
+              <span>related material changes share one affected-scope replan at the next safe boundary.</span>
             </div>
             <div class="artifact-card">
-              <strong>handoff.md</strong>
-              <span>short resume layer for continuation after pause or compaction.</span>
+              <strong>Targeted checks</strong>
+              <span>run after coherent implementation phases, not after every edit.</span>
             </div>
             <div class="artifact-card">
-              <strong>delivery handoff</strong>
-              <span>what is done, what is not, checks, risks, and what authorizes continuation.</span>
+              <strong>One final suite</strong>
+              <span>runs after review on the exact final tree before completion and optional delivery.</span>
             </div>
           </div>
         </section>
@@ -1281,7 +1282,7 @@
             planning: "planning",
             implementation: "implementation",
             "review loop": "review loop",
-            state: "state"
+            adaptation: "adaptation"
           },
           text: {
             ".skip-link": "Skip to slides",
@@ -1290,62 +1291,62 @@
             "#slide-1-title + .lead": "The orchestrator is not a visual map of everything at once. It is a chain of clear decisions that moves work from request to verified outcome.",
             "[aria-labelledby='slide-2-title'] .kicker": "root",
             "#slide-2-title": "Root directs. It does not write.",
-            "#slide-2-title + .lead": "Root keeps user context, decisions, approvals, and evidence. Source code and changes belong to delegated roles.",
+            "#slide-2-title + .lead": "Root keeps user context, routing, progress, and delivery intent. Source code and changes belong to delegated roles. Without a native delegated writer, work blocks before tracked edits.",
             ".hero-row:nth-child(1) strong": "Communication",
             ".hero-row:nth-child(1) span": "asks for decisions that cannot be safely inferred from the repository.",
-            ".hero-row:nth-child(2) strong": "Gates",
-            ".hero-row:nth-child(2) span": "guards persistence, risk tier, approval, and delivery rules.",
+            ".hero-row:nth-child(2) strong": "Scale",
+            ".hero-row:nth-child(2) span": "chooses the smallest agent shape that can complete the work safely.",
             ".hero-row:nth-child(3) strong": "Evidence",
             ".hero-row:nth-child(3) span": "does not accept a worker report as done without verification or review.",
             "[aria-labelledby='slide-3-title'] .kicker": "lifecycle",
             "#slide-3-title": "Root sends the token.",
-            "#slide-3-title + .lead": "Planner branches the work, scout reads the repo, lead implements, and reviewer sends fixes back into the loop.",
+            "#slide-3-title + .lead": "Root discovers the repository, brainstorms with the user, and presents a plan. Explicit approval releases tracked implementation work.",
             ".dispatch-label": "root command",
             ".dispatch-root strong": "Orchestrator",
-            ".dispatch-root p": "Context, approval, and evidence standard stay with root.",
-            ".dispatch-row:nth-child(1) .dispatch-index": "01 plan",
-            ".dispatch-row:nth-child(1) .dispatch-main strong": "Plan writer",
-            ".dispatch-row:nth-child(1) .dispatch-main p": "scenarios, gates, risks",
-            ".dispatch-row:nth-child(1) .dispatch-state": "route",
-            ".dispatch-row:nth-child(2) .dispatch-index": "02 scout",
-            ".dispatch-row:nth-child(2) .dispatch-main strong": "Scout",
-            ".dispatch-row:nth-child(2) .dispatch-main p": "repo facts without writes",
-            ".dispatch-row:nth-child(2) .dispatch-state": "read",
-            ".dispatch-row:nth-child(3) .dispatch-index": "03 lead",
-            ".dispatch-row:nth-child(3) .dispatch-main strong": "Implementation lead",
-            ".dispatch-row:nth-child(3) .dispatch-main p": "bounded slices and integration",
-            ".dispatch-row:nth-child(3) .dispatch-state": "build",
-            ".dispatch-row:nth-child(4) .dispatch-index": "04 review",
-            ".dispatch-row:nth-child(4) .dispatch-main strong": "Reviewer",
-            ".dispatch-row:nth-child(4) .dispatch-main p": "findings route fixes back",
-            ".dispatch-row:nth-child(4) .dispatch-state": "loop",
-            ".dispatch-row:nth-child(5) .dispatch-index": "05 lock",
-            ".dispatch-row:nth-child(5) .dispatch-main strong": "Evidence locked",
-            ".dispatch-row:nth-child(5) .dispatch-main p": "handoff opens only after verification",
+            ".dispatch-root p": "User context, routing, progress, and delivery stay with root.",
+            ".dispatch-row:nth-child(1) .dispatch-index": "01 discover",
+            ".dispatch-row:nth-child(1) .dispatch-main strong": "Read-only discovery",
+            ".dispatch-row:nth-child(1) .dispatch-main p": "repository inspection, facts, and contracts",
+            ".dispatch-row:nth-child(1) .dispatch-state": "read",
+            ".dispatch-row:nth-child(2) .dispatch-index": "02 brainstorm",
+            ".dispatch-row:nth-child(2) .dispatch-main strong": "Root + user",
+            ".dispatch-row:nth-child(2) .dispatch-main p": "goal, workflow, edges, tradeoffs",
+            ".dispatch-row:nth-child(2) .dispatch-state": "decide",
+            ".dispatch-row:nth-child(3) .dispatch-index": "03 approve",
+            ".dispatch-row:nth-child(3) .dispatch-main strong": "Implementation plan",
+            ".dispatch-row:nth-child(3) .dispatch-main p": "concrete steps and validation",
+            ".dispatch-row:nth-child(3) .dispatch-state": "gate",
+            ".dispatch-row:nth-child(4) .dispatch-index": "04 build",
+            ".dispatch-row:nth-child(4) .dispatch-main strong": "Implementation lead",
+            ".dispatch-row:nth-child(4) .dispatch-main p": "approved scope and integration",
+            ".dispatch-row:nth-child(4) .dispatch-state": "write",
+            ".dispatch-row:nth-child(5) .dispatch-index": "05 verify",
+            ".dispatch-row:nth-child(5) .dispatch-main strong": "Review + final suite",
+            ".dispatch-row:nth-child(5) .dispatch-main p": "verify the exact final tree",
             ".dispatch-row:nth-child(5) .dispatch-state": "done",
             "[aria-labelledby='slide-4-title'] .kicker": "routing",
-            "#slide-4-title": "Risk chooses the team.",
-            "#slide-4-title + .lead": "Speed does not come from bypassing rules. It comes from choosing the smallest delegated setup that is still safe for the cycle.",
-            ".risk-card:nth-child(1) strong": "Low",
-            ".risk-card:nth-child(1) span": "one bounded worker, minimum ceremony.",
-            ".risk-card:nth-child(2) strong": "Medium",
-            ".risk-card:nth-child(2) span": "implementation lead; scout or reviewer only when risk appears.",
-            ".risk-card:nth-child(3) strong": "High",
-            ".risk-card:nth-child(3) span": "scout, plan, lead, and reviewer.",
-            ".risk-card:nth-child(4) strong": "Critical",
-            ".risk-card:nth-child(4) span": "full lifecycle, strong validation, re-review discipline.",
+            "#slide-4-title": "Complexity chooses the shape.",
+            "#slide-4-title + .lead": "Speed does not come from bypassing rules. It comes from choosing the smallest delegated setup that is still safe for the work.",
+            ".risk-card:nth-child(1) strong": "Simple",
+            ".risk-card:nth-child(1) span": "compact discovery and plan; one writer after approval.",
+            ".risk-card:nth-child(2) strong": "Standard",
+            ".risk-card:nth-child(2) span": "one lead; scout or reviewer only when useful.",
+            ".risk-card:nth-child(3) strong": "High assurance",
+            ".risk-card:nth-child(3) span": "scouts as needed, one lead, and independent review.",
+            ".risk-card:nth-child(4) strong": "No bookkeeping",
+            ".risk-card:nth-child(4) span": "no phase owners, per-file agents, or custom runtime.",
             "[aria-labelledby='slide-5-title'] .kicker": "before code",
-            "#slide-5-title": "Facts first. Plan second.",
-            "#slide-5-title + .lead": "Scout separates repository truth from user decisions. Plan writer turns that into a commitment that can be reviewed and verified.",
-            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(1) strong": "Scout report",
-            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(1) span": "current behavior, contracts, legacy debt, options, and blocking questions.",
-            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(2) strong": "Direction",
-            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(2) span": "recommendation with tradeoffs, not blind acceptance of the first idea.",
-            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(3) strong": "Plan",
-            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(3) span": "acceptance scenarios, rollout, validation, and decision policy.",
+            "#slide-5-title": "Discover. Brainstorm. Plan. Approve.",
+            "#slide-5-title + .lead": "Every implementation gets pre-write discovery, a plan, and approval. New behavior adds user-needs brainstorming and deeper analysis before that plan.",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(1) strong": "Discovery",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(1) span": "current behavior, contracts, dependencies, obsolete paths, and risks.",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(2) strong": "Brainstorming",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(2) span": "goal, users, workflow, edge cases, non-goals, options, and tradeoffs.",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(3) strong": "Approved plan",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(3) span": "concrete steps, acceptance, and validation; tracked writers wait for approval.",
             "[aria-labelledby='slide-6-title'] .kicker": "delegated implementation",
             "#slide-6-title": "Lead owns the change.",
-            "#slide-6-title + .lead": "Even a small follow-up stays delegated while orchestration is active. Root-cause fixes beat workarounds and suppressed errors.",
+            "#slide-6-title + .lead": "The lead receives an approved implementation contract and verifies it against the code. Root-cause fixes beat workarounds and suppressed errors.",
             ".dark-row:nth-child(1) strong": "Reads code",
             ".dark-row:nth-child(1) span": "checks the plan against the real repository state, not against an assumption.",
             ".dark-row:nth-child(2) strong": "Splits work",
@@ -1354,34 +1355,34 @@
             ".dark-row:nth-child(3) span": "combines the result, runs targeted checks, and prepares the evidence trail.",
             "[aria-labelledby='slide-7-title'] .kicker": "review / fix",
             "#slide-7-title": "Done is not a worker claim.",
-            "#slide-7-title + .lead": "Reviewer does not start with the diff alone. It reads run context, plan, reports, checks, and looks for P0/P1/P2 risks that block completion.",
+            "#slide-7-title + .lead": "Reviewer does not start with the diff alone. It reads the goal, relevant context, reports, checks, and risks that can block completion.",
             "[aria-labelledby='slide-7-title'] .stack-row:nth-child(1) strong": "Finding",
             "[aria-labelledby='slide-7-title'] .stack-row:nth-child(1) span": "scope mismatch, contract break, missing tests, or weak evidence.",
             "[aria-labelledby='slide-7-title'] .stack-row:nth-child(2) strong": "Fix",
             "[aria-labelledby='slide-7-title'] .stack-row:nth-child(2) span": "lead fixes the root cause and adds targeted verification.",
             "[aria-labelledby='slide-7-title'] .stack-row:nth-child(3) strong": "Re-review",
-            "[aria-labelledby='slide-7-title'] .stack-row:nth-child(3) span": "P0/P1/P2 closes only after fix, verification, and re-review.",
-            "[aria-labelledby='slide-8-title'] .kicker": "durable state",
-            "#slide-8-title": "State is not chat.",
-            "#slide-8-title + .lead": "The orchestrator is resumable because current truth lives in structured artifacts. Markdown is a human layer, not the only source.",
-            ".artifact-card:nth-child(1) strong": "state.json",
-            ".artifact-card:nth-child(1) span": "current snapshot of run, cycle, role, phase, and blockers.",
-            ".artifact-card:nth-child(2) strong": "events.jsonl",
-            ".artifact-card:nth-child(2) span": "append-only log of decisions, spawns, checkpoints, and review.",
-            ".artifact-card:nth-child(3) strong": "handoff.md",
-            ".artifact-card:nth-child(3) span": "short resume layer for continuation after pause or compaction.",
-            ".artifact-card:nth-child(4) strong": "delivery handoff",
-            ".artifact-card:nth-child(4) span": "what is done, what is not, checks, risks, and what authorizes continuation."
+            "[aria-labelledby='slide-7-title'] .stack-row:nth-child(3) span": "a blocking finding closes only after fix, verification, and focused re-review.",
+            "[aria-labelledby='slide-8-title'] .kicker": "adaptive execution",
+            "#slide-8-title": "The workflow changes with the work.",
+            "#slide-8-title + .lead": "Native host controls keep the process responsive without a custom runtime. New complexity, user input, and validation results change only what they affect.",
+            ".artifact-card:nth-child(1) strong": "Adaptive reasoning",
+            ".artifact-card:nth-child(1) span": "escalates for uncertainty and de-escalates for deterministic segments.",
+            ".artifact-card:nth-child(2) strong": "Live user input",
+            ".artifact-card:nth-child(2) span": "related material changes share one affected-scope replan at the next safe boundary.",
+            ".artifact-card:nth-child(3) strong": "Targeted checks",
+            ".artifact-card:nth-child(3) span": "run after coherent implementation phases, not after every edit.",
+            ".artifact-card:nth-child(4) strong": "One final suite",
+            ".artifact-card:nth-child(4) span": "runs after review on the exact final tree before completion and optional delivery."
           },
           attrs: {
             ".hero-mark": { "aria-label": "What root owns" },
             ".motion-frame": { "aria-label": "Animated dispatch across orchestration phases" },
             ".role-stack": { "aria-label": "Dispatch lifecycle sequence" },
-            ".risk-grid": { "aria-label": "Risk tier dispatch" },
-            "[aria-labelledby='slide-5-title'] .stack": { "aria-label": "Planning artifacts" },
+            ".risk-grid": { "aria-label": "Execution shapes" },
+            "[aria-labelledby='slide-5-title'] .stack": { "aria-label": "Planning inputs" },
             ".dark-panel": { "aria-label": "Implementation lead responsibilities" },
             "[aria-labelledby='slide-7-title'] .stack": { "aria-label": "Review loop" },
-            ".artifact-grid": { "aria-label": "Orchestrator artifacts" },
+            ".artifact-grid": { "aria-label": "Adaptive orchestration rules" },
             ".deck-controls": { "aria-label": "Presentation controls" },
             "#dots": { "aria-label": "Slide selection" },
             ".language-toggle": { "aria-label": "Language" }
@@ -1405,7 +1406,7 @@
             planning: "plánování",
             implementation: "implementace",
             "review loop": "review loop",
-            state: "stav"
+            adaptation: "adaptace"
           },
           text: {
             ".skip-link": "Přeskočit na slidy",
@@ -1414,62 +1415,62 @@
             "#slide-1-title + .lead": "Orchestrátor není vizuální mapa všeho najednou. Je to sada jasných rozhodnutí, která posouvají práci od zadání k ověřenému výsledku.",
             "[aria-labelledby='slide-2-title'] .kicker": "root",
             "#slide-2-title": "Root řídí, nepíše.",
-            "#slide-2-title + .lead": "Root drží uživatelský kontext, rozhodnutí, schválení a důkazy. Zdrojový kód a změny patří delegovaným rolím.",
+            "#slide-2-title + .lead": "Root drží uživatelský kontext, routing, průběh a delivery záměr. Zdrojový kód a změny patří delegovaným rolím. Bez nativního writera se práce zastaví před tracked změnami.",
             ".hero-row:nth-child(1) strong": "Komunikace",
             ".hero-row:nth-child(1) span": "ptá se na rozhodnutí, která nejdou bezpečně zjistit z repa.",
-            ".hero-row:nth-child(2) strong": "Gates",
-            ".hero-row:nth-child(2) span": "hlídá persistence, risk tier, approval a delivery pravidla.",
+            ".hero-row:nth-child(2) strong": "Rozsah",
+            ".hero-row:nth-child(2) span": "volí nejmenší sestavu agentů, která práci bezpečně dokončí.",
             ".hero-row:nth-child(3) strong": "Evidence",
             ".hero-row:nth-child(3) span": "nebere worker report jako hotovo bez ověření nebo review.",
             "[aria-labelledby='slide-3-title'] .kicker": "lifecycle",
             "#slide-3-title": "Root vysílá token.",
-            "#slide-3-title + .lead": "Planner rozvětví práci, scout čte repo, lead implementuje a reviewer vrací fix zpět do smyčky.",
+            "#slide-3-title + .lead": "Root prozkoumá repozitář, brainstormuje s uživatelem a předloží plán. Tracked implementace začne až po explicitním schválení.",
             ".dispatch-label": "root command",
             ".dispatch-root strong": "Orchestrator",
-            ".dispatch-root p": "Kontext, approval a evidence standard zůstávají u rootu.",
-            ".dispatch-row:nth-child(1) .dispatch-index": "01 plán",
-            ".dispatch-row:nth-child(1) .dispatch-main strong": "Plan writer",
-            ".dispatch-row:nth-child(1) .dispatch-main p": "scénáře, gates, rizika",
-            ".dispatch-row:nth-child(1) .dispatch-state": "route",
-            ".dispatch-row:nth-child(2) .dispatch-index": "02 scout",
-            ".dispatch-row:nth-child(2) .dispatch-main strong": "Scout",
-            ".dispatch-row:nth-child(2) .dispatch-main p": "repo fakta bez zápisu",
-            ".dispatch-row:nth-child(2) .dispatch-state": "read",
-            ".dispatch-row:nth-child(3) .dispatch-index": "03 lead",
-            ".dispatch-row:nth-child(3) .dispatch-main strong": "Implementation lead",
-            ".dispatch-row:nth-child(3) .dispatch-main p": "bounded slices a integrace",
-            ".dispatch-row:nth-child(3) .dispatch-state": "build",
-            ".dispatch-row:nth-child(4) .dispatch-index": "04 review",
-            ".dispatch-row:nth-child(4) .dispatch-main strong": "Reviewer",
-            ".dispatch-row:nth-child(4) .dispatch-main p": "finding vrací fix zpět do změny",
-            ".dispatch-row:nth-child(4) .dispatch-state": "loop",
-            ".dispatch-row:nth-child(5) .dispatch-index": "05 lock",
-            ".dispatch-row:nth-child(5) .dispatch-main strong": "Evidence locked",
-            ".dispatch-row:nth-child(5) .dispatch-main p": "handoff je povolený až po ověření",
+            ".dispatch-root p": "Uživatelský kontext, routing, průběh a delivery zůstávají u rootu.",
+            ".dispatch-row:nth-child(1) .dispatch-index": "01 průzkum",
+            ".dispatch-row:nth-child(1) .dispatch-main strong": "Průzkum bez zápisu",
+            ".dispatch-row:nth-child(1) .dispatch-main p": "kontrola repozitáře, fakta a kontrakty",
+            ".dispatch-row:nth-child(1) .dispatch-state": "čte",
+            ".dispatch-row:nth-child(2) .dispatch-index": "02 brainstorming",
+            ".dispatch-row:nth-child(2) .dispatch-main strong": "Root + uživatel",
+            ".dispatch-row:nth-child(2) .dispatch-main p": "cíl, workflow, okraje, tradeoffs",
+            ".dispatch-row:nth-child(2) .dispatch-state": "rozhoduje",
+            ".dispatch-row:nth-child(3) .dispatch-index": "03 schválení",
+            ".dispatch-row:nth-child(3) .dispatch-main strong": "Implementační plán",
+            ".dispatch-row:nth-child(3) .dispatch-main p": "konkrétní kroky a validace",
+            ".dispatch-row:nth-child(3) .dispatch-state": "brána",
+            ".dispatch-row:nth-child(4) .dispatch-index": "04 implementace",
+            ".dispatch-row:nth-child(4) .dispatch-main strong": "Implementation lead",
+            ".dispatch-row:nth-child(4) .dispatch-main p": "schválený scope a integrace",
+            ".dispatch-row:nth-child(4) .dispatch-state": "píše",
+            ".dispatch-row:nth-child(5) .dispatch-index": "05 verify",
+            ".dispatch-row:nth-child(5) .dispatch-main strong": "Review + finální suite",
+            ".dispatch-row:nth-child(5) .dispatch-main p": "ověří přesně finální strom",
             ".dispatch-row:nth-child(5) .dispatch-state": "done",
             "[aria-labelledby='slide-4-title'] .kicker": "routing",
-            "#slide-4-title": "Riziko určuje sestavu.",
-            "#slide-4-title + .lead": "Rychlost nevzniká obejitím pravidel. Vzniká výběrem nejmenší delegované sestavy, která je pro daný cyklus ještě bezpečná.",
-            ".risk-card:nth-child(1) strong": "Low",
-            ".risk-card:nth-child(1) span": "jeden bounded worker, minimum ceremony.",
-            ".risk-card:nth-child(2) strong": "Medium",
-            ".risk-card:nth-child(2) span": "implementation lead; scout nebo reviewer jen při riziku.",
-            ".risk-card:nth-child(3) strong": "High",
-            ".risk-card:nth-child(3) span": "scout, plán, lead a reviewer.",
-            ".risk-card:nth-child(4) strong": "Critical",
-            ".risk-card:nth-child(4) span": "plný lifecycle, silná validace, re-review discipline.",
+            "#slide-4-title": "Složitost určuje sestavu.",
+            "#slide-4-title + .lead": "Rychlost nevzniká obejitím pravidel. Vzniká výběrem nejmenší delegované sestavy, která je pro danou práci ještě bezpečná.",
+            ".risk-card:nth-child(1) strong": "Jednoduchá",
+            ".risk-card:nth-child(1) span": "kompaktní průzkum a plán; jeden writer po schválení.",
+            ".risk-card:nth-child(2) strong": "Standardní",
+            ".risk-card:nth-child(2) span": "jeden lead; scout nebo reviewer jen když pomůže.",
+            ".risk-card:nth-child(3) strong": "Vysoká jistota",
+            ".risk-card:nth-child(3) span": "scouti podle potřeby, jeden lead a nezávislé review.",
+            ".risk-card:nth-child(4) strong": "Bez byrokracie",
+            ".risk-card:nth-child(4) span": "žádní phase owneři, agenti po souborech ani vlastní runtime.",
             "[aria-labelledby='slide-5-title'] .kicker": "před kódem",
-            "#slide-5-title": "Nejdřív fakta, potom plán.",
-            "#slide-5-title + .lead": "Scout oddělí repo-pravdu od uživatelských rozhodnutí. Plan writer z toho udělá závazek, který jde reviewnout a ověřit.",
-            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(1) strong": "Scout report",
-            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(1) span": "aktuální chování, kontrakty, legacy dluh, možnosti a blocking questions.",
-            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(2) strong": "Direction",
-            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(2) span": "doporučení s tradeoffs, ne slepé přijetí prvního nápadu.",
-            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(3) strong": "Plan",
-            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(3) span": "acceptance scénáře, rollout, validation a decision policy.",
+            "#slide-5-title": "Prozkoumat. Brainstormovat. Naplánovat. Schválit.",
+            "#slide-5-title + .lead": "Každá implementace má před zápisem průzkum, plán a schválení. Nové chování přidává brainstorming potřeb a hlubší analýzu ještě před vytvořením plánu.",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(1) strong": "Průzkum",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(1) span": "aktuální chování, kontrakty, závislosti, zastaralé cesty a rizika.",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(2) strong": "Brainstorming",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(2) span": "cíl, uživatelé, workflow, edge cases, non-goals, možnosti a tradeoffs.",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(3) strong": "Schválený plán",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(3) span": "konkrétní kroky, akceptace a validace; writeři čekají na schválení.",
             "[aria-labelledby='slide-6-title'] .kicker": "delegovaná implementace",
             "#slide-6-title": "Lead vlastní změny.",
-            "#slide-6-title + .lead": "I malý follow-up zůstává delegovaný, pokud je orchestrace aktivní. Root-cause fix má přednost před workaroundem a potlačením chyb.",
+            "#slide-6-title + .lead": "Lead dostane schválený implementační kontrakt a ověří ho proti kódu. Root-cause fix má přednost před workaroundem a potlačením chyb.",
             ".dark-row:nth-child(1) strong": "Čte kód",
             ".dark-row:nth-child(1) span": "ověřuje plán proti reálnému stavu repozitáře, ne proti předpokladu.",
             ".dark-row:nth-child(2) strong": "Dělí práci",
@@ -1478,34 +1479,34 @@
             ".dark-row:nth-child(3) span": "spojuje výsledek, spouští cílené kontroly a připraví evidence trail.",
             "[aria-labelledby='slide-7-title'] .kicker": "review / fix",
             "#slide-7-title": "Hotovo není worker claim.",
-            "#slide-7-title + .lead": "Reviewer nezačíná samotným diffem. Čte kontext běhu, plán, reporty, ověření a hledá P0/P1/P2 rizika, která blokují dokončení.",
+            "#slide-7-title + .lead": "Reviewer nezačíná samotným diffem. Čte cíl, relevantní kontext, reporty, kontroly a rizika, která mohou blokovat dokončení.",
             "[aria-labelledby='slide-7-title'] .stack-row:nth-child(1) strong": "Finding",
             "[aria-labelledby='slide-7-title'] .stack-row:nth-child(1) span": "scope mismatch, contract break, missing tests nebo slabá evidence.",
             "[aria-labelledby='slide-7-title'] .stack-row:nth-child(2) strong": "Fix",
             "[aria-labelledby='slide-7-title'] .stack-row:nth-child(2) span": "lead opraví root cause a doplní cílené ověření.",
             "[aria-labelledby='slide-7-title'] .stack-row:nth-child(3) strong": "Re-review",
-            "[aria-labelledby='slide-7-title'] .stack-row:nth-child(3) span": "P0/P1/P2 je zavřené až po fixu, ověření a re-review.",
-            "[aria-labelledby='slide-8-title'] .kicker": "durable state",
-            "#slide-8-title": "Stav není chat.",
-            "#slide-8-title + .lead": "Orchestrátor je obnovitelný, protože aktuální pravda žije ve strukturovaných artefaktech. Markdown je lidská vrstva, ne jediný zdroj.",
-            ".artifact-card:nth-child(1) strong": "state.json",
-            ".artifact-card:nth-child(1) span": "aktuální snapshot běhu, cyklu, role, fáze a blockerů.",
-            ".artifact-card:nth-child(2) strong": "events.jsonl",
-            ".artifact-card:nth-child(2) span": "append-only log rozhodnutí, spawnů, checkpointů a review.",
-            ".artifact-card:nth-child(3) strong": "handoff.md",
-            ".artifact-card:nth-child(3) span": "stručný resume layer pro pokračování po pauze nebo compactu.",
-            ".artifact-card:nth-child(4) strong": "delivery handoff",
-            ".artifact-card:nth-child(4) span": "co je hotovo, co není, checks, rizika a co autorizuje pokračování."
+            "[aria-labelledby='slide-7-title'] .stack-row:nth-child(3) span": "blokující finding se zavře až po fixu, ověření a cíleném re-review.",
+            "[aria-labelledby='slide-8-title'] .kicker": "adaptivní provedení",
+            "#slide-8-title": "Workflow se mění spolu s prací.",
+            "#slide-8-title + .lead": "Nativní možnosti hosta udržují proces živý bez vlastního runtime. Nová složitost, zprávy uživatele a výsledky kontrol mění jen to, čeho se týkají.",
+            ".artifact-card:nth-child(1) strong": "Adaptivní reasoning",
+            ".artifact-card:nth-child(1) span": "eskaluje při nejistotě a zlevňuje deterministické části.",
+            ".artifact-card:nth-child(2) strong": "Průběžné zprávy",
+            ".artifact-card:nth-child(2) span": "související materiální změny sdílí jeden replan dotčeného scope na nejbližší bezpečné hranici.",
+            ".artifact-card:nth-child(3) strong": "Cílené kontroly",
+            ".artifact-card:nth-child(3) span": "běží po ucelených fázích, ne po každé editaci.",
+            ".artifact-card:nth-child(4) strong": "Jedna finální suite",
+            ".artifact-card:nth-child(4) span": "běží po review na přesně finálním stromu před dokončením a případným delivery."
           },
           attrs: {
             ".hero-mark": { "aria-label": "Co root vlastní" },
             ".motion-frame": { "aria-label": "Animovaný dispatch mezi orchestration fázemi" },
             ".role-stack": { "aria-label": "Sekvence dispatch lifecycle" },
-            ".risk-grid": { "aria-label": "Risk tier dispatch" },
-            "[aria-labelledby='slide-5-title'] .stack": { "aria-label": "Planning artifacts" },
+            ".risk-grid": { "aria-label": "Varianty provedení" },
+            "[aria-labelledby='slide-5-title'] .stack": { "aria-label": "Vstupy plánování" },
             ".dark-panel": { "aria-label": "Odpovědnosti implementation leada" },
             "[aria-labelledby='slide-7-title'] .stack": { "aria-label": "Review loop" },
-            ".artifact-grid": { "aria-label": "Orchestrator artifacts" },
+            ".artifact-grid": { "aria-label": "Pravidla adaptivní orchestrace" },
             ".deck-controls": { "aria-label": "Ovládání prezentace" },
             "#dots": { "aria-label": "Výběr slidu" },
             ".language-toggle": { "aria-label": "Jazyk" }

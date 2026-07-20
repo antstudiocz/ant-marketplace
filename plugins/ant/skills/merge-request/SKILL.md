@@ -5,9 +5,11 @@ description: "Create GitLab/GitHub merge requests or pull requests with a practi
 
 # Merge Request
 
-**Announce at start:** "Zkontroluju git kontext a zeptám se na jazyk PR/MR popisu."
+**Announce at start:** Say you will inspect the git context and prepare the PR/MR in the selected language.
 
 Use this skill to turn the current branch changes into a GitLab Merge Request or GitHub Pull Request with a concise Conventional Commit title and a concrete description in the user's chosen language. Treat "merch request" in user wording as "merge request/MR".
+
+This skill is the sole owner of PR/MR creation and update behavior. It owns provider detection, description language, Draft/ready intent, title, description, confirmation, and the provider CLI commands. Other skills may supply verified context, but must not maintain an alternate creation workflow.
 
 ## Baseline
 
@@ -17,7 +19,9 @@ Use this skill to turn the current branch changes into a GitLab Merge Request or
 - Use `glab` for GitLab repositories and `gh` for GitHub repositories. Detect the provider from `git remote -v`.
 - Do not add `Generated with...`, `Co-Authored-By`, or similar footer lines to commits or MR descriptions.
 - Do not force-push, reset, or rewrite history unless the user explicitly asks and the risk is clear.
-- Always ask which language to use for the PR/MR description. Do not infer it silently from the conversation language.
+- Ask which language to use unless the user already chose it in the current task or the orchestrator passes that explicit choice.
+- Treat commit, push, PR/MR creation, Draft-to-ready conversion, merge, and release as distinct delivery actions. Perform only the actions the user requested.
+- Treat every created or updated description as a snapshot of the final change from the target branch merge base to final `HEAD`, not as a diary of work performed on the branch.
 
 ## Workflow
 
@@ -34,21 +38,39 @@ Use this skill to turn the current branch changes into a GitLab Merge Request or
    git log --oneline --decorate --max-count=20
    ```
 
-2. Determine target branch from explicit user instruction, existing upstream/MR, or `origin` HEAD. If still ambiguous, ask before creating the MR.
-3. Ask for the PR/MR description language before drafting the title/body. Use native question UI if available; otherwise ask directly in chat. Offer at least:
+2. Detect the provider from the remote URL. Use GitLab only for a GitLab remote and GitHub only for a GitHub remote. If the remote is missing, unsupported, or ambiguous, stop and ask instead of guessing.
+3. Determine target branch from explicit user instruction, the existing PR/MR, or `origin` HEAD. If still ambiguous, ask before creating or updating the PR/MR. Ensure the target ref is current enough to establish the real merge base.
+4. Resolve the PR/MR description language before drafting the title/body. Reuse an explicit choice from the current task; otherwise use native question UI if available or ask directly in chat. Offer at least:
    - Czech
    - English
    - Another language, where the user names the language
-4. Identify whether there are unstaged, staged, committed-but-unpushed, and unrelated changes. If committing is needed, propose exactly which files belong in the commit and use a short Conventional Commit message.
-5. Inspect the diff enough to understand what changed, why, technical decisions, user impact, and validation gaps. Do not generate the MR from filenames only.
-6. Run targeted validation appropriate to the change when feasible. Do not run project-disallowed commands.
-7. Push only after checking branch/upstream and user intent. If no upstream exists, use `git push -u origin <branch>`.
-8. Create or update the MR through `glab` or `gh`. Use Draft unless the user explicitly requested ready.
-9. Return the MR/PR URL and a short summary of what was created.
+5. Identify whether there are unstaged, staged, committed-but-unpushed, and unrelated changes. If committing is needed but was not requested, propose exactly which files and commit message would be used before acting.
+6. Compute the merge base between the target branch and final `HEAD`, then inspect that base-to-`HEAD` diff deeply enough to understand final behavior, technical decisions, user impact, and validation gaps. Verify any orchestrator summary against this final snapshot; do not generate the PR/MR from filenames, individual commits, or conversation history alone.
+7. Run targeted validation appropriate to the change when feasible. Do not run project-disallowed commands.
+8. Draft the final title, description, target, provider, and Draft/ready state. For an update, inspect the existing PR/MR first and identify exactly which fields will change.
+9. Present the complete preview unless the user already requested the exact title/body/update and readiness. Do not add an unnecessary second confirmation for settled choices.
+10. Push only when requested, after checking branch, upstream, and remote target. If no upstream exists, use `git push -u origin <branch>`.
+11. Create or update through `glab` or `gh`. Use Draft unless the user explicitly selected ready.
+12. Return the PR/MR URL and a short summary of what was created or updated.
+
+## Confirmation
+
+Before the provider command, show:
+
+- provider and repository;
+- source and target branches;
+- create versus update intent;
+- final title;
+- selected description language;
+- Draft or ready state;
+- full description preview or the exact fields being updated;
+- validation gaps and unrelated-worktree warnings.
+
+Offer `Create/update as Draft`, `Create/update as ready`, `Edit title`, `Edit description`, and `Cancel` when the user's current instructions have not already settled those choices. Do not treat PR/MR intent as permission to merge or release.
 
 ## Language Selection
 
-Always ask the language question, even when the current conversation language is obvious. The question prevents accidental Czech descriptions in English threads and English descriptions in Czech threads.
+Ask the language question when the user has not already selected a language for this PR/MR. Never infer it only from the conversation language, but do not ask twice after a clear answer.
 
 Recommended wording:
 
@@ -71,7 +93,7 @@ Keep the Conventional Commit title in English unless the repository convention o
 
 ## Commit And Push Rules
 
-- If the user asks "udělej MR" and there are no commits for the branch yet, committing/pushing is allowed only after the context check shows the changed files belong together.
+- If the user asks only to prepare or create a PR/MR and commits or a remote branch are missing, explain the required commit/push actions and obtain the missing intent before performing them. A request such as "do it completely, including push" already settles those actions.
 - If unrelated files are present, stage only MR-relevant files explicitly or ask the user to split scope.
 - Use a Conventional Commit message: `feat(scope): short summary`, `fix(scope): short summary`, `refactor(scope): short summary`, `docs(scope): short summary`, `test(scope): short summary`, or `chore(scope): short summary`.
 - Keep commit and MR titles short, factual, lower-case after the colon, without a trailing period.
@@ -103,6 +125,14 @@ docs(skills): add merge request workflow
 ## MR Description
 
 Write the description in the selected language. Be concrete and operational, not marketing-oriented. The description must start with a short plain-language summary of what was actually done, then a horizontal rule, then the detailed structured sections. Separate user walkthrough from technical validation.
+
+### Final Snapshot Rule
+
+- Establish the target branch first. For an existing PR/MR, use its actual base branch.
+- Compute the merge base and inspect the complete diff from that point to final `HEAD`, for example with `git merge-base <target-ref> HEAD` followed by `git diff <merge-base>..HEAD`.
+- Describe only the net behavior and files that remain in that final diff. Intermediate commits, abandoned approaches, temporary artifacts, and add-then-remove work do not belong in the description.
+- Mention branch history only when it remains materially relevant to migration, rollout, compatibility, data safety, or reviewer understanding of the final result.
+- Apply this rule on updates too: rebuild the description from the current base-to-final-`HEAD` snapshot instead of appending a changelog of edits made since the previous description.
 
 Use these sections. Translate section headings for other selected languages while preserving the meaning.
 
@@ -216,22 +246,38 @@ Use these sections. Translate section headings for other selected languages whil
 - In "How to test technically" / "Jak to technicky otestovat", include exact commands run or recommended. Keep this separate from UX clicking.
 - In "What could not be verified" / "Co nešlo ověřit", state blockers plainly, for example missing credentials, unavailable service, sandbox/network limitation, no seed data, or command intentionally skipped by project rule.
 - In "Reviewer focus" / "Na co se má reviewer zaměřit", call out risk areas, assumptions, edge cases, and files or flows needing careful review.
+- Before finalizing, compare every claim with the merge-base-to-`HEAD` diff and remove claims about reverted, abandoned, or otherwise absent work.
 
 If a section truly does not apply, keep it with a localized equivalent of `- Not applicable.` rather than deleting it, except screenshots or optional links requested by the repo convention.
 
 ## Provider CLI
 
-Prefer writing the description to a temporary file to avoid shell quoting problems.
+Prefer writing the description to a temporary file to avoid shell quoting problems. Current `glab mr create/update` accepts description text rather than a description-file flag, so read the file into a task-specific shell variable. Current `gh pr create/edit` accepts `--body-file` directly.
 
 GitLab:
 
 ```bash
+mr_description="$(< /tmp/mr-description.md)"
 glab mr create \
   --title "type(scope): short factual summary" \
-  --description-file /tmp/mr-description.md \
+  --description "$mr_description" \
   --target-branch <target-branch> \
   --assignee @me \
-  --draft
+  --draft \
+  --yes
+```
+
+For a ready GitLab MR, omit `--draft`. For an existing MR, update the intended fields and readiness explicitly:
+
+```bash
+mr_description="$(< /tmp/mr-description.md)"
+glab mr update <id-or-branch> \
+  --title "type(scope): short factual summary" \
+  --description "$mr_description" \
+  --draft \
+  --yes
+
+glab mr update <id-or-branch> --ready --yes
 ```
 
 GitHub:
@@ -244,13 +290,22 @@ gh pr create \
   --draft
 ```
 
+For a ready GitHub PR, omit `--draft`. Change an existing PR's content and review state with separate explicit commands:
+
+```bash
+gh pr edit <number-or-url-or-branch> \
+  --title "type(scope): short factual summary" \
+  --body-file /tmp/pr-description.md
+
+gh pr ready <number-or-url-or-branch>
+gh pr ready <number-or-url-or-branch> --undo
+```
+
 If the MR/PR already exists, inspect it first and update only the intended fields:
 
 ```bash
 glab mr view
-glab mr update --description-file /tmp/mr-description.md
 gh pr view
-gh pr edit --body-file /tmp/pr-description.md
 ```
 
 When `glab`, `gh`, or `git push` requires network/auth approval, request approval normally and explain that it is needed to push or create the MR/PR.
