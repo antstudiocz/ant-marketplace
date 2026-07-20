@@ -13,7 +13,7 @@ How it works:
 - checks the requester's local development environment, including whether Docker is available, by inspecting the local machine directly when the host supports it;
 - guides the requester through missing Git, package manager/runtime, or Docker setup from a dedicated local-dev setup reference before implementation planning, while allowing npm when Bun is unavailable;
 - always compares a TypeScript-only path with a Docker-based multi-language path in non-technical language;
-- keeps intake short with at most three grouped first-round questions and ends intake with an explicit decision status;
+- keeps the first intake round short while continuing with every genuinely blocking question needed for an honest decision status;
 - decides whether the app should be a TypeScript frontend/content app, TypeScript full-stack app, CMS-backed app, Dockerized modular app, new surface inside an existing app, or existing platform/module change;
 - selects frameworks and CMS options by project shape, preferring TanStack Start over Next.js for new app-like TypeScript products unless Next.js has a concrete project fit;
 - challenges inconsistent goals, unsafe assumptions, and mismatched technology choices before asking for approval;
@@ -22,7 +22,8 @@ How it works:
 - checks whether an admin/backoffice/client-portal surface can reuse the existing stack or needs a separate frontend/backend/security boundary;
 - makes mock data, prototype scope, persistence, secrets, and production-readiness tradeoffs explicit;
 - prepares an approved application brief with acceptance criteria and non-goals;
-- hands the approved brief to `implementation-orchestrator`, which owns planning depth, subagents, implementation, review, verification, and delivery.
+- hands only captured, approved brief fields to `implementation-orchestrator`; missing git/delivery startup choices remain open for the orchestrator instead of being invented;
+- leaves planning depth, capability-driven delegation, implementation, review, verification, and delivery to `implementation-orchestrator`.
 
 Use it when the user wants to create a new app from an idea before writing code.
 
@@ -41,8 +42,10 @@ How it works:
 - asks for one-time refactor vs phased rollout vs minimal compatibility strategy on broad or risky work;
 - asks for autonomous implementation mode vs manual decision mode on medium+ work before detailed planning;
 - requires a whole-roadmap phased plan before implementing phase 1 when phased rollout is selected;
-- treats phase artifacts as the source of truth and updates them before phase transitions, pauses, handoffs, or completion reports;
-- routes child agents explicitly by role and risk: `gpt-5.5`/Opus for decisions, leads, and review; `gpt-5.4-mini`/Sonnet for bounded small-medium work; `gpt-5.3-codex-spark`/Haiku for tiny mechanical tasks;
+- treats `state.json` and `events.jsonl` as machine source of truth; concise phase artifacts are the human resume layer and are updated alongside structured state before transitions, pauses, handoffs, or completion reports;
+- preflights the current host, classifies every bounded child task `low|medium|high`, and routes by required capabilities with adaptive reasoning translated by the active host adapter;
+- records canonical and translated requested reasoning separately from host-observed actual values; selector support without observable application keeps actual `unknown`;
+- uses flattened, foreground, browser-unavailable, or other explicit degraded modes when a preferred capability is missing, without weakening acceptance or pretending evidence exists;
 - challenges weak approaches with code evidence and asks for direction approval;
 - creates an `.ant/orchestrator/<run>/phases/05-planning/implementation-plan.md` checklist through a plan writer;
 - delegates implementation to an implementation lead, which may use `phases/06-implementation/subphases/` and slice workers for parallel backend/frontend/data/test work;
@@ -95,17 +98,17 @@ Use it for Laravel implementation, refactoring, performance work, caching work, 
 
 ## `delivery-workflows`
 
-Git/GitLab delivery workflows for creating merge requests and resolving merge conflicts with repository context.
+Git delivery workflows for resolving merge conflicts with repository context. The legacy create-MR entrypoint remains as a deprecated compatibility bridge to `merge-request`.
 
 How it works:
 
 - inspects branch and dirty state before mutating git state;
-- loads the matching reference for MR creation or conflict resolution;
+- loads conflict-resolution guidance or forwards a legacy PR/MR request unchanged to `merge-request`;
 - preserves unrelated user changes;
-- uses the repository's expected delivery tool, such as `glab` for GitLab;
+- preserves conflict-resolution ownership but does not duplicate provider, language, title, description, confirmation, or PR/MR command logic;
 - validates changes before push/MR handoff.
 
-Use it for delivery operations around an already-scoped code change.
+Use it for merge-conflict and delivery-hygiene operations around an already-scoped code change. Invoke `merge-request` directly for PR/MR creation or updates.
 
 ## `merge-request`
 
@@ -114,12 +117,14 @@ GitHub/GitLab Pull Request and Merge Request workflow for creating practical tit
 How it works:
 
 - checks git status, branch, target branch, remote provider, diff, and recent commits before mutating delivery state;
-- asks which language to use for the PR/MR description every time;
+- asks which language to use for every direct PR/MR invocation;
+- consumes canonical orchestrator handoff evidence and reuses an explicitly user-selected language without asking twice;
 - uses `glab` for GitLab repositories and `gh` for GitHub repositories;
 - prefers Draft MR unless the user explicitly asks for ready/bez draft;
-- can commit, push, and create an MR/PR after context checks show the scope is clear;
+- resolves commit, push, and PR/MR authorization independently after context checks show the exact scope; requesting an MR never implies staging, committing, or pushing;
 - uses a short Conventional Commit style title;
 - writes the description in the selected language with sections for what changed, why, chosen decisions, user and technical impact, UX walkthrough, technical testing, unverified items, and reviewer focus.
+- owns the final preview/confirmation and all `glab`/`gh` create or update commands.
 
 Use it when the user asks to create or prepare an MR/PR and needs a structured practical description.
 

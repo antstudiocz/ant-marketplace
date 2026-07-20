@@ -128,6 +128,15 @@
       "phaseId": "06-implementation",
       "agentId": "writer",
       "updatedAt": "2026-05-26T09:40:00Z"
+    },
+    {
+      "id": "runtime-preflight",
+      "kind": "json",
+      "path": ".ant/orchestrator/2026-05-26-release-notes/runtime/preflight.json",
+      "title": "Claude Code runtime preflight",
+      "phaseId": "06-implementation",
+      "agentId": "root",
+      "updatedAt": "2026-05-26T09:19:00Z"
     }
   ],
   "checkpoints": [
@@ -155,6 +164,64 @@
     "deliveryPreference": "ask-before-delivery",
     "pipelinePolicy": "do-not-check",
     "postImplementationActions": ["review", "verification"],
-    "sourceHostVersion": "claude-code"
+    "sourceHostVersion": "claude-code",
+    "runtime": {
+      "observedAt": "2026-05-26T09:19:00Z",
+      "artifactRef": "runtime-preflight",
+      "host": "claude-code",
+      "hostVersion": "unknown",
+      "capabilities": {
+        "delegation": true,
+        "maximumConfirmedDepth": 1,
+        "isolatedChildContext": true,
+        "backgroundPermissionPrompts": "foreground-required",
+        "browserSurfaces": [],
+        "supportedModelValues": "unknown",
+        "supportedReasoningValues": "unknown"
+      },
+      "degradedModes": ["flat-root-dispatch", "foreground-for-approval-sensitive-work", "browser-unavailable"]
+    },
+    "routingDecisions": [
+      {
+        "id": "route-reviewer-001",
+        "role": "reviewer",
+        "requiredCapabilities": ["isolated-child-context", "review-judgment"],
+        "complexity": {
+          "tier": "high",
+          "signals": ["independent review judgment"]
+        },
+        "requested": {
+          "model": "runtime-best-fit",
+          "reasoningTier": "high",
+          "reasoningHostValue": "omitted"
+        },
+        "reasoningTranslation": {
+          "mechanism": "none",
+          "mappingEvidenceSource": "runtime-preflight#reasoning-catalog-unknown",
+          "mappingScope": {"host": "claude-code", "hostVersion": "unknown", "model": "unknown"},
+          "observedAt": "2026-05-26T11:24:00Z"
+        },
+        "actual": {
+          "model": "unknown",
+          "reasoningTier": "unknown",
+          "reasoningHostValue": "unknown"
+        },
+        "mode": "flat-root-dispatch",
+        "fallback": "nested delegation unavailable at confirmed depth; reasoning capability unknown so selector omitted and session default used",
+        "evidenceSource": {
+          "kind": "host-preflight",
+          "artifactRef": "runtime-preflight"
+        }
+      }
+    ],
+    "approvalDisplay": {
+      "approvalId": null,
+      "digest": null,
+      "eventId": null,
+      "requestedActions": ["push", "mr"],
+      "resolution": "deny",
+      "reason": "metadata-only-delivery-intent",
+      "authoritative": false
+    }
   }
 }

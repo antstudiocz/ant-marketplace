@@ -1,0 +1,8 @@
+{
+  "traceId": "synthetic-codex-flattened-high", "fixtureAt": "2026-07-20T09:00:01Z",
+  "questions": [],
+  "events": [{ "type": "agent.spawned" }, { "type": "checkpoint.created" }],
+  "actions": [{ "type": "dispatch-lead" }, { "type": "flatten-to-root" }],
+  "routing": [{ "requested": { "role": "reviewer", "requiredCapabilities": ["independent-context"] }, "actual": { "host": "codex", "historyMode": "none", "model": "unknown", "evidenceSource": "synthetic-host-observed-spawn-result" } }],
+  "adjudication": { "status": "spec-expected" }
+}

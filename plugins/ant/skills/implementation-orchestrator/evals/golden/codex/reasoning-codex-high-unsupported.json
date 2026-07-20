@@ -1,0 +1,10 @@
+{
+  "traceId": "reasoning-codex-high-unsupported",
+  "fixtureAt": "2026-07-20T10:30:02Z",
+  "questions": [],
+  "events": [{"type": "checkpoint.created"}, {"type": "agent.spawned"}],
+  "actions": [{"type": "classify-complexity"}, {"type": "record-reasoning-fallback"}, {"type": "dispatch-child"}],
+  "reasoning": {"complexity": {"tier": "high", "signals": ["authorization architecture boundary"]}, "requested": {"reasoningTier": "high", "reasoningHostValue": "omitted"}, "capabilityStatus": "unsupported", "applicationStatus": "not-requested", "translation": {"mechanism": "none", "mappingEvidenceSource": "capability-artifact#reasoning-unsupported", "mappingScope": {"host": "codex", "hostVersion": "fixture-version", "model": "fixture-model"}, "observedAt": "2026-07-20T10:29:02Z"}, "actual": {"reasoningTier": "unknown", "hostValue": "unknown"}, "evidenceSource": "capability-artifact", "fallbackReason": "reasoning-selection-unsupported: omit selector, use session default, and preserve high-complexity review gates"},
+  "routing": [{"requested": {"role": "reviewer", "reasoningTier": "high", "reasoningHostValue": "omitted", "historyMode": "none"}, "actual": {"host": "codex", "reasoningTier": "unknown", "reasoningHostValue": "unknown", "historyMode": "none", "evidenceSource": "synthetic-host-preflight-capability-artifact"}, "fallbackReason": "reasoning-selection-unsupported"}],
+  "adjudication": {"status": "spec-expected-degraded", "residualRisk": "actual reasoning is not provable"}
+}

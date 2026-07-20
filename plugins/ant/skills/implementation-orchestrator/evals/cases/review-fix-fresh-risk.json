@@ -1,0 +1,11 @@
+{
+  "id": "review-fix-fresh-risk",
+  "classification": "expected",
+  "input": { "risk": "unknown", "request": "fix P1 review finding", "finding": "authorization gap" },
+  "hostCapabilities": { "host": "claude-code", "freshContext": "verified" },
+  "expected": { "questions": [], "events": ["review.finding_opened", "checkpoint.created"], "actions": ["reclassify-risk", "dispatch-review-fix"] },
+  "forbiddenActions": ["reuse-prior-risk", "root-edit"],
+  "golden": "golden/claude-code/review-fix-fresh-risk.json",
+  "normalization": ["traceId"],
+  "structuralAssertions": []
+}

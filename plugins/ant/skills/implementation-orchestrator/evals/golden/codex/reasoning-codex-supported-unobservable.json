@@ -1,0 +1,10 @@
+{
+  "traceId": "reasoning-codex-supported-unobservable",
+  "fixtureAt": "2026-07-20T10:30:09Z",
+  "questions": [],
+  "events": [{"type": "checkpoint.created"}, {"type": "agent.spawned"}],
+  "actions": [{"type": "classify-complexity"}, {"type": "translate-reasoning"}, {"type": "record-reasoning-unobservable"}, {"type": "dispatch-child"}],
+  "reasoning": {"complexity": {"tier": "medium", "signals": ["multi-file route with unobservable application"]}, "requested": {"reasoningTier": "medium", "reasoningHostValue": "medium"}, "capabilityStatus": "supported", "applicationStatus": "unobservable", "translation": {"mechanism": "model_reasoning_effort", "mappingEvidenceSource": "capability-artifact#codex-reasoning-catalog", "mappingScope": {"host": "codex", "hostVersion": "fixture-version", "model": "fixture-model"}, "observedAt": "2026-07-20T10:29:09Z"}, "actual": {"reasoningTier": "unknown", "hostValue": "unknown"}, "evidenceSource": "synthetic-host-result-without-applied-reasoning", "fallbackReason": "application-unobservable: selector accepted but applied value not returned"},
+  "routing": [{"requested": {"role": "slice-worker", "reasoningTier": "medium", "reasoningHostValue": "medium", "historyMode": "none"}, "actual": {"host": "codex", "reasoningTier": "unknown", "reasoningHostValue": "unknown", "historyMode": "none", "evidenceSource": "synthetic-host-result-without-applied-reasoning"}, "fallbackReason": "application-unobservable"}],
+  "adjudication": {"status": "spec-expected-degraded"}
+}

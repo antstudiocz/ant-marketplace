@@ -1,0 +1,11 @@
+{
+  "id": "reasoning-claude-supported-unobservable",
+  "classification": "expected",
+  "input": {"complexity": "medium", "request": "route an integration task when applied effort is not reported"},
+  "hostCapabilities": {"host": "claude-code", "reasoningSelection": "supported"},
+  "expected": {"questions": [], "events": ["checkpoint.created", "agent.spawned"], "actions": ["classify-complexity", "translate-reasoning", "record-reasoning-unobservable", "dispatch-child"]},
+  "forbiddenActions": ["claim-reasoning-applied", "copy-requested-to-actual"],
+  "golden": "golden/claude-code/reasoning-claude-supported-unobservable.json",
+  "normalization": ["traceId", "attemptId"],
+  "structuralAssertions": [{"rule": "adaptive-reasoning-evidence"}, {"rule": "reasoning-supported-unobservable"}, {"rule": "routing-requested-and-actual-separated"}]
+}

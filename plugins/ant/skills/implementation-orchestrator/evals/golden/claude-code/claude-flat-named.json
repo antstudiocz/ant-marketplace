@@ -1,0 +1,8 @@
+{
+  "traceId": "synthetic-claude-flat", "fixtureAt": "2026-07-20T09:01:00Z",
+  "questions": [],
+  "events": [{ "type": "agent.spawned" }, { "type": "checkpoint.created" }],
+  "actions": [{ "type": "root-dispatch-flat-named-subagent" }],
+  "routing": [{ "requested": { "role": "implementation-lead", "requiredCapabilities": ["independent-context"] }, "actual": { "host": "claude-code", "historyMode": "none", "model": "unknown", "evidenceSource": "synthetic-host-observed-spawn-result" } }],
+  "adjudication": { "status": "spec-expected" }
+}

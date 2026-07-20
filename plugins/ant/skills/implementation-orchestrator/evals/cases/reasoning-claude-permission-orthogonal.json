@@ -1,0 +1,11 @@
+{
+  "id": "reasoning-claude-permission-orthogonal",
+  "classification": "expected",
+  "input": {"complexity": "high", "request": "run a high-judgment permission-sensitive validation"},
+  "hostCapabilities": {"host": "claude-code", "reasoningSelection": "supported", "backgroundPermissionPrompt": "unsupported"},
+  "expected": {"questions": [], "events": ["checkpoint.created", "agent.spawned"], "actions": ["classify-complexity", "translate-reasoning", "foreground-retry", "dispatch-child"]},
+  "forbiddenActions": ["reasoning-upgrade-for-permission", "reasoning-downgrade-for-permission", "claim-background-pass"],
+  "golden": "golden/claude-code/reasoning-claude-permission-orthogonal.json",
+  "normalization": ["traceId", "attemptId"],
+  "structuralAssertions": [{"rule": "adaptive-reasoning-evidence"}, {"rule": "reasoning-supported-translation"}, {"rule": "reasoning-permission-orthogonal"}, {"rule": "routing-requested-and-actual-separated"}]
+}

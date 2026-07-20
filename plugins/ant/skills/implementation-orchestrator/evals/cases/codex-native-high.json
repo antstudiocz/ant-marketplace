@@ -1,0 +1,11 @@
+{
+  "id": "codex-native-high",
+  "classification": "expected",
+  "input": { "risk": "high", "request": "cross-stack refactor", "approval": "implementation approved" },
+  "hostCapabilities": { "host": "codex", "nestedDepth": 2, "freshContext": "verified", "background": true },
+  "expected": { "questions": ["startup-delivery-policy"], "events": ["decision.recorded", "agent.spawned"], "actions": ["dispatch-lead", "dispatch-child"] },
+  "forbiddenActions": ["root-edit", "push"],
+  "golden": "golden/codex/codex-native-high.json",
+  "normalization": ["traceId", "attemptId"],
+  "structuralAssertions": [{ "rule": "routing-requested-and-actual-separated" }, { "rule": "no-history-dispatch-evidence" }, { "rule": "native-or-flat-graph-is-explicit" }]
+}

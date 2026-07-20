@@ -84,6 +84,54 @@ This value is a forward-looking instruction and display hint:
 
 The contract is intentionally host-neutral. Host-specific details belong in `metadata`, `data`, or linked artifacts, not in divergent top-level shapes.
 
+## Runtime And Routing Evidence In Contract 1.0
+
+Plugin `9.2` keeps the state writer on schema `1.0.0`. Runtime preflight and route evidence therefore live in additive `metadata` and linked artifacts; they are operational evidence, not new authoritative top-level state.
+
+Recommended `metadata.runtime` fields are:
+
+- `observedAt`: UTC/Zulu timestamp of the preflight;
+- `artifactRef`: workspace-relative artifact containing the complete preflight result;
+- `host` and `hostVersion`: observed values, or `unknown` when the host cannot report them;
+- `capabilities`: observed capability values such as delegation support, maximum confirmed depth, isolated child context, background permission behavior, browser surfaces, and supported model/reasoning values;
+- `degradedModes`: explicit fallbacks selected because a capability is unavailable or unknown.
+
+Recommended `metadata.routingDecisions[]` fields are:
+
+- a stable decision `id`, target `role`, and required capabilities;
+- canonical task complexity and requested reasoning tier, plus the translated requested host value or `omitted`;
+- translation mechanism and a fresh mapping evidence reference scoped to the active host, host version, and model/catalog context;
+- `actual` model/reasoning host values and canonical tier only when returned or otherwise observed from the host and resolvable through that fresh mapping; use `unknown` when they cannot be verified;
+- selected topology/mode, fallback reason, and an `evidenceSource` pointing to host output or the preflight artifact.
+
+Selector support or acceptance does not prove application. Never copy a requested value into `actual` merely because it was requested. Consumers that need audit-grade route evidence must resolve the linked artifact and treat absent, stale, unreported, or unverifiable evidence as `unknown`. Reasoning classification is independent from permission/background execution and authorization. The Codex example shows a confirmed nested route; the Claude Code example shows a capability-driven flattened route. These are example observations, not static promises about every installation or model catalog.
+
+## Compatibility Authorization In Contract 1.0
+
+`state.json.metadata`, chat summaries, markdown, delivery preferences, and startup-contract fields never authorize an edit or delivery action. Metadata may contain only a non-authoritative display summary or pointer, for example `approvalId`, `digest`, `eventId`, `artifactRef`, and the last resolver result.
+
+The normative compatibility resolver and payload shape are owned by [`approval-policy.md`](../../skills/implementation-orchestrator/references/policies/approval-policy.md). For plugin `9.2`, authority comes only from:
+
+1. a complete immutable approval payload in a schema-valid `decision.recorded` event; or
+2. an immutable approval artifact registered in `state.json.artifacts[]` and linked from a schema-valid `decision.recorded` event by stable artifact reference and content digest.
+
+The approval payload and its one normative cross-host digest algorithm are owned by the canonical policy above. Revoke and supersede records bind the prior approval by both id and digest; revoke also records a reason. Missing or mismatched target evidence denies authorization. Records are append-only; do not edit a prior grant. Examples and production writers use that exact RFC 8785/UTF-8/SHA-256 algorithm; this README does not define an alternate serialization.
+
+Before each mutating action, and again after resume, compaction, or cross-host handoff, the resolver must validate the event/artifact and digest, replay later revoke/supersede decisions, and verify scope, action, provenance, stop conditions, and expiry. Missing, metadata-only, ambiguous, conflicting, expired, revoked, malformed, or out-of-scope evidence resolves to `deny` and requires fresh approval.
+
+Compatibility scenarios:
+
+| Evidence | Requested action | Result |
+|---|---|---|
+| `metadata.deliveryPreference` or an approval display pointer only | `edit`, `push`, or `mr` | Deny; metadata is not authority. |
+| Valid grant for `edit` in the current workspace/run/cycle/phase | `edit` in that scope | Allow until expiry, revocation, supersession, or a stop condition. |
+| The same grant | `push`, `mr`, `merge`, or another unlisted action | Deny as out of scope. |
+| A later valid supersede record | Action under the older grant | Deny the older grant; evaluate only the replacement envelope. |
+| A later valid revoke record | Action under the revoked approval | Deny. |
+| Valid grant after resume on another host | An in-scope action | Allow only after the new host revalidates the immutable evidence and digest; host metadata alone is insufficient. |
+
+The Codex `events.jsonl` example includes schema-1.0-compatible grant, supersede, and revoke `decision.recorded` events. No new event type is introduced. The Claude Code state example intentionally contains metadata-only delivery intent and a deny display result without an authoritative approval event.
+
 ## Risk-Tier Dispatch Metadata
 
 The orchestrator may use a lighter or heavier delegated workflow per request while keeping the same stable schema. Do not add new enum values for risk tiers, flow modes, planning cadence, phase policies, commit strategies, delivery preferences, or pipeline policies. Store dispatch and run-contract details in `state.json.metadata` and child-agent metadata:

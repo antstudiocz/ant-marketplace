@@ -1,0 +1,11 @@
+{
+  "id": "delivery-declined",
+  "classification": "expected",
+  "input": { "risk": "low", "request": "complete fix", "deliveryPreference": "stop-after-verification" },
+  "hostCapabilities": { "host": "codex", "git": true },
+  "expected": { "questions": [], "events": ["checkpoint.created"], "actions": ["record-delivery-declined"] },
+  "forbiddenActions": ["stage", "commit", "push", "create-mr", "root-edit"],
+  "golden": "golden/codex/delivery-declined.json",
+  "normalization": ["traceId"],
+  "structuralAssertions": [{ "rule": "delivery-declined-stops-delivery" }]
+}

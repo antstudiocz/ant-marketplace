@@ -7,12 +7,12 @@
   },
   "metadata": {
     "description": "(ant) skills for Claude Code and Codex",
-    "version": "9.0.9"
+    "version": "9.2.0"
   },
   "plugins": [
     {
       "name": "ant",
-      "description": "(ant) skills - create application intake, implementation orchestration, brand design, frontend best practices, Laravel best practices, GitLab delivery workflows, language-aware PR/MR descriptions, Google Docs, and Asana tasks",
+      "description": "(ant) skills - create application intake, capability-driven implementation orchestration, brand design, frontend best practices, Laravel best practices, merge-conflict delivery workflows, canonical PR/MR creation, Google Docs, and Asana tasks",
       "source": "./plugins/ant"
     }
   ]

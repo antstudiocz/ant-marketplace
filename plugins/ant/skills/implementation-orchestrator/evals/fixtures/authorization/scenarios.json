@@ -1,0 +1,60 @@
+[
+  {
+    "id": "valid-scoped-edit",
+    "decisions": [
+      {"operation":"grant","approvalId":"approval-a","digest":"sha256:aaa","scope":"run-a/phase-6","actions":["edit"],"provenanceHost":"codex","expiresAt":"2026-07-21T00:00:00Z"}
+    ],
+    "request": {"approvalId":"approval-a","action":"edit","scope":"run-a/phase-6","host":"codex","at":"2026-07-20T12:00:00Z","crossHostRevalidated":false},
+    "expected": "allow"
+  },
+  {
+    "id": "out-of-scope-push",
+    "decisions": [
+      {"operation":"grant","approvalId":"approval-a","digest":"sha256:aaa","scope":"run-a/phase-6","actions":["edit"],"provenanceHost":"codex","noExpiry":true}
+    ],
+    "request": {"approvalId":"approval-a","action":"push","scope":"run-a/phase-6","host":"codex","at":"2026-07-20T12:00:00Z","crossHostRevalidated":false},
+    "expected": "deny"
+  },
+  {
+    "id": "expired-grant",
+    "decisions": [
+      {"operation":"grant","approvalId":"approval-a","digest":"sha256:aaa","scope":"run-a/phase-6","actions":["edit"],"provenanceHost":"codex","expiresAt":"2026-07-19T00:00:00Z"}
+    ],
+    "request": {"approvalId":"approval-a","action":"edit","scope":"run-a/phase-6","host":"codex","at":"2026-07-20T12:00:00Z","crossHostRevalidated":false},
+    "expected": "deny"
+  },
+  {
+    "id": "revoked-grant",
+    "decisions": [
+      {"operation":"grant","approvalId":"approval-a","digest":"sha256:aaa","scope":"run-a/phase-6","actions":["edit"],"provenanceHost":"codex","noExpiry":true},
+      {"operation":"revoke","approvalId":"revocation-a","digest":"sha256:rrr","revokesApprovalId":"approval-a","revokesApprovalDigest":"sha256:aaa","reason":"User withdrew approval."}
+    ],
+    "request": {"approvalId":"approval-a","action":"edit","scope":"run-a/phase-6","host":"codex","at":"2026-07-20T12:00:00Z","crossHostRevalidated":false},
+    "expected": "deny"
+  },
+  {
+    "id": "superseded-old-grant",
+    "decisions": [
+      {"operation":"grant","approvalId":"approval-a","digest":"sha256:aaa","scope":"run-a/phase-6","actions":["edit","push"],"provenanceHost":"codex","noExpiry":true},
+      {"operation":"supersede","approvalId":"approval-b","digest":"sha256:bbb","supersedesApprovalId":"approval-a","supersedesApprovalDigest":"sha256:aaa","scope":"run-a/phase-6","actions":["edit"],"provenanceHost":"codex","noExpiry":true}
+    ],
+    "request": {"approvalId":"approval-a","action":"push","scope":"run-a/phase-6","host":"codex","at":"2026-07-20T12:00:00Z","crossHostRevalidated":false},
+    "expected": "deny"
+  },
+  {
+    "id": "cross-host-unverified",
+    "decisions": [
+      {"operation":"grant","approvalId":"approval-a","digest":"sha256:aaa","scope":"run-a/phase-6","actions":["edit"],"provenanceHost":"codex","noExpiry":true}
+    ],
+    "request": {"approvalId":"approval-a","action":"edit","scope":"run-a/phase-6","host":"claude-code","at":"2026-07-20T12:00:00Z","crossHostRevalidated":false},
+    "expected": "deny"
+  },
+  {
+    "id": "cross-host-revalidated",
+    "decisions": [
+      {"operation":"grant","approvalId":"approval-a","digest":"sha256:aaa","scope":"run-a/phase-6","actions":["edit"],"provenanceHost":"codex","noExpiry":true}
+    ],
+    "request": {"approvalId":"approval-a","action":"edit","scope":"run-a/phase-6","host":"claude-code","at":"2026-07-20T12:00:00Z","crossHostRevalidated":true},
+    "expected": "allow"
+  }
+]

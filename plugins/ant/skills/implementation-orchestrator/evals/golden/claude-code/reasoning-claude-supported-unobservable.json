@@ -1,0 +1,10 @@
+{
+  "traceId": "reasoning-claude-supported-unobservable",
+  "fixtureAt": "2026-07-20T10:30:10Z",
+  "questions": [],
+  "events": [{"type": "checkpoint.created"}, {"type": "agent.spawned"}],
+  "actions": [{"type": "classify-complexity"}, {"type": "translate-reasoning"}, {"type": "record-reasoning-unobservable"}, {"type": "dispatch-child"}],
+  "reasoning": {"complexity": {"tier": "medium", "signals": ["integration route with unobservable applied effort"]}, "requested": {"reasoningTier": "medium", "reasoningHostValue": "medium"}, "capabilityStatus": "supported", "applicationStatus": "unobservable", "translation": {"mechanism": "effortLevel", "mappingEvidenceSource": "capability-artifact#claude-effort-catalog", "mappingScope": {"host": "claude-code", "hostVersion": "fixture-version", "model": "fixture-model"}, "observedAt": "2026-07-20T10:29:10Z"}, "actual": {"reasoningTier": "unknown", "hostValue": "unknown"}, "evidenceSource": "synthetic-host-result-without-applied-effort", "fallbackReason": "application-unobservable: effort requested but applied value not returned"},
+  "routing": [{"requested": {"role": "slice-worker", "reasoningTier": "medium", "reasoningHostValue": "medium", "historyMode": "none"}, "actual": {"host": "claude-code", "reasoningTier": "unknown", "reasoningHostValue": "unknown", "historyMode": "none", "evidenceSource": "synthetic-host-result-without-applied-effort"}, "fallbackReason": "application-unobservable"}],
+  "adjudication": {"status": "spec-expected-degraded"}
+}

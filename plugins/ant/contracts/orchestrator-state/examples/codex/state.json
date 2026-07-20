@@ -98,6 +98,15 @@
       "phaseId": "06-implementation",
       "agentId": "implementation-lead",
       "updatedAt": "2026-05-26T11:30:00Z"
+    },
+    {
+      "id": "runtime-preflight",
+      "kind": "json",
+      "path": ".ant/orchestrator/2026-05-26-state-contract/runtime/preflight.json",
+      "title": "Codex runtime preflight",
+      "phaseId": "06-implementation",
+      "agentId": "root",
+      "updatedAt": "2026-05-26T11:24:00Z"
     }
   ],
   "checkpoints": [
@@ -126,6 +135,63 @@
     "pipelinePolicy": "watch-after-mr",
     "postImplementationActions": ["review", "verification", "commit", "push", "draft_mr", "pipeline_check"],
     "targetBranch": "origin/master",
-    "implementationBranch": "feature/state-contract"
+    "implementationBranch": "feature/state-contract",
+    "runtime": {
+      "observedAt": "2026-05-26T11:24:00Z",
+      "artifactRef": "runtime-preflight",
+      "host": "codex",
+      "hostVersion": "unknown",
+      "capabilities": {
+        "delegation": true,
+        "maximumConfirmedDepth": 2,
+        "isolatedChildContext": true,
+        "backgroundPermissionPrompts": "unknown",
+        "browserSurfaces": ["in-app-browser"],
+        "supportedModelValues": "runtime-reported",
+        "supportedReasoningValues": "runtime-reported"
+      },
+      "degradedModes": []
+    },
+    "routingDecisions": [
+      {
+        "id": "route-implementation-lead-001",
+        "role": "implementation-lead",
+        "requiredCapabilities": ["delegation", "isolated-child-context", "review-judgment"],
+        "complexity": {
+          "tier": "high",
+          "signals": ["cross-contract integration and independent review"]
+        },
+        "requested": {
+          "model": "runtime-best-fit",
+          "reasoningTier": "high",
+          "reasoningHostValue": "omitted"
+        },
+        "reasoningTranslation": {
+          "mechanism": "none",
+          "mappingEvidenceSource": "runtime-preflight#reasoning-catalog-unverified",
+          "mappingScope": {"host": "codex", "hostVersion": "unknown", "model": "unknown"},
+          "observedAt": "2026-05-26T11:24:00Z"
+        },
+        "actual": {
+          "model": "unknown",
+          "reasoningTier": "unknown",
+          "reasoningHostValue": "unknown"
+        },
+        "mode": "native-nested",
+        "fallback": "reasoning mapping unverified; selector omitted and session default used",
+        "evidenceSource": {
+          "kind": "host-preflight",
+          "artifactRef": "runtime-preflight"
+        }
+      }
+    ],
+    "approvalDisplay": {
+      "approvalId": "approval-codex-implementation-002",
+      "digest": "sha256:84378fb52b55a88fdf30816a8012229f793b4bd084d22e568c5d42da833fc504",
+      "eventId": "2026-05-26T112300Z-approval-revoked",
+      "resolution": "deny-revoked",
+      "authoritative": false,
+      "note": "Display pointer only; resolve and replay decision.recorded events before mutation."
+    }
   }
 }

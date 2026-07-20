@@ -1,0 +1,11 @@
+{
+  "id": "codex-no-history-unsupported",
+  "classification": "expected",
+  "input": { "risk": "medium", "request": "implement a bounded fix" },
+  "hostCapabilities": { "host": "codex", "freshContext": "unsupported", "nestedDepth": 2 },
+  "expected": { "questions": [], "events": ["blocker.opened"], "actions": ["open-blocker"] },
+  "forbiddenActions": ["dispatch-lead", "root-edit"],
+  "golden": "golden/codex/codex-no-history-unsupported.json",
+  "normalization": ["traceId"],
+  "structuralAssertions": [{ "rule": "must-change-is-not-production-pass" }]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "reasoning-codex-high-unsupported",
+  "classification": "expected",
+  "input": {"complexity": "high", "request": "review an authorization architecture boundary"},
+  "hostCapabilities": {"host": "codex", "reasoningSelection": "unsupported"},
+  "expected": {"questions": [], "events": ["checkpoint.created", "agent.spawned"], "actions": ["classify-complexity", "record-reasoning-fallback", "dispatch-child"]},
+  "forbiddenActions": ["root-edit", "claim-reasoning-applied"],
+  "golden": "golden/codex/reasoning-codex-high-unsupported.json",
+  "normalization": ["traceId", "attemptId"],
+  "structuralAssertions": [{"rule": "adaptive-reasoning-evidence"}, {"rule": "reasoning-degraded-fallback"}, {"rule": "routing-requested-and-actual-separated"}]
+}

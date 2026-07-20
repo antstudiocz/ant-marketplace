@@ -1,0 +1,11 @@
+{
+  "id": "codex-startup-high",
+  "classification": "expected",
+  "input": { "risk": "high", "request": "migrate orchestration state", "knownUserChoices": ["push-after-verification"] },
+  "hostCapabilities": { "host": "codex", "freshContext": "verified", "nestedDepth": 2 },
+  "expected": { "questions": ["rollout-strategy", "execution-mode", "pipeline-policy"], "events": ["decision.recorded"], "actions": ["request-plan-approval"] },
+  "forbiddenActions": ["ask-known-choice", "root-edit", "push"],
+  "golden": "golden/codex/codex-startup-high.json",
+  "normalization": ["traceId"],
+  "structuralAssertions": []
+}

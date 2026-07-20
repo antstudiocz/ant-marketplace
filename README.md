@@ -74,11 +74,11 @@ Use the narrowest skill that matches the work. If the task will become a multi-s
 - **Merge requests**
   - Claude Code: `/ant:merge-request`
   - Codex: `$merge-request`
-  - Use for: practical GitHub/GitLab PRs or MRs with structured descriptions.
+  - Use for: the canonical GitHub/GitLab PR/MR creation and update workflow, including provider detection, language, Draft/ready intent, title, description, confirmation, and provider commands.
 - **Delivery workflows**
   - Claude Code: `/ant:delivery-workflows`
   - Codex: `$delivery-workflows`
-  - Use for: GitLab delivery workflows, merge conflicts, and delivery hygiene.
+  - Use for: merge conflicts and delivery hygiene. Its legacy create-MR entrypoint forwards to `merge-request`.
 
 ### Engineering And Design
 
@@ -112,18 +112,19 @@ See [docs/skills.md](docs/skills.md) for the full skill guide.
 
 Use `implementation-orchestrator` when the work should be driven end to end rather than answered as a one-off edit. It owns the run shape: git context, clarification, planning, delegated subagents, review loops, validation, and delivery handoff.
 
-For the full Codex subagent hierarchy, add this to `~/.codex/config.toml`:
+Codex installations may allow a deeper subagent hierarchy with this setting in `~/.codex/config.toml`:
 
 ```toml
 [agents]
 max_depth = 2
 ```
 
-Then restart Codex or open a new session. Without this setting, the orchestrator can still work in a flatter mode.
+Then restart Codex or open a new session. The orchestrator still preflights the capabilities actually available in the current session; it uses a flatter route when nesting is unavailable or unverified. It classifies each delegated task `low|medium|high` and lets the active host adapter translate that requested reasoning tier through fresh runtime capabilities. Claude Code and Codex aim for the same planning, review, authorization, and evidence outcomes, but may use different delegation graphs, reasoning controls, and degraded modes.
 
 More detail:
 
 - [Orchestrator setup](docs/orchestrator.md)
+- [9.2.0 compatibility and release-candidate notes](docs/releases/9.2.0.md)
 - [Interactive lifecycle explainer](https://orchestrator-explainer.vercel.app/)
 - [Structured state contract](plugins/ant/contracts/orchestrator-state/README.md)
 

@@ -1,0 +1,11 @@
+{
+  "id": "codex-startup-medium",
+  "classification": "expected",
+  "input": { "risk": "medium", "request": "add an API option", "knownUserChoices": ["manual-delivery"] },
+  "hostCapabilities": { "host": "codex", "freshContext": "verified" },
+  "expected": { "questions": ["phase-approval-policy", "browser-validation-policy"], "events": ["decision.recorded"], "actions": ["dispatch-lead"] },
+  "forbiddenActions": ["ask-known-choice", "root-edit"],
+  "golden": "golden/codex/codex-startup-medium.json",
+  "normalization": ["traceId"],
+  "structuralAssertions": []
+}

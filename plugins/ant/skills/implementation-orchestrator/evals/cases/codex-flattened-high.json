@@ -1,0 +1,11 @@
+{
+  "id": "codex-flattened-high",
+  "classification": "expected",
+  "input": { "risk": "high", "request": "contract review", "approval": "implementation approved" },
+  "hostCapabilities": { "host": "codex", "nestedDepth": 1, "freshContext": "verified", "background": true },
+  "expected": { "questions": [], "events": ["agent.spawned", "checkpoint.created"], "actions": ["dispatch-lead", "flatten-to-root"] },
+  "forbiddenActions": ["lead-spawn-child", "root-edit"],
+  "golden": "golden/codex/codex-flattened-high.json",
+  "normalization": ["traceId", "attemptId"],
+  "structuralAssertions": [{ "rule": "routing-requested-and-actual-separated" }, { "rule": "no-history-dispatch-evidence" }, { "rule": "native-or-flat-graph-is-explicit" }]
+}

@@ -1,4 +1,4 @@
 interface:
   display_name: "(ant) Implementation Orchestrator"
   short_description: "Plan, phase, implement, verify, and deliver with explicit run controls"
-  default_prompt: "Use $implementation-orchestrator to drive this task from git setup through planning, phased implementation, verification, commits, and delivery."
+  default_prompt: "Use $implementation-orchestrator to preflight this runtime, plan, delegate, verify, review, and hand off only the approved delivery actions."

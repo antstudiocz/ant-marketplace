@@ -1,0 +1,10 @@
+{
+  "traceId": "reasoning-claude-resume-revalidation",
+  "fixtureAt": "2026-07-20T10:30:07Z",
+  "questions": [],
+  "events": [{"type": "checkpoint.created"}, {"type": "agent.spawned"}],
+  "actions": [{"type": "reopen-state"}, {"type": "reclassify-complexity"}, {"type": "revalidate-reasoning"}, {"type": "translate-reasoning"}, {"type": "dispatch-child"}],
+  "reasoning": {"complexity": {"tier": "high", "signals": ["independent review after host capability refresh"]}, "requested": {"reasoningTier": "high", "reasoningHostValue": "high"}, "capabilityStatus": "supported", "applicationStatus": "observed", "translation": {"mechanism": "effortLevel", "mappingEvidenceSource": "capability-artifact-refreshed-on-resume#claude-effort-catalog", "mappingScope": {"host": "claude-code", "hostVersion": "fixture-version", "model": "fixture-model"}, "observedAt": "2026-07-20T10:30:07Z"}, "actual": {"reasoningTier": "high", "hostValue": "high"}, "evidenceSource": "synthetic-host-observed-route-result-after-resume", "fallbackReason": null, "revalidation": {"reason": "resume", "previousObservedAt": "2026-07-19T10:00:00Z", "observedAt": "2026-07-20T10:30:07Z"}},
+  "routing": [{"requested": {"role": "reviewer", "reasoningTier": "high", "reasoningHostValue": "high", "historyMode": "none"}, "actual": {"host": "claude-code", "reasoningTier": "high", "reasoningHostValue": "high", "historyMode": "none", "evidenceSource": "synthetic-host-observed-route-result-after-resume"}, "fallbackReason": null}],
+  "adjudication": {"status": "spec-expected"}
+}

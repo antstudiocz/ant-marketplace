@@ -1,0 +1,10 @@
+{
+  "traceId": "reasoning-codex-resume-revalidation",
+  "fixtureAt": "2026-07-20T10:30:03Z",
+  "questions": [],
+  "events": [{"type": "checkpoint.created"}, {"type": "agent.spawned"}],
+  "actions": [{"type": "reopen-state"}, {"type": "reclassify-complexity"}, {"type": "revalidate-reasoning"}, {"type": "record-reasoning-fallback"}, {"type": "dispatch-child"}],
+  "reasoning": {"complexity": {"tier": "medium", "signals": ["changed integration packet after resume"]}, "requested": {"reasoningTier": "medium", "reasoningHostValue": "omitted"}, "capabilityStatus": "unknown", "applicationStatus": "not-requested", "translation": {"mechanism": "none", "mappingEvidenceSource": "capability-artifact-refreshed-on-resume#reasoning-unknown", "mappingScope": {"host": "codex", "hostVersion": "fixture-version", "model": "unknown"}, "observedAt": "2026-07-20T10:30:03Z"}, "actual": {"reasoningTier": "unknown", "hostValue": "unknown"}, "evidenceSource": "capability-artifact-refreshed-on-resume", "fallbackReason": "reasoning-capability-stale-then-unknown", "revalidation": {"reason": "resume", "previousObservedAt": "2026-07-19T10:00:00Z", "observedAt": "2026-07-20T10:30:03Z"}},
+  "routing": [{"requested": {"role": "implementation-lead", "reasoningTier": "medium", "reasoningHostValue": "omitted", "historyMode": "none"}, "actual": {"host": "codex", "reasoningTier": "unknown", "reasoningHostValue": "unknown", "historyMode": "none", "evidenceSource": "synthetic-host-preflight-refreshed-on-resume"}, "fallbackReason": "reasoning-capability-stale-then-unknown"}],
+  "adjudication": {"status": "spec-expected-degraded"}
+}

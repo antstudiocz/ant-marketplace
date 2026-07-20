@@ -1,0 +1,11 @@
+{
+  "id": "reasoning-claude-low-supported",
+  "classification": "expected",
+  "input": {"complexity": "low", "request": "check one deterministic link"},
+  "hostCapabilities": {"host": "claude-code", "reasoningSelection": "supported"},
+  "expected": {"questions": [], "events": ["checkpoint.created", "agent.spawned"], "actions": ["classify-complexity", "translate-reasoning", "dispatch-child"]},
+  "forbiddenActions": ["root-edit", "record-reasoning-fallback"],
+  "golden": "golden/claude-code/reasoning-claude-low-supported.json",
+  "normalization": ["traceId", "attemptId"],
+  "structuralAssertions": [{"rule": "adaptive-reasoning-evidence"}, {"rule": "reasoning-supported-translation"}, {"rule": "routing-requested-and-actual-separated"}]
+}

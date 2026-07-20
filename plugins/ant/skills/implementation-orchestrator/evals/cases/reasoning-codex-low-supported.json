@@ -1,0 +1,11 @@
+{
+  "id": "reasoning-codex-low-supported",
+  "classification": "expected",
+  "input": {"complexity": "low", "request": "inspect one deterministic manifest field"},
+  "hostCapabilities": {"host": "codex", "reasoningSelection": "supported"},
+  "expected": {"questions": [], "events": ["checkpoint.created", "agent.spawned"], "actions": ["classify-complexity", "translate-reasoning", "dispatch-child"]},
+  "forbiddenActions": ["root-edit", "record-reasoning-fallback"],
+  "golden": "golden/codex/reasoning-codex-low-supported.json",
+  "normalization": ["traceId", "attemptId"],
+  "structuralAssertions": [{"rule": "adaptive-reasoning-evidence"}, {"rule": "reasoning-supported-translation"}, {"rule": "routing-requested-and-actual-separated"}]
+}
