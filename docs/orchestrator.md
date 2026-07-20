@@ -11,7 +11,22 @@ Use `implementation-orchestrator` when a task should be taken from repository di
    - Codex: `$implementation-orchestrator`
 4. Provide the goal, repository or path, relevant constraints, and any delivery request.
 
-The orchestrator discovers repository facts before asking questions, delegates tracked edits, keeps review proportional to risk, and reports what was actually verified.
+The orchestrator discovers repository facts before asking questions, obtains approval for a concrete plan before tracked edits, keeps review proportional to risk, and reports what was actually verified.
+
+## Planning And Approval
+
+Every implementation starts with read-only repository discovery and a proportional plan that the user explicitly approves before tracked edits. A tiny mechanical change may need only a compact code check, stated delta, and validation plan; planning and approval are still present unless the change is already covered by an approved plan.
+
+For a new feature or materially new behavior, the sequence is:
+
+1. inspect the repository and relevant code paths;
+2. brainstorm the goal, users, workflow, edge cases, non-goals, options, and tradeoffs with the user;
+3. ask all material questions that cannot be answered from the repository, without an arbitrary question limit;
+4. after the answers, analyze architecture, contracts, data, dependencies, obsolete behavior, risks, and validation more deeply;
+5. present a concrete implementation plan and wait for explicit approval;
+6. only then dispatch tracked implementation work.
+
+Read-only scouts may help before approval. Fixes and refactors without new behavior use a shorter root-cause, impact, steps, risks, and checks plan. A user-provided concrete plan or approved `create-application` brief can satisfy earlier product brainstorming after repository verification, but the orchestrator still prepares an implementation plan and asks for approval before writes. That approval covers the stable workstream, not every phase.
 
 ## Execution Shape
 
@@ -59,7 +74,7 @@ Model choice, reasoning effort, permissions, and delivery authority remain separ
 
 ## Messages During Implementation
 
-You can continue messaging the orchestrator while it works. Status questions and additive non-conflicting changes do not stop unaffected work. Corrections replan only the impacted scope. The entire run stops only for an explicit global stop/replacement or a genuinely blocking contradiction or safety issue.
+You can continue messaging the orchestrator while it works. Status questions and details within approved behavior do not stop work. Materially new functionality starts a discovery, brainstorming, deeper-analysis, delta-plan, and approval cycle for the affected scope; only affected writes pause while independent work continues. The entire run stops only for an explicit global stop/replacement or a genuinely blocking contradiction or safety issue.
 
 Codex steering/queue controls and Claude Code message delivery are host-specific transport details; both follow the same behavior above.
 
@@ -71,6 +86,6 @@ At the final pre-delivery boundary it runs the repository's full suite once on t
 
 ## Delivery
 
-The orchestrator performs only the delivery actions the user requested. `merge-request` is the sole PR/MR creation and update workflow; `delivery-workflows` is only for merge conflicts. Merge, Draft-to-ready conversion, tag, publish, and release are never implied by commit, push, or PR creation.
+The orchestrator performs only the delivery actions the user requested. `merge-request` is the sole PR/MR creation and update workflow and rebuilds descriptions from the target merge base to final `HEAD`; `delivery-workflows` is only for merge conflicts. Merge, Draft-to-ready conversion, tag, publish, and release are never implied by commit, push, or PR creation.
 
 The final report includes the changed areas, checks run, unverified items, and current commit/PR/MR state.

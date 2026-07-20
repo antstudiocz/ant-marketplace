@@ -20,7 +20,7 @@ The `(ant)` marketplace gives Claude Code and Codex shared workflows for plannin
 2. Reload Claude Code or restart/open a new Codex session.
 3. Pick the skill that matches the task from [Choose a Skill](#choose-a-skill).
 4. For new product or app ideas, start with `create-application`.
-5. For implementation work that needs planning, subagents, review, and delivery, start with `implementation-orchestrator`.
+5. For implementation work, start with `implementation-orchestrator` so repository discovery and an approved plan happen before code changes, with brainstorming for new behavior.
 
 ## Quick Install
 
@@ -70,11 +70,11 @@ Use the narrowest skill that matches the work. If the task will become a multi-s
 - **Implementation orchestrator**
   - Claude Code: `/ant:implementation-orchestrator`
   - Codex: `$implementation-orchestrator`
-  - Use for: goal clarification, planning, subagents, review, verification, and delivery.
+  - Use for: repository discovery, user-needs brainstorming, approved implementation planning, subagents, review, verification, and delivery.
 - **Merge requests**
   - Claude Code: `/ant:merge-request`
   - Codex: `$merge-request`
-  - Use for: the canonical GitHub/GitLab PR/MR creation and update workflow, including provider detection, language, Draft/ready intent, title, description, confirmation, and provider commands.
+  - Use for: the canonical GitHub/GitLab PR/MR workflow, with descriptions rebuilt from the target merge base to final `HEAD`.
 - **Delivery workflows**
   - Claude Code: `/ant:delivery-workflows`
   - Codex: `$delivery-workflows`
@@ -110,7 +110,7 @@ See [docs/skills.md](docs/skills.md) for the full skill guide.
 
 ## Orchestrator
 
-Use `implementation-orchestrator` when work should be driven end to end rather than answered as a one-off edit. It discovers repository facts, clarifies only blocking choices, delegates tracked edits, reviews in proportion to risk, validates the final result, and performs requested delivery actions.
+Use `implementation-orchestrator` when work should be driven end to end rather than answered as a one-off edit. Every implementation starts with read-only repository discovery and a proportional plan that the user approves before any tracked writer starts. New or materially changed behavior also adds user-needs brainstorming, all material questions, and deeper technical analysis before that plan.
 
 Codex installations may allow a deeper subagent hierarchy with this setting in `~/.codex/config.toml`:
 
@@ -121,7 +121,9 @@ max_depth = 2
 
 Then restart Codex or open a new session. The orchestrator also works without nested delegation by dispatching a flatter agent graph.
 
-The shared workflow routes by Strong, Balanced, and Fast capabilities, while each host selects from its current model catalog. Reasoning is reassessed during work: it increases when ambiguity, risk, or failures broaden and decreases for bounded deterministic segments. During implementation it runs targeted checks after coherent phases; the full suite runs once on the final tree before delivery. New user messages update only the affected work unless they explicitly stop or replace the whole request.
+The shared workflow routes by Strong, Balanced, and Fast capabilities, while each host selects from its current model catalog. Reasoning is reassessed during work: it increases when ambiguity, risk, or failures broaden and decreases for bounded deterministic segments. During implementation it runs targeted checks after coherent phases; the full suite runs once on the final tree before delivery.
+
+Approval covers the stable plan rather than every phase. A tiny mechanical step inside that plan uses a compact cycle without duplicate approval. If the user adds materially new functionality mid-flight, only the affected writes pause for discovery, brainstorming, deeper analysis, a delta-plan, and approval; unaffected work continues.
 
 More detail:
 

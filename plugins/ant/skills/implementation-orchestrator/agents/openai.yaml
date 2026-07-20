@@ -1,4 +1,4 @@
 interface:
   display_name: "(ant) Implementation Orchestrator"
-  short_description: "Coordinate proportional implementation, review, validation, and delivery"
-  default_prompt: "Use $implementation-orchestrator to inspect the repository, choose a proportional agent shape, adapt reasoning during work, validate the final result, and perform only the requested delivery actions."
+  short_description: "Plan, approve, implement, verify, and deliver"
+  default_prompt: "Use $implementation-orchestrator to discover the repository, brainstorm new behavior with me, obtain approval for a concrete plan before edits, then implement and verify it proportionally."

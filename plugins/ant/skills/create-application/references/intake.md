@@ -1,10 +1,10 @@
 # Application Intake
 
-Ask the fewest high-impact questions needed to classify the app. Prefer grouped questions over a long interview, then make safe assumptions explicit.
+Ask high-impact questions in digestible grouped rounds rather than one long interview. Continue until every material decision that cannot be discovered from the repository or environment is resolved. Record safe assumptions only for non-material details.
 
-For the first round, ask at most 3 grouped questions. Use `decision-gates.md` for the exact minimum viable question rule and required intake end state.
+Inspect available repository and environment facts before asking. Use `decision-gates.md` for grouping guidance and the required intake end state.
 
-## Minimum Questions
+## Material Intake Areas
 
 Adapt wording to the selected communication level from `communication-level.md`.
 
@@ -21,9 +21,9 @@ Adapt wording to the selected communication level from `communication-level.md`.
 11. Is this standalone, or a new surface inside an existing app such as administration, backoffice, client portal, reporting, or a major module?
 12. Where should it run: local only, static hosting, existing platform, Docker Compose, cloud app platform, or unknown?
 
-## Clarify Only When Blocking
+## Resolve Material Decisions
 
-Blocking questions usually include:
+Material decisions usually include:
 
 - auth and private data requirements;
 - authorization and audit requirements for internal/admin workflows;
@@ -34,7 +34,7 @@ Blocking questions usually include:
 - whether an admin/backoffice/client-portal surface can reuse the existing app stack or needs a separate frontend/backend/security boundary;
 - production versus prototype expectations.
 
-Safe assumptions can include naming, visual style, mock content, and non-critical UI copy when the user has not specified them. State those assumptions before handoff.
+Safe assumptions can include naming, visual style, mock content, and non-critical UI copy when the user has not specified them. State them before handoff. Do not classify a material product, data, permission, integration, deployment, or production-readiness decision as safe merely to shorten intake.
 
 ## App Brief Fields
 

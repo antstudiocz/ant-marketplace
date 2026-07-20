@@ -1,24 +1,24 @@
 # Decision Gates
 
-Use this reference to keep intake short and to prevent implementation from starting with vague requirements.
+Use this reference to keep intake digestible and to prevent implementation from starting with vague requirements.
 
-## Minimum Viable Questions
+## Grouped Intake
 
-Start with at most 3 grouped questions. Adapt wording to the selected communication level.
+Ask related decisions together in short rounds and adapt wording to the selected communication level. Do not impose a fixed number of questions or rounds.
 
-Good first round when the host cannot inspect the local environment directly:
+Example opening round when the host cannot inspect the local environment directly:
 
 1. What are we building, who uses it, and what are the first 2-3 things users must do?
 2. What data/auth/integrations are involved, and is any of it private or business-critical?
 3. What can you run locally today: OS, Git, package manager/runtime, Docker, and target deployment if known?
 
-Good first round when the host can inspect the same machine/workspace directly:
+Example opening round when the host can inspect the same machine/workspace directly:
 
 1. What are we building, who uses it, and what are the first 2-3 things users must do?
 2. What data/auth/integrations are involved, and is any of it private or business-critical?
 3. Where should it run after the first version, and will anyone develop or maintain it on a different machine than this one?
 
-Continue asking only when answers expose a real blocker, contradiction, or required decision. Do not turn intake into a long checklist when the missing detail is safe to decide later.
+After each round, continue with every unresolved material decision that cannot be discovered from the repository or environment. Stop only when those decisions are answered. Do not repeat discoverable questions or turn safe, non-critical details into a checklist; record safe assumptions only for non-material details.
 
 ## Required Intake End State
 

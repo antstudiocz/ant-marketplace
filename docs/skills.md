@@ -13,7 +13,7 @@ How it works:
 - checks the requester's local development environment, including whether Docker is available, by inspecting the local machine directly when the host supports it;
 - guides the requester through missing Git, package manager/runtime, or Docker setup from a dedicated local-dev setup reference before implementation planning, while allowing npm when Bun is unavailable;
 - always compares a TypeScript-only path with a Docker-based multi-language path in non-technical language;
-- keeps the first intake round short while continuing with every genuinely blocking question needed for an honest decision status;
+- asks in digestible grouped rounds and continues until every material non-repo-discoverable decision is resolved, allowing explicit safe assumptions only for non-material details;
 - decides whether the app should be a TypeScript frontend/content app, TypeScript full-stack app, CMS-backed app, Dockerized modular app, new surface inside an existing app, or existing platform/module change;
 - selects frameworks and CMS options by project shape, preferring TanStack Start over Next.js for new app-like TypeScript products unless Next.js has a concrete project fit;
 - challenges inconsistent goals, unsafe assumptions, and mismatched technology choices before asking for approval;
@@ -23,7 +23,8 @@ How it works:
 - makes mock data, prototype scope, persistence, secrets, and production-readiness tradeoffs explicit;
 - prepares an approved application brief with acceptance criteria and non-goals;
 - hands only captured, approved brief fields to `implementation-orchestrator`; missing git/delivery startup choices remain open for the orchestrator instead of being invented;
-- leaves planning depth, capability-driven delegation, implementation, review, verification, and delivery to `implementation-orchestrator`.
+- treats brief approval as completed product brainstorming, not permission to write; `implementation-orchestrator` still verifies the repository, presents its concrete implementation plan, and obtains approval;
+- leaves capability-driven delegation, implementation, review, verification, and delivery to `implementation-orchestrator`.
 
 Use it when the user wants to create a new app from an idea before writing code.
 
@@ -33,13 +34,16 @@ End-to-end implementation flow for features, fixes, refactors, migrations, audit
 
 How it works:
 
-- inspects repository instructions, git state, relevant code, and validation commands before asking questions or editing;
-- asks only for unresolved choices that materially change behavior, architecture, safety, scope, or delivery;
+- starts every implementation with read-only repository discovery and a proportional plan;
+- for new or materially changed behavior, brainstorms goals, users, workflows, edge cases, non-goals, options, and tradeoffs before deeper technical analysis;
+- asks every material question that cannot be answered from the repository, without an arbitrary count;
+- presents a concrete implementation plan and obtains explicit approval before dispatching any tracked writer;
+- treats approval as covering the stable plan rather than requesting it again before every phase;
 - chooses a proportional shape: one writer for simple work, one lead plus optional scout/reviewer for standard work, and independent review for high-risk work;
 - routes children by Strong, Balanced, and Fast capabilities instead of hardcoded model names;
 - reassesses reasoning while work is active, escalating for new ambiguity or risk and lowering it at safe deterministic boundaries;
 - delegates all tracked edits and keeps write scopes disjoint when work is parallel;
-- accepts mid-flight status, corrections, and additive requests without pausing unaffected work;
+- accepts mid-flight status and approved-behavior details without stopping work; materially new functionality repeats the planning cycle only for the affected scope while unaffected work continues;
 - runs checks targeted to coherent implementation phases instead of repeatedly running the full suite;
 - runs one full suite on the final tree before delivery and refreshes it once only if a later relevant edit occurs;
 - uses `merge-request` for PR/MR creation or updates and `delivery-workflows` only for merge conflicts;
@@ -108,14 +112,15 @@ GitHub/GitLab Pull Request and Merge Request workflow for creating practical tit
 
 How it works:
 
-- checks git status, branch, target branch, remote provider, diff, and recent commits before mutating delivery state;
+- checks git status, branch, target branch, remote provider, and the target-merge-base-to-final-`HEAD` diff before mutating delivery state;
 - asks which language to use unless the current task already contains an explicit choice;
 - verifies any orchestrator summary against the repository instead of requiring a handoff schema;
 - uses `glab` for GitLab repositories and `gh` for GitHub repositories;
 - prefers Draft MR unless the user explicitly asks for ready/bez draft;
 - performs only the commit, push, PR/MR, readiness, merge, or release actions the user requested;
 - uses a short Conventional Commit style title;
-- writes the description in the selected language with sections for what changed, why, chosen decisions, user and technical impact, UX walkthrough, technical testing, unverified items, and reviewer focus.
+- writes the description as a snapshot of the net final diff, excluding intermediate commits, abandoned attempts, and add-then-remove artifacts unless they remain materially relevant;
+- uses sections for what changed, why, chosen decisions, user and technical impact, UX walkthrough, technical testing, unverified items, and reviewer focus.
 - owns the final preview/confirmation and all `glab`/`gh` create or update commands.
 
 Use it when the user asks to create or prepare an MR/PR and needs a structured practical description.

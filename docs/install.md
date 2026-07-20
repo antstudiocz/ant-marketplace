@@ -84,10 +84,13 @@ Codex: rerun the same `codex-marketplace add` command with the same scope (`--gl
 
 In a fresh session, invoke `implementation-orchestrator` on a small repository task and confirm that it:
 
+- performs read-only discovery, presents a proportional plan, and waits for approval before tracked edits;
+- for new behavior, brainstorms user needs, asks material questions, analyzes more deeply, and waits for explicit plan approval;
 - chooses a proportional agent shape;
 - routes by capability rather than requiring a fixed model;
 - adapts reasoning when task complexity changes;
 - runs targeted checks during work and one broad suite at the end;
-- continues unaffected work when you send a non-conflicting follow-up.
+- continues unaffected work when you send a status question or approved-behavior detail;
+- starts an affected-scope planning and approval cycle when you add materially new functionality.
 
 Version 10 is instruction-only and does not require an orchestration database, state contract, generated runtime, or migration command. See [the 10.0 release notes](releases/10.0.0.md).

@@ -21,6 +21,7 @@ This skill is the sole owner of PR/MR creation and update behavior. It owns prov
 - Do not force-push, reset, or rewrite history unless the user explicitly asks and the risk is clear.
 - Ask which language to use unless the user already chose it in the current task or the orchestrator passes that explicit choice.
 - Treat commit, push, PR/MR creation, Draft-to-ready conversion, merge, and release as distinct delivery actions. Perform only the actions the user requested.
+- Treat every created or updated description as a snapshot of the final change from the target branch merge base to final `HEAD`, not as a diary of work performed on the branch.
 
 ## Workflow
 
@@ -38,13 +39,13 @@ This skill is the sole owner of PR/MR creation and update behavior. It owns prov
    ```
 
 2. Detect the provider from the remote URL. Use GitLab only for a GitLab remote and GitHub only for a GitHub remote. If the remote is missing, unsupported, or ambiguous, stop and ask instead of guessing.
-3. Determine target branch from explicit user instruction, existing upstream/PR/MR, or `origin` HEAD. If still ambiguous, ask before creating or updating the PR/MR.
+3. Determine target branch from explicit user instruction, the existing PR/MR, or `origin` HEAD. If still ambiguous, ask before creating or updating the PR/MR. Ensure the target ref is current enough to establish the real merge base.
 4. Resolve the PR/MR description language before drafting the title/body. Reuse an explicit choice from the current task; otherwise use native question UI if available or ask directly in chat. Offer at least:
    - Czech
    - English
    - Another language, where the user names the language
 5. Identify whether there are unstaged, staged, committed-but-unpushed, and unrelated changes. If committing is needed but was not requested, propose exactly which files and commit message would be used before acting.
-6. Inspect the diff enough to understand what changed, why, technical decisions, user impact, and validation gaps. Verify any orchestrator summary against the repository; do not generate the PR/MR from filenames alone.
+6. Compute the merge base between the target branch and final `HEAD`, then inspect that base-to-`HEAD` diff deeply enough to understand final behavior, technical decisions, user impact, and validation gaps. Verify any orchestrator summary against this final snapshot; do not generate the PR/MR from filenames, individual commits, or conversation history alone.
 7. Run targeted validation appropriate to the change when feasible. Do not run project-disallowed commands.
 8. Draft the final title, description, target, provider, and Draft/ready state. For an update, inspect the existing PR/MR first and identify exactly which fields will change.
 9. Present the complete preview unless the user already requested the exact title/body/update and readiness. Do not add an unnecessary second confirmation for settled choices.
@@ -124,6 +125,14 @@ docs(skills): add merge request workflow
 ## MR Description
 
 Write the description in the selected language. Be concrete and operational, not marketing-oriented. The description must start with a short plain-language summary of what was actually done, then a horizontal rule, then the detailed structured sections. Separate user walkthrough from technical validation.
+
+### Final Snapshot Rule
+
+- Establish the target branch first. For an existing PR/MR, use its actual base branch.
+- Compute the merge base and inspect the complete diff from that point to final `HEAD`, for example with `git merge-base <target-ref> HEAD` followed by `git diff <merge-base>..HEAD`.
+- Describe only the net behavior and files that remain in that final diff. Intermediate commits, abandoned approaches, temporary artifacts, and add-then-remove work do not belong in the description.
+- Mention branch history only when it remains materially relevant to migration, rollout, compatibility, data safety, or reviewer understanding of the final result.
+- Apply this rule on updates too: rebuild the description from the current base-to-final-`HEAD` snapshot instead of appending a changelog of edits made since the previous description.
 
 Use these sections. Translate section headings for other selected languages while preserving the meaning.
 
@@ -237,6 +246,7 @@ Use these sections. Translate section headings for other selected languages whil
 - In "How to test technically" / "Jak to technicky otestovat", include exact commands run or recommended. Keep this separate from UX clicking.
 - In "What could not be verified" / "Co nešlo ověřit", state blockers plainly, for example missing credentials, unavailable service, sandbox/network limitation, no seed data, or command intentionally skipped by project rule.
 - In "Reviewer focus" / "Na co se má reviewer zaměřit", call out risk areas, assumptions, edge cases, and files or flows needing careful review.
+- Before finalizing, compare every claim with the merge-base-to-`HEAD` diff and remove claims about reverted, abandoned, or otherwise absent work.
 
 If a section truly does not apply, keep it with a localized equivalent of `- Not applicable.` rather than deleting it, except screenshots or optional links requested by the repo convention.
 

@@ -2,17 +2,32 @@
 
 This is the orchestrator's only internal reference. Apply it with the repository instructions and the capabilities actually available in the current Claude Code or Codex session.
 
-## 1. Establish Scope
+## 1. Discover, Brainstorm, And Approve
 
-Before editing:
+Every implementation has a pre-write discovery and planning cycle. Keep it compact for a tiny mechanical change and thorough for new, broad, ambiguous, or risky work; never remove it entirely.
 
-1. Read repository instructions and inspect the current branch, worktree, relevant diff, and validation commands.
+Before any tracked edit or tracked-writer dispatch:
+
+1. Read repository instructions and inspect the current branch, worktree, relevant diff, code path, and validation commands.
 2. Separate in-scope changes from unrelated or ambiguous dirty files. Preserve anything the user did not place in scope.
-3. Inspect the relevant code path or delegate a read-only scout. Do not ask the user for facts that can be discovered safely.
-4. Restate the goal, acceptance criteria, non-goals, and material risks in compact form.
-5. Ask only for unresolved choices that would materially change behavior, architecture, data safety, external effects, or delivery.
+3. Inspect the relevant behavior and contracts or delegate read-only scouts. Do not ask the user for facts that can be discovered safely from the repository or environment.
+4. Classify the request as a tiny mechanical change, work already covered by an approved plan, or new/materially changed behavior.
 
-An explicit request to implement or fix something authorizes the scoped repository edits normally required for that request. It does not silently authorize destructive operations, force-pushes, merges, releases, or unrelated cleanup. Respect any narrower repository or host permission boundary.
+For a fix, refactor, migration, or remediation that does not introduce materially new behavior, state the verified goal or root cause, acceptance behavior, affected areas, implementation steps, risks, and checks in a proportional plan, then obtain explicit user approval.
+
+For a new feature or materially new behavior, continue in this order:
+
+1. Brainstorm with the user about the goal, users, desired workflow, edge cases, non-goals, options, and tradeoffs.
+2. Ask every unresolved question whose answer materially changes behavior, scope, architecture, data, safety, validation, or delivery. Group questions clearly, but do not impose an arbitrary count.
+3. After receiving the answers, inspect architecture, contracts, data flows, dependencies, obsolete or legacy behavior, risks, and validation paths in greater depth.
+4. Present a concrete implementation plan covering acceptance behavior, affected areas, key decisions, implementation sequence, validation, risks, and explicit non-goals.
+5. Obtain explicit user approval of that plan before dispatching a tracked writer or making tracked edits.
+
+Read-only scouts may run before approval. They return evidence and options, never implementation changes. The approval applies to the stable plan or workstream, so do not ask again before every phase. Ask again only when a material discovery invalidates the plan or changes its behavior, architecture, risk, or scope.
+
+A tiny mechanical change inside an already approved plan may use a compact cycle: verify the affected code, state the small delta and checks, then continue without duplicate approval. A concrete plan supplied by the user or an approved `create-application` brief may satisfy earlier product brainstorming once repository facts are verified, but the orchestrator must still prepare an implementation plan and obtain approval before tracked writes.
+
+An implementation request by itself is not approval of a plan that has not yet been presented. Plan approval authorizes only the scoped repository edits required by that plan. It does not authorize destructive operations, force-pushes, merges, releases, or unrelated cleanup. Respect any narrower repository or host permission boundary.
 
 Do not create orchestration state files, schemas, event logs, approval artifacts, leases, or migration readers. Use the host's built-in plan/task state and concise user-facing checkpoints. After compaction or resume, reconstruct truth from the conversation summary, current git state, child reports, and fresh inspection.
 
@@ -28,6 +43,7 @@ Use risk and uncertainty, not task size alone:
 
 Rules:
 
+- Before approval, dispatch only read-only discovery or review work. Dispatch tracked implementation owners and slice workers only after the planning gate passes.
 - Do not spawn one agent per file, phase-owner agents, or agents whose only job is process bookkeeping.
 - One implementation lead owns the final integrated result. A small task may use the same agent as its sole writer.
 - Parallelize only independent work with disjoint write scopes and a stable shared contract. Keep a slot available for review or recovery when capacity is tight.
@@ -83,6 +99,8 @@ Role boundaries:
 - **Slice worker:** owns one disjoint bounded write scope and reports back to the lead; it does not redefine shared contracts.
 - **Reviewer:** independent and normally read-only; checks requirement fit, correctness, regressions, architecture, negative cases, and validation gaps.
 
+The approved plan is the implementation contract. Include its decisions and acceptance behavior in writer assignments, and escalate rather than silently redefining it.
+
 Pass relevant specialist-skill guidance into assignments when frontend, Laravel, brand, delivery, or another domain requires it. Do not assume a child will discover internal references by itself.
 
 ## 5. Execute And Adapt
@@ -100,8 +118,9 @@ The implementation owner should:
 Briefly acknowledge new input and classify it by effect:
 
 - **Status or question:** answer without stopping the active implementation.
-- **Additive, non-conflicting change:** add it to the appropriate current or upcoming work; unaffected work continues.
-- **Correction to part of the task:** redirect or pause only the impacted work, reassess affected edits and checks, and continue independent work.
+- **Detail within approved behavior:** incorporate it into the affected current or upcoming work; unaffected work continues and no duplicate approval is needed.
+- **Materially new functionality:** pause only affected writes; run affected-scope discovery, user-needs brainstorming, deeper analysis, a concrete delta-plan, and explicit approval before resuming those writes. Unaffected work continues.
+- **Correction to approved behavior:** redirect or pause only the impacted work, reassess affected edits and checks, and when the correction is material obtain explicit approval of a delta-plan before affected writes resume. Independent work continues.
 - **Explicit stop, replacement request, or blocking contradiction:** stop the affected work; stop the whole run only when the instruction or safety issue is global.
 
 Use the host's available transport. Codex may steer an active agent or queue input; Claude Code may deliver follow-up messages through different controls. Those are implementation details. If an active worker cannot be redirected safely, obtain a checkpoint and apply the change at the next dispatch boundary. Never ignore new user input, but do not turn every message into a global pause.
