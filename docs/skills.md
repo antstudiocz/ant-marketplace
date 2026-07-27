@@ -42,7 +42,7 @@ How it works:
 - chooses a proportional shape: one writer plus final independent review for simple work, optional scouts or slices for broader work, and extra specialist review only when risk warrants it;
 - keeps root coordination-only and stops before tracked edits when no writer-capable native delegation is available;
 - routes children by Strong, Balanced, and Fast capabilities while selecting a real host model and, where supported, effort for each dispatch;
-- keeps root at the host's maximum available reasoning effort for the whole run and pins every child explicitly at High or lower, independently from capability tier;
+- keeps root at the host's maximum available reasoning effort for the whole run and pins every child explicitly at High or lower, independently from capability tier; Codex children and nested children use `fork_turns="none"` with concise self-contained task context;
 - reuses an active agent that already owns the same goal and evidence instead of creating overlapping work, except for intentional independent review;
 - delegates all tracked edits and keeps write scopes disjoint when work is parallel;
 - accepts mid-flight status and approved-behavior details without stopping work; batches related material changes from the same active segment into one affected-scope planning and approval cycle at the next safe boundary while unaffected work continues;

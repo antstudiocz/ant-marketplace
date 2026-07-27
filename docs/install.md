@@ -90,7 +90,7 @@ In a fresh session, invoke `implementation-orchestrator` on a small repository t
 - for new behavior, brainstorms user needs, asks material questions, analyzes more deeply, and waits for explicit plan approval;
 - chooses a proportional agent shape and reports a blocker before tracked edits if no writer-capable native delegation is available;
 - routes by capability while selecting a real native model and, where supported, effort for every child;
-- keeps root at the host's maximum available reasoning effort and pins every child explicitly at High or lower, independently from capability tier;
+- keeps root at the host's maximum available reasoning effort and pins every child explicitly at High or lower, independently from capability tier; in Codex, every child and nested child uses `fork_turns="none"` with concise self-contained task context;
 - runs targeted checks during work, completes the required review, then runs one broad suite before completion and optional delivery;
 - performs a bounded root retrospective after the final suite, corrects any current gap, and proposes no more than one sanitized upstream feedback action only when the finding is material and generalizable;
 - asks for separate approval before writing to an upstream issue and never creates a retrospective PR automatically;

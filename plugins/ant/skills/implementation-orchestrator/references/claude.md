@@ -4,4 +4,11 @@ Set the root session to `best` plus `max` before invoking the orchestrator, and 
 
 For bounded children, invoke the existing plugin-scoped profiles instead of merely naming a tier in the prompt: `ant:strong-high` (`opus` + `high`), `ant:balanced-high`, `ant:balanced-medium`, and `ant:controlled-low` (the matching `sonnet` effort), and `ant:fast` (`haiku`). Haiku has no effort selector, so use it only for narrow, non-judgment-sensitive work; use `ant:controlled-low` when explicit effort control is required.
 
-Before dispatch, verify the effective selection, including any per-invocation selector, organization `availableModels`, effort caps, `CLAUDE_CODE_SUBAGENT_MODEL`, and `CLAUDE_CODE_EFFORT_LEVEL`. It must exactly match the selected profile's model and intended effort; `ant:fast` is the sole exception, requiring exact Haiku with no effort selector. A High-to-Medium clamp, per-invocation replacement, allowlist fallback, or environment override is a dispatch blocker even when the result remains below High or broadly fits the role. Do not dispatch and report the limitation.
+Before dispatch, complete this observable, fail-closed preflight:
+
+1. Choose the exact plugin profile. Do not pass a conflicting per-invocation model: it must be absent or exactly the profile's alias/model.
+2. Inspect `CLAUDE_CODE_SUBAGENT_MODEL`. Accept only an unset value, `inherit` (current documented behavior is unset), or the exact selected profile alias/model. Any other value blocks dispatch.
+3. Inspect `CLAUDE_CODE_EFFORT_LEVEL`. For a fixed-effort profile, accept only unset or its exact intended `low`, `medium`, or `high`; `auto` is not exact and blocks. For `ant:fast` (Haiku, with no effort support), require no fixed effort override; unset or `auto` is acceptable.
+4. When the host surfaces organization `availableModels` or effort caps, verify that they permit the exact profile model and intended effort. If the required state cannot be observed, block and report the limitation rather than claim enforcement.
+
+A High-to-Medium clamp, per-invocation replacement, allowlist fallback, or environment override blocks dispatch even when it stays at or below High or broadly fits the role. After dispatch, if UI, task metadata, or transcript exposes a model or effort mismatch, immediately stop or cancel the child, discard its result, and report the mismatch. This secondary guard never replaces the preflight.

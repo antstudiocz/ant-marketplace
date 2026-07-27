@@ -64,7 +64,7 @@ Capability tier and reasoning effort are independent controls. A Strong child do
 
 The root orchestrator uses the strongest available capability and the active host's maximum available reasoning effort for the entire run. It owns global context, decisions, integration, final adjudication, and the retrospective. Do not lower root effort for deterministic segments. If the host cannot expose or set the root control, use its strongest available root setting, state the limitation, and never describe it as maximum.
 
-Every child dispatch must pin its native model and, where that model exposes an effort selector, its supported effort explicitly. No child or nested child may use any setting above `High`. Never leave a child unpinned where it could inherit root maximum effort. When an override requires fresh or bounded context, use it and pass the task context explicitly. If the host exposes no safe way to prevent above-High inheritance, report the limitation and do not silently dispatch a violating child. A child that believes it needs effort above `High` must narrow or split the work, or return the unresolved judgment to root; it never self-escalates above the ceiling.
+Every child dispatch must pin its native model and, where that model exposes an effort selector, its supported effort explicitly. No child or nested child may use any setting above `High`. Never leave a child unpinned where it could inherit root maximum effort. Each child and nested child must receive fresh, task-local context through a concise self-contained assignment; never rely on inherited conversation history. Where the host exposes a history-propagation choice, select the isolating route. If the host exposes no safe way to prevent above-High inheritance or unwanted history propagation, report the limitation and do not silently dispatch a violating child. A child that believes it needs effort above `High` must narrow or split the work, or return the unresolved judgment to root; it never self-escalates above the ceiling.
 
 | Role | Capability | Default effort | Ceiling | Decision notes |
 |---|---|---|---|---|
@@ -85,13 +85,13 @@ Apply these dispatch decisions before every new child:
 2. Spawn only for materially distinct evidence or scope. Overlap is allowed only for intentional independent review with a distinct focus.
 3. If two proposed agents would receive the same data, goal, and expected output, merge them into one assignment.
 4. Final code review is a Strong child at `High`; root at maximum effort adjudicates its findings and completion.
-5. Treat a missing explicit child model or, where supported, effort, any child above `High`, avoidable expensive routing, redundant work, or overlapping work as an execution-retrospective finding. Root maximum effort is expected and is not an efficiency finding.
+5. Treat a missing explicit child model or, where supported, effort, any child above `High`, absent context isolation, avoidable expensive routing, redundant work, or overlapping work as an execution-retrospective finding. Root maximum effort is expected and is not an efficiency finding.
 
 ## 4. Delegate Clear Work
 
 Every assignment should contain only what the agent needs:
 
-- the active adapter's explicit native model and, when supported, effort, plus the inheritance isolation needed to enforce the `High` ceiling;
+- the active adapter's explicit native model and, when supported, effort, plus the isolation needed to enforce the `High` ceiling and fresh task-local context;
 - goal and observable acceptance criteria;
 - relevant repository context and constraints;
 - allowed write scope and explicit non-goals;
@@ -99,6 +99,8 @@ Every assignment should contain only what the agent needs:
 - expected targeted checks;
 - conditions that require escalation;
 - required report: changes, checks, unresolved risks, and unexpected findings.
+
+Preflight is required; post-dispatch visibility is only a secondary guard. If host-visible UI, task metadata, or transcript shows that a child was routed at a different model, effort, or isolation state than approved, immediately stop or cancel that child, discard its result, and report the mismatch. Do not treat a post-dispatch guard as permission to skip a preflight that the active adapter requires.
 
 Role boundaries:
 
@@ -179,7 +181,7 @@ Assess both correctness and the total resource cost of reaching a reliable resul
 - repeated checks without a relevant mutation, premature broad-suite runs, or work done before the final tree that could have waited;
 - routing or reasoning that was unnecessarily expensive, or too weak and therefore caused rework.
 
-Root maximum effort is required and is never an efficiency finding. Any child above `High`, child dispatch without an explicit model or, where supported, effort, avoidable expensive routing, or redundant or overlapping child work is a retrospective finding.
+Root maximum effort is required and is never an efficiency finding. Any child above `High`, child dispatch without an explicit model or, where supported, effort, missing required context isolation, avoidable expensive routing, or redundant or overlapping child work is a retrospective finding.
 
 Optimize total cost across agent context, tool work, validation, and latency while preserving implementation and review quality; raw token minimization is not the goal. Surface at most three findings. For each material finding, state the observable evidence, impact, better approach, and whether it is a current correctness gap, task-specific lesson, or plausibly generalizable process improvement.
 
