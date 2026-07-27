@@ -8,6 +8,7 @@
 .agents/plugins/
   marketplace.json    # Codex marketplace metadata
 plugins/ant/
+  agents/             # Five declarative Claude execution profiles for the orchestrator only
   .claude-plugin/
     plugin.json       # Claude plugin metadata with version
   .codex-plugin/
@@ -15,19 +16,20 @@ plugins/ant/
   commands/           # Claude command aliases only; avoid duplicates of skill names
   skills/             # Shared Claude/Codex public skill folders
     */agents/         # Codex skill UI metadata such as openai.yaml
-    */references/     # Internal topic guidance loaded by umbrella skills
+    */references/     # Shared lifecycle and concise host adapters
 assets/               # Shared README and branding assets
 ```
 
 ## Orchestrator Maintenance
 
-- Keep `implementation-orchestrator` instruction-only: one public `SKILL.md` and one concise `references/lifecycle.md`. Do not add a custom runtime, persisted state contract, event log, lease protocol, compatibility reader, generated validator, or synthetic eval framework.
-- Keep the shared workflow host-neutral. Route by `strong`, `balanced`, and `fast` capabilities; put current Codex or Claude model names only in user documentation as non-binding examples.
+- Keep `implementation-orchestrator` instruction-only: one public `SKILL.md`, one host-neutral `references/lifecycle.md`, two concise host adapters (`references/codex.md` and `references/claude.md`), and only the five small declarative Claude execution profiles in `plugins/ant/agents/`. Do not add a custom runtime, persisted state contract, event log, lease protocol, compatibility reader, generated validator, or synthetic eval framework.
+- Keep the shared workflow's semantic core host-neutral. Route by `strong`, `balanced`, and `fast` capabilities; permit native selectors or aliases only in the two host adapters and user documentation as non-binding examples, never as shared capability contracts.
 - Require read-only repository discovery, a proportional implementation plan, and explicit user approval before every tracked implementation. For new or materially changed behavior, also require user-needs brainstorming, all material non-repo-discoverable questions, and deeper technical analysis before the plan.
 - Treat an approved `create-application` brief or user-supplied concrete plan as product input, not automatic write authorization. The orchestrator must verify it against the repository, prepare the implementation plan, and obtain approval; do not repeat approval for every phase inside the stable plan.
 - Keep the root coordination-only while `implementation-orchestrator` is active. If no writer-capable native delegation is available, stop before tracked edits and report a blocker; never fall back to root writes or imply independent review.
-- Reassess reasoning during execution. Escalate when ambiguity, risk, conflicts, or failures broaden; de-escalate at safe boundaries for deterministic mechanical work.
+- Run the root orchestrator at the active host's maximum available reasoning effort for the entire run. Select every child's native model and, where supported, effort explicitly through the host adapter, cap children at `High`, and prevent root effort from leaking through inheritance; capability tier and effort are independent. Codex dispatches, including nested dispatches, must use `fork_turns="none"` and concise self-contained task context; never inherit conversation history.
 - Run targeted checks after coherent implementation phases. After the final tracked mutation and required review, run the broad/full suite once on the final tree before completion and optional delivery; refresh it only after a later relevant mutation.
+- After the final suite, require a bounded root-owned retrospective of correctness and total token/resource efficiency before completion or delivery. Only material, actionable, generalizable findings may become sanitized upstream issue candidates; issue writes need separate explicit approval, and retrospective PRs require a separate approved maintenance flow.
 - Mid-flight status/questions and details within approved behavior must not pause work. Batch related material changes or corrections received during the same active segment into one affected-scope discovery, brainstorming, analysis, delta-plan, and explicit approval cycle at the next safe boundary; pause only affected writes while unrelated work continues, and never delay an urgent stop or safety correction.
 - Invoke plugin skills through their host-visible identifiers: Claude Code `/ant:merge-request` and Codex `$merge-request` exclusively own PR/MR creation and updates; Claude Code `/ant:delivery-workflows` and Codex `$delivery-workflows` own merge-conflict resolution only. Do not add aliases or forwarding bridges between them.
 - When a clean breaking redesign is approved, remove obsolete paths and documentation instead of retaining parallel behavior.
@@ -51,7 +53,6 @@ Prefer a new public skill only for a distinct workflow or domain entrypoint. If 
 2. **SKILL.md format:**
    ```markdown
    ---
-   user-invocable: true
    name: my-skill
    description: Short description for skill discovery
    ---

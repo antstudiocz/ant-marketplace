@@ -68,9 +68,9 @@ Use the narrowest skill that matches the work. If the task will become a multi-s
   - Codex: `$create-application`
   - Use for: new apps, MVPs, prototypes, internal tools, dashboards, and major app surfaces before implementation.
 - **Implementation orchestrator**
-  - Claude Code: `/ant:implementation-orchestrator`
+  - Claude Code: start a `best` + `max` session, then `/ant:implementation-orchestrator`
   - Codex: `$implementation-orchestrator`
-  - Use for: repository discovery, user-needs brainstorming, approved implementation planning, subagents, review, verification, and delivery.
+  - Use for: repository discovery, user-needs brainstorming, approved implementation planning, subagents, review, verification, execution retrospectives, and optional delivery.
 - **Merge requests**
   - Claude Code: `/ant:merge-request`
   - Codex: `$merge-request`
@@ -121,7 +121,7 @@ max_depth = 2
 
 Then restart Codex or open a new session. The orchestrator also works without nested delegation by dispatching a flatter agent graph. If the active host cannot provide any writer-capable native delegation, the orchestrator stops before tracked edits instead of falling back to root writes.
 
-The shared workflow routes by Strong, Balanced, and Fast capabilities, while each host selects from its current model catalog. Reasoning is reassessed during work: it increases when ambiguity, risk, or failures broaden and decreases for bounded deterministic segments. During implementation it runs targeted checks after coherent phases; after the final tracked mutation and review, the full suite runs once on the final tree before completion and, when requested, delivery.
+The shared workflow routes by Strong, Balanced, and Fast capabilities independently from reasoning effort. Root uses the active host's strongest capability and maximum available effort for the entire run. In Claude Code, establish `best` + `max` for the session before invoking the skill; in Codex, select or verify the root separately for the task/session, while native spawn routing pins children only. Every child is pinned to a real host model and, where supported, effort, capped at High; narrow search and mechanical work normally use lower effort even when root remains at maximum. Codex children and nested children always start with `fork_turns="none"` and receive concise, self-contained task context rather than inherited conversation history. The current host adapters, including Claude's declarative subagent profiles and Codex catalog fallbacks, are in [the orchestrator setup guide](docs/orchestrator.md). During implementation it runs targeted checks after coherent phases; after the final tracked mutation and review, the full suite runs once on the final tree before completion and, when requested, delivery. Root then performs a bounded retrospective for correctness and avoidable token or resource cost. A material general improvement may become one sanitized upstream issue candidate, but issue writes need separate approval and the retrospective never auto-creates a PR.
 
 Approval covers the stable plan rather than every phase. A tiny mechanical step inside that plan uses a compact cycle without duplicate approval. Related material changes received during the same active segment are batched into one affected-scope discovery, brainstorming, deeper analysis, delta-plan, and approval at the next safe boundary; only affected writes pause while unaffected work continues. Urgent stop and safety corrections apply immediately.
 
@@ -138,7 +138,7 @@ The README is intentionally short. Longer guides live in `docs/` and can be mirr
 
 - [Installation guide](docs/install.md) - manual install, AI-assisted install prompts, and updates.
 - [Skill guide](docs/skills.md) - what each public skill does and when to use it.
-- [Orchestrator setup](docs/orchestrator.md) - execution shape, capability routing, adaptive reasoning, messages, validation, and delivery.
+- [Orchestrator setup](docs/orchestrator.md) - execution shape, capability and effort routing, messages, validation, retrospective, and delivery.
 - [Orchestrator slide deck](docs/index.html) - visual explainer for the orchestrator lifecycle.
 
 ## Update
