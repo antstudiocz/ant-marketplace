@@ -7,7 +7,7 @@ For bounded children, invoke the existing plugin-scoped profiles instead of mere
 Before dispatch, complete this observable, fail-closed preflight:
 
 1. Choose the exact plugin profile. Do not pass a conflicting per-invocation model: it must be absent or exactly the profile's alias/model.
-2. Inspect `CLAUDE_CODE_SUBAGENT_MODEL`. Accept only an unset value, `inherit` (current documented behavior is unset), or the exact selected profile alias/model. Any other value blocks dispatch.
+2. Inspect `CLAUDE_CODE_SUBAGENT_MODEL`. Accept only an unset value or the exact selected profile alias/model. `inherit` is a blocking override because it selects the parent model. Any other value blocks dispatch.
 3. Inspect `CLAUDE_CODE_EFFORT_LEVEL`. For a fixed-effort profile, accept only unset or its exact intended `low`, `medium`, or `high`; `auto` is not exact and blocks. For `ant:fast` (Haiku, with no effort support), require no fixed effort override; unset or `auto` is acceptable.
 4. When the host surfaces organization `availableModels` or effort caps, verify that they permit the exact profile model and intended effort. If the required state cannot be observed, block and report the limitation rather than claim enforcement.
 
