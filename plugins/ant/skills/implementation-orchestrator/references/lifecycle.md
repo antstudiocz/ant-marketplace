@@ -1,6 +1,6 @@
 # Implementation Lifecycle
 
-This is the orchestrator's only internal reference. Apply it with the repository instructions and the capabilities actually available in the current Claude Code or Codex session.
+This is the orchestrator's shared internal reference. Apply it with repository instructions and exactly one active-host routing adapter.
 
 ## 1. Discover, Brainstorm, And Approve
 
@@ -37,8 +37,8 @@ Use risk and uncertainty, not task size alone:
 
 | Shape | Typical use | Agents |
 |---|---|---|
-| Simple | Local, reversible, well-understood change | One implementation owner |
-| Standard | Multi-file or cross-component work with moderate integration risk | One implementation lead; optional scout or reviewer |
+| Simple | Local, reversible, well-understood change | One implementation owner; final independent reviewer |
+| Standard | Multi-file or cross-component work with moderate integration risk | One implementation lead; optional scout; final independent reviewer |
 | High assurance | Architecture, security, permissions, data, migrations, public contracts, broad refactors, or conflicting evidence | Read-only scouts as needed, one implementation lead, disjoint slice workers, independent reviewer |
 
 Rules:
@@ -50,7 +50,7 @@ Rules:
 - If nested delegation is unavailable, the root dispatches the same bounded roles directly. Outcome and review quality matter more than matching an agent tree.
 - If no writer-capable native delegation is available, stop before any tracked edit and report the blocker. The root remains coordination-only while this skill is active; it never becomes the fallback writer, and it must not pretend independent review occurred.
 
-## 3. Route By Capability
+## 3. Route By Capability And Effort
 
 Shared instructions use three capability tiers:
 
@@ -60,30 +60,38 @@ Shared instructions use three capability tiers:
 | Balanced | Normal implementation, integration, and repository investigation with bounded ambiguity |
 | Fast | Exact searches, read-heavy discovery, deterministic transformations, and other narrow mechanical work |
 
-Choose from models and controls the active host actually exposes. Never make a shared workflow depend on a fixed model identifier. If the preferred tier is unavailable, use the strongest safe available route and state the limitation when it affects confidence. Never silently downgrade judgment-critical work merely to save cost or latency.
+Capability tier and reasoning effort are independent controls. A Strong child does not imply effort above `High`, and a narrow Fast task should not inherit root effort. Every dispatch must select the active adapter's real native model and, where the selected model exposes it, explicit supported effort; a capability label in the task prompt is not a selector.
 
-Model tier and reasoning effort are related but separate. Select an initial reasoning level that fits the bounded assignment, then reassess it during execution:
+The root orchestrator uses the strongest available capability and the active host's maximum available reasoning effort for the entire run. It owns global context, decisions, integration, final adjudication, and the retrospective. Do not lower root effort for deterministic segments. If the host cannot expose or set the root control, use its strongest available root setting, state the limitation, and never describe it as maximum.
 
-Escalate when:
+Every child dispatch must pin its native model and, where that model exposes an effort selector, its supported effort explicitly. No child or nested child may use any setting above `High`. Never leave a child unpinned where it could inherit root maximum effort. When an override requires fresh or bounded context, use it and pass the task context explicitly. If the host exposes no safe way to prevent above-High inheritance, report the limitation and do not silently dispatch a violating child. A child that believes it needs effort above `High` must narrow or split the work, or return the unresolved judgment to root; it never self-escalates above the ceiling.
 
-- evidence conflicts or the root cause remains unclear;
-- scope crosses an unexpected contract or subsystem boundary;
-- validation fails in a new way or repeated attempts do not converge;
-- security, permissions, data integrity, concurrency, migration, or external side effects appear;
-- the agent must choose between materially different architectures or adjudicate review findings.
+| Role | Capability | Default effort | Ceiling | Decision notes |
+|---|---|---|---|---|
+| Root orchestrator | Strongest available | Max | Max | Uses the host's maximum available setting for the entire run; owns global decisions, integration, final adjudication, and retrospective |
+| Implementation lead | Balanced or Strong | High | High | Owns tracked implementation and integration |
+| Independent reviewer | Strong | High | High | Final code review always uses this route |
+| Architecture or security scout | Balanced or Strong | High | High | Use only when real ambiguity or risk warrants it |
+| Normal read-only scout | Fast or Balanced | Medium | High | Raise only for bounded complexity, never above High |
+| Slice worker | Fast or Balanced | Medium | High | Keep scope disjoint and contract stable |
+| Search or inventory | Fast | Low or Medium | Medium | Exact, narrow, read-only evidence gathering |
+| Validation or check | Fast or Balanced | Medium | High | Use High only when failure analysis is genuinely complex |
+| Delivery or PR support | Balanced | Medium | High | Delivery authority remains separate from effort |
+| Execution retrospective | Root-owned | Max | Max | Runs on root at the host's maximum available setting; never spawn a dedicated retrospective agent |
 
-De-escalate when:
+Apply these dispatch decisions before every new child:
 
-- the decision is settled and the remaining segment is narrow and deterministic;
-- work is a mechanical application of an already verified pattern;
-- the next check has a precise expected result and small regression surface.
-
-Do not switch tiers for every small fluctuation. Require a material change in task character, keep the stronger setting through the uncertain segment, and reconsider at the next safe boundary. If the host cannot change a running agent's model or reasoning in place, steer the active agent when possible or apply the new tier to the next bounded dispatch. Codex and Claude Code may expose different controls; preserve these semantics rather than forcing identical mechanics.
+1. If an active agent already covers the same goal, evidence, and output, steer or follow up with it instead of spawning.
+2. Spawn only for materially distinct evidence or scope. Overlap is allowed only for intentional independent review with a distinct focus.
+3. If two proposed agents would receive the same data, goal, and expected output, merge them into one assignment.
+4. Final code review is a Strong child at `High`; root at maximum effort adjudicates its findings and completion.
+5. Treat a missing explicit child model or, where supported, effort, any child above `High`, avoidable expensive routing, redundant work, or overlapping work as an execution-retrospective finding. Root maximum effort is expected and is not an efficiency finding.
 
 ## 4. Delegate Clear Work
 
 Every assignment should contain only what the agent needs:
 
+- the active adapter's explicit native model and, when supported, effort, plus the inheritance isolation needed to enforce the `High` ceiling;
 - goal and observable acceptance criteria;
 - relevant repository context and constraints;
 - allowed write scope and explicit non-goals;
@@ -111,7 +119,7 @@ The implementation owner should:
 2. Fix the root cause, removing obsolete paths when the approved direction is a clean replacement.
 3. Keep edits inside the assigned scope and flag unrelated dirty state immediately.
 4. Run targeted checks at meaningful boundaries, not after each file save.
-5. Report unexpected complexity early so routing, reasoning, scope, or the plan can be adjusted.
+5. Report unexpected complexity early so the assignment can be narrowed or split, or unresolved judgment can return to root.
 
 ### Mid-flight user messages
 
@@ -133,11 +141,7 @@ When an agent becomes silent or interrupted, first request or recover its latest
 
 ## 6. Review And Fix
 
-Review depth follows risk:
-
-- Simple work: the implementation owner performs a focused self-review against acceptance criteria and the diff.
-- Standard work: add an independent reviewer when integration, regressions, or uncertainty justify it.
-- High-assurance work: independent review is required before final validation.
+Every tracked implementation receives final code review from an independent Strong child pinned at `High`; root at maximum effort adjudicates the findings and completion. Risk controls whether additional specialized review is needed, not whether this final review occurs. If the host cannot safely dispatch the required reviewer without above-High inheritance, report the limitation and do not imply that independent review happened.
 
 Findings should name severity, evidence, impact, and the required correction. Send fixes back to an implementation owner, run the affected targeted checks, and re-review the changed area. Do not repeat the entire review process for unrelated settled code unless a fix changes its assumptions.
 
@@ -162,7 +166,36 @@ This completion gate applies whether or not delivery was requested. When PR/MR o
 
 Do not add a new test framework just to test instruction text. Lightweight syntax, link, manifest, discovery, and plugin validation are enough for an instruction-only plugin unless the repository already provides more.
 
-## 8. Deliver
+## 8. Retrospect And Improve
+
+After the required review and successful final suite, and before completion or delivery, the root performs a bounded execution retrospective at its maximum available effort. The root owns this step; do not spawn an agent solely to perform it. Keep it proportional and use only observable evidence already available from the native plan, user messages, assignments and reports, git diff, and check results. Do not reread the entire repository or transcript, expose or reconstruct chain-of-thought, or invent token counts. Use exact token or usage figures only when the host exposes them; otherwise use observable proxies.
+
+Assess both correctness and the total resource cost of reaching a reliable result. Look for:
+
+- a current correctness, requirement, review, or verification gap;
+- avoidable rework or duplicate and overlapping reads, searches, commands, or context loads;
+- redundant or overlapping agents, oversized child context, or repeated polling;
+- serial work that could safely have been batched or parallelized;
+- repeated checks without a relevant mutation, premature broad-suite runs, or work done before the final tree that could have waited;
+- routing or reasoning that was unnecessarily expensive, or too weak and therefore caused rework.
+
+Root maximum effort is required and is never an efficiency finding. Any child above `High`, child dispatch without an explicit model or, where supported, effort, avoidable expensive routing, or redundant or overlapping child work is a retrospective finding.
+
+Optimize total cost across agent context, tool work, validation, and latency while preserving implementation and review quality; raw token minimization is not the goal. Surface at most three findings. For each material finding, state the observable evidence, impact, better approach, and whether it is a current correctness gap, task-specific lesson, or plausibly generalizable process improvement.
+
+If a current correctness or verification gap exists, return it to the implementation owner, correct it, run the affected targeted checks and focused review, and refresh the final suite on the later final tree. Then rerun this bounded retrospective against the now-final evidence before completion or upstream feedback handling. Do not declare completion until the gap is closed. Task-specific or immaterial observations stay in the retrospective and do not become upstream feedback.
+
+Only a material, actionable, plausibly generalizable process improvement qualifies for upstream feedback. For the highest-value candidate only:
+
+1. Before any external search, sanitize client and project names, paths, source, prompts, credentials, secrets, and proprietary details from the candidate, then derive generic, non-sensitive search terms from the sanitized improvement.
+2. Search open and closed issues and PRs in the canonical upstream repository, `antstudiocz/ant-marketplace`, using only those generic terms and the active host's authenticated GitHub capability or `gh` when available.
+3. If network or authentication is unavailable, report the blocker without blocking the original implementation or authorized delivery.
+4. Treat a matching issue or PR as a deduplication result and do not prepare a new issue when either already covers the improvement. Comment on a matching issue only when the run adds materially new sanitized evidence. Generally reference or report a matching PR without writing to it through this issue feedback flow. Only when neither exists, prepare a concise English issue covering observed behavior, evidence and impact, proposed improvement, expected efficiency or quality effect, risks and tradeoffs, and a validation scenario.
+5. Perform at most one upstream feedback action per run. Creating, commenting on, or updating an issue is an external write and requires explicit current approval or clearly applicable standing approval; implementation or delivery approval does not imply it. Without that authority, show the prepared candidate and ask instead.
+
+Never auto-create a PR from the retrospective. A PR is a separate maintenance implementation with repository discovery, a concrete approved plan, delegated tracked writing, review, final validation, and the host-visible `/ant:merge-request` or `$merge-request` skill. The orchestrator never edits itself automatically.
+
+## 9. Deliver
 
 Before delivery, verify branch, target, final diff, validation results, and the exact actions requested by the user. Stage only in-scope files and follow repository commit/push rules.
 

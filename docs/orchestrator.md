@@ -6,12 +6,12 @@ Use `implementation-orchestrator` when a task should be taken from repository di
 
 1. Install the plugin from [the installation guide](install.md).
 2. Start a new Claude Code or Codex session.
-3. Invoke the skill:
-   - Claude Code: `/ant:implementation-orchestrator`
-   - Codex: `$implementation-orchestrator`
+3. Set up the active host, then invoke the skill:
+   - Claude Code: establish `best` + `max` for the session with `claude --model best --effort max`, or `/model best` and `/effort max`; then invoke `/ant:implementation-orchestrator`
+   - Codex: select or verify the root for the task/session, then invoke `$implementation-orchestrator`; its adapter pins child spawns only
 4. Provide the goal, repository or path, relevant constraints, and any delivery request.
 
-The orchestrator discovers repository facts before asking questions, obtains approval for a concrete plan before tracked edits, keeps review proportional to risk, and reports what was actually verified.
+The orchestrator discovers repository facts before asking questions, obtains approval for a concrete plan before tracked edits, keeps review proportional to risk, and reflects on the verified execution before completion or delivery.
 
 ## Planning And Approval
 
@@ -34,8 +34,8 @@ The workflow deliberately stays small:
 
 | Work | Default shape |
 |---|---|
-| Local and well understood | One implementation owner |
-| Multi-file or moderately uncertain | One implementation lead, optional scout or reviewer |
+| Local and well understood | One implementation owner, then final independent review |
+| Multi-file or moderately uncertain | One implementation lead, optional scout, then final independent review |
 | Architecture, security, data, migrations, or broad contracts | Scouts as needed, one lead, disjoint slices, independent reviewer |
 
 Claude Code and Codex may use different delegation trees. If nested agents are unavailable, the root dispatches the same bounded work directly. If no writer-capable native delegation is available at all, the root remains coordination-only and stops before tracked edits with a blocker. The acceptance criteria and review bar stay the same.
@@ -57,20 +57,29 @@ Shared instructions route by capability rather than fixed model identifiers:
 - **Balanced:** normal implementation, integration, and repository investigation.
 - **Fast:** exact searches, read-heavy discovery, and deterministic mechanical work.
 
-Current Codex examples for this release are `gpt-5.6` for demanding work and `gpt-5.6-terra` for light or read-heavy work. Leaving a child unpinned can let Codex balance quality, speed, and cost. These names are examples from the current Codex catalog, not requirements in the shared skill.
+The shared skill stays semantic and loads exactly one host adapter before any routing decision. Codex model names are current-catalog examples; Claude uses stable aliases. Neither is the permanent shared contract.
 
-Claude Code applies the same Strong/Balanced/Fast intent through the models and effort controls available in the active Claude environment. The workflow does not assume that Claude and Codex expose identical selectors.
+### Codex
 
-## Adaptive Reasoning
+Select or verify Codex root at task/session level: it is the strongest available route, currently `gpt-5.6-sol` at Max. Native spawn selectors cannot change an already-running root; they pin Strong children to Sol at High, Balanced children to `gpt-5.6-terra` at High, Medium, or Low, and Fast children to `gpt-5.6-luna` at Low or Medium when exposed. Luna-to-Terra at the same Low or Medium effort is the only fallback. Every child and nested child remains at High or below and never inherits root Max. If root control is unavailable, report that maximum is unverified; if Sol, Terra, or the requested child effort cannot be enforced, do not dispatch.
 
-Reasoning is reassessed while work is active, not chosen once at startup:
+### Claude Code
 
-- escalate when evidence conflicts, risk broadens, validation repeatedly fails, or a new contract/security/data boundary appears;
-- de-escalate when a decision is settled and the remaining work is deterministic;
-- keep the stronger setting through the uncertain segment to avoid rapid switching;
-- when an active agent cannot change in place, steer it if supported or apply the new level at the next bounded dispatch.
+Set `best` + `max` before invocation and keep it for the entire multi-turn workflow; skill or command frontmatter cannot guarantee the root selection. `best` resolves to Fable when available, otherwise the latest Opus. Do not use `opusplan` for root because it switches to Sonnet during execution.
 
-Model choice, reasoning effort, permissions, and delivery authority remain separate concerns.
+Bounded children use the plugin-scoped profiles in `plugins/ant/agents/`: `ant:strong-high` (`opus` + high), `ant:balanced-high`, `ant:balanced-medium`, and `ant:controlled-low` (Sonnet at the named effort), and `ant:fast` (Haiku). Haiku has no effort selector, so use it only for narrow, non-judgment-sensitive work; use `ant:controlled-low` when explicit effort control is required.
+
+Before dispatch, check the effective child selection: per-invocation selectors, organization `availableModels`, effort caps, `CLAUDE_CODE_SUBAGENT_MODEL`, and `CLAUDE_CODE_EFFORT_LEVEL` can alter profile behavior. The effective model and intended effort must exactly match the selected profile; `ant:fast` instead requires exact Haiku with no effort selector. A clamp, replacement, allowlist fallback, or environment override blocks dispatch even when it stays at or below High. Report the limitation.
+
+## Reasoning And Dispatch
+
+Capability tier and reasoning effort are separate selections. Root uses the strongest capability and maximum available reasoning effort exposed by the active host for the entire orchestrated run. If the host cannot expose or set that control, root uses the strongest available root setting and reports the limitation without calling it maximum.
+
+Every child dispatch pins a native model and, where that model exposes an effort selector, a supported effort explicitly. Children may use Low, Medium, or High effort, but never a host-specific level above High. A Strong child therefore does not imply above-High effort. If overriding root inheritance requires fresh or bounded context, the dispatch uses it and passes the needed task context explicitly; if the host cannot prevent above-High inheritance safely, the child is not dispatched and the limitation is reported.
+
+Typical assignments are High for implementation leads, independent review, and warranted architecture or security work; Medium for normal scouts, slices, checks, and delivery support; and Low or Medium for search and inventory. A child that cannot resolve work within High narrows or splits the assignment or returns the judgment to root. Final code review is Strong at High, while the execution retrospective remains root-owned at maximum.
+
+Before spawning, the orchestrator checks whether an active agent already covers the same goal, evidence, and output. It steers that agent instead. New agents require materially distinct scope or evidence; overlap is reserved for intentional independent review with a distinct focus.
 
 ## Messages During Implementation
 
@@ -84,8 +93,16 @@ During implementation, the orchestrator runs checks targeted to each coherent ph
 
 After the final tracked mutation and required review, it runs the repository's full suite once on the exact final tree before declaring the implementation complete, whether or not delivery was requested. When delivery is requested, the same run is the final pre-delivery suite. A later relevant edit invalidates it: the orchestrator reruns the impacted check and refreshes the final suite once. For this marketplace, the two Claude plugin validations are the final broad suite.
 
+## Execution Retrospective
+
+After the final suite and before completion or delivery, root performs a bounded retrospective using evidence already present in the plan, messages, assignments and reports, final diff, and check results. It checks for a current correctness or verification gap and for avoidable total cost: duplicate reads or commands, overlapping agents or context, repeated polling or checks, work that could safely have been batched or deferred, premature broad validation, and reasoning or routing that was either needlessly expensive or too weak and caused rework. It preserves quality, reports at most three findings, does not reconstruct hidden reasoning, and does not invent token figures.
+
+A current implementation gap returns to the implementation owner and invalidates the final suite until the correction, targeted checks, focused review, and refreshed suite pass. Only a material, actionable, plausibly generalizable process improvement can become upstream feedback. Before any external search, root removes client, project, and proprietary details from the candidate and derives generic, non-sensitive search terms. It then uses only those terms to search open and closed issues and PRs in `antstudiocz/ant-marketplace` and proposes at most one highest-value issue action. Creating or commenting on an issue requires explicit current or clearly applicable standing approval; implementation or delivery approval is not enough. Missing network or authentication does not block the original result.
+
+The retrospective never creates a PR automatically. A PR is a separate approved maintenance implementation and uses the host-visible merge-request skill after its own discovery, implementation, review, and validation.
+
 ## Delivery
 
 The orchestrator performs only the delivery actions the user requested. For PR/MR creation and updates it invokes the host-visible skill identifier: Claude Code `/ant:merge-request` or Codex `$merge-request`. For merge conflicts it uses Claude Code `/ant:delivery-workflows` or Codex `$delivery-workflows` only. Merge, Draft-to-ready conversion, tag, publish, and release are never implied by commit, push, or PR creation.
 
-The final report includes the changed areas, checks run, unverified items, and current commit/PR/MR state.
+The final report includes the changed areas, checks run, unverified items, retrospective outcome, any material upstream issue URL or candidate, and current commit/PR/MR state.

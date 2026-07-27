@@ -427,7 +427,7 @@
       .role-stack {
         position: relative;
         display: grid;
-        grid-template-rows: repeat(5, minmax(72px, 1fr));
+        grid-template-rows: repeat(6, minmax(62px, 1fr));
         gap: 10px;
         min-width: 0;
         margin: 0;
@@ -809,7 +809,7 @@
         }
 
         .role-stack {
-          grid-template-rows: repeat(5, minmax(62px, 1fr));
+          grid-template-rows: repeat(6, minmax(54px, 1fr));
           gap: 8px;
         }
 
@@ -1099,13 +1099,21 @@
                   </div>
                   <span class="dispatch-state">write</span>
                 </li>
-                <li class="dispatch-row evidence" style="--delay: 2380ms">
+                <li class="dispatch-row" style="--delay: 2380ms">
                   <span class="dispatch-index">05 verify</span>
                   <div class="dispatch-main">
                     <strong>Review + final suite</strong>
                     <p>verify the exact final tree</p>
                   </div>
-                  <span class="dispatch-state">done</span>
+                  <span class="dispatch-state">verified</span>
+                </li>
+                <li class="dispatch-row evidence" style="--delay: 2920ms">
+                  <span class="dispatch-index">06 reflect</span>
+                  <div class="dispatch-main">
+                    <strong>Root retrospective</strong>
+                    <p>then completion or requested delivery</p>
+                  </div>
+                  <span class="dispatch-state">complete</span>
                 </li>
               </ol>
             </div>
@@ -1124,11 +1132,11 @@
           <div class="risk-grid" aria-label="Execution shapes">
             <div class="risk-card active">
               <strong>Simple</strong>
-              <span>compact discovery and plan; one writer after approval.</span>
+              <span>compact discovery and plan; one writer plus final independent review.</span>
             </div>
             <div class="risk-card">
               <strong>Standard</strong>
-              <span>one lead; scout or reviewer only when useful.</span>
+              <span>one lead; optional scout; final independent review.</span>
             </div>
             <div class="risk-card">
               <strong>High assurance</strong>
@@ -1222,13 +1230,13 @@
             <h2 id="slide-8-title">The workflow changes with the work.</h2>
             <p class="lead">
               Native host controls keep the process responsive without a custom runtime.
-              New complexity, user input, and validation results change only what they affect.
+              New complexity, user input, validation results, and final evidence change only what they affect.
             </p>
           </div>
           <div class="artifact-grid" aria-label="Adaptive orchestration rules">
             <div class="artifact-card">
-              <strong>Adaptive reasoning</strong>
-              <span>escalates for uncertainty and de-escalates for deterministic segments.</span>
+              <strong>Host-pinned routing</strong>
+              <span>the task/session root is selected or verified separately; child spawns have an explicit model, supported effort, and High ceiling.</span>
             </div>
             <div class="artifact-card">
               <strong>Live user input</strong>
@@ -1239,8 +1247,8 @@
               <span>run after coherent implementation phases, not after every edit.</span>
             </div>
             <div class="artifact-card">
-              <strong>One final suite</strong>
-              <span>runs after review on the exact final tree before completion and optional delivery.</span>
+              <strong>Execution retrospective</strong>
+              <span>uses final evidence to catch gaps and avoidable cost before completion or delivery.</span>
             </div>
           </div>
         </section>
@@ -1323,14 +1331,18 @@
             ".dispatch-row:nth-child(5) .dispatch-index": "05 verify",
             ".dispatch-row:nth-child(5) .dispatch-main strong": "Review + final suite",
             ".dispatch-row:nth-child(5) .dispatch-main p": "verify the exact final tree",
-            ".dispatch-row:nth-child(5) .dispatch-state": "done",
+            ".dispatch-row:nth-child(5) .dispatch-state": "verified",
+            ".dispatch-row:nth-child(6) .dispatch-index": "06 reflect",
+            ".dispatch-row:nth-child(6) .dispatch-main strong": "Root retrospective",
+            ".dispatch-row:nth-child(6) .dispatch-main p": "then completion or requested delivery",
+            ".dispatch-row:nth-child(6) .dispatch-state": "complete",
             "[aria-labelledby='slide-4-title'] .kicker": "routing",
             "#slide-4-title": "Complexity chooses the shape.",
             "#slide-4-title + .lead": "Speed does not come from bypassing rules. It comes from choosing the smallest delegated setup that is still safe for the work.",
             ".risk-card:nth-child(1) strong": "Simple",
-            ".risk-card:nth-child(1) span": "compact discovery and plan; one writer after approval.",
+            ".risk-card:nth-child(1) span": "compact discovery and plan; one writer plus final independent review.",
             ".risk-card:nth-child(2) strong": "Standard",
-            ".risk-card:nth-child(2) span": "one lead; scout or reviewer only when useful.",
+            ".risk-card:nth-child(2) span": "one lead; optional scout; final independent review.",
             ".risk-card:nth-child(3) strong": "High assurance",
             ".risk-card:nth-child(3) span": "scouts as needed, one lead, and independent review.",
             ".risk-card:nth-child(4) strong": "No bookkeeping",
@@ -1364,15 +1376,15 @@
             "[aria-labelledby='slide-7-title'] .stack-row:nth-child(3) span": "a blocking finding closes only after fix, verification, and focused re-review.",
             "[aria-labelledby='slide-8-title'] .kicker": "adaptive execution",
             "#slide-8-title": "The workflow changes with the work.",
-            "#slide-8-title + .lead": "Native host controls keep the process responsive without a custom runtime. New complexity, user input, and validation results change only what they affect.",
-            ".artifact-card:nth-child(1) strong": "Adaptive reasoning",
-            ".artifact-card:nth-child(1) span": "escalates for uncertainty and de-escalates for deterministic segments.",
+            "#slide-8-title + .lead": "Native host controls keep the process responsive without a custom runtime. New complexity, user input, validation results, and final evidence change only what they affect.",
+            ".artifact-card:nth-child(1) strong": "Host-pinned routing",
+            ".artifact-card:nth-child(1) span": "the task/session root is selected or verified separately; child spawns have an explicit model, supported effort, and High ceiling.",
             ".artifact-card:nth-child(2) strong": "Live user input",
             ".artifact-card:nth-child(2) span": "related material changes share one affected-scope replan at the next safe boundary.",
             ".artifact-card:nth-child(3) strong": "Targeted checks",
             ".artifact-card:nth-child(3) span": "run after coherent implementation phases, not after every edit.",
-            ".artifact-card:nth-child(4) strong": "One final suite",
-            ".artifact-card:nth-child(4) span": "runs after review on the exact final tree before completion and optional delivery."
+            ".artifact-card:nth-child(4) strong": "Execution retrospective",
+            ".artifact-card:nth-child(4) span": "uses final evidence to catch gaps and avoidable cost before completion or delivery."
           },
           attrs: {
             ".hero-mark": { "aria-label": "What root owns" },
@@ -1447,14 +1459,18 @@
             ".dispatch-row:nth-child(5) .dispatch-index": "05 verify",
             ".dispatch-row:nth-child(5) .dispatch-main strong": "Review + finální suite",
             ".dispatch-row:nth-child(5) .dispatch-main p": "ověří přesně finální strom",
-            ".dispatch-row:nth-child(5) .dispatch-state": "done",
+            ".dispatch-row:nth-child(5) .dispatch-state": "ověřeno",
+            ".dispatch-row:nth-child(6) .dispatch-index": "06 retrospektiva",
+            ".dispatch-row:nth-child(6) .dispatch-main strong": "Retrospektiva rootu",
+            ".dispatch-row:nth-child(6) .dispatch-main p": "poté dokončení nebo vyžádané delivery",
+            ".dispatch-row:nth-child(6) .dispatch-state": "hotovo",
             "[aria-labelledby='slide-4-title'] .kicker": "routing",
             "#slide-4-title": "Složitost určuje sestavu.",
             "#slide-4-title + .lead": "Rychlost nevzniká obejitím pravidel. Vzniká výběrem nejmenší delegované sestavy, která je pro danou práci ještě bezpečná.",
             ".risk-card:nth-child(1) strong": "Jednoduchá",
-            ".risk-card:nth-child(1) span": "kompaktní průzkum a plán; jeden writer po schválení.",
+            ".risk-card:nth-child(1) span": "kompaktní průzkum a plán; jeden writer a závěrečné nezávislé review.",
             ".risk-card:nth-child(2) strong": "Standardní",
-            ".risk-card:nth-child(2) span": "jeden lead; scout nebo reviewer jen když pomůže.",
+            ".risk-card:nth-child(2) span": "jeden lead; volitelný scout; závěrečné nezávislé review.",
             ".risk-card:nth-child(3) strong": "Vysoká jistota",
             ".risk-card:nth-child(3) span": "scouti podle potřeby, jeden lead a nezávislé review.",
             ".risk-card:nth-child(4) strong": "Bez byrokracie",
@@ -1488,15 +1504,15 @@
             "[aria-labelledby='slide-7-title'] .stack-row:nth-child(3) span": "blokující finding se zavře až po fixu, ověření a cíleném re-review.",
             "[aria-labelledby='slide-8-title'] .kicker": "adaptivní provedení",
             "#slide-8-title": "Workflow se mění spolu s prací.",
-            "#slide-8-title + .lead": "Nativní možnosti hosta udržují proces živý bez vlastního runtime. Nová složitost, zprávy uživatele a výsledky kontrol mění jen to, čeho se týkají.",
-            ".artifact-card:nth-child(1) strong": "Adaptivní reasoning",
-            ".artifact-card:nth-child(1) span": "eskaluje při nejistotě a zlevňuje deterministické části.",
+            "#slide-8-title + .lead": "Nativní možnosti hosta udržují proces živý bez vlastního runtime. Nová složitost, zprávy uživatele, výsledky kontrol a finální evidence mění jen to, čeho se týkají.",
+            ".artifact-card:nth-child(1) strong": "Routing připnutý k hostu",
+            ".artifact-card:nth-child(1) span": "root pro úlohu či session se volí nebo ověřuje zvlášť; child spawny mají explicitní model, podporovaný effort a strop High.",
             ".artifact-card:nth-child(2) strong": "Průběžné zprávy",
             ".artifact-card:nth-child(2) span": "související materiální změny sdílí jeden replan dotčeného scope na nejbližší bezpečné hranici.",
             ".artifact-card:nth-child(3) strong": "Cílené kontroly",
             ".artifact-card:nth-child(3) span": "běží po ucelených fázích, ne po každé editaci.",
-            ".artifact-card:nth-child(4) strong": "Jedna finální suite",
-            ".artifact-card:nth-child(4) span": "běží po review na přesně finálním stromu před dokončením a případným delivery."
+            ".artifact-card:nth-child(4) strong": "Retrospektiva provedení",
+            ".artifact-card:nth-child(4) span": "před dokončením nebo delivery hledá ve finální evidenci mezery a zbytečné náklady."
           },
           attrs: {
             ".hero-mark": { "aria-label": "Co root vlastní" },

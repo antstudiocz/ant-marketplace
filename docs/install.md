@@ -21,6 +21,8 @@ claude plugin install ant@ant-marketplace --scope user
 
 Reload Claude Code after installing or updating.
 
+For the orchestrator, establish the root selection before invocation: start with `claude --model best --effort max`, or set `/model best` and `/effort max` in the session. Then invoke `/ant:implementation-orchestrator`. Keep that session setting through the multi-turn workflow; skill frontmatter does not guarantee it.
+
 ## Codex
 
 Global install:
@@ -87,9 +89,11 @@ In a fresh session, invoke `implementation-orchestrator` on a small repository t
 - performs read-only discovery, presents a proportional plan, and waits for approval before tracked edits;
 - for new behavior, brainstorms user needs, asks material questions, analyzes more deeply, and waits for explicit plan approval;
 - chooses a proportional agent shape and reports a blocker before tracked edits if no writer-capable native delegation is available;
-- routes by capability rather than requiring a fixed model;
-- adapts reasoning when task complexity changes;
+- routes by capability while selecting a real native model and, where supported, effort for every child;
+- keeps root at the host's maximum available reasoning effort and pins every child explicitly at High or lower, independently from capability tier;
 - runs targeted checks during work, completes the required review, then runs one broad suite before completion and optional delivery;
+- performs a bounded root retrospective after the final suite, corrects any current gap, and proposes no more than one sanitized upstream feedback action only when the finding is material and generalizable;
+- asks for separate approval before writing to an upstream issue and never creates a retrospective PR automatically;
 - continues unaffected work when you send a status question or approved-behavior detail;
 - batches related material changes from the same active segment into one affected-scope planning and approval cycle at the next safe boundary, without delaying an urgent stop or safety correction;
 - invokes `/ant:merge-request` and `/ant:delivery-workflows` in Claude Code or `$merge-request` and `$delivery-workflows` in Codex for delivery handoffs.

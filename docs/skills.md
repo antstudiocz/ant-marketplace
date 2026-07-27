@@ -39,18 +39,21 @@ How it works:
 - asks every material question that cannot be answered from the repository, without an arbitrary count;
 - presents a concrete implementation plan and obtains explicit approval before dispatching any tracked writer;
 - treats approval as covering the stable plan rather than requesting it again before every phase;
-- chooses a proportional shape: one writer for simple work, one lead plus optional scout/reviewer for standard work, and independent review for high-risk work;
+- chooses a proportional shape: one writer plus final independent review for simple work, optional scouts or slices for broader work, and extra specialist review only when risk warrants it;
 - keeps root coordination-only and stops before tracked edits when no writer-capable native delegation is available;
-- routes children by Strong, Balanced, and Fast capabilities instead of hardcoded model names;
-- reassesses reasoning while work is active, escalating for new ambiguity or risk and lowering it at safe deterministic boundaries;
+- routes children by Strong, Balanced, and Fast capabilities while selecting a real host model and, where supported, effort for each dispatch;
+- keeps root at the host's maximum available reasoning effort for the whole run and pins every child explicitly at High or lower, independently from capability tier;
+- reuses an active agent that already owns the same goal and evidence instead of creating overlapping work, except for intentional independent review;
 - delegates all tracked edits and keeps write scopes disjoint when work is parallel;
 - accepts mid-flight status and approved-behavior details without stopping work; batches related material changes from the same active segment into one affected-scope planning and approval cycle at the next safe boundary while unaffected work continues;
 - runs checks targeted to coherent implementation phases instead of repeatedly running the full suite;
 - runs one full suite after the final mutation and required review, before completion and optional delivery, and refreshes it once only if a later relevant edit occurs;
+- performs a bounded root-owned retrospective after the final suite, checking correctness and avoidable token or resource cost from evidence already available in the run;
+- corrects any current gap before completion and turns only a material, generalizable process improvement into at most one sanitized upstream issue candidate; issue writes need separate approval and PRs are never automatic;
 - invokes `/ant:merge-request` and `/ant:delivery-workflows` in Claude Code or `$merge-request` and `$delivery-workflows` in Codex for their respective PR/MR and merge-conflict responsibilities;
-- finishes with changed areas, checks run, unverified items, and delivery state.
+- finishes with changed areas, checks run, unverified items, retrospective outcome, material upstream feedback state, and delivery state.
 
-Use it when the user wants a task driven from idea to working, verified implementation.
+Use it when the user wants a task driven from idea to working, verified implementation. In Claude Code, first establish `best` + `max` for the session with `claude --model best --effort max` or `/model best` plus `/effort max`, then invoke `/ant:implementation-orchestrator`.
 
 ## `brand-design`
 

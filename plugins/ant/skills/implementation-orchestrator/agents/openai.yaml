@@ -1,4 +1,4 @@
 interface:
   display_name: "(ant) Implementation Orchestrator"
-  short_description: "Plan, approve, implement, verify, and deliver"
-  default_prompt: "Use $implementation-orchestrator to discover the repository, brainstorm new behavior with me, obtain approval for a concrete plan before edits, then implement and verify it proportionally."
+  short_description: "Plan, implement, verify, reflect, and deliver"
+  default_prompt: "Use $implementation-orchestrator in Codex after selecting or verifying the task/session root at the strongest available model and maximum available effort. Native spawn routing pins every child to a real model and, where it supports one, explicit effort at High or lower; it cannot change the already-running root. Discover the repository, brainstorm new behavior with me, obtain approval for a concrete plan before edits, implement and verify it proportionally, then perform a bounded execution retrospective before completion or delivery."
