@@ -2,25 +2,18 @@
   <img src="assets/logo.svg" alt="(ant)" width="200">
 </p>
 
-<h3 align="center">Workflow skills for Claude Code and Codex</h3>
+<h3 align="center">Practical workflow skills for Claude Code and Codex</h3>
 
 <p align="center">
-  <a href="#first-steps">First steps</a> ·
   <a href="#quick-install">Install</a> ·
-  <a href="#choose-a-skill">Skills</a> ·
-  <a href="#orchestrator">Orchestrator</a> ·
+  <a href="#use-the-right-entry-point">Use a skill</a> ·
+  <a href="#implementation-orchestrator">Orchestrator</a> ·
   <a href="#docs">Docs</a>
 </p>
 
-The `(ant)` marketplace gives Claude Code and Codex shared workflows for planning, implementation orchestration, delivery, frontend, Laravel, brand design, Google Docs, and Asana task analysis.
+`(ant)` gives Claude Code and Codex a small set of reusable workflows for turning product ideas, repository tasks, delivery work, and source material into dependable outcomes. It keeps the public entry points broad, while each skill loads detailed guidance only when it is relevant.
 
-## First Steps
-
-1. Install the plugin for your assistant: [Claude Code](#claude-code) or [Codex](#codex).
-2. Reload Claude Code or restart/open a new Codex session.
-3. Pick the skill that matches the task from [Choose a Skill](#choose-a-skill).
-4. For new product or app ideas, start with `create-application`.
-5. For implementation work, start with `implementation-orchestrator` so repository discovery and an approved plan happen before code changes, with brainstorming for new behavior.
+Use it to scope a new application, plan and delegate a verified implementation, improve a React or Laravel codebase, work from an Asana task or Google Doc, resolve a merge conflict, or prepare a PR/MR with a truthful final-diff description.
 
 ## Quick Install
 
@@ -55,95 +48,71 @@ Project install:
 bunx codex-marketplace add antstudiocz/ant-marketplace/plugins/ant --plugin --project
 ```
 
-Want an assistant to do the installation for you? Use the prompts in [docs/install.md](docs/install.md).
+Reload Claude Code, or restart Codex/open a new Codex session, after installation or an update. More installation and AI-assisted setup prompts are in the [installation guide](docs/install.md).
 
-## Choose a Skill
+## Use The Right Entry Point
 
-Use the narrowest skill that matches the work. If the task will become a multi-step implementation, use `implementation-orchestrator` first and let it delegate the right specialist roles.
+Invoke skills with `/ant:skill-name` in Claude Code or `$skill-name` in Codex. Choose the narrowest entry point that matches the request.
 
-### Planning And Delivery
+| Need | Start with | Example |
+| --- | --- | --- |
+| Shape a new product, MVP, dashboard, or app surface | `create-application` | “Turn this client portal idea into an approved product brief.” |
+| Drive a feature, fix, refactor, migration, or remediation through verified delivery | `implementation-orchestrator` | “Investigate the failing checkout flow, propose a plan, then implement it after approval.” |
+| Build or review React, Next.js, or TypeScript UI | `frontend-best-practices` | “Make this settings form responsive and accessible.” |
+| Improve Laravel architecture, Eloquent, caching, or queues | `laravel-best-practices` | “Find the cache ownership issue in this endpoint.” |
+| Apply or audit the `(ant)` visual identity | `brand-design` | “Review this landing page against the `(ant)` brand.” |
+| Read requirements from a Google Doc or Asana task | `google-docs` or `asana-task-analyzer` | “Extract acceptance criteria and open questions from this link.” |
+| Resolve a merge conflict | `delivery-workflows` | “Resolve these conflicts without losing either branch’s intent.” |
+| Create or update a GitHub PR or GitLab MR | `merge-request` | “Prepare a draft MR in English from the current branch.” |
+| Ask a one-off question or make a tiny, isolated change | Use the relevant specialist skill directly—or no skill | “Explain this query plan” or “Rename this local label and run its focused check.” |
 
-- **Create applications**
-  - Claude Code: `/ant:create-application`
-  - Codex: `$create-application`
-  - Use for: new apps, MVPs, prototypes, internal tools, dashboards, and major app surfaces before implementation.
-- **Implementation orchestrator**
-  - Claude Code: start a `best` + `max` session, then `/ant:implementation-orchestrator`
-  - Codex: `$implementation-orchestrator`
-  - Use for: repository discovery, user-needs brainstorming, approved implementation planning, subagents, review, verification, execution retrospectives, and optional delivery.
-- **Merge requests**
-  - Claude Code: `/ant:merge-request`
-  - Codex: `$merge-request`
-  - Use for: the canonical GitHub/GitLab PR/MR workflow, with descriptions rebuilt from the target merge base to final `HEAD`.
-- **Delivery workflows**
-  - Claude Code: `/ant:delivery-workflows`
-  - Codex: `$delivery-workflows`
-  - Use for: contextual merge-conflict resolution. Use `merge-request` directly for PR/MR creation or updates.
+See the [complete skill guide](docs/skills.md) for the full scope of every public skill.
 
-### Engineering And Design
+## Implementation Orchestrator
 
-- **Frontend best practices**
-  - Claude Code: `/ant:frontend-best-practices`
-  - Codex: `$frontend-best-practices`
-  - Use for: React, Next.js, TypeScript, accessibility, forms, performance, responsive UI, i18n, skeletons, and composition.
-- **Laravel best practices**
-  - Claude Code: `/ant:laravel-best-practices`
-  - Codex: `$laravel-best-practices`
-  - Use for: Laravel 12+ architecture, caching, performance, Eloquent, queues, UTC time handling, and backend review.
-- **Brand design**
-  - Claude Code: `/ant:brand-design`
-  - Codex: `$brand-design`
-  - Use for: websites, apps, decks, documents, and visuals against the `(ant)` brand.
+Use `implementation-orchestrator` when the outcome needs end-to-end ownership: repository discovery, an implementation plan, delegated tracked edits, independent review, validation, and an optional delivery handoff. It is especially useful when the task spans multiple files, has uncertain root cause, changes behavior, touches data/security/contracts, or needs a trustworthy final verification.
 
-### Content And Intake
+Do not use it just to answer a question, inspect a file, draft copy, make a genuinely isolated one-off edit, or invoke a specialist workflow such as a merge-conflict resolution or PR/MR request. Those tasks are faster and clearer when handled directly.
 
-- **Google Docs**
-  - Claude Code: `/ant:google-docs`
-  - Codex: `$google-docs`
-  - Use for: reading and extracting content from Google Docs.
-- **Asana task analyzer**
-  - Claude Code: `/ant:asana-task-analyzer`
-  - Codex: `$asana-task-analyzer`
-  - Use for: Asana goals, requirements, blockers, and implementation context.
+For implementation work, it first discovers repository facts and presents a proportional plan for explicit approval before tracked edits. New or materially changed behavior also requires user-needs exploration, material unanswered questions, and deeper technical analysis. The root remains coordination-only; if the host cannot delegate a writer safely, it stops before edits rather than silently taking over.
 
-See [docs/skills.md](docs/skills.md) for the full skill guide.
+For Claude Code, establish `best` + `max` before invoking `/ant:implementation-orchestrator` (for example, `claude --model best --effort max`). In Codex, select or verify the root route for the task/session before invoking `$implementation-orchestrator`.
 
-## Orchestrator
+### Current Routing Examples
 
-Use `implementation-orchestrator` when work should be driven end to end rather than answered as a one-off edit. Every implementation starts with read-only repository discovery and a proportional plan that the user approves before any tracked writer starts. New or materially changed behavior also adds user-needs brainstorming, all material questions, and deeper technical analysis before that plan.
+The workflow selects capability and thinking effort independently. These are current host mappings—not a permanent shared model contract—and the active host adapter remains the source of operational detail.
 
-Codex installations may allow a deeper subagent hierarchy with this setting in `~/.codex/config.toml`:
+| Use case | Codex route | Claude Code route |
+| --- | --- | --- |
+| Root coordination, decisions, integration, and retrospective | `gpt-5.6-sol` · Max | `best` + Max: Fable when available, otherwise latest Opus |
+| Architecture, security, migrations, or complex root cause | `gpt-5.6-sol` · High | Opus · High |
+| Mandatory independent final review | `gpt-5.6-sol` · High | Opus · High |
+| Standard implementation and integration | `gpt-5.6-terra` · High | Sonnet · High |
+| Repository investigation, bounded slices, and validation | `gpt-5.6-terra` · Medium | Sonnet · Medium |
+| Exact searches and mechanical work | `gpt-5.6-luna` · Low/Medium; otherwise Terra at the same effort | Haiku, or Sonnet · Low when explicit effort control is required |
+| PR/MR support | `gpt-5.6-terra` · Medium | Sonnet · Medium |
 
-```toml
-[agents]
-max_depth = 2
-```
+Root always uses the strongest available capability at the host’s maximum available effort. Every child is explicitly routed and capped at High; a Strong task does not imply above-High effort. In Codex, each child—including nested work—gets concise self-contained context and uses `fork_turns="none"`. If the required route or isolation cannot be enforced, it is reported rather than assumed.
 
-Then restart Codex or open a new session. The orchestrator also works without nested delegation by dispatching a flatter agent graph. If the active host cannot provide any writer-capable native delegation, the orchestrator stops before tracked edits instead of falling back to root writes.
+The [orchestrator guide](docs/orchestrator.md) contains its lifecycle, routing details, validation, review, retrospective, delivery boundaries, and optional Codex nested-agent setup.
 
-The shared workflow routes by Strong, Balanced, and Fast capabilities independently from reasoning effort. Root uses the active host's strongest capability and maximum available effort for the entire run. In Claude Code, establish `best` + `max` for the session before invoking the skill; in Codex, select or verify the root separately for the task/session, while native spawn routing pins children only. Every child is pinned to a real host model and, where supported, effort, capped at High; narrow search and mechanical work normally use lower effort even when root remains at maximum. Codex children and nested children always start with `fork_turns="none"` and receive concise, self-contained task context rather than inherited conversation history. The current host adapters, including Claude's declarative subagent profiles and Codex catalog fallbacks, are in [the orchestrator setup guide](docs/orchestrator.md). During implementation it runs targeted checks after coherent phases; after the final tracked mutation and review, the full suite runs once on the final tree before completion and, when requested, delivery. Root then performs a bounded retrospective for correctness and avoidable token or resource cost. A material general improvement may become one sanitized upstream issue candidate, but issue writes need separate approval and the retrospective never auto-creates a PR.
+## Prerequisites And Integrations
 
-Approval covers the stable plan rather than every phase. A tiny mechanical step inside that plan uses a compact cycle without duplicate approval. Related material changes received during the same active segment are batched into one affected-scope discovery, brainstorming, deeper analysis, delta-plan, and approval at the next safe boundary; only affected writes pause while unaffected work continues. Urgent stop and safety corrections apply immediately.
+Install the plugin into a working Claude Code or Codex environment. The Codex commands above use `bunx`; use the appropriate scope for your setup. The plugin does not require a separate orchestration database, generated runtime, or migration command.
 
-Delivery handoffs use the identifier visible in the active host: Claude Code invokes `/ant:merge-request` and `/ant:delivery-workflows`; Codex invokes `$merge-request` and `$delivery-workflows`.
-
-More detail:
-
-- [Orchestrator setup](docs/orchestrator.md)
-- [10.0 release notes](docs/releases/10.0.0.md)
+The Google Docs skill supports publicly shared Google Docs. The Asana skill requires active host MCP/access and authorization for the task and its linked content. PR/MR support uses the repository’s existing GitHub or GitLab access, performs only explicitly requested delivery actions, and confirms unresolved choices. Missing external access is reported without blocking unrelated local work.
 
 ## Docs
 
-The README is intentionally short. Longer guides live in `docs/` and can be mirrored into GitHub Wiki if the marketplace grows.
-
-- [Installation guide](docs/install.md) - manual install, AI-assisted install prompts, and updates.
-- [Skill guide](docs/skills.md) - what each public skill does and when to use it.
-- [Orchestrator setup](docs/orchestrator.md) - execution shape, capability and effort routing, messages, validation, retrospective, and delivery.
-- [Orchestrator slide deck](docs/index.html) - visual explainer for the orchestrator lifecycle.
+- [Installation guide](docs/install.md) — installation, updates, and assisted setup prompts.
+- [Skill guide](docs/skills.md) — scope and usage of each public skill.
+- [Orchestrator guide](docs/orchestrator.md) — full execution, routing, review, validation, and delivery guidance.
+- [Orchestrator visual explainer](docs/index.html) — a visual overview of the lifecycle.
+- [10.0.0 release notes](docs/releases/10.0.0.md) — historical notes for the 10.0.0 release; the current manifests are version 10.0.1.
 
 ## Update
 
-Claude Code:
+In Claude Code:
 
 ```text
 /plugin marketplace update ant-marketplace
@@ -151,27 +120,16 @@ Claude Code:
 /reload-plugins
 ```
 
-Codex: rerun the same `codex-marketplace add` command with the same scope (`--global` or `--project`), then restart Codex or open a new session.
+For Codex, rerun the same `codex-marketplace add` command using the same scope (`--global` or `--project`), then restart Codex or open a new session.
 
 ## Contributing
 
-1. Create a folder in `plugins/ant/skills/your-skill-name/` with a `SKILL.md` file for a new public workflow.
-2. Prefer adding detailed topic guidance under an existing skill's `references/` folder when it belongs to an umbrella skill.
-3. Do not add same-name command aliases; Claude Code discovers skills directly from `skills/*/SKILL.md`.
-4. Validate manifests and docs before opening a PR.
+Keep public skills focused and broad. Add new public workflows under `plugins/ant/skills/`; put detailed guidance that belongs to an existing umbrella skill in its `references/` directory. Avoid same-name Claude command aliases, keep plugin versions aligned when releasing, and validate manifests and relevant documentation before opening a PR.
 
 ---
 
 <div align="center">
 
-## Made with <img src="assets/heart.svg" height="18" alt="love"> by (ant)
-
-*From (WTF) ideas we create (WOW) results.*
-
-We are a full-service digital agency from Western Czechia. For over 25 years we've been creating projects that push boundaries. We have 50+ experts and one know-how: **doing things differently**.
-
-![25+ years](https://img.shields.io/badge/25+-years-5bffc4?style=flat-square)
-![50+ experts](https://img.shields.io/badge/50+-experts-5bffc4?style=flat-square)
-![Pilsen, CZ](https://img.shields.io/badge/Pilsen-CZ-5bffc4?style=flat-square)
+Made with <img src="assets/heart.svg" height="16" alt="love"> by [(ant)](https://antstudio.cz) — a full-service digital agency from Western Czechia.
 
 </div>
