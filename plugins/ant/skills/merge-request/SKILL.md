@@ -236,7 +236,7 @@ Use these sections. Translate section headings for other selected languages whil
 
 ### Description Guidance
 
-- In "Summary" / "Stručně", write 1-3 short bullets for a non-technical reviewer. Say what was actually delivered in plain language. Avoid implementation details, file names, recovery history, and vague process wording.
+- In "Summary" / "Stručně", write short bullets for a non-technical reviewer. Prefer 1-3 bullets for ordinary changes, but use as many as needed to cover materially distinct outcomes in a large PR/MR; there is no fixed maximum. Keep every bullet concise, say what was actually delivered in plain language, and avoid implementation details, file names, recovery history, and vague process wording.
 - Put `---` directly after the summary section so the quick summary is visually separated from the detailed review notes.
 - In "What changed" / "Co se změnilo", summarize the actual diff by behavior and touched areas, not only file names.
 - In "Why" / "Proč", connect the change to the user problem, task, regression, workflow need, or technical debt visible from context.
