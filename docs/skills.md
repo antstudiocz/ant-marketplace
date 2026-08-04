@@ -23,7 +23,7 @@ How it works:
 - makes mock data, prototype scope, persistence, secrets, and production-readiness tradeoffs explicit;
 - prepares an approved application brief with acceptance criteria and non-goals;
 - hands only captured, approved brief fields to `implementation-orchestrator`; missing git/delivery startup choices remain open for the orchestrator instead of being invented;
-- treats brief approval as completed product brainstorming, not permission to write; `implementation-orchestrator` still verifies the repository, presents its concrete implementation plan, and obtains approval;
+- treats brief approval as completed product brainstorming, not permission to write by itself; `implementation-orchestrator` still verifies the repository and presents its concrete implementation plan, then continues only when explicit end-to-end execution intent from the original request covers the unchanged scope and risk;
 - leaves capability-driven delegation, implementation, review, verification, and delivery to `implementation-orchestrator`.
 
 Use it when the user wants to create a new app from an idea before writing code.
@@ -34,18 +34,19 @@ End-to-end implementation flow for features, fixes, refactors, migrations, audit
 
 How it works:
 
-- starts every implementation with read-only repository discovery and a proportional plan;
+- classifies requests at intake as analysis-only, implementation-authorized, or ambiguous, asking early when intent is unclear;
+- starts every implementation with read-only repository discovery and a proportional plan before tracked edits;
 - for new or materially changed behavior, brainstorms goals, users, workflows, edge cases, non-goals, options, and tradeoffs before deeper technical analysis;
 - asks every material question that cannot be answered from the repository, without an arbitrary count;
-- presents a concrete implementation plan and obtains explicit approval before dispatching any tracked writer;
-- treats approval as covering the stable plan rather than requesting it again before every phase;
+- presents a concrete implementation plan as a mandatory progress checkpoint; explicit execution language such as “fix it and test it end-to-end” continues afterward when scope and risk remain unchanged, while “analyze only” remains read-only;
+- waits for explicit approval when requested by the user or when discovery materially changes scope, behavior, architecture, data, safety/risk, or requires destructive action; approval or authorization covers the stable plan rather than every phase;
 - chooses a proportional shape: one writer plus final independent review for simple work, optional scouts or slices for broader work, and extra specialist review only when risk warrants it;
 - keeps root coordination-only and stops before tracked edits when no writer-capable native delegation is available;
 - routes children by Strong, Balanced, and Fast capabilities while selecting a real host model and, where supported, effort for each dispatch;
 - keeps root at the host's maximum available reasoning effort for the whole run and pins every child explicitly at High or lower, independently from capability tier; Codex children and nested children use `fork_turns="none"` with concise self-contained task context;
 - reuses an active agent that already owns the same goal and evidence instead of creating overlapping work, except for intentional independent review;
 - delegates all tracked edits and keeps write scopes disjoint when work is parallel;
-- accepts mid-flight status and approved-behavior details without stopping work; batches related material changes from the same active segment into one affected-scope planning and approval cycle at the next safe boundary while unaffected work continues;
+- accepts mid-flight status and authorized-behavior details without stopping work; batches related material changes from the same active segment into one affected-scope planning and approval cycle at the next safe boundary while unaffected work continues;
 - runs checks targeted to coherent implementation phases instead of repeatedly running the full suite;
 - runs one full suite after the final mutation and required review, before completion and optional delivery, and refreshes it once only if a later relevant edit occurs;
 - performs a bounded root-owned retrospective after the final suite, checking correctness and avoidable token or resource cost from evidence already available in the run;
