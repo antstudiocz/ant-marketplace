@@ -8,10 +8,10 @@ Use `implementation-orchestrator` when a task should be taken from repository di
 2. Start a new Claude Code or Codex session.
 3. Set up the active host, then invoke the skill:
    - Claude Code: establish `best` + `max` for the session with `claude --model best --effort max`, or `/model best` and `/effort max`; then invoke `/ant:implementation-orchestrator`
-   - Codex: select or verify the root for the task/session, then invoke `$implementation-orchestrator`; its adapter pins child spawns only
+   - Codex: select or verify the root for the task/session, then invoke `$implementation-orchestrator`; its adapter pins child spawns and manages matching native goals when those tools are available
 4. Provide the goal, repository or path, relevant constraints, and any delivery request.
 
-The orchestrator classifies execution intent, discovers repository facts before asking questions, presents a concrete plan before tracked edits, keeps review proportional to risk, and reflects on the verified execution before completion or delivery.
+The orchestrator classifies execution intent, discovers repository facts before asking questions, presents a concrete plan before tracked edits, establishes a native goal for implementation work, keeps review proportional to risk, and reflects on the verified execution before completion or delivery.
 
 ## Planning And Approval
 
@@ -29,6 +29,8 @@ For a new feature or materially new behavior, the sequence is:
 6. dispatch tracked implementation work when explicit execution intent covers the unchanged scope and risk, or otherwise wait for explicit approval.
 
 Read-only scouts may help before execution is authorized. Fixes and refactors without new behavior use a shorter root-cause, impact, steps, risks, and checks plan. A user-provided concrete plan or approved `create-application` brief can satisfy earlier product brainstorming after repository verification, but neither grants write authorization by itself. The orchestrator still prepares and presents an implementation plan. It pauses when the user requested a plan or approval gate, or when discovery materially changes behavior, scope, architecture, data, safety/risk, or requires destructive action. Authorization covers the stable workstream, not every phase or delivery action.
+
+After the plan is stable and before tracked-writer dispatch, implementation work gets a native goal envelope that captures the measurable outcome, acceptance conditions, material constraints, required checks, and only delivery already authorized. It complements planning and authorization; it does not replace them. Analysis-only and unresolved ambiguous requests never create one. Codex automatically inspects the current goal and reuses a matching active goal or creates one when native goal tools are available; an unrelated active goal pauses tracked work for user resolution. Claude Code goals are activated by the user: when no matching session goal exists or the state cannot be observed, the orchestrator says so as applicable and gives an exact plan-tailored `/goal <condition>` command to run before tracked writes. Running that command replaces any active session goal, including a hidden unrelated one; an observable unrelated goal still requires the user to clear or replace it before execution. In either host, the goal closes only after the scoped implementation, required review, final validation, retrospective, and any included delivery are complete.
 
 ## Execution Shape
 

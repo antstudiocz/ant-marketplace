@@ -37,6 +37,14 @@ A tiny mechanical change inside an already approved or otherwise authorized plan
 
 Implementation authorization does not remove the mandatory plan checkpoint or authorize a materially expanded plan. Approval or authorization covers only the scoped repository edits required by the plan. It does not authorize destructive operations, force-pushes, commits, pushes, PR/MR creation, merges, releases, or unrelated cleanup. Respect any narrower repository or host permission boundary.
 
+### Native Goal Envelope
+
+For implementation-authorized work, or work that later receives the required approval, establish the active host's native goal envelope after the objective, acceptance behavior, constraints, validation, and any authorized delivery are stable, and immediately before tracked-writer dispatch. Do not establish a goal for analysis-only work or while an ambiguous request remains unresolved. The goal is an outcome-oriented complement to the native plan and authorization checkpoint, never a replacement for either.
+
+Use the active-host adapter for the mechanism. The goal condition must be measurable and include the verified outcome, material constraints, required checks, and only delivery actions the user has already authorized. Do not create custom goal state, hooks, runtimes, or compatibility layers. Reuse a semantically matching active native goal when the host supports that; do not overwrite, complete, or block an unrelated active goal.
+
+Close the native goal only when its scoped implementation is complete and the required independent review, final validation, root retrospective, and any delivery explicitly included in the goal have actually finished. Ordinary approval waits, clarification, or a temporary lack of user input are not goal blockers. Host-specific availability, inspection, creation, completion, and repeated-blocker behavior belongs in the adapter.
+
 Do not create orchestration state files, schemas, event logs, approval artifacts, leases, or migration readers. Use the host's built-in plan/task state and concise user-facing checkpoints. After compaction or resume, reconstruct truth from the conversation summary, current git state, child reports, and fresh inspection.
 
 ## 2. Choose The Smallest Useful Shape

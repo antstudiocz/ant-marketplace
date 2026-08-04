@@ -39,6 +39,7 @@ How it works:
 - for new or materially changed behavior, brainstorms goals, users, workflows, edge cases, non-goals, options, and tradeoffs before deeper technical analysis;
 - asks every material question that cannot be answered from the repository, without an arbitrary count;
 - presents a concrete implementation plan as a mandatory progress checkpoint; explicit execution language such as “fix it and test it end-to-end” continues afterward when scope and risk remain unchanged, while “analyze only” remains read-only;
+- establishes a measurable native goal after the plan is stable and before tracked-writer dispatch for implementation-authorized or later-approved work; Codex automatically reuses or creates a matching goal when native tools are available, while Claude Code asks the user to run an exact plan-tailored `/goal` command;
 - waits for explicit approval when requested by the user or when discovery materially changes scope, behavior, architecture, data, safety/risk, or requires destructive action; approval or authorization covers the stable plan rather than every phase;
 - chooses a proportional shape: one writer plus final independent review for simple work, optional scouts or slices for broader work, and extra specialist review only when risk warrants it;
 - keeps root coordination-only and stops before tracked edits when no writer-capable native delegation is available;
@@ -54,7 +55,7 @@ How it works:
 - invokes `/ant:merge-request` and `/ant:delivery-workflows` in Claude Code or `$merge-request` and `$delivery-workflows` in Codex for their respective PR/MR and merge-conflict responsibilities;
 - finishes with changed areas, checks run, unverified items, retrospective outcome, material upstream feedback state, and delivery state.
 
-Use it when the user wants a task driven from idea to working, verified implementation. In Claude Code, first establish `best` + `max` for the session with `claude --model best --effort max` or `/model best` plus `/effort max`, then invoke `/ant:implementation-orchestrator`.
+Use it when the user wants a task driven from idea to working, verified implementation. In Claude Code, first establish `best` + `max` for the session with `claude --model best --effort max` or `/model best` plus `/effort max`, then invoke `/ant:implementation-orchestrator`; run its exact `/goal` command before tracked writes when it requests activation.
 
 ## `brand-design`
 
