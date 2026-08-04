@@ -1,4 +1,4 @@
 interface:
   display_name: "(ant) Merge Request"
-  short_description: "PR/MR delivery checks with language choice"
-  default_prompt: "Use $merge-request to create a structured PR/MR after asking which language to use."
+  short_description: "Prepare or deliver a verified PR/MR"
+  default_prompt: "Use $merge-request to preview a proposal for preparation intent, or for explicit creation/update intent create a structured Draft PR/MR by default only when new, preserve an ordinary update's readiness unless explicitly changed, and monitor its exact head pipeline."

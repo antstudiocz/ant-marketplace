@@ -63,7 +63,7 @@ Invoke skills with `/ant:skill-name` in Claude Code or `$skill-name` in Codex. C
 | Apply or audit the `(ant)` visual identity | `brand-design` | “Review this landing page against the `(ant)` brand.” |
 | Read requirements from a Google Doc or Asana task | `google-docs` or `asana-task-analyzer` | “Extract acceptance criteria and open questions from this link.” |
 | Resolve a merge conflict | `delivery-workflows` | “Resolve these conflicts without losing either branch’s intent.” |
-| Create or update a GitHub PR or GitLab MR | `merge-request` | “Prepare a draft MR in English from the current branch.” |
+| Prepare or create/update a GitHub PR or GitLab MR | `merge-request` | “Prepare an English MR proposal from the current branch.” or “Create a Draft MR from the current branch.” |
 | Ask a one-off question or make a tiny, isolated change | Use the relevant specialist skill directly—or no skill | “Explain this query plan” or “Rename this local label and run its focused check.” |
 
 See the [complete skill guide](docs/skills.md) for the full scope of every public skill.
@@ -100,7 +100,7 @@ The [orchestrator guide](docs/orchestrator.md) contains its lifecycle, routing d
 
 Install the plugin into a working Claude Code or Codex environment. The Codex commands above use `bunx`; use the appropriate scope for your setup. The plugin does not require a separate orchestration database, generated runtime, or migration command.
 
-The Google Docs skill supports publicly shared Google Docs. The Asana skill requires active host MCP/access and authorization for the task and its linked content. PR/MR support uses the repository’s existing GitHub or GitLab access, performs only explicitly requested delivery actions, and confirms unresolved choices. Missing external access is reported without blocking unrelated local work.
+The Google Docs skill supports publicly shared Google Docs. The Asana skill requires active host MCP/access and authorization for the task and its linked content. PR/MR support uses the repository’s existing GitHub or GitLab access: a preparation request returns a read-only title/body preview, while an explicit create/update request safely commits scoped work when needed, pushes, creates a Draft by default or preserves an existing request's readiness, and observes the matching pipeline for the resolved head. If no matching checks/pipeline registers within the repository-appropriate bounded window, it reports an unverified external-state outcome rather than green. It resolves repository-set language and target choices without asking again, and asks only about material unresolved conflicts. Missing external access is reported without blocking unrelated local work.
 
 ## Docs
 
