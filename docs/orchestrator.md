@@ -11,11 +11,13 @@ Use `implementation-orchestrator` when a task should be taken from repository di
    - Codex: select or verify the root for the task/session, then invoke `$implementation-orchestrator`; its adapter pins child spawns only
 4. Provide the goal, repository or path, relevant constraints, and any delivery request.
 
-The orchestrator discovers repository facts before asking questions, obtains approval for a concrete plan before tracked edits, keeps review proportional to risk, and reflects on the verified execution before completion or delivery.
+The orchestrator classifies execution intent, discovers repository facts before asking questions, presents a concrete plan before tracked edits, keeps review proportional to risk, and reflects on the verified execution before completion or delivery.
 
 ## Planning And Approval
 
-Every implementation starts with read-only repository discovery and a proportional plan that the user explicitly approves before tracked edits. A tiny mechanical change may need only a compact code check, stated delta, and validation plan; planning and approval are still present unless the change is already covered by an approved plan.
+At intake, the orchestrator classifies the request as analysis-only, implementation-authorized, or ambiguous. “Analyze only” stays read-only. Explicit action language such as “fix it and test it end-to-end” authorizes implementation after discovery and plan presentation when the plan remains within the requested scope and risk. If intent is genuinely ambiguous, it asks early whether the user wants analysis only or implementation too.
+
+Every implementation starts with read-only repository discovery and a proportional plan before tracked edits. A tiny mechanical change may need only a compact code check, stated delta, and validation plan; planning is still present unless the change is already covered by an approved or otherwise authorized plan.
 
 For a new feature or materially new behavior, the sequence is:
 
@@ -23,10 +25,10 @@ For a new feature or materially new behavior, the sequence is:
 2. brainstorm the goal, users, workflow, edge cases, non-goals, options, and tradeoffs with the user;
 3. ask all material questions that cannot be answered from the repository, without an arbitrary question limit;
 4. after the answers, analyze architecture, contracts, data, dependencies, obsolete behavior, risks, and validation more deeply;
-5. present a concrete implementation plan and wait for explicit approval;
-6. only then dispatch tracked implementation work.
+5. present a concrete implementation plan;
+6. dispatch tracked implementation work when explicit execution intent covers the unchanged scope and risk, or otherwise wait for explicit approval.
 
-Read-only scouts may help before approval. Fixes and refactors without new behavior use a shorter root-cause, impact, steps, risks, and checks plan. A user-provided concrete plan or approved `create-application` brief can satisfy earlier product brainstorming after repository verification, but the orchestrator still prepares an implementation plan and asks for approval before writes. That approval covers the stable workstream, not every phase.
+Read-only scouts may help before execution is authorized. Fixes and refactors without new behavior use a shorter root-cause, impact, steps, risks, and checks plan. A user-provided concrete plan or approved `create-application` brief can satisfy earlier product brainstorming after repository verification, but neither grants write authorization by itself. The orchestrator still prepares and presents an implementation plan. It pauses when the user requested a plan or approval gate, or when discovery materially changes behavior, scope, architecture, data, safety/risk, or requires destructive action. Authorization covers the stable workstream, not every phase or delivery action.
 
 ## Execution Shape
 
@@ -83,7 +85,7 @@ Before spawning, the orchestrator checks whether an active agent already covers 
 
 ## Messages During Implementation
 
-You can continue messaging the orchestrator while it works. Status questions and details within approved behavior do not stop work. Related material changes or corrections received during the same active segment are batched into one discovery, brainstorming, deeper-analysis, consolidated delta-plan, and approval cycle for the affected scope at the next safe boundary; only affected writes pause while independent work continues. An urgent stop or safety correction applies immediately. The entire run stops only for an explicit global stop/replacement or a genuinely blocking contradiction or safety issue.
+You can continue messaging the orchestrator while it works. Status questions and details within authorized behavior do not stop work. Related material changes or corrections received during the same active segment are batched into one discovery, brainstorming, deeper-analysis, consolidated delta-plan, and approval cycle for the affected scope at the next safe boundary; only affected writes pause while independent work continues. An urgent stop or safety correction applies immediately. The entire run stops only for an explicit global stop/replacement or a genuinely blocking contradiction or safety issue.
 
 Codex steering/queue controls and Claude Code message delivery are host-specific transport details; both follow the same behavior above.
 
@@ -99,7 +101,7 @@ After the final suite and before completion or delivery, root performs a bounded
 
 A current implementation gap returns to the implementation owner and invalidates the final suite until the correction, targeted checks, focused review, and refreshed suite pass. Only a material, actionable, plausibly generalizable process improvement can become upstream feedback. Before any external search, root removes client, project, and proprietary details from the candidate and derives generic, non-sensitive search terms. It then uses only those terms to search open and closed issues and PRs in `antstudiocz/ant-marketplace` and proposes at most one highest-value issue action. Creating or commenting on an issue requires explicit current or clearly applicable standing approval; implementation or delivery approval is not enough. Missing network or authentication does not block the original result.
 
-The retrospective never creates a PR automatically. A PR is a separate approved maintenance implementation and uses the host-visible merge-request skill after its own discovery, implementation, review, and validation.
+The retrospective never creates a PR automatically. A PR is a separately authorized maintenance implementation and uses the host-visible merge-request skill after its own discovery, implementation, review, and validation.
 
 ## Delivery
 

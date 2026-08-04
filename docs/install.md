@@ -86,15 +86,16 @@ Codex: rerun the same `codex-marketplace add` command with the same scope (`--gl
 
 In a fresh session, invoke `implementation-orchestrator` on a small repository task and confirm that it:
 
-- performs read-only discovery, presents a proportional plan, and waits for approval before tracked edits;
-- for new behavior, brainstorms user needs, asks material questions, analyzes more deeply, and waits for explicit plan approval;
+- classifies “analyze only” as read-only, “fix it and test it end-to-end” as implementation-authorized, and genuinely ambiguous requests with an early clarification question;
+- performs read-only discovery and presents a proportional plan before tracked edits; it continues after that checkpoint for unchanged explicitly authorized work, but waits when the user asked for approval or discovery materially changes scope, behavior, architecture, data, safety/risk, or introduces destructive action;
+- for new behavior, brainstorms user needs, asks material questions, and analyzes more deeply before the plan;
 - chooses a proportional agent shape and reports a blocker before tracked edits if no writer-capable native delegation is available;
 - routes by capability while selecting a real native model and, where supported, effort for every child;
 - keeps root at the host's maximum available reasoning effort and pins every child explicitly at High or lower, independently from capability tier; in Codex, every child and nested child uses `fork_turns="none"` with concise self-contained task context;
 - runs targeted checks during work, completes the required review, then runs one broad suite before completion and optional delivery;
 - performs a bounded root retrospective after the final suite, corrects any current gap, and proposes no more than one sanitized upstream feedback action only when the finding is material and generalizable;
 - asks for separate approval before writing to an upstream issue and never creates a retrospective PR automatically;
-- continues unaffected work when you send a status question or approved-behavior detail;
+- continues unaffected work when you send a status question or authorized-behavior detail;
 - batches related material changes from the same active segment into one affected-scope planning and approval cycle at the next safe boundary, without delaying an urgent stop or safety correction;
 - invokes `/ant:merge-request` and `/ant:delivery-workflows` in Claude Code or `$merge-request` and `$delivery-workflows` in Codex for delivery handoffs.
 

@@ -57,7 +57,7 @@ Invoke skills with `/ant:skill-name` in Claude Code or `$skill-name` in Codex. C
 | Need | Start with | Example |
 | --- | --- | --- |
 | Shape a new product, MVP, dashboard, or app surface | `create-application` | “Turn this client portal idea into an approved product brief.” |
-| Drive a feature, fix, refactor, migration, or remediation through verified delivery | `implementation-orchestrator` | “Investigate the failing checkout flow, propose a plan, then implement it after approval.” |
+| Drive a feature, fix, refactor, migration, or remediation through verified delivery | `implementation-orchestrator` | “Analyze this failing checkout flow only” or “Fix it and test it end-to-end.” |
 | Build or review React, Next.js, or TypeScript UI | `frontend-best-practices` | “Make this settings form responsive and accessible.” |
 | Improve Laravel architecture, Eloquent, caching, or queues | `laravel-best-practices` | “Find the cache ownership issue in this endpoint.” |
 | Apply or audit the `(ant)` visual identity | `brand-design` | “Review this landing page against the `(ant)` brand.” |
@@ -74,7 +74,7 @@ Use `implementation-orchestrator` when the outcome needs end-to-end ownership: r
 
 Do not use it just to answer a question, inspect a file, draft copy, make a genuinely isolated one-off edit, or invoke a specialist workflow such as a merge-conflict resolution or PR/MR request. Those tasks are faster and clearer when handled directly.
 
-For implementation work, it first discovers repository facts and presents a proportional plan for explicit approval before tracked edits. New or materially changed behavior also requires user-needs exploration, material unanswered questions, and deeper technical analysis. The root remains coordination-only; if the host cannot delegate a writer safely, it stops before edits rather than silently taking over.
+At intake, it distinguishes analysis-only, implementation-authorized, and ambiguous requests. It always discovers repository facts and presents a proportional plan before tracked edits. “Analyze this only” stays read-only; “fix it and test it end-to-end” continues after the plan checkpoint when scope and risk remain unchanged. A request to wait for approval, or a material scope/risk change, still pauses. New or materially changed behavior also requires user-needs exploration, material unanswered questions, and deeper technical analysis. The root remains coordination-only; if the host cannot delegate a writer safely, it stops before edits rather than silently taking over.
 
 For Claude Code, establish `best` + `max` before invoking `/ant:implementation-orchestrator` (for example, `claude --model best --effort max`). In Codex, select or verify the root route for the task/session before invoking `$implementation-orchestrator`.
 
@@ -108,7 +108,7 @@ The Google Docs skill supports publicly shared Google Docs. The Asana skill requ
 - [Skill guide](docs/skills.md) — scope and usage of each public skill.
 - [Orchestrator guide](docs/orchestrator.md) — full execution, routing, review, validation, and delivery guidance.
 - [Orchestrator visual explainer](docs/index.html) — a visual overview of the lifecycle.
-- [10.0.0 release notes](docs/releases/10.0.0.md) — historical notes for the 10.0.0 release; the current manifests are version 10.0.1.
+- [10.0.0 release notes](docs/releases/10.0.0.md) — historical notes for the 10.0.0 release; the current manifests are version 10.0.3.
 
 ## Update
 

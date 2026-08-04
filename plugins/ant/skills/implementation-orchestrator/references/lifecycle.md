@@ -2,18 +2,26 @@
 
 This is the orchestrator's shared internal reference. Apply it with repository instructions and exactly one active-host routing adapter.
 
-## 1. Discover, Brainstorm, And Approve
+## 1. Discover, Classify, Brainstorm, And Plan
 
-Every implementation has a pre-write discovery and planning cycle. Keep it compact for a tiny mechanical change and thorough for new, broad, ambiguous, or risky work; never remove it entirely.
+Every implementation has a pre-write discovery and planning cycle. Keep it compact for a tiny mechanical change and thorough for new, broad, ambiguous, or risky work; never remove it entirely. Plan presentation is always required before tracked edits. Whether it also pauses execution depends on the user's intent and the resulting scope and risk.
+
+At intake, classify the request before substantive or deep analysis:
+
+- **Analysis-only:** The user asks to inspect, diagnose, explain, review, audit, or propose without asking for execution. Stay read-only and report evidence, options, and any recommended next step.
+- **Implementation-authorized:** The user explicitly asks to fix, implement, change, build, test, or otherwise carry work through execution. This is upfront authorization to implement the requested outcome after discovery and plan presentation, not authorization for delivery or external writes.
+- **Ambiguous:** When it is genuinely unclear whether the user wants analysis or implementation, ask early whether they want analysis only or implementation too. Minimal repository inspection needed to route the request is allowed, but do not begin deep analysis first.
+
+An explicit request to propose a plan, wait for approval, or otherwise defer execution overrides implementation authorization and requires a pause. Do not infer authorization from a product brief, a concrete plan, or a request that merely names an implementation topic.
 
 Before any tracked edit or tracked-writer dispatch:
 
-1. Read repository instructions and inspect the current branch, worktree, relevant diff, code path, and validation commands.
-2. Separate in-scope changes from unrelated or ambiguous dirty files. Preserve anything the user did not place in scope.
-3. Inspect the relevant behavior and contracts or delegate read-only scouts. Do not ask the user for facts that can be discovered safely from the repository or environment.
-4. Classify the request as a tiny mechanical change, work already covered by an approved plan, or new/materially changed behavior.
+1. Read repository instructions and do only the minimal inspection needed to classify intent and protect unrelated work.
+2. Classify the intent as analysis-only, implementation-authorized, or ambiguous. For ambiguity, ask the user before substantive or deep analysis.
+3. Separate in-scope changes from unrelated dirty files, then inspect the current branch, relevant diff, code path, behavior, contracts, and validation commands or delegate read-only scouts. Do not ask the user for facts that can be discovered safely from the repository or environment.
+4. Classify the work as a tiny mechanical change, work already covered by an approved or otherwise authorized plan, or new/materially changed behavior.
 
-For a fix, refactor, migration, or remediation that does not introduce materially new behavior, state the verified goal or root cause, acceptance behavior, affected areas, implementation steps, risks, and checks in a proportional plan, then obtain explicit user approval.
+For analysis-only work, stop after the appropriate read-only discovery and report. For an ambiguous request, resolve the intended mode before substantive or deep analysis. For a fix, refactor, migration, or remediation that does not introduce materially new behavior, state the verified goal or root cause, acceptance behavior, affected areas, implementation steps, risks, and checks in a proportional plan. Continue into tracked implementation after presenting that plan only when execution was explicitly authorized and it stays within the original scope and risk; otherwise obtain explicit approval.
 
 For a new feature or materially new behavior, continue in this order:
 
@@ -21,13 +29,13 @@ For a new feature or materially new behavior, continue in this order:
 2. Ask every unresolved question whose answer materially changes behavior, scope, architecture, data, safety, validation, or delivery. Group questions clearly, but do not impose an arbitrary count.
 3. After receiving the answers, inspect architecture, contracts, data flows, dependencies, obsolete or legacy behavior, risks, and validation paths in greater depth.
 4. Present a concrete implementation plan covering acceptance behavior, affected areas, key decisions, implementation sequence, validation, risks, and explicit non-goals.
-5. Obtain explicit user approval of that plan before dispatching a tracked writer or making tracked edits.
+5. Present the plan before dispatching a tracked writer or making tracked edits. When execution was explicitly authorized and the plan remains within the user's original scope and risk, continue without waiting for another confirmation. Otherwise obtain explicit user approval.
 
-Read-only scouts may run before approval. They return evidence and options, never implementation changes. The approval applies to the stable plan or workstream, so do not ask again before every phase. Ask again only when a material discovery invalidates the plan or changes its behavior, architecture, risk, or scope.
+Read-only scouts may run before the execution gate. They return evidence and options, never implementation changes. Approval or implementation authorization applies only to the stable plan or workstream, so do not ask again before every phase. Ask again when a material discovery invalidates the plan or changes behavior, architecture, data, safety/risk, scope, or requires destructive action.
 
-A tiny mechanical change inside an already approved plan may use a compact cycle: verify the affected code, state the small delta and checks, then continue without duplicate approval. A concrete plan supplied by the user or an approved `create-application` brief may satisfy earlier product brainstorming once repository facts are verified, but the orchestrator must still prepare an implementation plan and obtain approval before tracked writes.
+A tiny mechanical change inside an already approved or otherwise authorized plan may use a compact cycle: verify the affected code, state the small delta and checks, then continue without duplicate approval. A concrete plan supplied by the user or an approved `create-application` brief may satisfy earlier product brainstorming once repository facts are verified, but it is not implementation authorization. A separate explicit end-to-end implementation request may provide that authorization after plan presentation.
 
-An implementation request by itself is not approval of a plan that has not yet been presented. Plan approval authorizes only the scoped repository edits required by that plan. It does not authorize destructive operations, force-pushes, merges, releases, or unrelated cleanup. Respect any narrower repository or host permission boundary.
+Implementation authorization does not remove the mandatory plan checkpoint or authorize a materially expanded plan. Approval or authorization covers only the scoped repository edits required by the plan. It does not authorize destructive operations, force-pushes, commits, pushes, PR/MR creation, merges, releases, or unrelated cleanup. Respect any narrower repository or host permission boundary.
 
 Do not create orchestration state files, schemas, event logs, approval artifacts, leases, or migration readers. Use the host's built-in plan/task state and concise user-facing checkpoints. After compaction or resume, reconstruct truth from the conversation summary, current git state, child reports, and fresh inspection.
 
@@ -43,7 +51,7 @@ Use risk and uncertainty, not task size alone:
 
 Rules:
 
-- Before approval, dispatch only read-only discovery or review work. Dispatch tracked implementation owners and slice workers only after the planning gate passes.
+- Before the applicable execution gate passes, dispatch only read-only discovery or review work. Dispatch tracked implementation owners and slice workers only after presenting the plan and, when required, receiving explicit approval.
 - Do not spawn one agent per file, phase-owner agents, or agents whose only job is process bookkeeping.
 - One implementation lead owns the final integrated result. A small task may use the same agent as its sole writer.
 - Parallelize only independent work with disjoint write scopes and a stable shared contract. Keep a slot available for review or recovery when capacity is tight.
@@ -109,7 +117,7 @@ Role boundaries:
 - **Slice worker:** owns one disjoint bounded write scope and reports back to the lead; it does not redefine shared contracts.
 - **Reviewer:** independent and normally read-only; checks requirement fit, correctness, regressions, architecture, negative cases, and validation gaps.
 
-The approved plan is the implementation contract. Include its decisions and acceptance behavior in writer assignments, and escalate rather than silently redefining it.
+The approved or otherwise authorized plan is the implementation contract. Include its decisions and acceptance behavior in writer assignments, and escalate rather than silently redefining it.
 
 Pass relevant specialist-skill guidance into assignments when frontend, Laravel, brand, delivery, or another domain requires it. Do not assume a child will discover internal references by itself.
 
@@ -118,7 +126,7 @@ Pass relevant specialist-skill guidance into assignments when frontend, Laravel,
 The implementation owner should:
 
 1. Verify the assigned plan against the real code before writing.
-2. Fix the root cause, removing obsolete paths when the approved direction is a clean replacement.
+2. Fix the root cause, removing obsolete paths when the approved or otherwise authorized direction is a clean replacement.
 3. Keep edits inside the assigned scope and flag unrelated dirty state immediately.
 4. Run targeted checks at meaningful boundaries, not after each file save.
 5. Report unexpected complexity early so the assignment can be narrowed or split, or unresolved judgment can return to root.
@@ -128,9 +136,9 @@ The implementation owner should:
 Briefly acknowledge new input and classify it by effect:
 
 - **Status or question:** answer without stopping the active implementation.
-- **Detail within approved behavior:** incorporate it into the affected current or upcoming work; unaffected work continues and no duplicate approval is needed.
+- **Detail within authorized behavior:** incorporate it into the affected current or upcoming work; unaffected work continues and no duplicate approval is needed.
 - **Materially new functionality:** pause only affected writes; run affected-scope discovery, user-needs brainstorming, deeper analysis, a concrete delta-plan, and explicit approval before resuming those writes. Unaffected work continues.
-- **Correction to approved behavior:** redirect or pause only the impacted work, reassess affected edits and checks, and when the correction is material obtain explicit approval of a delta-plan before affected writes resume. Independent work continues.
+- **Correction to authorized behavior:** redirect or pause only the impacted work, reassess affected edits and checks, and when the correction is material obtain explicit approval of a delta-plan before affected writes resume. Independent work continues.
 - **Explicit stop, replacement request, or blocking contradiction:** stop the affected work; stop the whole run only when the instruction or safety issue is global.
 
 Batch multiple related material changes or corrections received during the same active segment. At the next safe boundary, handle them through one affected-scope discovery, brainstorming, deeper analysis, consolidated delta-plan, and explicit approval instead of one cycle per message. Keep unaffected work moving. Do not defer an urgent stop, safety correction, or instruction that makes continuing unsafe.
@@ -195,7 +203,7 @@ Only a material, actionable, plausibly generalizable process improvement qualifi
 4. Treat a matching issue or PR as a deduplication result and do not prepare a new issue when either already covers the improvement. Comment on a matching issue only when the run adds materially new sanitized evidence. Generally reference or report a matching PR without writing to it through this issue feedback flow. Only when neither exists, prepare a concise English issue covering observed behavior, evidence and impact, proposed improvement, expected efficiency or quality effect, risks and tradeoffs, and a validation scenario.
 5. Perform at most one upstream feedback action per run. Creating, commenting on, or updating an issue is an external write and requires explicit current approval or clearly applicable standing approval; implementation or delivery approval does not imply it. Without that authority, show the prepared candidate and ask instead.
 
-Never auto-create a PR from the retrospective. A PR is a separate maintenance implementation with repository discovery, a concrete approved plan, delegated tracked writing, review, final validation, and the host-visible `/ant:merge-request` or `$merge-request` skill. The orchestrator never edits itself automatically.
+Never auto-create a PR from the retrospective. A PR is a separate maintenance implementation with repository discovery, a concrete approved or otherwise authorized plan, delegated tracked writing, review, final validation, and the host-visible `/ant:merge-request` or `$merge-request` skill. The orchestrator never edits itself automatically.
 
 ## 9. Deliver
 

@@ -14,7 +14,7 @@ Use this skill as the product and architecture intake layer for new application 
 
 Do not implement application code directly from this skill.
 
-Create the app brief, make the architecture recommendation, get user approval, then invoke `ant:implementation-orchestrator` with the approved handoff. Brief approval can satisfy product brainstorming, but it does not authorize tracked edits: the orchestrator verifies repository facts, prepares a concrete implementation plan, and obtains approval before writing. The orchestrator then owns subagent strategy, implementation, review, verification, and delivery.
+Create the app brief, make the architecture recommendation, get user approval, then invoke `ant:implementation-orchestrator` with the approved handoff. Brief approval can satisfy product brainstorming, but it does not authorize tracked edits by itself: the orchestrator verifies repository facts, classifies execution intent, and presents a concrete implementation plan before writing. An explicit end-to-end implementation request may authorize execution after that checkpoint when scope and risk remain unchanged. The orchestrator then owns subagent strategy, implementation, review, verification, and delivery.
 
 ## Reference Selection
 
@@ -58,7 +58,7 @@ Load only the references needed for the current conversation. For a user who is 
 15. Explain the tradeoff in a few concrete sentences, especially when avoiding overengineering or rejecting a too-simple frontend-only shape.
 16. Produce an application brief with acceptance criteria and explicit non-goals.
 17. Ask the user to approve the implementation path, architecture, framework/CMS choice, and brief before coding.
-18. After approval, invoke `ant:implementation-orchestrator` and pass the handoff from `references/orchestrator-handoff.md`. The orchestrator must still verify the repository, prepare the implementation plan, and obtain explicit approval before tracked edits.
+18. After approval, invoke `ant:implementation-orchestrator` and pass the handoff from `references/orchestrator-handoff.md`. The orchestrator must still verify the repository and present its implementation plan before tracked edits; it continues without another pause only when the original request gave explicit end-to-end implementation authorization and scope/risk remain unchanged.
 
 ## Boundaries
 
