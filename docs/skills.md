@@ -119,15 +119,16 @@ GitHub/GitLab Pull Request and Merge Request workflow for creating practical tit
 How it works:
 
 - checks git status, branch, target branch, remote provider, and the target-merge-base-to-final-`HEAD` diff before mutating delivery state;
-- asks which language to use unless the current task already contains an explicit choice;
+- distinguishes a read-only preparation proposal from explicit create/update intent, which performs the safe scoped commit/push/create-or-update chain and observes the matching pipeline/check set for the resolved head within a repository-appropriate bounded registration window;
+- resolves language and target choices from current instruction, repository rules, existing PR/MR state, metadata, and safe defaults; it asks only when a material conflict remains;
 - verifies any orchestrator summary against the repository instead of requiring a handoff schema;
 - uses `glab` for GitLab repositories and `gh` for GitHub repositories;
-- prefers Draft MR unless the user explicitly asks for ready/bez draft;
-- performs only the commit, push, PR/MR, readiness, merge, or release actions the user requested;
+- defaults a new MR/PR to Draft unless explicitly ready, while preserving existing readiness on ordinary updates;
+- never implies merge, release, rebase, force-push, or history rewrite from PR/MR creation intent;
 - uses a short Conventional Commit style title;
 - writes the description as a snapshot of the net final diff, excluding intermediate commits, abandoned attempts, and add-then-remove artifacts unless they remain materially relevant;
 - uses sections for what changed, why, chosen decisions, user and technical impact, UX walkthrough, technical testing, unverified items, and reviewer focus.
-- owns the final preview/confirmation and all `glab`/`gh` create or update commands.
+- returns a preview only for preparation intent; for creation/update intent, treats its preview as status rather than duplicate confirmation, owns `glab`/`gh` creation or update and pipeline evidence, and hands MR-diff regressions to the orchestrator for repair.
 
 Use it when the user asks to create or prepare an MR/PR and needs a structured practical description.
 

@@ -1,26 +1,28 @@
 ---
 name: merge-request
-description: "Create GitLab/GitHub merge requests or pull requests with a practical structured description, delivery checks, and an explicit language choice. Use when the user asks to create, prepare, draft, or update an MR/PR/merge request/pull request, including Czech requests like 'udělej MR', 'udělej PR', 'vytvoř merge request', 'připrav PR', or mistaken wording like 'merch request'."
+description: "Prepare a read-only GitLab/GitHub MR/PR proposal or create/update one with a practical final-diff description, safe delivery chain, and pipeline observation. Use when the user asks to create, prepare, draft, or update an MR/PR/merge request/pull request, including Czech requests like 'udělej MR', 'udělej PR', 'vytvoř merge request', 'připrav PR', or mistaken wording like 'merch request'."
 ---
 
 # Merge Request
 
-**Announce at start:** Say you will inspect the git context and prepare the PR/MR in the selected language.
+**Announce at start:** Say you will inspect the git context, resolve settled delivery choices, and either prepare a preview or create/update the PR/MR.
 
-Use this skill to turn the current branch changes into a GitLab Merge Request or GitHub Pull Request with a concise Conventional Commit title and a concrete description in the user's chosen language. Treat "merch request" in user wording as "merge request/MR".
+Use this skill to turn the current branch changes into a GitLab Merge Request or GitHub Pull Request with a concise Conventional Commit title and a concrete description in the resolved language. Treat "merch request" in user wording as "merge request/MR".
 
-This skill is the sole owner of PR/MR creation and update behavior. It owns provider detection, description language, Draft/ready intent, title, description, confirmation, and the provider CLI commands. Other skills may supply verified context, but must not maintain an alternate creation workflow.
+This skill is the sole owner of provider detection, description language, Draft/ready intent, title, description, creation/update commands, and pipeline observation. Other skills may supply verified context, but must not maintain an alternate creation workflow or use this skill as a code writer.
 
 ## Baseline
 
 - Respect repository instructions first, including package manager, branch naming, and delivery tool rules.
 - Preserve unrelated user changes. Never stage files blindly when the worktree contains changes outside the MR scope.
-- Prefer Draft MR unless the user explicitly says `ready`, `bez draft`, or equivalent.
+- Prefer Draft only when creating a new MR/PR unless the user explicitly says `ready`, `bez draft`, or equivalent. Preserve an existing MR/PR's readiness on an ordinary update; change it only on an explicit request.
 - Use `glab` for GitLab repositories and `gh` for GitHub repositories. Detect the provider from `git remote -v`.
 - Do not add `Generated with...`, `Co-Authored-By`, or similar footer lines to commits or MR descriptions.
 - Do not force-push, reset, or rewrite history unless the user explicitly asks and the risk is clear.
-- Ask which language to use unless the user already chose it in the current task or the orchestrator passes that explicit choice.
-- Treat commit, push, PR/MR creation, Draft-to-ready conversion, merge, and release as distinct delivery actions. Perform only the actions the user requested.
+- Resolve each choice in this order: the explicit current user instruction; target-repository instructions and existing MR/PR state; git/provider metadata; then safe documented defaults. Ask only when a material choice remains unresolved or these sources conflict. Conversation language alone is not a choice.
+- Repository instructions or an existing MR/PR can settle the description language and target branch; do not ask again when they do. In their absence, use English as the safe documented default.
+- Classify the request before delivery: **preparation intent** (for example, “prepare a proposal”, “draft the title/body”, or “show a PR preview”) returns only a read-only title/body preview. **Creation/update intent** (for example, “create”, “make”, “do”, “open”, `udělej MR`, or `vytvoř MR`) authorizes the safe necessary chain of a scoped commit when needed, source-branch push, new-MR/PR Draft creation unless ready was explicit, ordinary-update readiness preservation, and pipeline observation. “Draft” modifies readiness only when creation/update intent is otherwise clear.
+- Creation/update intent never authorizes merge, release, tag/publish, Draft-to-ready conversion unless `ready` was explicit, force-push, rebase, reset, or any history rewrite.
 - Treat every created or updated description as a snapshot of the final change from the target branch merge base to final `HEAD`, not as a diary of work performed on the branch.
 
 ## Workflow
@@ -35,42 +37,44 @@ This skill is the sole owner of PR/MR creation and update behavior. It owns prov
    git diff --stat
    git diff --name-status
    git diff
+   git diff --cached --stat
+   git diff --cached --name-status
+   git diff --cached
+   git diff HEAD --stat
+   git diff HEAD --name-status
+   git diff HEAD
    git log --oneline --decorate --max-count=20
    ```
 
 2. Detect the provider from the remote URL. Use GitLab only for a GitLab remote and GitHub only for a GitHub remote. If the remote is missing, unsupported, or ambiguous, stop and ask instead of guessing.
-3. Determine target branch from explicit user instruction, the existing PR/MR, or `origin` HEAD. If still ambiguous, ask before creating or updating the PR/MR. Ensure the target ref is current enough to establish the real merge base.
-4. Resolve the PR/MR description language before drafting the title/body. Reuse an explicit choice from the current task; otherwise use native question UI if available or ask directly in chat. Offer at least:
-   - Czech
-   - English
-   - Another language, where the user names the language
-5. Identify whether there are unstaged, staged, committed-but-unpushed, and unrelated changes. If committing is needed but was not requested, propose exactly which files and commit message would be used before acting.
-6. Compute the merge base between the target branch and final `HEAD`, then inspect that base-to-`HEAD` diff deeply enough to understand final behavior, technical decisions, user impact, and validation gaps. Verify any orchestrator summary against this final snapshot; do not generate the PR/MR from filenames, individual commits, or conversation history alone.
-7. Run targeted validation appropriate to the change when feasible. Do not run project-disallowed commands.
-8. Draft the final title, description, target, provider, and Draft/ready state. For an update, inspect the existing PR/MR first and identify exactly which fields will change.
-9. Present the complete preview unless the user already requested the exact title/body/update and readiness. Do not add an unnecessary second confirmation for settled choices.
-10. Push only when requested, after checking branch, upstream, and remote target. If no upstream exists, use `git push -u origin <branch>`.
-11. Create or update through `glab` or `gh`. Use Draft unless the user explicitly selected ready.
-12. Return the PR/MR URL and a short summary of what was created or updated.
+3. Resolve target, language, existing MR/PR state, and Draft/ready state using the precedence above. Determine target branch from explicit user instruction, the existing PR/MR, repository instructions, or `origin` HEAD. For a new MR/PR, Draft is the default; preserve existing readiness unless an explicit request changes it. Ask only if a choice remains materially ambiguous or conflicting. Ensure the target ref is current enough to establish the real merge base; a source branch merely behind target is not a reason to rebase, update it, or ask.
+4. Identify whether there are unstaged, staged, committed-but-unpushed, and unrelated changes from the separate staged, unstaged, and `HEAD` views. For preparation intent, inspect only. For creation/update intent, commit only clearly MR-scoped files when necessary. Never commit pre-staged unrelated files or mixed hunks merely because creation intent permits a scoped commit; stop and ask if staging cannot safely isolate the MR scope.
+5. Compute the merge base between the target branch and current `HEAD`, then inspect that diff deeply enough to understand final behavior, technical decisions, user impact, and validation gaps. If clearly scoped working-tree changes must be committed for creation/update intent, include them in the proposed preview and repeat this inspection from the real final `HEAD` after the commit. Verify any orchestrator summary against the final snapshot; do not generate the PR/MR from filenames, individual commits, or conversation history alone.
+6. Run targeted validation appropriate to the change when feasible. Do not run project-disallowed commands.
+7. Draft the final title, description, target, provider, and readiness behavior. For an update, inspect the existing PR/MR first, preserve its readiness unless explicitly changed, and identify exactly which fields will change.
+8. For preparation intent, return the complete read-only preview and stop. For creation/update intent, present the same concise preview as status, including any necessary scoped commit and push, then continue without a duplicate confirmation.
+9. Commit and push the source branch for creation/update intent after checking branch, upstream, and remote target. When a commit was needed, recompute the merge base and rebuild the description from the real final `HEAD` before the provider command. If no upstream exists, use `git push -u origin <branch>`.
+10. Create or update through `glab` or `gh`. Use Draft for a new MR/PR unless the user explicitly selected ready; leave existing readiness unchanged unless explicitly requested.
+11. Identify checks for the exact created/updated MR/PR head, monitor its matching pipeline/check set to a terminal state, and return the URL plus a concise delivery and pipeline summary.
 
-## Confirmation
+## Preview And Questions
 
-Before the provider command, show:
+For preparation intent, return this as the final preview. For creation/update intent, show it as a non-blocking status before performing the safe delivery chain:
 
 - provider and repository;
 - source and target branches;
 - create versus update intent;
 - final title;
 - selected description language;
-- Draft or ready state;
+- new-MR/PR Draft or ready state, or existing-MR/PR readiness preservation/change;
 - full description preview or the exact fields being updated;
 - validation gaps and unrelated-worktree warnings.
 
-Offer `Create/update as Draft`, `Create/update as ready`, `Edit title`, `Edit description`, and `Cancel` when the user's current instructions have not already settled those choices. Do not treat PR/MR intent as permission to merge or release.
+Do not seek a second confirmation for creation/update intent. Ask only for a real blocker: unrelated or ambiguous changes that cannot be scoped safely, conflicting instructions, unsupported or ambiguous provider, unresolved target, destructive history operation, or materially risky scope expansion. Do not treat PR/MR intent as permission to merge or release.
 
-## Language Selection
+## Language Resolution
 
-Ask the language question when the user has not already selected a language for this PR/MR. Never infer it only from the conversation language, but do not ask twice after a clear answer.
+Use the precedence rules above. Never infer language only from the conversation language, but do not ask when the repository instructions, existing MR/PR, or safe English default already settles it. Ask only when higher-priority sources conflict or the required language is materially unresolved.
 
 Recommended wording:
 
@@ -81,7 +85,7 @@ V jakém jazyce mám připravit PR/MR popis?
 - Jiný jazyk
 ```
 
-If the user picks "another language", ask for the exact language name. Use the selected language for:
+If language is genuinely unresolved and the user picks "another language", ask for the exact language name. Use the resolved language for:
 
 - PR/MR description headings;
 - bullet content;
@@ -93,8 +97,8 @@ Keep the Conventional Commit title in English unless the repository convention o
 
 ## Commit And Push Rules
 
-- If the user asks only to prepare or create a PR/MR and commits or a remote branch are missing, explain the required commit/push actions and obtain the missing intent before performing them. A request such as "do it completely, including push" already settles those actions.
-- If unrelated files are present, stage only MR-relevant files explicitly or ask the user to split scope.
+- Preparation intent never commits, pushes, creates, updates, or monitors a provider object. Creation/update intent includes the scoped commit and source-branch push needed to deliver the requested MR/PR; do not ask again just because either is necessary.
+- If unrelated files or mixed staged hunks are present, stage only MR-relevant files explicitly or ask the user to split scope. Never include pre-staged unrelated changes in the commit.
 - Use a Conventional Commit message: `feat(scope): short summary`, `fix(scope): short summary`, `refactor(scope): short summary`, `docs(scope): short summary`, `test(scope): short summary`, or `chore(scope): short summary`.
 - Keep commit and MR titles short, factual, lower-case after the colon, without a trailing period.
 
@@ -267,16 +271,17 @@ glab mr create \
   --yes
 ```
 
-For a ready GitLab MR, omit `--draft`. For an existing MR, update the intended fields and readiness explicitly:
+For a ready GitLab MR, omit `--draft`. For an existing MR, update content without changing readiness:
 
 ```bash
 mr_description="$(< /tmp/mr-description.md)"
 glab mr update <id-or-branch> \
   --title "type(scope): short factual summary" \
   --description "$mr_description" \
-  --draft \
   --yes
 
+# Only when explicitly requested:
+glab mr update <id-or-branch> --draft --yes
 glab mr update <id-or-branch> --ready --yes
 ```
 
@@ -290,13 +295,14 @@ gh pr create \
   --draft
 ```
 
-For a ready GitHub PR, omit `--draft`. Change an existing PR's content and review state with separate explicit commands:
+For a ready GitHub PR, omit `--draft`. Change an existing PR's content without changing its review state:
 
 ```bash
 gh pr edit <number-or-url-or-branch> \
   --title "type(scope): short factual summary" \
   --body-file /tmp/pr-description.md
 
+# Only when explicitly requested:
 gh pr ready <number-or-url-or-branch>
 gh pr ready <number-or-url-or-branch> --undo
 ```
@@ -309,3 +315,23 @@ gh pr view
 ```
 
 When `glab`, `gh`, or `git push` requires network/auth approval, request approval normally and explain that it is needed to push or create the MR/PR.
+
+## Pipeline Observation And Remediation Handoff
+
+After every create or update, resolve the exact MR/PR head and observe only its matching checks/pipeline to a terminal state by default. This is part of creation/update intent, not a separate confirmation.
+
+- Set a finite registration deadline using repository/provider guidance when available; otherwise use a safe bounded window. Announce the wait concisely. If matching checks or a pipeline are still absent at the deadline, collect the head and provider evidence, report `no pipeline/checks registered` as an unverified external-state outcome, and ask or stop as repository instructions require—never report green or wait indefinitely.
+- For GitHub, resolve the created/updated PR's `headRefOid` first. Within the registration window, wait for its checks rollup to register checks for that OID; an empty rollup is pending, not success. Then use `gh pr checks <id> --watch`. An exit status of `8` means checks are still pending; continue bounded observation rather than treating it as a failure. Re-read `headRefOid` after observation; if it changed, restart observation for the newer head instead of reporting the prior head green.
+- For GitLab, resolve the MR's current head SHA (for example `diff_refs.head_sha`), wait within the registration window for a matching pipeline, and prefer the repository-correct MR pipeline source—normally `merge_request_event`. Capture that pipeline's exact ID and poll or observe that ID to terminal. `glab ci view --pipelineid` can inspect a known pipeline, but non-interactive API polling by pipeline ID is acceptable when it is more reliable.
+- While checks are pending or running, send one concise waiting status and continue monitoring at bounded intervals so the user receives an update at least every 60 seconds. Do not narrate unchanged snapshots.
+- On success, report that the exact MR/PR pipeline is green. On failure or cancellation, collect the failing check/job identity and relevant provider diagnostic logs or evidence before classifying the cause as an MR-diff regression, flaky/infrastructure issue, credentials issue, or external-state blocker.
+- A safe provider retry is allowed only for a classified flaky/infrastructure failure when provider support and repository/user instructions permit it. Monitor the retried run. Never weaken, skip, or silently ignore checks.
+- For credentials or external-state blockers, a materially risky scope expansion, or any conflicting instruction, report the evidence and ask for direction. Never imply authorization to merge, release, rebase, force-push, reset, or rewrite history.
+
+### Repair Ownership
+
+`merge-request` owns provider observation and the diagnostic bundle; it never makes tracked code repairs.
+
+- When an implementation-orchestrator run is active and the evidence shows an in-scope MR-diff regression, return that bundle to its implementation/review/validation loop. The orchestrator dispatches the bounded repair, targeted validation, independent review, and required final-suite refresh, then re-enters this skill only to commit/push/update and monitor the replacement pipeline.
+- For standalone creation/update intent, hand off the same bounded regression evidence to `implementation-orchestrator`. The original creation/update intent authorizes repair only while it remains within the MR's established scope and risk. The orchestrator performs discovery, a proportional repair plan, tracked repair delegation, review, validation, and the final-suite refresh before returning to this skill for the updated MR/PR and pipeline observation.
+- Repeat that repair-and-observation loop until the exact pipeline is green or there is a genuine blocker or material scope/risk change. This is a caller handoff, not a circular invocation: this skill reports evidence upward or starts the orchestrator handoff; the orchestrator resumes this skill only after repair work is ready for delivery.

@@ -35,7 +35,7 @@ Read-only scouts may run before the execution gate. They return evidence and opt
 
 A tiny mechanical change inside an already approved or otherwise authorized plan may use a compact cycle: verify the affected code, state the small delta and checks, then continue without duplicate approval. A concrete plan supplied by the user or an approved `create-application` brief may satisfy earlier product brainstorming once repository facts are verified, but it is not implementation authorization. A separate explicit end-to-end implementation request may provide that authorization after plan presentation.
 
-Implementation authorization does not remove the mandatory plan checkpoint or authorize a materially expanded plan. Approval or authorization covers only the scoped repository edits required by the plan. It does not authorize destructive operations, force-pushes, commits, pushes, PR/MR creation, merges, releases, or unrelated cleanup. Respect any narrower repository or host permission boundary.
+Implementation authorization does not remove the mandatory plan checkpoint or authorize a materially expanded plan. Approval or authorization covers only the scoped repository edits required by the plan. It does not independently authorize destructive operations, force-pushes, merges, releases, or unrelated cleanup. An explicit create/update PR/MR request carries only the limited scoped commit, push, new-request Draft-by-default creation, ordinary-update readiness preservation, and pipeline-observation chain defined by `merge-request`; respect any narrower repository or host permission boundary.
 
 ### Native Goal Envelope
 
@@ -157,6 +157,14 @@ Use the host's available transport. Codex may steer an active agent or queue inp
 
 When an agent becomes silent or interrupted, first request or recover its latest checkpoint and inspect the actual git diff. Reassign overlapping writes only after the prior writer is known to be stopped or its scope is safely handed off. Do not add a lease protocol or assume that elapsed time proves abandonment.
 
+### MR/PR Pipeline Regression Handoff
+
+`merge-request` resolves the exact created or updated MR/PR head, observes its matching pipeline/check set within its bounded registration window, and owns provider evidence. If no matching checks/pipeline registers by that deadline, it reports an unverified external-state outcome rather than green; do not enter the repair loop without failure evidence. If it reports a failed or cancelled pipeline, first use that evidence to distinguish an in-scope MR-diff regression from a flaky/infrastructure, credentials, or external-state issue.
+
+For an in-scope regression, the original explicit create/update intent authorizes a bounded repair only while it remains inside the established MR scope and risk. Treat the diagnostic bundle as a new implementation phase: verify the failure against the diff, state a proportional repair plan, delegate the tracked repair, run targeted validation, require independent review, and refresh the final suite after the final repair mutation. Then invoke `merge-request` to commit/push/update the same MR/PR and monitor its replacement pipeline. Repeat until green or a genuine blocker or material scope/risk change requires the user.
+
+For flaky/infrastructure failures, let `merge-request` retry only when the provider supports a safe retry and repository/user instructions allow it; do not weaken or skip checks. Credentials and external-state blockers, conflicting instructions, and material scope expansion require a concise evidence-backed question. `merge-request` never writes code, and this lifecycle never asks it to orchestrate repairs: it returns evidence to an active orchestrator run, or a standalone delivery request hands off into this lifecycle before resuming the merge-request skill.
+
 ## 6. Review And Fix
 
 Every tracked implementation receives final code review from an independent Strong child pinned at `High`; root at maximum effort adjudicates the findings and completion. Risk controls whether additional specialized review is needed, not whether this final review occurs. If the host cannot safely dispatch the required reviewer without above-High inheritance, report the limitation and do not imply that independent review happened.
@@ -218,6 +226,7 @@ Never auto-create a PR from the retrospective. A PR is a separate maintenance im
 Before delivery, verify branch, target, final diff, validation results, and the exact actions requested by the user. Stage only in-scope files and follow repository commit/push rules.
 
 - For every PR/MR create or update action, invoke the plugin skill through its host-visible identifier: Claude Code `/ant:merge-request` or Codex `$merge-request`. Pass it the verified summary, checks, target, language/readiness choices already supplied by the user, and unresolved risks.
+- After every create/update, let `merge-request` resolve the exact MR/PR head and observe its matching pipeline/check set to a terminal state. If its evidence identifies an in-scope regression, re-enter the bounded repair loop above before asking it to update and observe the replacement pipeline.
 - For merge-conflict resolution and related recovery, use Claude Code `/ant:delivery-workflows` or Codex `$delivery-workflows` only.
 - A request to commit and push does not imply merge, Draft-to-ready conversion, tagging, publishing, or release unless the user says so.
 
