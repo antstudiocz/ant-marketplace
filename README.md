@@ -92,7 +92,7 @@ The workflow selects capability and thinking effort independently. These are cur
 | Exact searches and mechanical work | `gpt-5.6-luna` · Low/Medium; otherwise Terra at the same effort | Haiku, or Sonnet · Low when explicit effort control is required |
 | PR/MR support | `gpt-5.6-terra` · Medium | Sonnet · Medium |
 
-Root always uses the strongest available capability at the host’s maximum available effort. Every child is explicitly routed and capped at High; a Strong task does not imply above-High effort. In Codex, each child—including nested work—gets concise self-contained context and uses `fork_turns="none"`. If the required route or isolation cannot be enforced, it is reported rather than assumed.
+Root always uses the strongest available capability at the host’s maximum available effort. Every child is explicitly routed and capped at High; a Strong task does not imply above-High effort. In Codex, read-only, review, slice, validation, and nested children use `fork_turns="none"`; the primary tracked writer may receive exactly one directly authorizing user turn with `fork_turns="1"`. Every assignment remains concise and self-contained, and no child receives the full conversation. Child decisions route upward to root, which asks the user only for genuinely new authority.
 
 The [orchestrator guide](docs/orchestrator.md) contains its lifecycle, routing details, validation, review, retrospective, delivery boundaries, and optional Codex nested-agent setup.
 

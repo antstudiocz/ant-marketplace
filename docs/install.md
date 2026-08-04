@@ -91,7 +91,7 @@ In a fresh session, invoke `implementation-orchestrator` on a small repository t
 - for new behavior, brainstorms user needs, asks material questions, and analyzes more deeply before the plan;
 - chooses a proportional agent shape and reports a blocker before tracked edits if no writer-capable native delegation is available;
 - routes by capability while selecting a real native model and, where supported, effort for every child;
-- keeps root at the host's maximum available reasoning effort and pins every child explicitly at High or lower, independently from capability tier; in Codex, every child and nested child uses `fork_turns="none"` with concise self-contained task context;
+- keeps root at the host's maximum available reasoning effort and pins every child explicitly at High or lower, independently from capability tier; in Codex, history-free children use `fork_turns="none"` and the primary tracked writer may receive only one directly authorizing user turn with `fork_turns="1"`;
 - after a stable implementation plan, uses a measurable native goal before tracked-writer dispatch: Codex inspects and reuses or creates a matching goal when native tools are available, while Claude Code gives the user an exact `/goal` command to activate;
 - runs targeted checks during work, completes the required review, then runs one broad suite before completion and optional delivery;
 - performs a bounded root retrospective after the final suite, corrects any current gap, and proposes no more than one sanitized upstream feedback action only when the finding is material and generalizable;

@@ -80,7 +80,7 @@ Capability tier and reasoning effort are independent controls. A Strong child do
 
 The root orchestrator uses the strongest available capability and the active host's maximum available reasoning effort for the entire run. It owns global context, decisions, integration, final adjudication, and the retrospective. Do not lower root effort for deterministic segments. If the host cannot expose or set the root control, use its strongest available root setting, state the limitation, and never describe it as maximum.
 
-Every child dispatch must pin its native model and, where that model exposes an effort selector, its supported effort explicitly. No child or nested child may use any setting above `High`. Never leave a child unpinned where it could inherit root maximum effort. Each child and nested child must receive fresh, task-local context through a concise self-contained assignment; never rely on inherited conversation history. Where the host exposes a history-propagation choice, select the isolating route. If the host exposes no safe way to prevent above-High inheritance or unwanted history propagation, report the limitation and do not silently dispatch a violating child. A child that believes it needs effort above `High` must narrow or split the work, or return the unresolved judgment to root; it never self-escalates above the ceiling.
+Every child dispatch must pin its native model and, where that model exposes an effort selector, its supported effort explicitly. No child or nested child may use any setting above `High`. Never leave a child unpinned where it could inherit root maximum effort. Each child and nested child must receive task-local context through a concise self-contained assignment; never rely on broad inherited conversation history. Where the host exposes a history-propagation choice, select the most isolating route that still preserves authorization provenance required for the assigned writes. The active adapter may carry one directly authorizing user turn for the primary tracked implementation owner; read-only, review, and nested children remain history-free. If the host exposes no safe way to enforce the effort ceiling and this bounded isolation, report the limitation and do not silently dispatch a violating child. A child that believes it needs effort above `High` must narrow or split the work, or return the unresolved judgment to root; it never self-escalates above the ceiling.
 
 | Role | Capability | Default effort | Ceiling | Decision notes |
 |---|---|---|---|---|
@@ -126,6 +126,18 @@ Role boundaries:
 - **Reviewer:** independent and normally read-only; checks requirement fit, correctness, regressions, architecture, negative cases, and validation gaps.
 
 The approved or otherwise authorized plan is the implementation contract. Include its decisions and acceptance behavior in writer assignments, and escalate rather than silently redefining it.
+
+### Decision Routing And Authorization Provenance
+
+Children escalate to their parent. They do not ask the user directly or require the user to relay decisions between agents. The parent resolves bounded implementation details; the root owns final adjudication and is the only layer that decides whether new user input is needed.
+
+The root must classify each escalation before involving the user:
+
+- If repository evidence, the stable plan, or an already authorized acceptance rule answers it, the root decides and sends the child the concrete instruction. No duplicate approval is needed.
+- If it materially changes behavior, scope, architecture, data, safety/risk, or requires an uncovered destructive, delivery, or external action, the root asks the user once with the evidence and recommendation.
+- If a host safety mechanism asks for original-user provenance for an action already covered by valid authorization, treat that as a delegation-context problem, not a new product decision. Reuse the primary implementation owner that received the bounded authorization context or redispatch through the active adapter's minimal authorization-preserving route. Ask the user to restate approval only when no valid authorization exists or the requested action exceeds it.
+
+Every child assignment names its escalation recipient and the decisions already made. A child returns evidence, options, and a recommendation; it never widens the user-facing approval surface on its own.
 
 Pass relevant specialist-skill guidance into assignments when frontend, Laravel, brand, delivery, or another domain requires it. Do not assume a child will discover internal references by itself.
 

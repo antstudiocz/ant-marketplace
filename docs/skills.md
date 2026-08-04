@@ -44,7 +44,8 @@ How it works:
 - chooses a proportional shape: one writer plus final independent review for simple work, optional scouts or slices for broader work, and extra specialist review only when risk warrants it;
 - keeps root coordination-only and stops before tracked edits when no writer-capable native delegation is available;
 - routes children by Strong, Balanced, and Fast capabilities while selecting a real host model and, where supported, effort for each dispatch;
-- keeps root at the host's maximum available reasoning effort for the whole run and pins every child explicitly at High or lower, independently from capability tier; Codex children and nested children use `fork_turns="none"` with concise self-contained task context;
+- keeps root at the host's maximum available reasoning effort for the whole run and pins every child explicitly at High or lower, independently from capability tier; Codex uses `fork_turns="none"` for read-only, review, slice, validation, and nested work, while the primary tracked writer may receive exactly one directly authorizing user turn;
+- routes child questions to their parent and lets root adjudicate decisions already covered by the stable plan instead of asking the user to repeat approval;
 - reuses an active agent that already owns the same goal and evidence instead of creating overlapping work, except for intentional independent review;
 - delegates all tracked edits and keeps write scopes disjoint when work is parallel;
 - accepts mid-flight status and authorized-behavior details without stopping work; batches related material changes from the same active segment into one affected-scope planning and approval cycle at the next safe boundary while unaffected work continues;
