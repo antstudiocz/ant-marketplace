@@ -21,7 +21,7 @@ claude plugin install ant@ant-marketplace --scope user
 
 Reload Claude Code after installing or updating.
 
-For the orchestrator, establish the root selection before invocation: start with `claude --model best --effort max`, or set `/model best` and `/effort max` in the session. Then invoke `/ant:implementation-orchestrator`. Keep that session setting through the multi-turn workflow; skill frontmatter does not guarantee it.
+For the orchestrator, establish the root selection before invocation: start with `claude --model best --effort max`, or set `/model best` and `/effort max` in the session. Then invoke `/ant:implementation-orchestrator`. Keep that session setting through the multi-turn workflow; skill frontmatter does not guarantee it. For implementation work, run the exact plan-tailored `/goal` command it gives you before tracked writes unless it can observe a matching session goal; the command replaces any current session goal.
 
 ## Codex
 
@@ -92,6 +92,7 @@ In a fresh session, invoke `implementation-orchestrator` on a small repository t
 - chooses a proportional agent shape and reports a blocker before tracked edits if no writer-capable native delegation is available;
 - routes by capability while selecting a real native model and, where supported, effort for every child;
 - keeps root at the host's maximum available reasoning effort and pins every child explicitly at High or lower, independently from capability tier; in Codex, every child and nested child uses `fork_turns="none"` with concise self-contained task context;
+- after a stable implementation plan, uses a measurable native goal before tracked-writer dispatch: Codex inspects and reuses or creates a matching goal when native tools are available, while Claude Code gives the user an exact `/goal` command to activate;
 - runs targeted checks during work, completes the required review, then runs one broad suite before completion and optional delivery;
 - performs a bounded root retrospective after the final suite, corrects any current gap, and proposes no more than one sanitized upstream feedback action only when the finding is material and generalizable;
 - asks for separate approval before writing to an upstream issue and never creates a retrospective PR automatically;
@@ -99,4 +100,4 @@ In a fresh session, invoke `implementation-orchestrator` on a small repository t
 - batches related material changes from the same active segment into one affected-scope planning and approval cycle at the next safe boundary, without delaying an urgent stop or safety correction;
 - invokes `/ant:merge-request` and `/ant:delivery-workflows` in Claude Code or `$merge-request` and `$delivery-workflows` in Codex for delivery handoffs.
 
-Version 10 is instruction-only and does not require an orchestration database, state contract, generated runtime, or migration command. See [the 10.0 release notes](releases/10.0.0.md).
+Version 10.1 is instruction-only and does not require an orchestration database, state contract, generated runtime, or migration command. See [the 10.0 release notes](releases/10.0.0.md).
