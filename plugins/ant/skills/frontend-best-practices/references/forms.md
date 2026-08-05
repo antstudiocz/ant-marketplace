@@ -61,6 +61,13 @@ function ContactForm() {
   const onSubmit = async (data: FormData) => {
     try {
       await submitData(data);
+
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'app_form_submit',
+        form_name: 'contact-form',
+      });
+
       toast.success(t('success'));
       form.reset();
     } catch {
@@ -105,6 +112,26 @@ function ContactForm() {
     </form>
   );
 }
+```
+
+## Successful Submission Tracking
+
+When a form needs analytics tracking, push the event only after the backend
+submission succeeds. Do not track a button click, a validation attempt, or a
+failed request as a successful form submission.
+
+Use an explicit, stable `form_name` identifier for each form:
+
+```tsx
+const onSubmit = async (data: FormData) => {
+  await submitData(data);
+
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event: 'app_form_submit',
+    form_name: 'contact-form',
+  });
+};
 ```
 
 ## Field Component Implementation

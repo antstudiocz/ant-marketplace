@@ -20,6 +20,10 @@ For any frontend change, consider:
 - responsive behavior across supported breakpoints;
 - i18n for all user-visible text;
 - performance, loading states, and layout stability;
+- successful form submissions are tracked with an `app_form_submit` event
+  only after the backend request succeeds, using an explicit stable
+  `form_name` identifier; never track button clicks, validation attempts, or
+  failed requests as successful submissions;
 - framework-specific boundaries for React, Next.js, Server Components, caching, and PPR.
 
 Do not load every reference by default. Select the smallest useful set for the task.
