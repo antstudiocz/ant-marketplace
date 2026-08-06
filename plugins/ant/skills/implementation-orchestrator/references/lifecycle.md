@@ -1,6 +1,6 @@
 # Implementation Lifecycle
 
-This is the orchestrator's shared internal reference. Apply it with repository instructions and exactly one active-host routing adapter.
+This is the orchestrator's shared internal reference. Apply it with repository instructions, and load exactly one active-host adapter only when `SKILL.md` Reference Loading reaches a host-specific native-goal, delegation, or model/effort decision.
 
 ## 1. Discover, Classify, Brainstorm, And Plan
 
@@ -37,11 +37,26 @@ A tiny mechanical change inside an already approved or otherwise authorized plan
 
 Implementation authorization does not remove the mandatory plan checkpoint or authorize a materially expanded plan. Approval or authorization covers only the scoped repository edits required by the plan. It does not independently authorize destructive operations, force-pushes, merges, releases, or unrelated cleanup. An explicit create/update PR/MR request carries only the limited scoped commit, push, new-request Draft-by-default creation, ordinary-update readiness preservation, and pipeline-observation chain defined by `merge-request`; respect any narrower repository or host permission boundary.
 
+### Implementation Continuity
+
+After initial read-only discovery and before the concrete implementation plan or any tracked write, decide whether the task materially differs under these modes:
+
+- **Incrementally verifiable:** Each coherent checkpoint leaves the affected system runnable or testable to the degree defined by the plan.
+- **Integrated replacement:** Optimize the edit sequence for the final architecture. The active checkout may intentionally be unusable between integration boundaries; do not add compatibility shims or transitional paths solely to keep intermediate states green.
+
+First check whether the user already explicitly chose a mode; if so, record it without asking again. Otherwise, treat the modes as materially different whenever preserving intermediate runnability or testability would change sequencing, require compatibility shims or transitional paths, or add meaningful validation or rework. Broad clean replacements and cross-component rewrites should normally be material choices. A feasible incremental path, or unrelated or current dirty changes, does not make the modes equivalent. Only for genuinely equivalent work, normally tiny and local, select Incrementally verifiable without a ceremonial question and state that approach in the plan. For a material difference, ask one concise predefined choice: **Incrementally verifiable** (recommended when intermediate checkpoints matter) or **Integrated replacement** (recommended only when final-architecture integration materially benefits); tailor the recommendation to the task context and do not silently select Integrated replacement.
+
+Integrated replacement requires explicit user acceptance and confirmation that the active checkout is exclusively dedicated to this implementation. If it is unavailable because the checkout is not yet exclusively dedicated or unrelated changes or processes need protection, state that constraint and ask whether to dedicate or isolate the checkout or use Incrementally verifiable; do not silently default on the user's behalf. A separate worktree is preferred for isolation but is not required; a root checkout is allowed. Identify and protect unrelated dirty changes, and do not assume that avoiding a push isolates local processes or data.
+
+Continuity changes only intermediate local implementation order and validation boundaries. It never waives destructive-action authorization, useful targeted checks, independent final review, a successful final suite on the exact final tree, MR/pipeline/deployment safety, backwards compatibility, rolling deployment, or deploy-safe data and API migration requirements. Required migration compatibility is final correctness, not disposable scaffolding.
+
+Record the selected mode, its implementation-order and validation implications, and any checkout constraints in the concrete plan, native goal envelope, and writer assignment. Treat a later material mode switch as a material correction under the delta-plan and risk rules before affected writes continue.
+
 ### Native Goal Envelope
 
 For implementation-authorized work, or work that later receives the required approval, establish the active host's native goal envelope after the objective, acceptance behavior, constraints, validation, and any authorized delivery are stable, and immediately before tracked-writer dispatch. Do not establish a goal for analysis-only work or while an ambiguous request remains unresolved. The goal is an outcome-oriented complement to the native plan and authorization checkpoint, never a replacement for either.
 
-Use the active-host adapter for the mechanism. The goal condition must be measurable and include the verified outcome, material constraints, required checks, and only delivery actions the user has already authorized. Do not create custom goal state, hooks, runtimes, or compatibility layers. Reuse a semantically matching active native goal when the host supports that; do not overwrite, complete, or block an unrelated active goal.
+Use the active-host adapter for the mechanism. The goal condition must be measurable and include the verified outcome, selected continuity mode and its implications, material constraints, required checks, and only delivery actions the user has already authorized. Do not create custom goal state, hooks, runtimes, or compatibility layers. Reuse a semantically matching active native goal when the host supports that; do not overwrite, complete, or block an unrelated active goal.
 
 Close the native goal only when its scoped implementation is complete and the required independent review, final validation, root retrospective, and any delivery explicitly included in the goal have actually finished. Ordinary approval waits, clarification, or a temporary lack of user input are not goal blockers. Host-specific availability, inspection, creation, completion, and repeated-blocker behavior belongs in the adapter.
 
@@ -111,7 +126,7 @@ Every assignment should contain only what the agent needs:
 - goal and observable acceptance criteria;
 - relevant repository context and constraints;
 - allowed write scope and explicit non-goals;
-- important decisions already made;
+- important decisions already made, including the selected continuity mode and its implications;
 - expected targeted checks;
 - conditions that require escalation;
 - required report: changes, checks, unresolved risks, and unexpected findings.
