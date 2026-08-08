@@ -37,6 +37,23 @@ A tiny mechanical change inside an already approved or otherwise authorized plan
 
 Implementation authorization does not remove the mandatory plan checkpoint or authorize a materially expanded plan. Approval or authorization covers only the scoped repository edits required by the plan. It does not independently authorize destructive operations, force-pushes, merges, releases, or unrelated cleanup. An explicit create/update PR/MR request carries only the limited scoped commit, push, new-request Draft-by-default creation, ordinary-update readiness preservation, and pipeline-observation chain defined by `merge-request`; respect any narrower repository or host permission boundary.
 
+Implementing and testing code for future production behavior is not the same as actually deploying, publishing, releasing, running a production operation, or causing an external side effect. The former is covered by implementation authorization when it stays inside the stable plan; the latter requires the corresponding delivery or external-action authority.
+
+### Decision And Approval Routing
+
+Root is the only role that communicates with the user, formulates user-facing questions, or adjudicates approval. A delegated scout, writer, slice worker, reviewer, validator, or delivery helper never asks the user directly and never drafts a question for the user to relay. When it cannot safely continue, it returns one escalation packet to its parent containing:
+
+- repository or host evidence and the decision that remains unresolved;
+- viable options and tradeoffs;
+- its recommendation;
+- the exact affected scope paused while unaffected authorized work continues.
+
+Nested parents resolve what they can from their assignment and pass any remainder upward in the same form until it reaches root. Root first checks repository evidence, the stable authorized plan, and prior user decisions. It asks the user only for genuinely new material behavior, scope, or risk; an uncovered destructive, external, or delivery action; or a real native user-only host approval. Consolidate every known necessary user decision into one concrete question. If the user immediately answers that root question with an ordinary `yes`, `continue`, or equivalent unambiguous confirmation, it is sufficient; do not require ritual wording or claim that an exact sentence is needed.
+
+Keep workflow approval distinct from host execution policy. A declined patch, `fileChange`, or policy classification is not by itself a native user-only approval gate and does not justify asking the user to repeat approval. Resolve a safe in-policy execution path that produces the identical planned result, or return the full shared escalation packet—evidence, viable options and tradeoffs, a recommendation, and the exact paused scope—to the parent for escalation through parents to root. Mechanical patch splitting is permitted only when the pieces are coherent implementation steps toward that identical final result; never split work to evade policy classification.
+
+Quality is invariant across every resolution path. Never choose weaker architecture, reduced tests or validation, a legacy fallback, a hidden workaround, or any semantic compromise to avoid an approval. If the correct solution genuinely requires new authority, root asks once rather than degrading the result.
+
 ### Implementation Continuity
 
 After initial read-only discovery and before the concrete implementation plan or any tracked write, decide whether the task materially differs under these modes:
@@ -75,6 +92,7 @@ Use risk and uncertainty, not task size alone:
 Rules:
 
 - Before the applicable execution gate passes, dispatch only read-only discovery or review work. Dispatch tracked implementation owners and slice workers only after presenting the plan and, when required, receiving explicit approval.
+- Delegated agents never communicate with the user or formulate user questions. They escalate evidence, options, a recommendation, and paused scope only to their parent; root alone resolves or asks.
 - Do not spawn one agent per file, phase-owner agents, or agents whose only job is process bookkeeping.
 - One implementation lead owns the final integrated result. A small task may use the same agent as its sole writer.
 - Parallelize only independent work with disjoint write scopes and a stable shared contract. Keep a slot available for review or recovery when capacity is tight.
@@ -129,13 +147,14 @@ Every assignment should contain only what the agent needs:
 - important decisions already made, including the selected continuity mode and its implications;
 - expected targeted checks;
 - conditions that require escalation;
+- required escalation shape: evidence, options, recommendation, and exact paused scope, returned only to the parent;
 - required report: changes, checks, unresolved risks, and unexpected findings.
 
 Preflight is required; post-dispatch visibility is only a secondary guard. If host-visible UI, task metadata, or transcript shows that a child was routed at a different model, effort, or isolation state than approved, immediately stop or cancel that child, discard its result, and report the mismatch. Do not treat a post-dispatch guard as permission to skip a preflight that the active adapter requires.
 
 Role boundaries:
 
-- **Scout:** read-only; returns concise code evidence, likely root cause, options, and open questions.
+- **Scout:** read-only; returns concise code evidence, likely root cause, options, and unresolved decisions to its parent.
 - **Implementation lead:** owns tracked edits, integration, targeted checks, and the final implementation report. It may request slices or review.
 - **Slice worker:** owns one disjoint bounded write scope and reports back to the lead; it does not redefine shared contracts.
 - **Reviewer:** independent and normally read-only; checks requirement fit, correctness, regressions, architecture, negative cases, and validation gaps.
@@ -152,11 +171,11 @@ The implementation owner should:
 2. Fix the root cause, removing obsolete paths when the approved or otherwise authorized direction is a clean replacement.
 3. Keep edits inside the assigned scope and flag unrelated dirty state immediately.
 4. Run targeted checks at meaningful boundaries, not after each file save.
-5. Report unexpected complexity early so the assignment can be narrowed or split, or unresolved judgment can return to root.
+5. Report unexpected complexity early to the parent so the assignment can be narrowed or split, or unresolved judgment can reach root through the escalation chain.
 
 ### Mid-flight user messages
 
-Briefly acknowledge new input and classify it by effect:
+Root briefly acknowledges new input and classifies it by effect. Delegated agents receive only the resulting assignment update and never reply to the user:
 
 - **Status or question:** answer without stopping the active implementation.
 - **Detail within authorized behavior:** incorporate it into the affected current or upcoming work; unaffected work continues and no duplicate approval is needed.

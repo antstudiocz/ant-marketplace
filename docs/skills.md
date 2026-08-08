@@ -37,7 +37,7 @@ How it works:
 - classifies requests at intake as analysis-only, implementation-authorized, or ambiguous, asking early when intent is unclear;
 - starts every implementation with read-only repository discovery and a proportional plan before tracked edits;
 - for new or materially changed behavior, brainstorms goals, users, workflows, edge cases, non-goals, options, and tradeoffs before deeper technical analysis;
-- asks every material question that cannot be answered from the repository, without an arbitrary count;
+- keeps root as the sole user-facing adjudicator; delegated agents escalate evidence, options, a recommendation, and paused scope only to their parent, while root resolves discoverable decisions and batches all genuinely new material authority into one question;
 - presents a concrete implementation plan as a mandatory progress checkpoint; explicit execution language such as “fix it and test it end-to-end” continues afterward when scope and risk remain unchanged, while “analyze only” remains read-only;
 - after initial discovery, first honors any already explicit continuity choice; otherwise records incrementally verifiable checkpoints without asking when continuity does not materially differ, or asks once for the predefined choice with a contextual recommendation when it does; integrated replacement requires an implementation-dedicated checkout and never weakens final safety or migration requirements;
 - establishes a measurable native goal after the plan is stable and before tracked-writer dispatch for implementation-authorized or later-approved work; Codex automatically reuses or creates a matching goal when native tools are available, while Claude Code asks the user to run an exact plan-tailored `/goal` command;
@@ -46,6 +46,7 @@ How it works:
 - keeps root coordination-only and stops before tracked edits when no writer-capable native delegation is available;
 - routes children by Strong, Balanced, and Fast capabilities while selecting a real host model and, where supported, effort for each dispatch;
 - keeps root at the host's maximum available reasoning effort for the whole run and pins every child explicitly at High or lower, independently from capability tier; Codex children and nested children use `fork_turns="none"` with concise self-contained task context;
+- distinguishes declined patch/fileChange/policy classifications from real native user-only approval gates and never weakens architecture, behavior, tests, validation, or compatibility to avoid approval;
 - reuses an active agent that already owns the same goal and evidence instead of creating overlapping work, except for intentional independent review;
 - delegates all tracked edits and keeps write scopes disjoint when work is parallel;
 - accepts mid-flight status and authorized-behavior details without stopping work; batches related material changes from the same active segment into one affected-scope planning and approval cycle at the next safe boundary while unaffected work continues;
