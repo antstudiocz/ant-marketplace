@@ -128,7 +128,7 @@ docs(skills): add merge request workflow
 
 ## MR Description
 
-Write the description in the selected language. Be concrete and operational, not marketing-oriented. The description must start with a short plain-language summary of what was actually done, then a horizontal rule, then the detailed structured sections. Separate user walkthrough from technical validation.
+Write the description in the selected language. Be concrete and operational, not marketing-oriented. Organize it in two layers: a concise reviewer-first default layer that exposes the outcome, behavior, impact, risk, verification status, and review priority; then optional implementation and validation detail. The description must start with a short plain-language summary, followed immediately by a horizontal rule.
 
 ### Final Snapshot Rule
 
@@ -138,33 +138,43 @@ Write the description in the selected language. Be concrete and operational, not
 - Mention branch history only when it remains materially relevant to migration, rollout, compatibility, data safety, or reviewer understanding of the final result.
 - Apply this rule on updates too: rebuild the description from the current base-to-final-`HEAD` snapshot instead of appending a changelog of edits made since the previous description.
 
-Use these sections. Translate section headings for other selected languages while preserving the meaning.
+Use the templates below as a placement guide, not as an always-present checklist. `Summary`, `Impact and risk`, `Verification`, and `Reviewer focus` are the required core; every other shown block is conditional. Translate headings for other selected languages while preserving their meaning. Adapt labels to the change type instead of emitting empty or `Not applicable` sections.
 
 ### Czech
 
 ````markdown
 ## Stručně
 
-- ...
+Předtím ... Nově ... Prakticky to znamená ...
 
 ---
 
-## Co se změnilo
+## Průchod změnou
 
-- ...
+1. Spouštěč: ...
+2. ...
+3. Úspěšný a praktický výsledek: ...
 
-## Proč
+## Příčina a odůvodnění
 
-- ...
+- Příčina: ...
+- Rozhodnutí a kompromisy: ...
 
-## Proč je to řešené takhle
-
-- ...
-
-## Dopady
+## Dopady a rizika
 
 - Uživatelé: ...
 - Technicky: ...
+- Rizika a ochrany: ...
+
+## Známá omezení a navazující práce
+
+- ...
+
+## Ověření
+
+- Stav: ...
+- Ověřeno: ...
+- Neověřeno: ...
 
 ## Jak to proklikat
 
@@ -172,21 +182,27 @@ Use these sections. Translate section headings for other selected languages whil
 2. ...
 3. Očekávaný výsledek: ...
 
-## Jak to technicky otestovat
+## Na co se má reviewer zaměřit
+
+- ...
+
+<details>
+<summary>Detaily implementace</summary>
+
+- ...
+
+</details>
+
+<details>
+<summary>Podrobné technické ověření</summary>
 
 ```bash
 ...
 ```
 
-- Očekávaný výsledek: ...
+- Výsledek: ...
 
-## Co nešlo ověřit
-
-- ...
-
-## Na co se má reviewer zaměřit
-
-- ...
+</details>
 ````
 
 ### English
@@ -194,26 +210,36 @@ Use these sections. Translate section headings for other selected languages whil
 ````markdown
 ## Summary
 
-- ...
+Previously ... Now ... In practice, this means ...
 
 ---
 
-## What changed
+## End-to-end flow
 
-- ...
+1. Trigger: ...
+2. ...
+3. Successful and practical result: ...
 
-## Why
+## Root cause and rationale
 
-- ...
+- Root cause: ...
+- Decision and tradeoffs: ...
 
-## Why this approach
-
-- ...
-
-## Impact
+## Impact and risk
 
 - Users: ...
 - Technical: ...
+- Risks and safeguards: ...
+
+## Known limitations and follow-ups
+
+- ...
+
+## Verification
+
+- Status: ...
+- Verified: ...
+- Not verified: ...
 
 ## How to click through
 
@@ -221,38 +247,44 @@ Use these sections. Translate section headings for other selected languages whil
 2. ...
 3. Expected result: ...
 
-## How to test technically
+## Reviewer focus
+
+- ...
+
+<details>
+<summary>Implementation details</summary>
+
+- ...
+
+</details>
+
+<details>
+<summary>Detailed technical verification</summary>
 
 ```bash
 ...
 ```
 
-- Expected result: ...
+- Result: ...
 
-## What could not be verified
-
-- ...
-
-## Reviewer focus
-
-- ...
+</details>
 ````
 
 ### Description Guidance
 
-- In "Summary" / "Stručně", write concise plain-language bullets for a non-technical reviewer. Cover every materially distinct delivered outcome from the final diff exactly once, and combine overlapping outcomes. Omit implementation details, file names, recovery history, and vague process wording. Do not target, prefer, minimize, maximize, pad to, or cap a bullet count; use exactly as many bullets as coverage requires. Before finalizing, verify that no important outcome is missing and no two bullets describe the same outcome.
-- Put `---` directly after the summary section so the quick summary is visually separated from the detailed review notes.
-- In "What changed" / "Co se změnilo", summarize the actual diff by behavior and touched areas, not only file names.
-- In "Why" / "Proč", connect the change to the user problem, task, regression, workflow need, or technical debt visible from context.
-- In "Why this approach" / "Proč je to řešené takhle", explain concrete decisions, tradeoffs, and why the implementation shape is appropriate.
-- In "Impact" / "Dopady", explicitly mention UI, API, auth, data, permissions, cache, background jobs, workflows, migrations, and compatibility when affected.
-- In "How to click through" / "Jak to proklikat", write real user scenarios step by step. Include roles/accounts or permissions when relevant.
-- In "How to test technically" / "Jak to technicky otestovat", include exact commands run or recommended. Keep this separate from UX clicking.
-- In "What could not be verified" / "Co nešlo ověřit", state blockers plainly, for example missing credentials, unavailable service, sandbox/network limitation, no seed data, or command intentionally skipped by project rule.
-- In "Reviewer focus" / "Na co se má reviewer zaměřit", call out risk areas, assumptions, edge cases, and files or flows needing careful review.
+- **Required default layer:** always include `Summary`, `Impact and risk`, `Verification`, and `Reviewer focus`. Keep these sections visible and concise. Never hide material impact, migrations or compatibility, permissions or data safety, known risks, known limitations, unverified material scope, the verification outcome, or the highest-risk reviewer focus inside a disclosure.
+- In `Summary` / `Stručně`, give a non-technical reviewer the mental model in this order: the previous problem or constraint, the new behavior, and the practical effect. Cover every materially distinct delivered outcome from the final diff exactly once. Omit component inventories, file names, recovery history, and vague process wording.
+- Put `---` immediately after the summary section so nothing interrupts the quick summary and detailed review notes.
+- Add `End-to-end flow` / `Průchod změnou` when behavior crosses stages or components, or has important branches or failure stops. Use a numbered sequence that always covers the trigger, ordered stages, and successful or practical result. Add branches, failure or stop paths, safeguards or decision points, and remaining gaps only when they are materially present and evidence-backed. Omit the flow for a genuinely simple change, and never invent optional paths or fill them with `Not applicable`.
+- Add `Root cause and rationale` / `Příčina a odůvodnění` when an actual failure mechanism or root cause is known and material, or when a non-obvious decision needs explanation. Include only the applicable evidence-backed bullets: the cause and/or the concise decision rationale, alternatives, or tradeoffs a reviewer needs to judge the change. Keep decision-critical rationale visible; only collapse lengthy supporting implementation detail. Do not infer or invent a cause, rejected alternative, or rationale that is unsupported by the final diff, repository or task evidence, or other verified context. Omit this section for trivial changes without material root-cause or decision context.
+- In `Impact and risk` / `Dopady a rizika`, explain user and technical impact plus material risks and safeguards. Explicitly cover UI, API, auth, data, permissions, cache, background jobs, workflows, migrations, rollout, and compatibility when affected; omit unaffected categories instead of listing noise.
+- Add `Known limitations and follow-ups` / `Známá omezení a navazující práce` only for accepted design or product limitations, deferred scope, or known follow-up work. Keep it separate from `Not verified` / `Neověřeno`, which is only for claims that could not be checked because of missing credentials, unavailable services, sandbox or network limits, absent fixtures, or intentionally skipped commands.
+- In `Verification` / `Ověření`, give a concise evidence-backed overall status, what was verified, and any material item not verified. Omit the `Not verified` bullet when everything material was checked; never present an unrun check as passing.
+- Add `How to click through` / `Jak to proklikat` only when the change has a meaningful user-facing or operator-facing manual path. Write the real scenario step by step, including roles, accounts, or permissions when relevant. Rename it to a more accurate localized heading such as `How to exercise the flow` for API, worker, or operational changes. Omit it for CI-, documentation-, or test-only changes unless there is a useful manual workflow; never emit an `N/A` walkthrough.
+- In `Reviewer focus` / `Na co se má reviewer zaměřit`, name the highest-risk behavior, assumption, edge case, or interaction that deserves careful review. Prefer a small number of precise priorities over a general file list.
+- Add implementation detail only when it improves reviewability. Keep a short explanation visible when concise; collapse longer technical decisions under portable `<details>` / `<summary>` markup with blank lines around the content. Do not add disclosure overhead to a small description.
+- Keep detailed test commands and results separate from the visible verification status. Collapse lengthy command/output evidence under a `Detailed technical verification` disclosure using the same blank-line structure; leave short evidence visible when that is easier to scan.
 - Before finalizing, compare every claim with the merge-base-to-`HEAD` diff and remove claims about reverted, abandoned, or otherwise absent work.
-
-If a section truly does not apply, keep it with a localized equivalent of `- Not applicable.` rather than deleting it, except screenshots or optional links requested by the repo convention.
 
 ## Provider CLI
 

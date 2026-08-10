@@ -1,4 +1,4 @@
 interface:
   display_name: "(ant) Merge Request"
   short_description: "Prepare or deliver a verified PR/MR"
-  default_prompt: "Use $merge-request to preview a proposal for preparation intent, or for explicit creation/update intent create a structured Draft PR/MR by default only when new, preserve an ordinary update's readiness unless explicitly changed, and monitor its exact head pipeline."
+  default_prompt: "Use $merge-request to preview or deliver a reviewer-first PR/MR description with a visible outcome, conditional flow and evidence-backed rationale, impact, risks, verification status, and reviewer focus, keeping lengthy details secondary; for delivery, default only new PRs/MRs to Draft, preserve existing readiness unless explicitly changed, and monitor the exact head pipeline."
