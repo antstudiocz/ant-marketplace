@@ -61,7 +61,21 @@ After initial read-only discovery and before the concrete implementation plan or
 - **Incrementally verifiable:** Each coherent checkpoint leaves the affected system runnable or testable to the degree defined by the plan.
 - **Integrated replacement:** Optimize the edit sequence for the final architecture. The active checkout may intentionally be unusable between integration boundaries; do not add compatibility shims or transitional paths solely to keep intermediate states green.
 
-First check whether the user already explicitly chose a mode; if so, record it without asking again. Otherwise, treat the modes as materially different whenever preserving intermediate runnability or testability would change sequencing, require compatibility shims or transitional paths, or add meaningful validation or rework. Broad clean replacements and cross-component rewrites should normally be material choices. A feasible incremental path, or unrelated or current dirty changes, does not make the modes equivalent. Only for genuinely equivalent work, normally tiny and local, select Incrementally verifiable without a ceremonial question and state that approach in the plan. For a material difference, ask one concise predefined choice: **Incrementally verifiable** (recommended when intermediate checkpoints matter) or **Integrated replacement** (recommended only when final-architecture integration materially benefits); tailor the recommendation to the task context and do not silently select Integrated replacement.
+First check whether the user already explicitly chose a mode; if so, record it without asking again. Otherwise, treat the modes as materially different whenever preserving intermediate runnability or testability would change sequencing, require compatibility shims or transitional paths, or add meaningful validation or rework. Broad clean replacements and cross-component rewrites should normally be material choices. A feasible incremental path, or unrelated or current dirty changes, does not make the modes equivalent. Only for genuinely equivalent work, normally tiny and local, select Incrementally verifiable without a ceremonial question and state that approach in the plan.
+
+For a material difference, deliver one self-contained, user-visible blocking decision question before continuing. List every viable option with its material implication or tradeoff and give exactly one context-based recommendation. Do not reduce a multi-option choice to yes/no, ask only for confirmation of the recommendation, or hide alternatives in commentary or progress updates; they may collapse. An ordinary `yes`, `continue`, or equivalent selects a mode only when the immediately preceding user-visible question makes that mapping unambiguous. Earlier product or plan approval is not a continuity choice. Prefer the native predefined-choice surface; otherwise provide the same complete numbered or text fallback.
+
+Canonical shape:
+
+```text
+Choose implementation continuity:
+1. Incrementally verifiable — each coherent checkpoint leaves the affected system runnable or testable to the degree defined by the plan.
+2. Integrated replacement — optimize for the final architecture; intermediate states may be unusable and require a dedicated checkout.
+Recommendation: [option label] — [task-specific reason].
+Reply with 1 or 2.
+```
+
+When Integrated replacement is unavailable until checkout protection is resolved, state that constraint in the same question and list each viable path: Incrementally verifiable, dedicate the current checkout for Integrated replacement, or isolate it in a separate checkout for Integrated replacement.
 
 Integrated replacement requires explicit user acceptance and confirmation that the active checkout is exclusively dedicated to this implementation. If it is unavailable because the checkout is not yet exclusively dedicated or unrelated changes or processes need protection, state that constraint and ask whether to dedicate or isolate the checkout or use Incrementally verifiable; do not silently default on the user's behalf. A separate worktree is preferred for isolation but is not required; a root checkout is allowed. Identify and protect unrelated dirty changes, and do not assume that avoiding a push isolates local processes or data.
 
