@@ -254,6 +254,30 @@ This completion gate applies whether or not delivery was requested. When PR/MR o
 
 Do not add a new test framework just to test instruction text. Lightweight syntax, link, manifest, discovery, and plugin validation are enough for an instruction-only plugin unless the repository already provides more.
 
+### Final Readiness Verdict
+
+Every tracked implementation's final user-facing handoff must contain exactly one explicit, evidence-based verdict, using one of these labels only. Classify the observed state in this order; the branches are exclusive:
+
+| Verdict | Threshold |
+|---|---|
+| **NOT READY** | Required scoped implementation, independent review, or final validation is incomplete, failed, or unverified; a known technical blocker remains; or deployment was observed while proportional production verification or a known required production/pre-deployment prerequisite was incomplete, failed, or unverified. |
+| **DEPLOYED & VERIFIED** | Scoped implementation, independent review, and final validation are complete and verified; no known technical blocker remains; all known required production/pre-deployment prerequisites were verified; deployment was observed; and proportional production verification was observed. |
+| **CONDITIONALLY READY** | Deployment was not observed; scoped implementation, independent review, and final validation are complete and verified; no known technical blocker remains; but a named external, delivery, or pre-deployment prerequisite remains incomplete or unverified—for example PR review or merge, organizational approval, release, configuration or migration action, or environment verification. |
+| **READY TO DEPLOY** | Deployment was not observed; scoped implementation, independent review, and final validation are complete and verified; no known technical blocker remains; and all known required production/pre-deployment prerequisites within observable scope are verified. |
+
+Unverified prerequisites are never satisfied by inference, intent, an agent report, or a completion claim. A statement such as “done” or “complete” must be qualified by the verdict rather than implying merge, release, deployment, or production verification.
+
+The handoff must separately state:
+
+- implementation state;
+- review and validation state;
+- delivery state;
+- production state;
+- concrete remaining required steps, or explicitly `None`;
+- one next action.
+
+The verdict is a point-in-time snapshot. Recompute it whenever an authorized delivery action changes observed state. The assistant's current authority to merge, release, or deploy does not itself change the verdict: a required organizational approval remains a prerequisite and is **CONDITIONALLY READY** until verified. The verdict never grants authority for merge, release, deployment, configuration, migration, or any other external action, and it does not change Draft PR/MR semantics or readiness state.
+
 ## 8. Retrospect And Improve
 
 After the required review and successful final suite, and before completion or delivery, the root performs a bounded execution retrospective at its maximum available effort. The root owns this step; do not spawn an agent solely to perform it. Keep it proportional and use only observable evidence already available from the native plan, user messages, assignments and reports, git diff, and check results. Do not reread the entire repository or transcript, expose or reconstruct chain-of-thought, or invent token counts. Use exact token or usage figures only when the host exposes them; otherwise use observable proxies.
