@@ -21,14 +21,14 @@ Before any tracked edit or tracked-writer dispatch:
 3. Separate in-scope changes from unrelated dirty files, then inspect the current branch, relevant diff, code path, behavior, contracts, and validation commands or delegate read-only scouts. Do not ask the user for facts that can be discovered safely from the repository or environment.
 4. Classify the work as a tiny mechanical change, work already covered by an approved or otherwise authorized plan, or new/materially changed behavior.
 
-For analysis-only work, stop after the appropriate read-only discovery and report. For an ambiguous request, resolve the intended mode before substantive or deep analysis. For a fix, refactor, migration, or remediation that does not introduce materially new behavior, state the verified goal or root cause, acceptance behavior, affected areas, implementation steps, risks, and checks in a proportional plan. Continue into tracked implementation after presenting that plan only when execution was explicitly authorized and it stays within the original scope and risk; otherwise obtain explicit approval.
+For analysis-only work, stop after the appropriate read-only discovery and report. For an ambiguous request, resolve the intended mode before substantive or deep analysis. For a fix, refactor, migration, or remediation that does not introduce materially new behavior, state the verified goal or root cause, acceptance behavior, affected areas, implementation steps, risks, checks, and expected execution shape in a proportional plan. Continue into tracked implementation after presenting that plan only when execution was explicitly authorized and it stays within the original scope and risk; otherwise obtain explicit approval.
 
 For a new feature or materially new behavior, continue in this order:
 
 1. Brainstorm with the user about the goal, users, desired workflow, edge cases, non-goals, options, and tradeoffs.
 2. Ask every unresolved question whose answer materially changes behavior, scope, architecture, data, safety, validation, or delivery. Group questions clearly, but do not impose an arbitrary count.
 3. After receiving the answers, inspect architecture, contracts, data flows, dependencies, obsolete or legacy behavior, risks, and validation paths in greater depth.
-4. Present a concrete implementation plan covering acceptance behavior, affected areas, key decisions, implementation sequence, validation, risks, and explicit non-goals.
+4. Present a concrete implementation plan covering acceptance behavior, affected areas, key decisions, implementation sequence, validation, risks, explicit non-goals, and the expected execution shape.
 5. Present the plan before dispatching a tracked writer or making tracked edits. When execution was explicitly authorized and the plan remains within the user's original scope and risk, continue without waiting for another confirmation. Otherwise obtain explicit user approval.
 
 Read-only scouts may run before the execution gate. They return evidence and options, never implementation changes. Approval or implementation authorization applies only to the stable plan or workstream, so do not ask again before every phase. Ask again when a material discovery invalidates the plan or changes behavior, architecture, data, safety/risk, scope, or requires destructive action.
@@ -36,6 +36,12 @@ Read-only scouts may run before the execution gate. They return evidence and opt
 A tiny mechanical change inside an already approved or otherwise authorized plan may use a compact cycle: verify the affected code, state the small delta and checks, then continue without duplicate approval. A concrete plan supplied by the user or an approved `create-application` brief may satisfy earlier product brainstorming once repository facts are verified, but it is not implementation authorization. A separate explicit end-to-end implementation request may provide that authorization after plan presentation.
 
 Implementation authorization does not remove the mandatory plan checkpoint or authorize a materially expanded plan. Approval or authorization covers only the scoped repository edits required by the plan. It does not independently authorize destructive operations, force-pushes, merges, releases, or unrelated cleanup. An explicit create/update PR/MR request carries only the limited scoped commit, push, new-request Draft-by-default creation, ordinary-update readiness preservation, and pipeline-observation chain defined by `merge-request`; respect any narrower repository or host permission boundary.
+
+### Workstream Boundaries
+
+Record each workstream's expected execution shape and proportional delegation budget in the host-native plan: the roles, boundaries, and likely concurrent coverage needed to reach its acceptance criteria. This is a planning guide, not a hard cap or custom state contract. Before adding coverage, first reuse an active agent whose assignment still fits or retire coverage that no longer does; add a distinct role only when its evidence, write scope, or review focus is materially different, and record that reason in the native plan. This adjustment needs no user approval unless it materially changes the workstream's scope or risk.
+
+For a materially separate follow-up, distinguish an additive workstream from a replacement or reset. An additive workstream preserves unaffected active agents and their goal envelopes. Use a replacement or reset only at a terminal boundary of the prior workstream and native goal. At that boundary, stop or recover only agents assigned to the replaced workstream, inspect their checkpoints and actual diffs, and verify the correct task and worktree ownership before reassignment. Then run fresh proportional discovery and planning and establish or reuse a matching native goal only through the active-host adapter. For an in-flight materially separate replacement, follow Mid-flight User Messages: stop or recover only affected work, preserve unaffected agents, inspect the checkpoint and diff, and defer a fresh tracked workstream when the adapter exposes no legitimate cancel, replace, or terminal transition. Do not force a separate host-level conversation or invent persisted orchestration state merely to mark the boundary.
 
 Implementing and testing code for future production behavior is not the same as actually deploying, publishing, releasing, running a production operation, or causing an external side effect. The former is covered by implementation authorization when it stays inside the stable plan; the latter requires the corresponding delivery or external-action authority.
 
@@ -109,6 +115,7 @@ Rules:
 - Delegated agents never communicate with the user or formulate user questions. They escalate evidence, options, a recommendation, and paused scope only to their parent; root alone resolves or asks.
 - Do not spawn one agent per file, phase-owner agents, or agents whose only job is process bookkeeping.
 - One implementation lead owns the final integrated result. A small task may use the same agent as its sole writer.
+- Apply Workstream Boundaries when selecting or expanding the shape.
 - Parallelize only independent work with disjoint write scopes and a stable shared contract. Keep a slot available for review or recovery when capacity is tight.
 - If nested delegation is unavailable, the root dispatches the same bounded roles directly. Outcome and review quality matter more than matching an agent tree.
 - If no writer-capable native delegation is available, stop before any tracked edit and report the blocker. The root remains coordination-only while this skill is active; it never becomes the fallback writer, and it must not pretend independent review occurred.
@@ -160,11 +167,14 @@ Every assignment should contain only what the agent needs:
 - allowed write scope and explicit non-goals;
 - important decisions already made, including the selected continuity mode and its implications;
 - expected targeted checks;
+- meaningful checkpoints that the child will push after a coherent phase, targeted check, blocker, or handoff;
 - conditions that require escalation;
 - required escalation shape: evidence, options, recommendation, and exact paused scope, returned only to the parent;
 - required report: changes, checks, unresolved risks, and unexpected findings.
 
 Preflight is required; post-dispatch visibility is only a secondary guard. If host-visible UI, task metadata, or transcript shows that a child was routed at a different model, effort, or isolation state than approved, immediately stop or cancel that child, discard its result, and report the mismatch. Do not treat a post-dispatch guard as permission to skip a preflight that the active adapter requires.
+
+Use those checkpoints push-first: root observes pushed completion, check, blocker, and handoff updates, and does not steer or poll an active agent merely to ask for status. Request a checkpoint only for recovery, a safe redirection boundary, a material decision, or evidence that the assignment may no longer be covered.
 
 Role boundaries:
 
@@ -186,6 +196,10 @@ The implementation owner should:
 3. Keep edits inside the assigned scope and flag unrelated dirty state immediately.
 4. Run targeted checks at meaningful boundaries, not after each file save.
 5. Report unexpected complexity early to the parent so the assignment can be narrowed or split, or unresolved judgment can reach root through the escalation chain.
+
+### Bounded Experiments
+
+For open-ended experiment work, define success metrics, a small limited set of concurrent hypotheses, and the evidence or time boundary for choosing, reverting, or discarding each hypothesis. Keep reversible experiment changes isolated where practical. Stop and re-evaluate the plan when the metric does not discriminate, the hypothesis budget is exhausted, or the next experiment would materially expand scope or risk; do not turn exploratory work into unbounded retries.
 
 ### Mid-flight user messages
 
@@ -217,7 +231,7 @@ For flaky/infrastructure failures, let `merge-request` retry only when the provi
 
 Every tracked implementation receives final code review from an independent Strong child pinned at `High`; root at maximum effort adjudicates the findings and completion. Risk controls whether additional specialized review is needed, not whether this final review occurs. If the host cannot safely dispatch the required reviewer without above-High inheritance, report the limitation and do not imply that independent review happened.
 
-Findings should name severity, evidence, impact, and the required correction. Send fixes back to an implementation owner, run the affected targeted checks, and re-review the changed area. Do not repeat the entire review process for unrelated settled code unless a fix changes its assumptions.
+Findings should name severity, evidence, impact, and the required correction. Send fixes back to an implementation owner, run the affected targeted checks, and by default return the changed area to the same independent reviewer for each correction cycle. Add a new reviewer only when the risk is distinct, a fresh final review is needed, or that reviewer is unavailable. Do not repeat the entire review process for unrelated settled code unless a fix changes its assumptions.
 
 ## 7. Validate Proportionately
 
@@ -239,6 +253,30 @@ At the final completion boundary, after the final tracked mutation and required 
 This completion gate applies whether or not delivery was requested. When PR/MR or other delivery is requested, the same successful run is the final pre-delivery suite.
 
 Do not add a new test framework just to test instruction text. Lightweight syntax, link, manifest, discovery, and plugin validation are enough for an instruction-only plugin unless the repository already provides more.
+
+### Final Readiness Verdict
+
+Every tracked implementation's final user-facing handoff must contain exactly one explicit, evidence-based verdict, using one of these labels only. Classify the observed state in this order; the branches are exclusive:
+
+| Verdict | Threshold |
+|---|---|
+| **NOT READY** | Required scoped implementation, independent review, or final validation is incomplete, failed, or unverified; a known technical blocker remains; or deployment was observed while proportional production verification or a known required production/pre-deployment prerequisite was incomplete, failed, or unverified. |
+| **DEPLOYED & VERIFIED** | Scoped implementation, independent review, and final validation are complete and verified; no known technical blocker remains; all known required production/pre-deployment prerequisites were verified; deployment was observed; and proportional production verification was observed. |
+| **CONDITIONALLY READY** | Deployment was not observed; scoped implementation, independent review, and final validation are complete and verified; no known technical blocker remains; but a named external, delivery, or pre-deployment prerequisite remains incomplete or unverified—for example PR review or merge, organizational approval, release, configuration or migration action, or environment verification. |
+| **READY TO DEPLOY** | Deployment was not observed; scoped implementation, independent review, and final validation are complete and verified; no known technical blocker remains; and all known required production/pre-deployment prerequisites within observable scope are verified. |
+
+Unverified prerequisites are never satisfied by inference, intent, an agent report, or a completion claim. A statement such as “done” or “complete” must be qualified by the verdict rather than implying merge, release, deployment, or production verification.
+
+The handoff must separately state:
+
+- implementation state;
+- review and validation state;
+- delivery state;
+- production state;
+- concrete remaining required steps, or explicitly `None`;
+- one next action.
+
+The verdict is a point-in-time snapshot. Recompute it whenever an authorized delivery action changes observed state. The assistant's current authority to merge, release, or deploy does not itself change the verdict: a required organizational approval remains a prerequisite and is **CONDITIONALLY READY** until verified. The verdict never grants authority for merge, release, deployment, configuration, migration, or any other external action, and it does not change Draft PR/MR semantics or readiness state.
 
 ## 8. Retrospect And Improve
 
