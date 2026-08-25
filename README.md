@@ -76,23 +76,23 @@ Do not use it just to answer a question, inspect a file, draft copy, make a genu
 
 At intake, it distinguishes analysis-only, implementation-authorized, and ambiguous requests. It always discovers repository facts and presents a proportional plan before tracked edits. After discovery, it first honors any already explicit continuity choice. Otherwise, it records Incrementally verifiable without asking when the modes do not materially change local implementation order; when they do, it asks the single predefined choice with a context-based recommendation. Integrated replacement needs explicit acceptance and a checkout dedicated to the work, and it never relaxes final safety or migration requirements. “Analyze this only” stays read-only; “fix it and test it end-to-end” continues after the plan checkpoint when scope and risk remain unchanged. A request to wait for approval, or a material scope/risk change, still pauses. New or materially changed behavior also requires user-needs exploration, material unanswered questions, and deeper technical analysis. Root is the sole user-facing adjudicator: delegated agents escalate evidence, options, a recommendation, and paused scope only to their parent, while root resolves from repository evidence and prior decisions before batching any genuinely new authority into one question. The root remains coordination-only; if the host cannot delegate a writer safely, it stops before edits rather than silently taking over.
 
-For Claude Code, establish `best` + `max` before invoking `/ant:implementation-orchestrator` (for example, `claude --model best --effort max`). Before tracked writes, it reuses an observable matching session goal; otherwise, it discloses unobservability as applicable and asks you to run an exact plan-tailored `/goal` command, which replaces any active session goal. In Codex, select or verify the root route for the task/session before invoking `$implementation-orchestrator`; it automatically inspects and reuses or creates a matching native goal when those tools are available.
+For Claude Code, establish `best` + `max` before invoking `/ant:implementation-orchestrator` (for example, `claude --model best --effort max`). Before tracked writes, the workflow uses the host's native Plan and Goal; if either cannot be observed or managed, it reports the limitation and stops before edits. In Codex, select or verify the root route for the task/session before invoking `$implementation-orchestrator`; native Goal tools are mandatory before tracked-writer dispatch, and unavailable Goal tools fail closed after read-only discovery/planning.
 
 ### Current Routing Examples
 
-The workflow selects capability and thinking effort independently. These are current host mappings—not a permanent shared model contract—and the active host adapter remains the source of operational detail.
+The workflow selects capability and reasoning effort independently. The Codex rows are the active routing policy; the shared lifecycle remains host-neutral and the active adapter remains the operational source.
 
 | Use case | Codex route | Claude Code route |
 | --- | --- | --- |
-| Root coordination, decisions, integration, and retrospective | `gpt-5.6-sol` · Max | `best` + Max: Fable when available, otherwise latest Opus |
+| Root coordination, decisions, integration, and retrospective | `gpt-5.6-sol` · High | `best` + Max: Fable when available, otherwise latest Opus |
 | Architecture, security, migrations, or complex root cause | `gpt-5.6-sol` · High | Opus · High |
 | Mandatory independent final review | `gpt-5.6-sol` · High | Opus · High |
-| Standard implementation and integration | `gpt-5.6-terra` · High | Sonnet · High |
-| Repository investigation, bounded slices, and validation | `gpt-5.6-terra` · Medium | Sonnet · Medium |
-| Exact searches and mechanical work | `gpt-5.6-luna` · Low/Medium; otherwise Terra at the same effort | Haiku, or Sonnet · Low when explicit effort control is required |
-| PR/MR support | `gpt-5.6-terra` · Medium | Sonnet · Medium |
+| Standard implementation and integration | `gpt-5.6-luna` · High | Sonnet · High |
+| Repository investigation, bounded slices, and validation | `gpt-5.6-luna` · Medium | Sonnet · Medium |
+| Exact searches and mechanical work | `gpt-5.6-luna` · Low/Medium | Haiku, or Sonnet · Low when explicit effort control is required |
+| PR/MR support | `gpt-5.6-luna` · Medium | Sonnet · Medium |
 
-Root always uses the strongest available capability at the host’s maximum available effort. Every child is explicitly routed and capped at High; a Strong task does not imply above-High effort. In Codex, each child—including nested work—gets concise self-contained context and uses `fork_turns="none"`. If the required route or isolation cannot be enforced, it is reported rather than assumed.
+Root uses `gpt-5.6-sol` at High in Codex. Every child is explicitly routed and capped at High; a Strong task does not imply above-High effort. In Codex, Strong children use Sol High and every other child uses Luna at proportional High, Medium, or Low effort; each child—including nested work—gets concise self-contained context and uses `fork_turns="none"`. There is no Terra route or fallback. If the required route or isolation cannot be enforced, it is reported rather than assumed.
 
 The [orchestrator guide](docs/orchestrator.md) contains its lifecycle, routing details, validation, review, retrospective, delivery boundaries, and optional Codex nested-agent setup.
 
@@ -108,7 +108,7 @@ The Google Docs skill supports publicly shared Google Docs. The Asana skill requ
 - [Skill guide](docs/skills.md) — scope and usage of each public skill.
 - [Orchestrator guide](docs/orchestrator.md) — full execution, routing, review, validation, and delivery guidance.
 - [Orchestrator visual explainer](docs/index.html) — a visual overview of the lifecycle.
-- [10.0.0 release notes](docs/releases/10.0.0.md) — historical notes for the 10.0.0 release; the current manifests are version 10.1.4.
+- [11.0.0 release notes](docs/releases/11.0.0.md) — breaking native Plan/Goal and Luna/Sol orchestration update.
 
 ## Update
 

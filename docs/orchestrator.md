@@ -8,7 +8,7 @@ Use `implementation-orchestrator` when a task should be taken from repository di
 2. Start a new Claude Code or Codex session.
 3. Set up the active host, then invoke the skill:
    - Claude Code: establish `best` + `max` for the session with `claude --model best --effort max`, or `/model best` and `/effort max`; then invoke `/ant:implementation-orchestrator`
-   - Codex: select or verify the root for the task/session, then invoke `$implementation-orchestrator`; its adapter pins child spawns and manages matching native goals when those tools are available
+   - Codex: select or verify the root for the task/session, then invoke `$implementation-orchestrator`; its adapter pins child spawns and requires native Goal tools before tracked-writer dispatch
 4. Provide the goal, repository or path, relevant constraints, and any delivery request.
 
 The orchestrator classifies execution intent, discovers repository facts before asking questions, presents a concrete plan before tracked edits, establishes a native goal for implementation work, keeps review proportional to risk, and reflects on the verified execution before completion or delivery.
@@ -40,7 +40,7 @@ After initial read-only discovery and before the concrete plan, it first honors 
 
 This choice controls only intermediate local edit order and validation boundaries. It never removes targeted checks, independent review, the final suite on the exact final tree, delivery safety, backwards compatibility, rolling deployment, or deploy-safe data/API migrations. The selected mode and implications are included in the plan, native goal, and writer assignment. A material later change follows the normal delta-plan and risk gate.
 
-After the plan is stable and before tracked-writer dispatch, implementation work gets a native goal envelope that captures the measurable outcome, acceptance conditions, material constraints, required checks, and only delivery already authorized. It complements planning and authorization; it does not replace them. Analysis-only and unresolved ambiguous requests never create one. Codex automatically inspects the current goal and reuses a matching active goal or creates one when native goal tools are available; an unrelated active goal pauses tracked work for user resolution. Claude Code goals are activated by the user: when no matching session goal exists or the state cannot be observed, the orchestrator says so as applicable and gives an exact plan-tailored `/goal <condition>` command to run before tracked writes. Running that command replaces any active session goal, including a hidden unrelated one; an observable unrelated goal still requires the user to clear or replace it before execution. In either host, the goal closes only after the scoped implementation, required review, final validation, retrospective, and any included delivery are complete.
+After discovery and before tracked-writer dispatch, implementation work uses the host's native Plan and Goal. The Plan records phases or waves, dependencies, continuity mode, acceptance behavior, checks, and authorized delivery, with one top-level item `in_progress`; concurrent workers are represented by native agent/thread state. The Goal captures the measurable outcome, acceptance conditions, material constraints, required checks, and only delivery already authorized. These native controls complement planning and authorization; they do not replace them. Analysis-only and unresolved ambiguous requests never create a Goal. Codex requires native Goal tools, inspects and reuses a matching active Goal or creates one, and fails closed before tracked edits when those tools are unavailable; an unrelated Goal pauses tracked work for user resolution. Claude Code likewise requires an observable native Goal and Plan and never substitutes slash commands or pseudo-state. Stable in-scope follow-ups amend the active Plan and Goal; material scope, contract, behavior, or risk changes require a delta decision and authorization. In either host, the Goal closes only after the scoped implementation, required review, final validation, retrospective, and any included delivery are complete.
 
 ## Execution Shape
 
@@ -53,6 +53,10 @@ The workflow deliberately stays small:
 | Architecture, security, data, migrations, or broad contracts | Scouts as needed, one lead, disjoint slices, independent reviewer |
 
 Claude Code and Codex may use different delegation trees. If nested agents are unavailable, the root dispatches the same bounded work directly. If no writer-capable native delegation is available at all, the root remains coordination-only and stops before tracked edits with a blocker. The acceptance criteria and review bar stay the same.
+
+Parallel backend, frontend, test, research, and implementation workers are supported when their write scopes are disjoint and shared contracts are stable. One integration lead owns shared files and contracts. Related agents keep raw logs, large diffs, debug history, repeated tool calls, and local failures in their own repair loops, returning root only compact knowledge deltas: outcome, contract changes, new facts or invalidated assumptions, evidence location, residual risk, decision needed, and paused scope. Root reopens coherent artifacts only for adjudication or final verification.
+
+Codex examples: simple work follows root discovery → proportional native Plan → native Goal → one Luna implementer performs focused verification, implementation, and targeted tests → independent Sol High review → final validation, retrospective, and authorized delivery. Larger or ambiguous work follows parallel Luna scouts → stable contracts and a workstream wave → a Luna High integration lead owning stable shared files/contracts plus disjoint Luna backend/frontend/test workers → peer repair loops and knowledge-delta summaries → independent Sol High review → final suite, retrospective, and authorized delivery. Only high-risk or cross-contract integration judgment escalates to Sol High. An implementer may spawn a disjoint helper or reviewer where native delegation allows, but the final reviewer must be independent.
 
 For Codex, nested lead/worker delegation can use:
 
@@ -67,15 +71,15 @@ This is optional. Restart Codex or open a new session after changing its configu
 
 Shared instructions route by capability rather than fixed model identifiers:
 
-- **Strong:** architecture, difficult root-cause analysis, security/data decisions, integration ownership, and independent review.
+- **Strong:** architecture, difficult root-cause analysis, security/data decisions, migrations, high-risk or cross-contract integration judgment/adjudication, and independent review.
 - **Balanced:** normal implementation, integration, and repository investigation.
 - **Fast:** exact searches, read-heavy discovery, and deterministic mechanical work.
 
-The shared skill stays semantic and loads exactly one host adapter before any routing decision. Codex model names are current-catalog examples; Claude uses stable aliases. Neither is the permanent shared contract.
+The shared skill stays semantic and loads exactly one host adapter before any routing decision. Concrete Codex model names belong to the active Codex policy; Claude uses stable aliases. The shared lifecycle remains host-neutral.
 
 ### Codex
 
-Select or verify Codex root at task/session level: it is the strongest available route, currently `gpt-5.6-sol` at Max. Native spawn selectors cannot change an already-running root; they pin Strong children to Sol at High, Balanced children to `gpt-5.6-terra` at High, Medium, or Low, and Fast children to `gpt-5.6-luna` at Low or Medium when exposed. Luna-to-Terra at the same Low or Medium effort is the only fallback. Every child and nested child remains at High or below and never inherits root Max. Every Codex dispatch, including nested dispatch, sets `fork_turns="none"`; omitted, `all`, and positive bounded-history values are not allowed. Give the child a concise, self-contained assignment with every task-relevant fact. If a history-free child meets a genuine host provenance gate it cannot satisfy, it reports one blocker to root; the workflow does not retry with inherited history, let root edit, or treat relayed approval as native provenance. If root control is unavailable, report that maximum is unverified; if Sol, Terra, the requested child effort, or `fork_turns="none"` cannot be enforced, do not dispatch.
+Select or verify Codex root at task/session level: the active policy is `gpt-5.6-sol` at High. Native spawn selectors cannot change an already-running root; they pin Strong children to Sol at High and every other child to `gpt-5.6-luna` at proportional High, Medium, or Low. There is no Terra route or fallback. Every child and nested child remains at High or below and never inherits root High. Every Codex dispatch, including nested dispatch, sets `fork_turns="none"`; omitted, `all`, and positive bounded-history values are not allowed. Give the child a concise, self-contained assignment with every task-relevant fact. If a history-free child meets a genuine host provenance gate it cannot satisfy, it reports one blocker to root; the workflow does not retry with inherited history, let root edit, or treat relayed approval as native provenance. If root control is unavailable, report that the Sol High route is unverified; if Sol, Luna, the requested child effort, or `fork_turns="none"` cannot be enforced, do not dispatch.
 
 ### Claude Code
 
@@ -87,11 +91,11 @@ Before dispatch, complete an observable, fail-closed preflight. Choose the exact
 
 ## Reasoning And Dispatch
 
-Capability tier and reasoning effort are separate selections. Root uses the strongest capability and maximum available reasoning effort exposed by the active host for the entire orchestrated run. If the host cannot expose or set that control, root uses the strongest available root setting and reports the limitation without calling it maximum.
+Capability tier and reasoning effort are separate selections. Root uses the strongest capability and the model/effort defined by the active host adapter for the entire orchestrated run. If the host cannot expose or set that adapter-defined control, root uses the strongest available root setting and reports the limitation without claiming adapter enforcement.
 
 Every child dispatch pins a native model and, where that model exposes an effort selector, a supported effort explicitly. Children may use Low, Medium, or High effort, but never a host-specific level above High. A Strong child therefore does not imply above-High effort. Every assignment is concise and self-contained with the task-relevant facts; do not depend on inherited conversation history. Codex always dispatches with `fork_turns="none"`, including from nested children. If the host cannot prevent above-High inheritance or required context isolation safely, the child is not dispatched and the limitation is reported.
 
-Typical assignments are High for implementation leads, independent review, and warranted architecture or security work; Medium for normal scouts, slices, checks, and delivery support; and Low or Medium for search and inventory. A child that cannot resolve work within High narrows or splits the assignment or returns the judgment to root. Final code review is Strong at High, while the execution retrospective remains root-owned at maximum.
+Typical assignments are High for implementation leads, independent review, and warranted architecture or security work; Medium for normal scouts, slices, checks, and delivery support; and Low or Medium for search and inventory. A child that cannot resolve work within High narrows or splits the assignment or returns the judgment to root. Final code review is Strong at High, while the execution retrospective remains root-owned at the adapter-defined route.
 
 Before spawning, the orchestrator checks whether an active agent already covers the same goal, evidence, and output. It steers that agent instead. New agents require materially distinct scope or evidence; overlap is reserved for intentional independent review with a distinct focus.
 

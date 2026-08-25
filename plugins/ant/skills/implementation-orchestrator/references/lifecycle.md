@@ -39,7 +39,7 @@ Implementation authorization does not remove the mandatory plan checkpoint or au
 
 ### Workstream Boundaries
 
-Record each workstream's expected execution shape and proportional delegation budget in the host-native plan: the roles, boundaries, and likely concurrent coverage needed to reach its acceptance criteria. This is a planning guide, not a hard cap or custom state contract. Before adding coverage, first reuse an active agent whose assignment still fits or retire coverage that no longer does; add a distinct role only when its evidence, write scope, or review focus is materially different, and record that reason in the native plan. This adjustment needs no user approval unless it materially changes the workstream's scope or risk.
+Record each workstream's expected execution shape and proportional delegation budget in the native Plan: the roles, boundaries, and likely concurrent coverage needed to reach its acceptance criteria. The Plan expresses phases or waves and keeps one top-level item `in_progress`; actual concurrency is represented by native agent/thread state, not by extra plan items or custom state. Before adding coverage, first reuse an active agent whose assignment still fits or retire coverage that no longer does; add a distinct role only when its evidence, write scope, or review focus is materially different, and record that reason in the native Plan. This adjustment needs no user approval unless it materially changes the workstream's scope or risk.
 
 For a materially separate follow-up, distinguish an additive workstream from a replacement or reset. An additive workstream preserves unaffected active agents and their goal envelopes. Use a replacement or reset only at a terminal boundary of the prior workstream and native goal. At that boundary, stop or recover only agents assigned to the replaced workstream, inspect their checkpoints and actual diffs, and verify the correct task and worktree ownership before reassignment. Then run fresh proportional discovery and planning and establish or reuse a matching native goal only through the active-host adapter. For an in-flight materially separate replacement, follow Mid-flight User Messages: stop or recover only affected work, preserve unaffected agents, inspect the checkpoint and diff, and defer a fresh tracked workstream when the adapter exposes no legitimate cancel, replace, or terminal transition. Do not force a separate host-level conversation or invent persisted orchestration state merely to mark the boundary.
 
@@ -89,13 +89,15 @@ Continuity changes only intermediate local implementation order and validation b
 
 Record the selected mode, its implementation-order and validation implications, and any checkout constraints in the concrete plan, native goal envelope, and writer assignment. Treat a later material mode switch as a material correction under the delta-plan and risk rules before affected writes continue.
 
-### Native Goal Envelope
+### Native Plan And Goal
 
-For implementation-authorized work, or work that later receives the required approval, establish the active host's native goal envelope after the objective, acceptance behavior, constraints, validation, and any authorized delivery are stable, and immediately before tracked-writer dispatch. Do not establish a goal for analysis-only work or while an ambiguous request remains unresolved. The goal is an outcome-oriented complement to the native plan and authorization checkpoint, never a replacement for either.
+For every implementation, use the host's native Plan to record the proportional phases or waves, dependencies, acceptance behavior, continuity choice, checks, and delivery boundary. Keep exactly one top-level Plan item `in_progress`; subordinate agent/thread work may be concurrent and is represented by native execution state. Do not treat slash commands, pseudo-plan files, or manual checklists as the workflow contract.
 
-Use the active-host adapter for the mechanism. The goal condition must be measurable and include the verified outcome, selected continuity mode and its implications, material constraints, required checks, and only delivery actions the user has already authorized. Do not create custom goal state, hooks, runtimes, or compatibility layers. Reuse a semantically matching active native goal when the host supports that; do not overwrite, complete, or block an unrelated active goal.
+For implementation-authorized work, or work that later receives the required approval, establish the active host's native Goal after the Plan is stable and immediately before tracked-writer dispatch. Do not establish a Goal for analysis-only work or while an ambiguous request remains unresolved. The Goal is an outcome-oriented complement to the native Plan and authorization checkpoint, never a replacement for either.
 
-Close the native goal only when its scoped implementation is complete and the required independent review, final validation, root retrospective, and any delivery explicitly included in the goal have actually finished. Ordinary approval waits, clarification, or a temporary lack of user input are not goal blockers. Host-specific availability, inspection, creation, completion, and repeated-blocker behavior belongs in the adapter.
+Use the active-host adapter for the mechanism. The Goal condition must be measurable and include the verified outcome, selected continuity mode and its implications, material constraints, required checks, and only delivery actions the user has already authorized. Do not create custom Goal state, hooks, runtimes, or compatibility layers. Reuse a semantically matching active native Goal; if the adapter cannot inspect or establish it, fail closed before tracked edits rather than continuing with Plan alone.
+
+Close the native Goal only when its scoped implementation is complete and the required independent review, final validation, root retrospective, and any delivery explicitly included in the Goal have actually finished. Stable in-scope follow-ups amend the active Plan and Goal; material scope, contract, behavior, or risk changes require a delta decision and authorization before affected writes resume. Ordinary approval waits, clarification, or a temporary lack of user input are not Goal blockers. Host-specific availability, inspection, creation, completion, and repeated-blocker behavior belongs in the adapter.
 
 Do not create orchestration state files, schemas, event logs, approval artifacts, leases, or migration readers. Use the host's built-in plan/task state and concise user-facing checkpoints. After compaction or resume, reconstruct truth from the conversation summary, current git state, child reports, and fresh inspection.
 
@@ -116,7 +118,7 @@ Rules:
 - Do not spawn one agent per file, phase-owner agents, or agents whose only job is process bookkeeping.
 - One implementation lead owns the final integrated result. A small task may use the same agent as its sole writer.
 - Apply Workstream Boundaries when selecting or expanding the shape.
-- Parallelize only independent work with disjoint write scopes and a stable shared contract. Keep a slot available for review or recovery when capacity is tight.
+- Parallelize several backend, frontend, test, research, or implementation workers only when their write scopes are disjoint and the shared contracts are stable. One integration lead owns shared files and contracts. Keep a slot available for independent review or recovery when capacity is tight; overlapping assignments are fake parallelism.
 - If nested delegation is unavailable, the root dispatches the same bounded roles directly. Outcome and review quality matter more than matching an agent tree.
 - If no writer-capable native delegation is available, stop before any tracked edit and report the blocker. The root remains coordination-only while this skill is active; it never becomes the fallback writer, and it must not pretend independent review occurred.
 
@@ -126,20 +128,20 @@ Shared instructions use three capability tiers:
 
 | Tier | Use for |
 |---|---|
-| Strong | Architecture, ambiguous root-cause work, security/data/permission decisions, migrations, integration ownership, and independent review |
+| Strong | Architecture, ambiguous root-cause work, security/data/permission decisions, migrations, high-risk or cross-contract integration judgment/adjudication, and independent review |
 | Balanced | Normal implementation, integration, and repository investigation with bounded ambiguity |
 | Fast | Exact searches, read-heavy discovery, deterministic transformations, and other narrow mechanical work |
 
 Capability tier and reasoning effort are independent controls. A Strong child does not imply effort above `High`, and a narrow Fast task should not inherit root effort. Every dispatch must select the active adapter's real native model and, where the selected model exposes it, explicit supported effort; a capability label in the task prompt is not a selector.
 
-The root orchestrator uses the strongest available capability and the active host's maximum available reasoning effort for the entire run. It owns global context, decisions, integration, final adjudication, and the retrospective. Do not lower root effort for deterministic segments. If the host cannot expose or set the root control, use its strongest available root setting, state the limitation, and never describe it as maximum.
+The root orchestrator uses the strongest available capability and the active host adapter's defined model and reasoning effort for the entire run. It owns global context, decisions, integration, final adjudication, and the retrospective. Do not lower root effort for deterministic segments. If the host cannot expose or set the adapter-defined root control, use its strongest available root setting, state the limitation, and never claim the adapter route is enforced. Host adapters define concrete model/effort selectors; the shared lifecycle does not.
 
-Every child dispatch must pin its native model and, where that model exposes an effort selector, its supported effort explicitly. No child or nested child may use any setting above `High`. Never leave a child unpinned where it could inherit root maximum effort. Each child and nested child must receive fresh, task-local context through a concise self-contained assignment; never rely on inherited conversation history. Where the host exposes a history-propagation choice, select the isolating route. If the host exposes no safe way to prevent above-High inheritance or unwanted history propagation, report the limitation and do not silently dispatch a violating child. A child that believes it needs effort above `High` must narrow or split the work, or return the unresolved judgment to root; it never self-escalates above the ceiling.
+Every child dispatch must pin its native model and, where that model exposes an effort selector, its supported effort explicitly. No child or nested child may use any setting above `High`. Never leave a child unpinned where it could inherit the adapter-defined root effort. Each child and nested child must receive fresh, task-local context through a concise self-contained assignment; never rely on inherited conversation history. Where the host exposes a history-propagation choice, select the isolating route. If the host exposes no safe way to prevent above-High inheritance or unwanted history propagation, report the limitation and do not silently dispatch a violating child. A child that believes it needs effort above `High` must narrow or split the work, or return the unresolved judgment to root; it never self-escalates above the ceiling.
 
 | Role | Capability | Default effort | Ceiling | Decision notes |
 |---|---|---|---|---|
-| Root orchestrator | Strongest available | Max | Max | Uses the host's maximum available setting for the entire run; owns global decisions, integration, final adjudication, and retrospective |
-| Implementation lead | Balanced or Strong | High | High | Owns tracked implementation and integration |
+| Root orchestrator | Strongest available | Adapter-defined | Adapter-defined | Uses the active host adapter's defined route for the entire run; owns global decisions, integration, final adjudication, and retrospective |
+| Implementation lead | Balanced normally; Strong only for ambiguous/high-risk cross-contract judgment | High | High | Owns tracked implementation, shared files, and integration |
 | Independent reviewer | Strong | High | High | Final code review always uses this route |
 | Architecture or security scout | Balanced or Strong | High | High | Use only when real ambiguity or risk warrants it |
 | Normal read-only scout | Fast or Balanced | Medium | High | Raise only for bounded complexity, never above High |
@@ -147,15 +149,15 @@ Every child dispatch must pin its native model and, where that model exposes an 
 | Search or inventory | Fast | Low or Medium | Medium | Exact, narrow, read-only evidence gathering |
 | Validation or check | Fast or Balanced | Medium | High | Use High only when failure analysis is genuinely complex |
 | Delivery or PR support | Balanced | Medium | High | Delivery authority remains separate from effort |
-| Execution retrospective | Root-owned | Max | Max | Runs on root at the host's maximum available setting; never spawn a dedicated retrospective agent |
+| Execution retrospective | Root-owned | Adapter-defined | Adapter-defined | Runs on root at the adapter-defined route; never spawn a dedicated retrospective agent |
 
 Apply these dispatch decisions before every new child:
 
 1. If an active agent already covers the same goal, evidence, and output, steer or follow up with it instead of spawning.
 2. Spawn only for materially distinct evidence or scope. Overlap is allowed only for intentional independent review with a distinct focus.
 3. If two proposed agents would receive the same data, goal, and expected output, merge them into one assignment.
-4. Final code review is a Strong child at `High`; root at maximum effort adjudicates its findings and completion.
-5. Treat a missing explicit child model or, where supported, effort, any child above `High`, absent context isolation, avoidable expensive routing, redundant work, or overlapping work as an execution-retrospective finding. Root maximum effort is expected and is not an efficiency finding.
+4. Final code review is a Strong child at `High`; the adapter-defined root route adjudicates its findings and completion.
+5. Treat a missing explicit child model or, where supported, effort, any child above `High`, absent context isolation, avoidable expensive routing, redundant work, or overlapping work as an execution-retrospective finding. The adapter-defined root route is expected and is not an efficiency finding.
 
 ## 4. Delegate Clear Work
 
@@ -182,6 +184,12 @@ Role boundaries:
 - **Implementation lead:** owns tracked edits, integration, targeted checks, and the final implementation report. It may request slices or review.
 - **Slice worker:** owns one disjoint bounded write scope and reports back to the lead; it does not redefine shared contracts.
 - **Reviewer:** independent and normally read-only; checks requirement fit, correctness, regressions, architecture, negative cases, and validation gaps.
+
+### Local Context And Knowledge Deltas
+
+Related agents own routine operational context and repair loops among themselves. Keep raw logs, large diffs, debug history, repeated tool calls, and local test failures with the agent that can act on them. A completion or handoff report to root is a compact knowledge delta, not a transcript: outcome, contract changes, new facts or invalidated assumptions, verification/evidence location, residual risk, decision needed, and exact paused scope. The integration lead consolidates worker deltas for shared contracts. Escalate to root only for architecture, scope, public contracts, security, migration, conflicting capsules, disputed or repeated failure, or user authority; root need not reopen coherent artifacts except for adjudication or final verification.
+
+An implementer normally performs focused local investigation and targeted tests. Use separate scouts for broad, ambiguous, or cross-cutting discovery. An implementer may spawn a disjoint helper or reviewer where native delegation allows, but the final review must be an independent Strong child at High and must not be the implementer.
 
 The approved or otherwise authorized plan is the implementation contract. Include its decisions and acceptance behavior in writer assignments, and escalate rather than silently redefining it.
 
@@ -229,7 +237,7 @@ For flaky/infrastructure failures, let `merge-request` retry only when the provi
 
 ## 6. Review And Fix
 
-Every tracked implementation receives final code review from an independent Strong child pinned at `High`; root at maximum effort adjudicates the findings and completion. Risk controls whether additional specialized review is needed, not whether this final review occurs. If the host cannot safely dispatch the required reviewer without above-High inheritance, report the limitation and do not imply that independent review happened.
+Every tracked implementation receives final code review from an independent Strong child pinned at `High`; the adapter-defined root route adjudicates the findings and completion. Risk controls whether additional specialized review is needed, not whether this final review occurs. If the host cannot safely dispatch the required reviewer without above-High inheritance, report the limitation and do not imply that independent review happened.
 
 Findings should name severity, evidence, impact, and the required correction. Send fixes back to an implementation owner, run the affected targeted checks, and by default return the changed area to the same independent reviewer for each correction cycle. Add a new reviewer only when the risk is distinct, a fresh final review is needed, or that reviewer is unavailable. Do not repeat the entire review process for unrelated settled code unless a fix changes its assumptions.
 
@@ -280,7 +288,7 @@ The verdict is a point-in-time snapshot. Recompute it whenever an authorized del
 
 ## 8. Retrospect And Improve
 
-After the required review and successful final suite, and before completion or delivery, the root performs a bounded execution retrospective at its maximum available effort. The root owns this step; do not spawn an agent solely to perform it. Keep it proportional and use only observable evidence already available from the native plan, user messages, assignments and reports, git diff, and check results. Do not reread the entire repository or transcript, expose or reconstruct chain-of-thought, or invent token counts. Use exact token or usage figures only when the host exposes them; otherwise use observable proxies.
+After the required review and successful final suite, and before completion or delivery, the root performs a bounded execution retrospective at the adapter-defined root effort. The root owns this step; do not spawn an agent solely to perform it. Keep it proportional and use only observable evidence already available from the native plan, user messages, assignments and reports, git diff, and check results. Do not reread the entire repository or transcript, expose or reconstruct chain-of-thought, or invent token counts. Use exact token or usage figures only when the host exposes them; otherwise use observable proxies.
 
 Assess both correctness and the total resource cost of reaching a reliable result. Look for:
 
@@ -291,7 +299,7 @@ Assess both correctness and the total resource cost of reaching a reliable resul
 - repeated checks without a relevant mutation, premature broad-suite runs, or work done before the final tree that could have waited;
 - routing or reasoning that was unnecessarily expensive, or too weak and therefore caused rework.
 
-Root maximum effort is required and is never an efficiency finding. Any child above `High`, child dispatch without an explicit model or, where supported, effort, missing required context isolation, avoidable expensive routing, or redundant or overlapping child work is a retrospective finding.
+The adapter-defined root effort is required and is never an efficiency finding. Any child above `High`, child dispatch without an explicit model or, where supported, effort, missing required context isolation, avoidable expensive routing, or redundant or overlapping child work is a retrospective finding.
 
 Optimize total cost across agent context, tool work, validation, and latency while preserving implementation and review quality; raw token minimization is not the goal. Surface at most three findings. For each material finding, state the observable evidence, impact, better approach, and whether it is a current correctness gap, task-specific lesson, or plausibly generalizable process improvement.
 
