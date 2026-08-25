@@ -1052,8 +1052,8 @@
             <span class="kicker">lifecycle</span>
             <h2 id="slide-3-title">Root sends the token.</h2>
             <p class="lead">
-              Root classifies intent, discovers the repository, brainstorms when needed, and presents a plan.
-              Explicit execution intent continues unchanged work; an approval gate still pauses it.
+              Root classifies intent, discovers the repository, and presents a native Plan.
+              After the Plan is stable, native Goal state gates tracked dispatch; actual concurrency is native worker state.
             </p>
           </div>
           <div class="motion-frame" aria-label="Animated dispatch across orchestration phases">
@@ -1086,8 +1086,8 @@
                 <li class="dispatch-row" style="--delay: 1300ms">
                   <span class="dispatch-index">03 plan</span>
                   <div class="dispatch-main">
-                    <strong>Implementation plan</strong>
-                    <p>concrete steps and validation</p>
+                    <strong>Native Plan + Goal</strong>
+                    <p>phases, waves, acceptance, and validation</p>
                   </div>
                   <span class="dispatch-state">gate</span>
                 </li>
@@ -1154,8 +1154,8 @@
             <span class="kicker">before code</span>
             <h2 id="slide-5-title">Discover. Brainstorm. Plan. Gate.</h2>
             <p class="lead">
-              Every implementation gets pre-write discovery and a plan. Explicit execution intent
-              continues unchanged work after that checkpoint; new behavior adds deeper analysis.
+              Every implementation gets pre-write discovery and a native Plan. A native Goal follows
+              once the Plan is stable; new behavior adds deeper analysis and material scope changes require a delta decision.
             </p>
           </div>
           <div class="stack" aria-label="Planning inputs">
@@ -1169,7 +1169,7 @@
             </div>
             <div class="stack-row">
               <strong>Plan checkpoint</strong>
-              <span>concrete steps, acceptance, and validation; wait only when authorization requires it.</span>
+              <span>phases or waves with one top-level in_progress item; native worker state carries concurrency.</span>
             </div>
           </div>
         </section>
@@ -1182,11 +1182,11 @@
             </div>
             <div class="dark-row">
               <strong>Splits work</strong>
-              <span>creates bounded slices only where a clear contract exists.</span>
+              <span>creates disjoint backend, frontend, test, or research slices only where a clear contract exists.</span>
             </div>
             <div class="dark-row">
               <strong>Integrates</strong>
-              <span>combines the result, runs targeted checks, and prepares the evidence trail.</span>
+              <span>owns shared contracts and files, runs targeted checks, and prepares compact knowledge deltas.</span>
             </div>
           </div>
           <div class="copy">
@@ -1204,7 +1204,7 @@
             <span class="kicker">review / fix</span>
             <h2 id="slide-7-title">Done is not a worker claim.</h2>
             <p class="lead">
-              Reviewer does not start with the diff alone. It reads the goal,
+              Reviewer does not start with the diff alone. It reads the native Goal,
               relevant context, reports, checks, and risks that can block completion.
             </p>
           </div>
@@ -1229,18 +1229,18 @@
             <span class="kicker">adaptive execution</span>
             <h2 id="slide-8-title">The workflow changes with the work.</h2>
             <p class="lead">
-              Native host controls keep the process responsive without a custom runtime.
+              Native Plan, Goal, and worker controls keep the process responsive without a custom runtime.
               New complexity, user input, validation results, and final evidence change only what they affect.
             </p>
           </div>
           <div class="artifact-grid" aria-label="Adaptive orchestration rules">
             <div class="artifact-card">
               <strong>Host-pinned routing</strong>
-              <span>the task/session root is selected or verified separately; child spawns have an explicit model, supported effort, High ceiling, and self-contained context.</span>
+              <span>Codex root is Sol High; Strong children use Sol High and every other child Luna at proportional effort, with explicit model, High ceiling, and self-contained context.</span>
             </div>
             <div class="artifact-card">
               <strong>Live user input</strong>
-              <span>related material changes share one affected-scope replan at the next safe boundary.</span>
+              <span>related agents keep raw logs and repair loops local, sending root compact knowledge deltas.</span>
             </div>
             <div class="artifact-card">
               <strong>Targeted checks</strong>
@@ -1308,7 +1308,7 @@
             ".hero-row:nth-child(3) span": "does not accept a worker report as done without verification or review.",
             "[aria-labelledby='slide-3-title'] .kicker": "lifecycle",
             "#slide-3-title": "Root sends the token.",
-            "#slide-3-title + .lead": "Root classifies intent, discovers the repository, brainstorms when needed, and presents a plan. Explicit execution intent continues unchanged work; an approval gate still pauses it.",
+            "#slide-3-title + .lead": "Root classifies intent, discovers the repository, and presents a native Plan. After the Plan is stable, native Goal state gates tracked dispatch; actual concurrency is native worker state.",
             ".dispatch-label": "root command",
             ".dispatch-root strong": "Orchestrator",
             ".dispatch-root p": "User context, routing, progress, and delivery stay with root.",
@@ -1321,8 +1321,8 @@
             ".dispatch-row:nth-child(2) .dispatch-main p": "goal, workflow, edges, tradeoffs",
             ".dispatch-row:nth-child(2) .dispatch-state": "decide",
             ".dispatch-row:nth-child(3) .dispatch-index": "03 plan",
-            ".dispatch-row:nth-child(3) .dispatch-main strong": "Implementation plan",
-            ".dispatch-row:nth-child(3) .dispatch-main p": "concrete steps and validation",
+            ".dispatch-row:nth-child(3) .dispatch-main strong": "Native Plan + Goal",
+            ".dispatch-row:nth-child(3) .dispatch-main p": "phases, waves, acceptance, and validation",
             ".dispatch-row:nth-child(3) .dispatch-state": "gate",
             ".dispatch-row:nth-child(4) .dispatch-index": "04 build",
             ".dispatch-row:nth-child(4) .dispatch-main strong": "Implementation lead",
@@ -1349,25 +1349,25 @@
             ".risk-card:nth-child(4) span": "no phase owners, per-file agents, or custom runtime.",
             "[aria-labelledby='slide-5-title'] .kicker": "before code",
             "#slide-5-title": "Discover. Brainstorm. Plan. Gate.",
-            "#slide-5-title + .lead": "Every implementation gets pre-write discovery and a plan. Explicit execution intent continues unchanged work after that checkpoint; new behavior adds deeper analysis.",
+            "#slide-5-title + .lead": "Every implementation gets pre-write discovery and a native Plan. A native Goal follows once the Plan is stable; new behavior adds deeper analysis and material scope changes require a delta decision.",
             "[aria-labelledby='slide-5-title'] .stack-row:nth-child(1) strong": "Discovery",
             "[aria-labelledby='slide-5-title'] .stack-row:nth-child(1) span": "current behavior, contracts, dependencies, obsolete paths, and risks.",
             "[aria-labelledby='slide-5-title'] .stack-row:nth-child(2) strong": "Brainstorming",
             "[aria-labelledby='slide-5-title'] .stack-row:nth-child(2) span": "goal, users, workflow, edge cases, non-goals, options, and tradeoffs.",
             "[aria-labelledby='slide-5-title'] .stack-row:nth-child(3) strong": "Plan checkpoint",
-            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(3) span": "concrete steps, acceptance, and validation; wait only when authorization requires it.",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(3) span": "phases or waves with one top-level in_progress item; native worker state carries concurrency.",
             "[aria-labelledby='slide-6-title'] .kicker": "delegated implementation",
             "#slide-6-title": "Lead owns the change.",
             "#slide-6-title + .lead": "The lead receives an authorized implementation contract and verifies it against the code. Root-cause fixes beat workarounds and suppressed errors.",
             ".dark-row:nth-child(1) strong": "Reads code",
             ".dark-row:nth-child(1) span": "checks the plan against the real repository state, not against an assumption.",
             ".dark-row:nth-child(2) strong": "Splits work",
-            ".dark-row:nth-child(2) span": "creates bounded slices only where a clear contract exists.",
+            ".dark-row:nth-child(2) span": "creates disjoint backend, frontend, test, or research slices only where a clear contract exists.",
             ".dark-row:nth-child(3) strong": "Integrates",
-            ".dark-row:nth-child(3) span": "combines the result, runs targeted checks, and prepares the evidence trail.",
+            ".dark-row:nth-child(3) span": "owns shared contracts and files, runs targeted checks, and prepares compact knowledge deltas.",
             "[aria-labelledby='slide-7-title'] .kicker": "review / fix",
             "#slide-7-title": "Done is not a worker claim.",
-            "#slide-7-title + .lead": "Reviewer does not start with the diff alone. It reads the goal, relevant context, reports, checks, and risks that can block completion.",
+            "#slide-7-title + .lead": "Reviewer does not start with the diff alone. It reads the native Goal, relevant context, reports, checks, and risks that can block completion.",
             "[aria-labelledby='slide-7-title'] .stack-row:nth-child(1) strong": "Finding",
             "[aria-labelledby='slide-7-title'] .stack-row:nth-child(1) span": "scope mismatch, contract break, missing tests, or weak evidence.",
             "[aria-labelledby='slide-7-title'] .stack-row:nth-child(2) strong": "Fix",
@@ -1376,11 +1376,11 @@
             "[aria-labelledby='slide-7-title'] .stack-row:nth-child(3) span": "a blocking finding closes only after fix, verification, and focused re-review.",
             "[aria-labelledby='slide-8-title'] .kicker": "adaptive execution",
             "#slide-8-title": "The workflow changes with the work.",
-            "#slide-8-title + .lead": "Native host controls keep the process responsive without a custom runtime. New complexity, user input, validation results, and final evidence change only what they affect.",
+            "#slide-8-title + .lead": "Native Plan, Goal, and worker controls keep the process responsive without a custom runtime. New complexity, user input, validation results, and final evidence change only what they affect.",
             ".artifact-card:nth-child(1) strong": "Host-pinned routing",
-            ".artifact-card:nth-child(1) span": "the task/session root is selected or verified separately; child spawns have an explicit model, supported effort, High ceiling, and self-contained context.",
+            ".artifact-card:nth-child(1) span": "Codex root is Sol High; Strong children use Sol High and every other child Luna at proportional effort, with explicit model, High ceiling, and self-contained context.",
             ".artifact-card:nth-child(2) strong": "Live user input",
-            ".artifact-card:nth-child(2) span": "related material changes share one affected-scope replan at the next safe boundary.",
+            ".artifact-card:nth-child(2) span": "related agents keep raw logs and repair loops local, sending root compact knowledge deltas.",
             ".artifact-card:nth-child(3) strong": "Targeted checks",
             ".artifact-card:nth-child(3) span": "run after coherent implementation phases, not after every edit.",
             ".artifact-card:nth-child(4) strong": "Execution retrospective",
@@ -1436,7 +1436,7 @@
             ".hero-row:nth-child(3) span": "nebere worker report jako hotovo bez ověření nebo review.",
             "[aria-labelledby='slide-3-title'] .kicker": "lifecycle",
             "#slide-3-title": "Root vysílá token.",
-            "#slide-3-title + .lead": "Root určí intent, prozkoumá repozitář, podle potřeby brainstormuje a předloží plán. Explicitní execution intent pokračuje v nezměněném rozsahu; approval gate jej stále zastaví.",
+            "#slide-3-title + .lead": "Root určí intent, prozkoumá repozitář a předloží nativní Plan. Po stabilizaci Planu nativní Goal řídí tracked dispatch; souběh drží nativní stav workerů.",
             ".dispatch-label": "root command",
             ".dispatch-root strong": "Orchestrator",
             ".dispatch-root p": "Uživatelský kontext, routing, průběh a delivery zůstávají u rootu.",
@@ -1449,8 +1449,8 @@
             ".dispatch-row:nth-child(2) .dispatch-main p": "cíl, workflow, okraje, tradeoffs",
             ".dispatch-row:nth-child(2) .dispatch-state": "rozhoduje",
             ".dispatch-row:nth-child(3) .dispatch-index": "03 plán",
-            ".dispatch-row:nth-child(3) .dispatch-main strong": "Implementační plán",
-            ".dispatch-row:nth-child(3) .dispatch-main p": "konkrétní kroky a validace",
+            ".dispatch-row:nth-child(3) .dispatch-main strong": "Nativní Plan + Goal",
+            ".dispatch-row:nth-child(3) .dispatch-main p": "fáze, vlny, akceptace a validace",
             ".dispatch-row:nth-child(3) .dispatch-state": "brána",
             ".dispatch-row:nth-child(4) .dispatch-index": "04 implementace",
             ".dispatch-row:nth-child(4) .dispatch-main strong": "Implementation lead",
@@ -1477,25 +1477,25 @@
             ".risk-card:nth-child(4) span": "žádní phase owneři, agenti po souborech ani vlastní runtime.",
             "[aria-labelledby='slide-5-title'] .kicker": "před kódem",
             "#slide-5-title": "Průzkum. Brainstorming. Plán. Brána.",
-            "#slide-5-title + .lead": "Každá implementace má průzkum bez zápisu a plán. Explicitní execution intent pokračuje v nezměněném rozsahu po tomto checkpointu; nové chování přidává hlubší analýzu.",
+            "#slide-5-title + .lead": "Každá implementace má průzkum bez zápisu a nativní Plan. Po jeho stabilizaci následuje nativní Goal; nové chování přidává hlubší analýzu a materiální změna scope vyžaduje delta rozhodnutí.",
             "[aria-labelledby='slide-5-title'] .stack-row:nth-child(1) strong": "Průzkum",
             "[aria-labelledby='slide-5-title'] .stack-row:nth-child(1) span": "současné chování, kontrakty, závislosti, zastaralé cesty a rizika.",
             "[aria-labelledby='slide-5-title'] .stack-row:nth-child(2) strong": "Brainstorming",
             "[aria-labelledby='slide-5-title'] .stack-row:nth-child(2) span": "cíl, uživatelé, workflow, okraje, non-goals, možnosti a tradeoffs.",
             "[aria-labelledby='slide-5-title'] .stack-row:nth-child(3) strong": "Kontrolní bod plánu",
-            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(3) span": "konkrétní kroky, akceptace a validace; čeká se jen, když to vyžaduje autorizace.",
+            "[aria-labelledby='slide-5-title'] .stack-row:nth-child(3) span": "fáze nebo vlny s jedním top-level in_progress; souběh nesou nativní workeři.",
             "[aria-labelledby='slide-6-title'] .kicker": "delegovaná implementace",
             "#slide-6-title": "Lead vlastní změny.",
             "#slide-6-title + .lead": "Lead dostane autorizovaný implementační kontrakt a ověří ho proti kódu. Root-cause fix má přednost před workaroundem a potlačením chyb.",
             ".dark-row:nth-child(1) strong": "Čte kód",
             ".dark-row:nth-child(1) span": "ověřuje plán proti reálnému stavu repozitáře, ne proti předpokladu.",
             ".dark-row:nth-child(2) strong": "Dělí práci",
-            ".dark-row:nth-child(2) span": "vytváří bounded slices jen tam, kde existuje jasný kontrakt.",
+            ".dark-row:nth-child(2) span": "vytváří disjoint backendové, frontendové, testovací nebo research slices jen s jasným kontraktem.",
             ".dark-row:nth-child(3) strong": "Integruje",
-            ".dark-row:nth-child(3) span": "spojuje výsledek, spouští cílené kontroly a připraví evidence trail.",
+            ".dark-row:nth-child(3) span": "vlastní sdílené kontrakty a soubory, spouští cílené kontroly a připraví knowledge deltas.",
             "[aria-labelledby='slide-7-title'] .kicker": "review / fix",
             "#slide-7-title": "Hotovo není worker claim.",
-            "#slide-7-title + .lead": "Reviewer nezačíná samotným diffem. Čte cíl, relevantní kontext, reporty, kontroly a rizika, která mohou blokovat dokončení.",
+            "#slide-7-title + .lead": "Reviewer nezačíná samotným diffem. Čte nativní Goal, relevantní kontext, reporty, kontroly a rizika, která mohou blokovat dokončení.",
             "[aria-labelledby='slide-7-title'] .stack-row:nth-child(1) strong": "Finding",
             "[aria-labelledby='slide-7-title'] .stack-row:nth-child(1) span": "scope mismatch, contract break, missing tests nebo slabá evidence.",
             "[aria-labelledby='slide-7-title'] .stack-row:nth-child(2) strong": "Fix",
@@ -1504,11 +1504,11 @@
             "[aria-labelledby='slide-7-title'] .stack-row:nth-child(3) span": "blokující finding se zavře až po fixu, ověření a cíleném re-review.",
             "[aria-labelledby='slide-8-title'] .kicker": "adaptivní provedení",
             "#slide-8-title": "Workflow se mění spolu s prací.",
-            "#slide-8-title + .lead": "Nativní možnosti hosta udržují proces živý bez vlastního runtime. Nová složitost, zprávy uživatele, výsledky kontrol a finální evidence mění jen to, čeho se týkají.",
+            "#slide-8-title + .lead": "Nativní Plan, Goal a stav workerů udržují proces živý bez vlastního runtime. Nová složitost, zprávy uživatele, výsledky kontrol a finální evidence mění jen to, čeho se týkají.",
             ".artifact-card:nth-child(1) strong": "Routing připnutý k hostu",
-            ".artifact-card:nth-child(1) span": "root pro úlohu či session se volí nebo ověřuje zvlášť; child spawny mají explicitní model, podporovaný effort, strop High a samostatný kontext.",
+            ".artifact-card:nth-child(1) span": "Codex root je Sol High; Strong children Sol High a ostatní Luna s proporcionálním effortem, explicitním modelem, stropem High a samostatným kontextem.",
             ".artifact-card:nth-child(2) strong": "Průběžné zprávy",
-            ".artifact-card:nth-child(2) span": "související materiální změny sdílí jeden replan dotčeného scope na nejbližší bezpečné hranici.",
+            ".artifact-card:nth-child(2) span": "související agenti drží logy a repair loops lokálně a rootu posílají kompaktní knowledge deltas.",
             ".artifact-card:nth-child(3) strong": "Cílené kontroly",
             ".artifact-card:nth-child(3) span": "běží po ucelených fázích, ne po každé editaci.",
             ".artifact-card:nth-child(4) strong": "Retrospektiva provedení",

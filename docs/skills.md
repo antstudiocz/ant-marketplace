@@ -40,15 +40,16 @@ How it works:
 - keeps root as the sole user-facing adjudicator; delegated agents escalate evidence, options, a recommendation, and paused scope only to their parent, while root resolves discoverable decisions and batches all genuinely new material authority into one question;
 - presents a concrete implementation plan as a mandatory progress checkpoint; explicit execution language such as “fix it and test it end-to-end” continues afterward when scope and risk remain unchanged, while “analyze only” remains read-only;
 - after initial discovery, first honors any already explicit continuity choice; otherwise records incrementally verifiable checkpoints without asking when continuity does not materially differ, or asks once for the predefined choice with a contextual recommendation when it does; integrated replacement requires an implementation-dedicated checkout and never weakens final safety or migration requirements;
-- establishes a measurable native goal after the plan is stable and before tracked-writer dispatch for implementation-authorized or later-approved work; Codex automatically reuses or creates a matching goal when native tools are available, while Claude Code asks the user to run an exact plan-tailored `/goal` command;
+- establishes the host's native Plan and a measurable native Goal after the objective is stable and before tracked-writer dispatch; the Plan records phases/waves with one top-level item `in_progress`, while concurrent workers are represented by native agent/thread state; Codex requires Goal tools and fails closed before tracked edits when they are unavailable, while Claude Code requires observable native Plan/Goal state;
 - waits for explicit approval when requested by the user or when discovery materially changes scope, behavior, architecture, data, safety/risk, or requires destructive action; approval or authorization covers the stable plan rather than every phase;
 - chooses a proportional shape: one writer plus final independent review for simple work, optional scouts or slices for broader work, and extra specialist review only when risk warrants it;
 - keeps root coordination-only and stops before tracked edits when no writer-capable native delegation is available;
 - routes children by Strong, Balanced, and Fast capabilities while selecting a real host model and, where supported, effort for each dispatch;
-- keeps root at the host's maximum available reasoning effort for the whole run and pins every child explicitly at High or lower, independently from capability tier; Codex children and nested children use `fork_turns="none"` with concise self-contained task context;
+- keeps root at the active host's configured strongest route for the whole run and pins every child explicitly at High or lower, independently from capability tier; Codex children and nested children use `fork_turns="none"` with concise self-contained task context;
 - distinguishes declined patch/fileChange/policy classifications from real native user-only approval gates and never weakens architecture, behavior, tests, validation, or compatibility to avoid approval;
 - reuses an active agent that already owns the same goal and evidence instead of creating overlapping work, except for intentional independent review;
-- delegates all tracked edits and keeps write scopes disjoint when work is parallel;
+- delegates all tracked edits, supports disjoint parallel backend/frontend/test/research/implementation workers behind one integration lead, and keeps write scopes disjoint when work is parallel;
+- keeps raw logs, large diffs, debug history, repeated tool calls, and local failures in related-agent repair loops; sends root compact knowledge deltas and escalates only material contract, scope, security, migration, conflict, repeated-failure, or authority decisions;
 - accepts mid-flight status and authorized-behavior details without stopping work; batches related material changes from the same active segment into one affected-scope planning and approval cycle at the next safe boundary while unaffected work continues;
 - runs checks targeted to coherent implementation phases instead of repeatedly running the full suite;
 - runs one full suite after the final mutation and required review, before completion and optional delivery, and refreshes it once only if a later relevant edit occurs;
@@ -57,7 +58,7 @@ How it works:
 - invokes `/ant:merge-request` and `/ant:delivery-workflows` in Claude Code or `$merge-request` and `$delivery-workflows` in Codex for their respective PR/MR and merge-conflict responsibilities;
 - finishes with changed areas, checks run, unverified items, retrospective outcome, material upstream feedback state, and delivery state.
 
-Use it when the user wants a task driven from idea to working, verified implementation. In Claude Code, first establish `best` + `max` for the session with `claude --model best --effort max` or `/model best` plus `/effort max`, then invoke `/ant:implementation-orchestrator`; run its exact `/goal` command before tracked writes when it requests activation.
+Use it when the user wants a task driven from idea to working, verified implementation. In Claude Code, first establish `best` + `max` for the session with `claude --model best --effort max` or `/model best` plus `/effort max`, then invoke `/ant:implementation-orchestrator`; ensure native Plan/Goal state is observable before tracked writes.
 
 ## `brand-design`
 
