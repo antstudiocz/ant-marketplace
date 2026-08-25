@@ -129,7 +129,7 @@ How it works:
 - never implies merge, release, rebase, force-push, or history rewrite from PR/MR creation intent;
 - uses a short Conventional Commit style title;
 - writes the description as a snapshot of the net final diff, excluding intermediate commits, abandoned attempts, and add-then-remove artifacts unless they remain materially relevant;
-- uses sections for what changed, why, chosen decisions, user and technical impact, UX walkthrough, technical testing, unverified items, and reviewer focus.
+- keeps a human-first core for the plain-language outcome, adaptive rationale, and material impact or risk; collapses structured technical review context and detailed verification evidence, while each verification summary exposes its status and material gaps.
 - returns a preview only for preparation intent; for creation/update intent, treats its preview as status rather than duplicate confirmation, owns `glab`/`gh` creation or update and pipeline evidence, and hands MR-diff regressions to the orchestrator for repair.
 
 Use it when the user asks to create or prepare an MR/PR and needs a structured practical description.

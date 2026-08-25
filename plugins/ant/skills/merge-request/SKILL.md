@@ -128,7 +128,7 @@ docs(skills): add merge request workflow
 
 ## MR Description
 
-Write the description in the selected language. Be concrete and operational, not marketing-oriented. Organize it in two layers: a concise reviewer-first default layer that exposes the outcome, behavior, impact, risk, verification status, and review priority; then optional implementation and validation detail. The description must start with a short plain-language summary, followed immediately by a horizontal rule.
+Write the description in the selected language. Be concrete and operational, not marketing-oriented. Organize it in two layers: a short human-first core for ordinary review, then collapsed technical review and verification evidence. The description must start with a short plain-language summary, followed immediately by a horizontal rule.
 
 ### Final Snapshot Rule
 
@@ -138,7 +138,7 @@ Write the description in the selected language. Be concrete and operational, not
 - Mention branch history only when it remains materially relevant to migration, rollout, compatibility, data safety, or reviewer understanding of the final result.
 - Apply this rule on updates too: rebuild the description from the current base-to-final-`HEAD` snapshot instead of appending a changelog of edits made since the previous description.
 
-Use the templates below as a placement guide, not as an always-present checklist. `Summary`, `Impact and risk`, `Verification`, and `Reviewer focus` are the required core; every other shown block is conditional. Translate headings for other selected languages while preserving their meaning. Adapt labels to the change type instead of emitting empty or `Not applicable` sections.
+Use the templates below as a placement guide, not as an always-present checklist. The visible human-first core is `Summary`, an adaptive rationale slot, and `Impact and risk`: a known-cause fix uses `Root cause and rationale` / `Příčina a odůvodnění`; a feature, refactor, or unknown-cause fix uses `Rationale` / `Odůvodnění`. Every other shown block is conditional. Translate headings for other selected languages while preserving their meaning. Adapt the rationale to the change type instead of emitting empty or `Not applicable` sections.
 
 ### Czech
 
@@ -149,58 +149,68 @@ Předtím ... Nově ... Prakticky to znamená ...
 
 ---
 
-## Průchod změnou
+## Odůvodnění
 
-1. Spouštěč: ...
-2. ...
-3. Úspěšný a praktický výsledek: ...
-
-## Příčina a odůvodnění
-
-- Příčina: ...
-- Rozhodnutí a kompromisy: ...
+- Pro feature, refaktor nebo opravu bez prokázané příčiny: důvod rozhodnutí a relevantní kompromis.
+- Pro opravu s prokázanou příčinou: přejmenujte nadpis na `Příčina a odůvodnění` a popište mechanismus selhání i proč jej změna řeší.
 
 ## Dopady a rizika
 
-- Uživatelé: ...
-- Technicky: ...
-- Rizika a ochrany: ...
-
-## Známá omezení a navazující práce
-
-- ...
-
-## Ověření
-
-- Stav: ...
-- Ověřeno: ...
-- Neověřeno: ...
-
-## Jak to proklikat
-
-1. ...
-2. ...
-3. Očekávaný výsledek: ...
-
-## Na co se má reviewer zaměřit
-
-- ...
+- Praktický dopad: ...
+- Nejvyšší riziko a ochrana: ...
+- Migrace, kompatibilita, oprávnění, data, známé omezení nebo neověřený materiální rozsah: ...
 
 <details>
-<summary>Detaily implementace</summary>
+<summary>Technický kontext pro review</summary>
+
+### Dotčené kontrakty a oblasti
+
+- ...
+
+### Zachované invarianty
+
+- ...
+
+### Cesty selhání a návratu
+
+- ...
+
+### Okrajové případy a otázky pro review
+
+- ...
+
+### Průchod nebo manuální ověření
 
 - ...
 
 </details>
 
 <details>
-<summary>Podrobné technické ověření</summary>
+<summary>Ověření — prošlo: ...</summary>
 
 ```bash
 ...
 ```
 
 - Výsledek: ...
+
+</details>
+
+Pro selhané ověření použijte místo toho:
+
+<details>
+<summary>Ověření — selhalo: pojmenujte konkrétní selhání</summary>
+
+...detailní evidence...
+
+</details>
+
+Pokud po selhání zůstávají materiální neověřené položky, vypište je také přímo ve stejné summary. Pro neúplné ověření použijte místo toho:
+
+<details>
+<summary>Ověření — neúplné: vypište všechny neověřené materiální položky</summary>
+
+...detailní evidence...
 
 </details>
 ````
@@ -214,52 +224,44 @@ Previously ... Now ... In practice, this means ...
 
 ---
 
-## End-to-end flow
+## Rationale
 
-1. Trigger: ...
-2. ...
-3. Successful and practical result: ...
-
-## Root cause and rationale
-
-- Root cause: ...
-- Decision and tradeoffs: ...
+- For a feature, refactor, or a fix without a proven cause: the decision rationale and relevant tradeoff.
+- For a fix with a proven cause: rename this heading to `Root cause and rationale` and describe the failure mechanism and why this change resolves it.
 
 ## Impact and risk
 
-- Users: ...
-- Technical: ...
-- Risks and safeguards: ...
-
-## Known limitations and follow-ups
-
-- ...
-
-## Verification
-
-- Status: ...
-- Verified: ...
-- Not verified: ...
-
-## How to click through
-
-1. ...
-2. ...
-3. Expected result: ...
-
-## Reviewer focus
-
-- ...
+- Practical impact: ...
+- Highest risk and safeguard: ...
+- Migration, compatibility, permissions, data safety, known limitation, or unverified material scope: ...
 
 <details>
-<summary>Implementation details</summary>
+<summary>Technical review context</summary>
+
+### Affected contracts and areas
+
+- ...
+
+### Preserved invariants
+
+- ...
+
+### Failure and rollback paths
+
+- ...
+
+### Edge cases and reviewer questions
+
+- ...
+
+### Flow or manual exercise
 
 - ...
 
 </details>
 
 <details>
-<summary>Detailed technical verification</summary>
+<summary>Verification — passed: ...</summary>
 
 ```bash
 ...
@@ -268,22 +270,37 @@ Previously ... Now ... In practice, this means ...
 - Result: ...
 
 </details>
+
+For failed verification, use this instead:
+
+<details>
+<summary>Verification — failed: name the specific failure</summary>
+
+...detailed evidence...
+
+</details>
+
+If material items remain unverified after the failure, list them directly in that same summary. For incomplete verification, use this instead:
+
+<details>
+<summary>Verification — incomplete: list every material item not verified</summary>
+
+...detailed evidence...
+
+</details>
 ````
 
 ### Description Guidance
 
-- **Required default layer:** always include `Summary`, `Impact and risk`, `Verification`, and `Reviewer focus`. Keep these sections visible and concise. Never hide material impact, migrations or compatibility, permissions or data safety, known risks, known limitations, unverified material scope, the verification outcome, or the highest-risk reviewer focus inside a disclosure.
-- In `Summary` / `Stručně`, give a non-technical reviewer the mental model in this order: the previous problem or constraint, the new behavior, and the practical effect. Cover every materially distinct delivered outcome from the final diff exactly once. Omit component inventories, file names, recovery history, and vague process wording.
+- **Human-first core:** always include `Summary` / `Stručně`, an adaptive rationale slot, and `Impact and risk` / `Dopady a rizika`. Use `Root cause and rationale` / `Příčina a odůvodnění` only for a fix with a known, evidence-backed cause; otherwise use `Rationale` / `Odůvodnění`. Keep this core brief and understandable without codebase knowledge.
+- In `Summary` / `Stručně`, give a non-technical reviewer the mental model in this order: the previous problem or constraint, the new behavior, and the practical effect. Cover every materially distinct delivered outcome from the final diff exactly once. Keep internal symbols, file names, component inventories, recovery history, and process wording in technical details.
 - Put `---` immediately after the summary section so nothing interrupts the quick summary and detailed review notes.
-- Add `End-to-end flow` / `Průchod změnou` when behavior crosses stages or components, or has important branches or failure stops. Use a numbered sequence that always covers the trigger, ordered stages, and successful or practical result. Add branches, failure or stop paths, safeguards or decision points, and remaining gaps only when they are materially present and evidence-backed. Omit the flow for a genuinely simple change, and never invent optional paths or fill them with `Not applicable`.
-- Add `Root cause and rationale` / `Příčina a odůvodnění` when an actual failure mechanism or root cause is known and material, or when a non-obvious decision needs explanation. Include only the applicable evidence-backed bullets: the cause and/or the concise decision rationale, alternatives, or tradeoffs a reviewer needs to judge the change. Keep decision-critical rationale visible; only collapse lengthy supporting implementation detail. Do not infer or invent a cause, rejected alternative, or rationale that is unsupported by the final diff, repository or task evidence, or other verified context. Omit this section for trivial changes without material root-cause or decision context.
-- In `Impact and risk` / `Dopady a rizika`, explain user and technical impact plus material risks and safeguards. Explicitly cover UI, API, auth, data, permissions, cache, background jobs, workflows, migrations, rollout, and compatibility when affected; omit unaffected categories instead of listing noise.
-- Add `Known limitations and follow-ups` / `Známá omezení a navazující práce` only for accepted design or product limitations, deferred scope, or known follow-up work. Keep it separate from `Not verified` / `Neověřeno`, which is only for claims that could not be checked because of missing credentials, unavailable services, sandbox or network limits, absent fixtures, or intentionally skipped commands.
-- In `Verification` / `Ověření`, give a concise evidence-backed overall status, what was verified, and any material item not verified. Omit the `Not verified` bullet when everything material was checked; never present an unrun check as passing.
-- Add `How to click through` / `Jak to proklikat` only when the change has a meaningful user-facing or operator-facing manual path. Write the real scenario step by step, including roles, accounts, or permissions when relevant. Rename it to a more accurate localized heading such as `How to exercise the flow` for API, worker, or operational changes. Omit it for CI-, documentation-, or test-only changes unless there is a useful manual workflow; never emit an `N/A` walkthrough.
-- In `Reviewer focus` / `Na co se má reviewer zaměřit`, name the highest-risk behavior, assumption, edge case, or interaction that deserves careful review. Prefer a small number of precise priorities over a general file list.
-- Add implementation detail only when it improves reviewability. Keep a short explanation visible when concise; collapse longer technical decisions under portable `<details>` / `<summary>` markup with blank lines around the content. Do not add disclosure overhead to a small description.
-- Keep detailed test commands and results separate from the visible verification status. Collapse lengthy command/output evidence under a `Detailed technical verification` disclosure using the same blank-line structure; leave short evidence visible when that is easier to scan.
+- In the adaptive rationale slot, use `Root cause and rationale` / `Příčina a odůvodnění` only when a fix's actual failure mechanism is known. For a feature, refactor, or a fix without a proven cause, use `Rationale` / `Odůvodnění` for the evidence-backed decision and relevant tradeoff. Do not manufacture a root cause or invent a rejected alternative or rationale unsupported by the final diff, repository, task, or verified context.
+- In `Impact and risk` / `Dopady a rizika`, explain the practical impact, the highest-risk human takeaway, and relevant safeguards. Material impact and risk, migrations, compatibility, permissions or data safety, known limitations, and unverified material scope must stay visible here; omit unaffected categories instead of listing noise.
+- Use one `Technical review context` / `Technický kontext pro review` disclosure when it improves reviewability. Structure its applicable contents around affected contracts and areas, preserved invariants, failure and rollback paths, edge cases, precise reviewer questions, and a flow or manual exercise where detailed context is useful. Omit empty subheadings and disclosures.
+- Use one `Verification` / `Ověření` disclosure for detailed evidence when verification was run or has a material gap, and make its `<summary>` match the actual outcome. A passed summary states only the passing result. A failed summary names the specific failure and adds every material unverified item only when any remain. An incomplete summary names every material item not verified. Put commands, results, environment constraints, and detailed evidence inside; never present an unrun check as passing or hide a failure or unknown inside the disclosure.
+- Do not include chain-of-thought, agent diaries, intermediate attempts, or raw process history in the human-first core or the disclosures. Internal symbols, files, and technical inventories belong only in the collapsed technical context when they help review. Technical details support deeper human review and AI use, not process reconstruction.
+- Use a flow or manual exercise only when it helps reviewers evaluate behavior across stages, roles, components, branches, or failure stops. Omit it for simple, CI-, documentation-, or test-only changes unless it adds real review value.
 - Before finalizing, compare every claim with the merge-base-to-`HEAD` diff and remove claims about reverted, abandoned, or otherwise absent work.
 
 ## Provider CLI

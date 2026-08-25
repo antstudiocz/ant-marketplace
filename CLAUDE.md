@@ -40,7 +40,7 @@ assets/               # Shared README and branding assets
 
 - Always use the host-visible `/ant:merge-request` (Claude Code) or `$merge-request` (Codex) skill when preparing, creating, or updating a PR/MR.
 - Write PR/MR titles in Conventional Commit style and keep PR/MR descriptions in English by default, unless the user explicitly requests another language.
-- Use the Merge Request skill's structured description format, including the short summary at the top, the `---` separator, validation notes, and reviewer focus.
+- Use the Merge Request skill's human-first description format: visible plain-language summary, adaptive rationale, and material impact or risk after the `---` separator; structured technical context and detailed verification evidence may be collapsed, but verification status and every material gap must be readable in its summary.
 - Write every new or updated PR/MR description as a snapshot of the final diff from the target branch merge base to final `HEAD`. Do not narrate intermediate commits, abandoned attempts, or artifacts that were added and later removed unless they remain relevant to migration or reviewer truth.
 
 ## Adding a New Skill
