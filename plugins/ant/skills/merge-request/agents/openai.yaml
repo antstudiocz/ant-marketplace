@@ -1,4 +1,4 @@
 interface:
   display_name: "(ant) Merge Request"
   short_description: "Prepare or deliver a verified PR/MR"
-  default_prompt: "Use $merge-request to preview or deliver a reviewer-first PR/MR description with a visible outcome, conditional flow and evidence-backed rationale, impact, risks, verification status, and reviewer focus, keeping lengthy details secondary; for delivery, default only new PRs/MRs to Draft, preserve existing readiness unless explicitly changed, and monitor the exact head pipeline."
+  default_prompt: "Use $merge-request to preview or deliver a human-first PR/MR description: keep the plain-language summary, adaptive rationale, and material impact or risk visible; place structured technical review context and detailed verification evidence in disclosures whose verification summary states the status and every material gap. For delivery, default only new PRs/MRs to Draft, preserve existing readiness unless explicitly changed, and monitor the exact head pipeline."
