@@ -33,6 +33,21 @@ For a new feature or materially new behavior, continue in this order:
 
 Read-only scouts may run before the execution gate. They return evidence and options, never implementation changes. Approval or implementation authorization applies only to the stable plan or workstream, so do not ask again before every phase. Ask again when a material discovery invalidates the plan or changes behavior, architecture, data, safety/risk, scope, or requires destructive action.
 
+### Proportional engineering quality
+
+During read-only discovery, before the continuity decision or concrete plan, derive material quality attributes and constraints from repository and user evidence rather than applying a fixed checklist. Consider correctness, maintainability, reliability, performance, scalability, operability, security, accessibility, or compatibility only when the task makes them relevant. Record the resulting attributes and the rationale for a lighter or heavier option in the Plan and relevant writer/reviewer assignments. Select the smallest durable solution that fits the verified constraints. Do not claim performance or scalability improvements without measurements or verified workload, latency, volume, or availability constraints. The implementation owner and independent reviewer both look for expedient shortcuts and hidden debt as well as speculative overengineering, unneeded abstractions, and unnecessary dependencies.
+
+### Deterministic test design
+
+For authored or changed tests involving asynchronous work or concurrency, the plan and test review require:
+
+- synchronization on observable events or state, with timeouts used only as failure bounds;
+- uniquely owned test data/state and cleanup of configuration, globals, mocks, timers, processes, browser contexts, and database state;
+- virtual time where the behavior permits it, and CI-like concurrency/environment coverage when those conditions matter;
+- repeat, shuffle, or seed controls where the test runner supports them, with retries used only to diagnose or classify a failure, never as acceptance evidence.
+
+Never repair a flake with sleeps, inflated timeouts, skipped or weakened assertions, reduced meaningful coverage, or suppressed failures. A heavy performance or fault scenario may be recommended for benchmark, nightly, or manual execution while the merge request validates the smallest representative invariant. If repeated violations are evidenced, report a repository-level lint, ratchet, or enforcement recommendation as an adjacent improvement; never add enforcement automatically or expand the workstream without authority.
+
 A tiny mechanical change inside an already approved or otherwise authorized plan may use a compact cycle: verify the affected code, state the small delta and checks, then continue without duplicate approval. A concrete plan supplied by the user or an approved `create-application` brief may satisfy earlier product brainstorming once repository facts are verified, but it is not implementation authorization. A separate explicit end-to-end implementation request may provide that authorization after plan presentation.
 
 Implementation authorization does not remove the mandatory plan checkpoint or authorize a materially expanded plan. Approval or authorization covers only the scoped repository edits required by the plan. It does not independently authorize destructive operations, force-pushes, merges, releases, or unrelated cleanup. An explicit create/update PR/MR request carries only the limited scoped commit, push, new-request Draft-by-default creation, ordinary-update readiness preservation, and pipeline-observation chain defined by `merge-request`; respect any narrower repository or host permission boundary.
@@ -243,6 +258,18 @@ Findings should name severity, evidence, impact, and the required correction. Se
 
 ## 7. Validate Proportionately
 
+### Adjacent findings
+
+During scoped discovery, implementation, review, and validation, capture every verified, material, actionable adjacent codebase finding discovered naturally. Keep these findings separate from the root execution retrospective; the retrospective may retain its existing at-most-three process findings, while adjacent findings have no arbitrary count cap. Group and prioritize them when numerous. Each report names evidence and location, impact, and a concise recommended direction and urgency. Exclude speculation, duplicates, and cosmetic nits. A finding that is actually a current correctness, requirement, or verification gap is fixed in scope or lowers/blocks the readiness verdict; it is not silently deferred as adjacent work. Reporting a finding does not authorize expanding the implementation scope. Repeated violations may produce a repository lint/ratchet/enforcement recommendation, but the orchestrator never adds that enforcement automatically.
+
+### Runtime smoke before readiness
+
+For executable, runtime, or user-visible changes, the Plan defines the smallest realistic smoke scenarios before implementation: environment and host, preconditions, exact flow, expected observable results, side effects/authentication/data constraints, cleanup, and evidence to capture. After the final suite and before readiness/completion, discover the actual host and repository capabilities and offer the user every applicable available testing surface, with a concise difference and implication for each and exactly one evidence-based recommendation. Do not dump unavailable or inapplicable options, and honor an explicit prior tool choice without asking again. If only one surface is available, offer it transparently; if none is available or smoke is not meaningful, state N/A and why.
+
+The offer must describe exactly which flows will run and what evidence will be captured. The smoke never replaces automated validation. After selection, run the Plan's scenarios and report environment/head, expected versus observed outcomes, side effects, gaps, and screenshots for meaningful checkpoints and failures when the selected surface supports them; protect secrets and private data. A required smoke that fails, is unavailable, or is declined affects readiness. An optional smoke that was offered but declined is reported as unverified without inventing a blocker. A smoke-discovered gap returns to implementation; any later mutation requires targeted checks, focused re-review, a refreshed final suite, and repeat of the affected smoke.
+
+Host adapters map available smoke surfaces to their native capabilities; the semantic lifecycle remains host-neutral and must not invent selectors or assume a testing surface that is unavailable.
+
 During implementation:
 
 - After a coherent task or phase, run only checks relevant to the behavior changed in that unit.
@@ -256,7 +283,8 @@ At the final completion boundary, after the final tracked mutation and required 
 1. Confirm the intended diff and that unrelated files are excluded.
 2. Run the repository's full suite once on the exact final tree when such a suite exists.
 3. If the repository has no named full suite, use its broadest normal validation command or plugin validation as the final suite.
-4. If a relevant mutation happens afterward, rerun the impacted targeted check and refresh the final suite once on the new final tree.
+4. For executable, runtime, or user-visible changes, discover and offer applicable smoke surfaces after the final suite, let the user choose one (unless an explicit prior choice applies), and run the selected Plan scenarios. Capture the chosen surface, flows, environment/head, screenshots where supported, expected versus observed results, side effects, and gaps.
+5. If a relevant mutation happens afterward, rerun the impacted targeted check, refresh the final suite once on the new final tree, and repeat the affected smoke.
 
 This completion gate applies whether or not delivery was requested. When PR/MR or other delivery is requested, the same successful run is the final pre-delivery suite.
 
@@ -274,6 +302,8 @@ Every tracked implementation's final user-facing handoff must contain exactly on
 | **READY TO DEPLOY** | Deployment was not observed; scoped implementation, independent review, and final validation are complete and verified; no known technical blocker remains; and all known required production/pre-deployment prerequisites within observable scope are verified. |
 
 Unverified prerequisites are never satisfied by inference, intent, an agent report, or a completion claim. A statement such as “done” or “complete” must be qualified by the verdict rather than implying merge, release, deployment, or production verification.
+
+For a runtime smoke required by the Plan or repository/user acceptance criteria, a failed, unavailable, or declined smoke is an unverified required prerequisite and therefore prevents a `READY TO DEPLOY` or `DEPLOYED & VERIFIED` verdict until resolved. An optional smoke that was offered and declined is reported as unverified, but does not by itself invent a blocker.
 
 The handoff must separately state:
 
@@ -324,4 +354,4 @@ Before delivery, verify branch, target, final diff, validation results, and the 
 - For merge-conflict resolution and related recovery, use Claude Code `/ant:delivery-workflows` or Codex `$delivery-workflows` only.
 - A request to commit and push does not imply merge, Draft-to-ready conversion, tagging, publishing, or release unless the user says so.
 
-Finish with the delivered commit/PR/MR state, checks run, and anything that remains unverified. Keep the report concise enough to scan once.
+Finish with the delivered commit/PR/MR state, material quality attributes, checks run, smoke choice and evidence (or N/A reason), all verified adjacent findings, and anything that remains unverified. Keep the report concise enough to scan once and include exactly one readiness verdict.

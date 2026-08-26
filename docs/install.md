@@ -94,10 +94,12 @@ In a fresh session, invoke `implementation-orchestrator` on a small repository t
 - keeps root at the active host's configured strongest route and pins every child explicitly at High or lower, independently from capability tier; in Codex, every child and nested child uses `fork_turns="none"` with concise self-contained task context;
 - after a stable implementation Plan, establishes a measurable native Goal before tracked-writer dispatch: Codex requires Goal tools and fails closed before tracked edits when they are unavailable, while Claude Code requires observable native Plan/Goal state;
 - runs targeted checks during work, completes the required review, then runs one broad suite before completion and optional delivery;
+- derives only material quality attributes and constraints during read-only discovery, before continuity/planning, records lighter/heavier rationale in the Plan and writer/reviewer assignments, requires deterministic async/concurrency tests, and reports all verified adjacent findings separately from the at-most-three execution retrospective;
+- for executable/runtime/user-visible work, offers every applicable available smoke surface after the final suite with exactly one recommendation while leaving tool selection to the user;
 - performs a bounded root retrospective after the final suite, corrects any current gap, and proposes no more than one sanitized upstream feedback action only when the finding is material and generalizable;
 - asks for separate approval before writing to an upstream issue and never creates a retrospective PR automatically;
 - continues unaffected work when you send a status question or authorized-behavior detail;
 - batches related material changes from the same active segment into one affected-scope planning and approval cycle at the next safe boundary, without delaying an urgent stop or safety correction;
 - invokes `/ant:merge-request` and `/ant:delivery-workflows` in Claude Code or `$merge-request` and `$delivery-workflows` in Codex for delivery handoffs.
 
-Version 11.0.0 is instruction-only and does not require an orchestration database, state contract, generated runtime, or migration command. See [the 11.0.0 release notes](releases/11.0.0.md).
+Version 11.1.0 is instruction-only and does not require an orchestration database, state contract, generated runtime, or migration command. See [the 11.1.0 release notes](releases/11.1.0.md).
