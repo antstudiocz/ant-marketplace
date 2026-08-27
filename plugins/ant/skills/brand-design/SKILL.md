@@ -1,12 +1,11 @@
 ---
-user-invocable: true
 name: brand-design
 description: "Use when designing or reviewing websites, apps, documents, decks, visuals, or UI so they follow the (ant) brand identity, including logo usage, color, typography, layout language, digital labels, assets, and brand-fit QA."
 ---
 
 # Brand Design
 
-Use this skill when a task asks for design in the `(ant)` brand, a redesign toward the `(ant)` identity, or a brand-fit review of a visual/UI output. This skill provides brand direction; pair it with implementation skills when code quality, framework behavior, accessibility, or delivery work is in scope.
+Use this skill when a task asks for design in the `(ant)` brand, a redesign toward the `(ant)` identity, or a brand-fit review of a visual/UI output. This skill provides brand direction; when implementation is requested, apply it inside the repository's normal implementation and review workflow.
 
 **Announce at start:** "Using the brand-design skill to align the work with the (ant) identity before design or review."
 
@@ -23,9 +22,9 @@ Load the smallest useful set:
 - Website/app UI patterns, slide decks, fixed-viewport layouts, components, motion, responsiveness, and implementation handoff: `references/digital-ui-patterns.md`.
 - Bundled logos, images, and source-manual lookup guidance: `references/asset-usage.md`.
 - Brand-fit QA and review format: `references/review-checklist.md`.
-- Exact public brand manual details when a decision needs source evidence: `references/source-ant-brand.md`.
+- Exact public brand manual details when a decision needs source evidence: `assets/source/ant-brand.md`; use `assets/source/manifest.json` for machine-readable metadata.
 
-For frontend implementation, also use `ant:frontend-best-practices`. For a new app or app-like product, use `ant:create-application` first, then apply this skill during design direction and UI execution.
+For a new app or materially new product surface, use this skill during product/design direction and keep implementation under `implementation-orchestrator`.
 
 ## Workflow
 

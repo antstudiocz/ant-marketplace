@@ -188,13 +188,13 @@ Tabulka pro orientaci, kdy je vhodné použít hlavní, doplňkové nebo alterna
 **Položky (kam karty vedou):**
 
 - **Pravidla správného (antáka):** https://drive.google.com/drive/folders/1i2TgnkKIbLaBZtLJUWkrtyU_faghRJs9?usp=share_link
-  - **Obrázek na kartě:** ![](assets/images/img_obraz.png)
+  - **Obrázek na kartě:** ![](../images/img_obraz.png)
 
 - **Obrazy - 4 dohody:** https://drive.google.com/drive/folders/1tyduI6A6JUC9ulGu1ULSnZpOXOCP77R7?usp=sharing
-  - **Obrázek na kartě:** ![](assets/images/dohoda_img.png)
+  - **Obrázek na kartě:** ![](../images/dohoda_img.png)
 
 - **RollUP:** https://drive.google.com/drive/folders/1-_sEW8yHBxx-5rXLGMvteXs77kWLFUaI?usp=share_link
-  - **Obrázek na kartě:** ![](assets/images/image-2.png)
+  - **Obrázek na kartě:** ![](../images/image-2.png)
 
 #### Budete potřebovat ...
 
@@ -218,25 +218,25 @@ Tento grafický element tvoří hravou a dynamickou součást vizuálního stylu
 
 **Obrázek v sekci** (1/4)
 
-**Obrázek:** ![](assets/images/label_nahled.webp)
+**Obrázek:** ![](../images/label_nahled.webp)
 
 ---
 
 **Obrázek v sekci** (2/4)
 
-**Obrázek:** ![](assets/images/labels01.webp)
+**Obrázek:** ![](../images/labels01.webp)
 
 ---
 
 **Obrázek v sekci** (3/4)
 
-**Obrázek:** ![](assets/images/label_nahled_02.webp)
+**Obrázek:** ![](../images/label_nahled_02.webp)
 
 ---
 
 **Obrázek v sekci** (4/4)
 
-**Obrázek:** ![](assets/images/labels02.webp)
+**Obrázek:** ![](../images/labels02.webp)
 
 ---
 
@@ -253,19 +253,19 @@ Tento grafický element tvoří hravou a dynamickou součást vizuálního stylu
 
 **Obrázek v sekci** (1/3)
 
-**Obrázek:** ![](assets/images/02.webp)
+**Obrázek:** ![](../images/02.webp)
 
 ---
 
 **Obrázek v sekci** (2/3)
 
-**Obrázek:** ![](assets/images/03.webp)
+**Obrázek:** ![](../images/03.webp)
 
 ---
 
 **Obrázek v sekci** (3/3)
 
-**Obrázek:** ![](assets/images/04.webp)
+**Obrázek:** ![](../images/04.webp)
 
 ---
 
@@ -281,43 +281,43 @@ Pro online schůzky jsme připravili sadu brandových pozadí, která vycházej�
 
 **Obrázek v sekci** (1/7)
 
-**Obrázek:** ![](assets/images/meet_01.webp)
+**Obrázek:** ![](../images/meet_01.webp)
 
 ---
 
 **Obrázek v sekci** (2/7)
 
-**Obrázek:** ![](assets/images/meet_07.webp)
+**Obrázek:** ![](../images/meet_07.webp)
 
 ---
 
 **Obrázek v sekci** (3/7)
 
-**Obrázek:** ![](assets/images/meet_03.webp)
+**Obrázek:** ![](../images/meet_03.webp)
 
 ---
 
 **Obrázek v sekci** (4/7)
 
-**Obrázek:** ![](assets/images/meet_02.webp)
+**Obrázek:** ![](../images/meet_02.webp)
 
 ---
 
 **Obrázek v sekci** (5/7)
 
-**Obrázek:** ![](assets/images/meet_06.webp)
+**Obrázek:** ![](../images/meet_06.webp)
 
 ---
 
 **Obrázek v sekci** (6/7)
 
-**Obrázek:** ![](assets/images/meet_05.webp)
+**Obrázek:** ![](../images/meet_05.webp)
 
 ---
 
 **Obrázek v sekci** (7/7)
 
-**Obrázek:** ![](assets/images/meet_04.webp)
+**Obrázek:** ![](../images/meet_04.webp)
 
 ---
 
@@ -331,7 +331,7 @@ Profilovka pro našeho AI Notetakera (tl;dv). Používejte ji v týmu pro sjedno
 
 **Poznámka:** Náš AI Notetaker (tl;dv) funguje jako rozšíření našeho workflow. Automaticky zaznamenává meetingy, pořizuje přepisy, sumarizuje klíčové body a předává je týmu v podobě srozumitelných výstupů.
 
-**Obrázek:** ![](assets/images/frame-1.webp)
+**Obrázek:** ![](../images/frame-1.webp)
 
 ---
 
@@ -345,7 +345,7 @@ Nástroj pro sjednocení naší komunikace. Každý mail je brand dotek. Podpis 
 
 **Tip:** Náš generátor na podpis.antstudio.app zajišťuje, že každý výstup z mraveniště vypadá (WOW). Žádné rozbité fonty. Žádné obří přílohy. Jen čisté řemeslo, které prodává naši profesionalitu při každém odeslání.
 
-**Obrázek:** ![](assets/images/eml_dlazdice.webp)
+**Obrázek:** ![](../images/eml_dlazdice.webp)
 **Text pod obrázkem:** *(bez textu pod obrázkem)*
 
 
@@ -362,7 +362,7 @@ Směřujte uživatele tam, kam potřebujete. Externí odkazy propojí váš bran
 
 Na rozdíl od sekce Obrázek tato sekce k obrázku integruje tlačítka nebo rozbalovací pole pro definování různých pravidel. Tato je sekce je jednoznačně nejpoužívanější sekcí při tvorbě vizuálních pravidel. Nabízí možnosti definování grafiky společně s tlačítky ke stažení zdrojových souborů nebo podrobné návody s cover obrázkem. Ukázky, jak můžete tuto sekci používat, uvádíme níže. brand.antstudio.cz/obsahova-stranka-s-prehledem-vsech-sekci/modules/sekce-obrazek-jednoduchy TIP: Věděli jste, že obsah výše je generován automaticky? Stačí v nastavení Obsahové stránky zaškrtnou tlačítko „Generovat obsah stránky“ a vloží se automaticky.
 
-**Obrázek:** ![](assets/images/stationery_mockup_1.webp)
+**Obrázek:** ![](../images/stationery_mockup_1.webp)
 
 ---
 
@@ -385,7 +385,7 @@ V tomto rozbalovacím obsahu můžete sepsat další pravidla ve vašem brand ma
 
 Obrázek (jednoduchý) je sekce s obrázkem a případně i volitelným textem pod ním. Umožňuje kamkoliv do obsahové stránky vložit obrázek nebo fotografii a definovat jeho pravidla používání. TIP: Jednoduchý obrázek můžete také zobrazit v lightboxu ve větším rozlišení, jakmile na něj kliknete.
 
-**Obrázek:** ![](assets/images/stationery_mockup_2.webp)
+**Obrázek:** ![](../images/stationery_mockup_2.webp)
 **Text pod obrázkem:** Pod obrázek můžete vložit textové pole, kde můžete popsat případná pravidla zobrazená na obrázku. Samozřejmostí jsou externí odkazy nebo zvýraznění textu. Můžete vložit také číslované nebo nečíslované seznamy: Položka 1 Položka 2 Položka 3 Položka 4
 
 #### Sekce: Galerie obrázků
@@ -402,7 +402,7 @@ Sekce Galerie je jedna s nejpřínosnějších sekcí pro grafické manuály a b
 
 **Položka galerie** (1/4)
 
-**Obrázek:** ![](assets/images/stationery_mockup_3.webp)
+**Obrázek:** ![](../images/stationery_mockup_3.webp)
 **Popisek tohoto obrázku:** Každou fotografii můžete okomentovat pomocí tohoto popisku
 **Pravidlo:** zakázáno
 
@@ -410,7 +410,7 @@ Sekce Galerie je jedna s nejpřínosnějších sekcí pro grafické manuály a b
 
 **Položka galerie** (2/4)
 
-**Obrázek:** ![](assets/images/stationery_mockup_4.webp)
+**Obrázek:** ![](../images/stationery_mockup_4.webp)
 **Popisek tohoto obrázku:** Každou fotografii můžete okomentovat pomocí tohoto popisku
 **Pravidlo:** povoleno
 
@@ -418,7 +418,7 @@ Sekce Galerie je jedna s nejpřínosnějších sekcí pro grafické manuály a b
 
 **Položka galerie** (3/4)
 
-**Obrázek:** ![](assets/images/stationery_mockup_5.webp)
+**Obrázek:** ![](../images/stationery_mockup_5.webp)
 **Popisek tohoto obrázku:** Fotografie může být také bez pravidel (přeškrtnutí nebo s ikonou „check“).
 **Pravidlo:** bez pravidel
 
@@ -426,7 +426,7 @@ Sekce Galerie je jedna s nejpřínosnějších sekcí pro grafické manuály a b
 
 **Položka galerie** (4/4)
 
-**Obrázek:** ![](assets/images/obsahova-stranka-s-prehledem-vsech-sekci/stationery_mockup_1.webp)
+**Obrázek:** ![](../images/obsahova-stranka-s-prehledem-vsech-sekci/stationery_mockup_1.webp)
 **Popisek tohoto obrázku:** *(bez textového popisku)*
 **Pravidlo:** bez pravidel
 
@@ -446,23 +446,23 @@ Karusel je sekce, která postupně zobrazuje obrázky v podobě automatické sli
 
 ---
 
-**Obrázek v karuselu:** (1/5) ![](assets/images/stationery_mockup_1.webp)
+**Obrázek v karuselu:** (1/5) ![](../images/stationery_mockup_1.webp)
 
 ---
 
-**Obrázek v karuselu:** (2/5) ![](assets/images/stationery_mockup_2.webp)
+**Obrázek v karuselu:** (2/5) ![](../images/stationery_mockup_2.webp)
 
 ---
 
-**Obrázek v karuselu:** (3/5) ![](assets/images/obsahova-stranka-s-prehledem-vsech-sekci/stationery_mockup_3.webp)
+**Obrázek v karuselu:** (3/5) ![](../images/obsahova-stranka-s-prehledem-vsech-sekci/stationery_mockup_3.webp)
 
 ---
 
-**Obrázek v karuselu:** (4/5) ![](assets/images/obsahova-stranka-s-prehledem-vsech-sekci/stationery_mockup_4.webp)
+**Obrázek v karuselu:** (4/5) ![](../images/obsahova-stranka-s-prehledem-vsech-sekci/stationery_mockup_4.webp)
 
 ---
 
-**Obrázek v karuselu:** (5/5) ![](assets/images/obsahova-stranka-s-prehledem-vsech-sekci/stationery_mockup_5.webp)
+**Obrázek v karuselu:** (5/5) ![](../images/obsahova-stranka-s-prehledem-vsech-sekci/stationery_mockup_5.webp)
 
 #### Sekce: Text
 
@@ -730,7 +730,7 @@ Použití: Krátké texty pro rychlou prezentaci značky (ant) na sociálních s
 
 **Tip:** Tip pro tým Používejte tyto texty beze změn, aby byla komunikace konzistentní.
 
-![](assets/images/02.png)
+![](../images/02.png)
 
 ### (ant) – full-service digitální agentura z Plzně
 
@@ -770,13 +770,13 @@ Kompletní průvodce verbální identitou (ant)studia. Najdete zde: definici na�
 
 **Obrázek v sekci** (1/2)
 
-**Obrázek:** ![](assets/images/foto01.webp)
+**Obrázek:** ![](../images/foto01.webp)
 
 ---
 
 **Obrázek v sekci** (2/2)
 
-**Obrázek:** ![](assets/images/foto02.webp)
+**Obrázek:** ![](../images/foto02.webp)
 
 ---
 

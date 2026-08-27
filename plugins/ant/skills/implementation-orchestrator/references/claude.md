@@ -1,50 +1,32 @@
-# Claude Code Routing Adapter
+# Claude Code Adapter
 
-## Native Plan and Goal
+## Root Route, Plan, And Goal
 
-- For implementation-authorized or later-approved work with a stable verified objective, use Claude Code's native Plan to record phases or waves, dependencies, acceptance behavior, continuity mode, checks, and authorized delivery, with one top-level item `in_progress`. Actual concurrent workers are represented by native agent/thread state.
-- Before tracked-writer dispatch, inspect the native Goal when the host exposes it and reuse only a semantically matching active Goal.
-- If native Goal state cannot be observed or managed, report that limitation and stop before tracked writes. Do not substitute `/goal`, `/plan`, a pseudo-plan file, or a manual state contract.
-- The Goal condition must be measurable and include the verified outcome, acceptance conditions, material constraints, required checks, and only delivery already authorized.
-- An observable unrelated active goal must be cleared or replaced by the user before tracked execution. Do not add Stop hooks, a runtime, or synthetic state.
-- A goal is complete only after its scoped implementation, required review, final validation, retrospective, and any delivery included in the condition are actually complete.
-- Stable in-scope follow-ups amend the native Plan and Goal; material scope or contract changes require a delta decision and authorization.
+- Root must run `best` at `max` for the entire run, selected with `claude --model best --effort max` or `/model best` plus `/effort max`. `best` resolves dynamically to Fable where available, otherwise current Opus; do not use `opusplan`.
+- Verify that route from authoritative host/session/task metadata or an explicit current host selection. Model self-identification is not evidence. If the mandatory exact root route cannot be verified, fail closed before tracked-writer dispatch.
+- Use native Plan for phases, dependencies, acceptance behavior, continuity, checks, and authorized delivery with one top-level item in progress. Native Goal support is optional; never supersede an unrelated optional Goal. Use a fresh session/task or explicit user-native replacement. Material objective/public-contract changes need a checkpoint, actual diff, Plan/Goal delta, and separate follow-on authorization.
 
-## Root routing
+## Routing And Recursive Capsule
 
-- Set the root session to `best` plus `max` before invoking the orchestrator, and keep that setting for the entire multi-turn discovery, authorization, implementation, review, and retrospective workflow.
-- Start Claude Code with `claude --model best --effort max`, or set durable session controls with `/model best` and `/effort max` before invoking `/ant:implementation-orchestrator`. Do not rely on skill or command frontmatter to guarantee a multi-turn root selection.
-- Use stable aliases: `best` resolves to Fable when available, otherwise the latest Opus. Do not use `opusplan` for root because it switches to Sonnet during execution.
+- Dispatch every child with a fresh, concise, self-contained assignment through exactly one plugin-scoped profile; children and nested children remain capped at High and never inherit conversational history.
 
-## Child routing
-
-For bounded children, invoke the existing plugin-scoped profiles instead of merely naming a tier in the prompt:
-
-| Profile | Model + effort | Notes |
+| Role | Profile | Exact route |
 |---|---|---|
-| `ant:strong-high` | `opus` + `high` | Strong roles, including final independent review |
-| `ant:balanced-high` | `sonnet` + `high` | Normal implementation and integration leads |
-| `ant:balanced-medium` | `sonnet` + `medium` | Scouts, slices, validation |
-| `ant:controlled-low` | `sonnet` + `low` | When explicit low effort control is required |
-| `ant:fast` | `haiku` | No effort selector; only narrow, non-judgment-sensitive work |
+| Strong judgment, architecture, security, migration, independent review | `ant:strong-high` | `opus` + `high` |
+| Integration and normal implementation | `ant:balanced-high` | `sonnet` + `high` |
+| Bounded investigation, slice, validation | `ant:balanced-medium` | `sonnet` + `medium` |
+| Narrow work requiring explicit Low | `ant:controlled-low` | `sonnet` + `low` |
+| Narrow inventory or deterministic check | `ant:fast` | `sonnet` + `low` |
 
-## Dispatch preflight
+- Every assignment must include the full recursive capsule: exact profile/model/effort and override-preflight result; fresh-context/isolation rule; measurable outcome, acceptance, non-goals, write ownership and shared boundaries; targeted checks; explicit nested-delegation permission and permitted profile routes with effort ceiling; and report topology. If nested delegation is not explicit, return the need to the parent. Nested children receive the full capsule recursively, instantiated with their own selected profile, model, effort, preflight, and ownership, and never inherit history.
+- Hard-gate tracked orchestration before any tracked work: Claude must be version 2.1.219 or newer; root must be verified as `best` + `max`; ordinary root-level `Agent` dispatch must be available; `CLAUDE_CODE_SUBAGENT_MODEL` must be unset or exactly `inherit`; each per-invocation child model must be omitted or exactly match its selected profile; `CLAUDE_CODE_EFFORT_LEVEL` must be entirely unset; and profile, allowlist, cap, isolation, and runtime metadata must be exact. Any failure stops before tracked work. `inherit` is route-neutral and continues to invocation/frontmatter; `auto` and every other present value block the complete run. Stop and discard a mismatched child result before correcting and re-dispatching.
+- Routine operational communication and repair/test/re-review loops stay local. The integration owner consolidates worker/tester deltas. Settled compact deltas go to the parent; material, disputed, authority, public-contract, security, migration, or repeated-failure issues escalate to root. Root dispatches/receives the independent reviewer; ordinary actionable findings/fix evidence may go directly to the integration owner, while the settled final reviewer verdict goes to root and the reviewer never writes fixes.
+- Preferred local topology, after the hard gates: keep agent teams effectively off; use an optional runtime `Agent` `name` for addressable ordinary subagents, `SendMessage`, and effective spawn depth either unset/default on 2.1.219+ or an integer of at least 2 for root→owner→worker/tester. Use a named balanced-high owner, nested worker/tester, root-dispatched named strong-high reviewer, and local messaging. The frontmatter `name` is not the optional runtime `Agent` `name`.
+- If teams are enabled, or named/`SendMessage`/nested capability or depth is unavailable, use the safe unnamed fallback: root invokes ordinary `Agent` with `subagent_type: ant:balanced-high` and explicitly omits runtime `name`; no nesting or peer messaging; the owner performs edits and targeted checks sequentially and returns one compact result. Root invokes `ant:strong-high` the same unnamed way; root relays compact findings through a fresh unnamed owner redispatch (or an ID only when safely supported). If Claude auto-adds a runtime name or metadata shows teammate semantics, stop and discard. If exact unnamed ordinary dispatch cannot be enforced, hard stop. Agent teams do not block the entire run; they select this safe fallback because teammates inherit root max.
+- The same underlying defect or check still unresolved after two completed local repair-and-verification cycles escalates to root. Distinct or successfully resolved routine failures stay local; evidence conflicts, material scope, or authority ambiguity escalate immediately.
 
-Complete this observable, fail-closed preflight before every dispatch:
+## Decisions And Recovery
 
-1. Choose the exact plugin profile. Do not pass a conflicting per-invocation model: it must be absent or exactly the profile's alias/model.
-2. Inspect `CLAUDE_CODE_SUBAGENT_MODEL`. Accept only an unset value or the exact selected profile alias/model. `inherit` is a blocking override because it selects the parent model. Any other value blocks dispatch.
-3. Inspect `CLAUDE_CODE_EFFORT_LEVEL`. For a fixed-effort profile, accept only unset or its exact intended `low`, `medium`, or `high`; `auto` is not exact and blocks. For `ant:fast` (Haiku, no effort support), require no fixed effort override; unset or `auto` is acceptable.
-4. When the host surfaces organization `availableModels` or effort caps, verify they permit the exact profile model and intended effort. If the required state cannot be observed, block and report the limitation rather than claim enforcement.
-
-A High-to-Medium clamp, per-invocation replacement, allowlist fallback, or environment override blocks dispatch even when it stays at or below High or broadly fits the role. After dispatch, if UI, task metadata, or transcript exposes a model or effort mismatch: immediately stop or cancel the child, discard its result, and report the mismatch. This secondary guard never replaces the preflight.
-
-## Runtime smoke mapping
-
-For executable, runtime, or user-visible changes, after the final suite and before readiness:
-
-1. Discover the testing surfaces actually exposed by the Claude Code host and repository. Keep this mapping generic to host capabilities and never invent selectors.
-2. Offer every applicable available surface, explain its concise implication, state the exact Plan flows, preconditions, expected observables, and evidence to capture, and give exactly one evidence-based recommendation for the user's choice (unless an explicit prior tool choice applies).
-3. If only one surface is available, say so; if none is available or smoke is not meaningful, report N/A and why.
-4. After selection, run the smallest realistic smoke scenarios and report environment, repository head, expected versus observed results, side effects or auth/data constraints, gaps, and screenshots for meaningful checkpoints or failures when the selected surface supports them. Screenshots supplement assertions and must protect secrets and private data.
-5. A required smoke that fails, is unavailable, or is declined affects readiness; an optional declined smoke is reported unverified without an invented blocker. A smoke-discovered gap returns to implementation and requires targeted checks, focused re-review, a refreshed final suite, and repeat of the affected smoke after mutation.
+- Only root communicates with the user. Treat permission denials and native user-only gates according to their actual semantics; never weaken the plan or let root become a tracked writer.
+- After review starts, tracked mutation invalidates affected review evidence and any final-suite result. Run targeted checks, obtain same-reviewer affected-area review when available, and one refreshed final suite; root directly verifies the gate.
+- Recover interruptions/compaction from native Plan/Goal when available, git/worktree/index state, checkpoints, reports, and actual diff; reverify route and ownership before resuming and avoid status polling.

@@ -1,7 +1,7 @@
 {
   "name": "ant",
-  "version": "11.1.0",
-  "description": "(ant) dual Claude Code and Codex skills: create application intake, native-goal-aware proportional capability-routed implementation orchestration, brand design, frontend best practices, Laravel best practices, merge-conflict resolution, canonical PR/MR creation, Google Docs, and Asana task analysis.",
+  "version": "12.0.0",
+  "description": "Three (ant) skills for verified implementation, GitHub/GitLab delivery and conflict resolution, and brand design.",
   "author": {
     "name": "(ant)",
     "description": "full-service digital agency"
@@ -18,16 +18,15 @@
     "orchestration",
     "brand",
     "design",
-    "frontend",
-    "laravel",
-    "react",
-    "nextjs"
+    "delivery",
+    "git",
+    "conflicts"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "(ant)",
     "shortDescription": "Shared (ant) skills for Codex and Claude Code.",
-    "longDescription": "(ant) umbrella skills for new application intake, native-goal-aware proportional capability-routed implementation orchestration, brand design, frontend quality, Laravel architecture/performance/caching, merge-conflict resolution, canonical GitHub/GitLab PR/MR creation, Google Docs, and Asana task analysis.",
+    "longDescription": "Three focused skills for proportional implementation orchestration, PR/MR delivery plus conflict resolution, and professional (ant) brand design.",
     "developerName": "(ant)",
     "category": "Productivity",
     "capabilities": [
@@ -35,9 +34,7 @@
       "Write"
     ],
     "defaultPrompt": [
-      "Use the relevant (ant) skill for this task.",
-      "Use create-application for new apps and implementation-orchestrator for scoped implementation work.",
-      "Answer in my language and load only references needed for the task."
+      "Use the relevant (ant) skill for implementation, PR/MR or conflict work, or brand design."
     ],
     "brandColor": "#5BFFC4"
   }

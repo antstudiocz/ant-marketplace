@@ -1,6 +1,6 @@
 # Brand Foundation
 
-Source: public `(ant)` Visualbook export generated on 2026-06-03. Use `source-ant-brand.md` for exact manual text and `../assets/source/manifest.json` for machine-readable asset metadata.
+Source: public `(ant)` Visualbook export generated on 2026-06-03. Use `../assets/source/ant-brand.md` for exact manual text and `../assets/source/manifest.json` for machine-readable asset metadata.
 
 ## Identity Summary
 
@@ -88,7 +88,7 @@ Minimum height:
 - primary logo: 14 px on screens, 5 mm in print;
 - logo with claim: 16 px on screens, 20 mm in print.
 
-Allowed background colors mentioned for primary logo usage include `#5bffc4`, `#000000`, `#ffffff`, `#e7e8e9`, `#aeb1b7`. The manual flags some color-background combinations as forbidden; consult `source-ant-brand.md` before using the logo on nonstandard colored backgrounds.
+Allowed background colors mentioned for primary logo usage include `#5bffc4`, `#000000`, `#ffffff`, `#e7e8e9`, `#aeb1b7`. The manual flags some color-background combinations as forbidden; consult `../assets/source/ant-brand.md` before using the logo on nonstandard colored backgrounds.
 
 Do not distort, recolor, outline, rotate, crop, or recreate the logo.
 

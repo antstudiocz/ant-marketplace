@@ -1,6 +1,6 @@
 # Asset Usage
 
-Bundled assets include the full public Visualbook export asset set from 2026-06-03. The original source markdown is available at `../assets/source/ant-brand.md`, an agent-readable copy is available as `source-ant-brand.md`, and the source manifest is available at `../assets/source/manifest.json`.
+Bundled assets include the full public Visualbook export asset set from 2026-06-03. The canonical source markdown is `../assets/source/ant-brand.md`, and the machine-readable source manifest is `../assets/source/manifest.json`.
 
 ## Logos
 
@@ -56,6 +56,6 @@ Do not use these images as generic decoration in unrelated product UI.
 
 When uncertain:
 
-1. Search `source-ant-brand.md` for the section name, asset filename, or manual concept.
+1. Search `../assets/source/ant-brand.md` for the section name, asset filename, or manual concept.
 2. Search `../assets/source/manifest.json` for exact asset metadata such as width, height, format, page id, or section title.
 3. Prefer the source manual over inferred style rules.
