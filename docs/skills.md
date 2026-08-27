@@ -1,170 +1,40 @@
 # Skills
 
-This marketplace exposes a small set of public skills. Detailed topic guidance lives under each skill's `references/` folder and is loaded only when relevant.
-
-## `create-application`
-
-Product and architecture intake for new applications, MVPs, prototypes, internal tools, dashboards, automation UIs, full-stack products, and new app-like surfaces inside existing products such as administration, backoffice, client portals, reporting, or major modules.
-
-How it works:
-
-- clarifies goal, users, workflows, data, auth, integrations, background work, deployment, and expected lifetime;
-- asks for the requester's technical level and adapts wording for beginner, intermediate, or advanced users, including plain-language explanations for infrastructure terms such as cron, Supabase, workers, queues, and managed services;
-- checks the requester's local development environment, including whether Docker is available, by inspecting the local machine directly when the host supports it;
-- guides the requester through missing Git, package manager/runtime, or Docker setup from a dedicated local-dev setup reference before implementation planning, while allowing npm when Bun is unavailable;
-- always compares a TypeScript-only path with a Docker-based multi-language path in non-technical language;
-- asks in digestible grouped rounds and continues until every material non-repo-discoverable decision is resolved, allowing explicit safe assumptions only for non-material details;
-- decides whether the app should be a TypeScript frontend/content app, TypeScript full-stack app, CMS-backed app, Dockerized modular app, new surface inside an existing app, or existing platform/module change;
-- selects frameworks and CMS options by project shape, preferring TanStack Start over Next.js for new app-like TypeScript products unless Next.js has a concrete project fit;
-- challenges inconsistent goals, unsafe assumptions, and mismatched technology choices before asking for approval;
-- validates decisions repeatedly, optionally with an independent reviewer/subagent for medium/high-risk app choices;
-- asks explicit questions about authorization, database/storage, auditability, deployment, and production expectations instead of making assumptions;
-- checks whether an admin/backoffice/client-portal surface can reuse the existing stack or needs a separate frontend/backend/security boundary;
-- makes mock data, prototype scope, persistence, secrets, and production-readiness tradeoffs explicit;
-- prepares an approved application brief with acceptance criteria and non-goals;
-- hands only captured, approved brief fields to `implementation-orchestrator`; missing git/delivery startup choices remain open for the orchestrator instead of being invented;
-- treats brief approval as completed product brainstorming, not permission to write by itself; `implementation-orchestrator` still verifies the repository and presents its concrete implementation plan, then continues only when explicit end-to-end execution intent from the original request covers the unchanged scope and risk;
-- leaves capability-driven delegation, implementation, review, verification, and delivery to `implementation-orchestrator`.
-
-Use it when the user wants to create a new app from an idea before writing code.
+The plugin exposes exactly three public entry points. Use the narrowest one that owns the requested outcome.
 
 ## `implementation-orchestrator`
 
-End-to-end implementation flow for features, fixes, refactors, migrations, audits, and remediation work.
+Use for work that should finish as a reviewed and verified implementation: new applications, features, fixes, refactors, migrations, and remediation.
 
-How it works:
+It:
 
-- classifies requests at intake as analysis-only, implementation-authorized, or ambiguous, asking early when intent is unclear;
-- starts every implementation with read-only repository discovery and a proportional plan before tracked edits;
-- for new or materially changed behavior, brainstorms goals, users, workflows, edge cases, non-goals, options, and tradeoffs before deeper technical analysis;
-- keeps root as the sole user-facing adjudicator; delegated agents escalate evidence, options, a recommendation, and paused scope only to their parent, while root resolves discoverable decisions and batches all genuinely new material authority into one question;
-- presents a concrete implementation plan as a mandatory progress checkpoint; explicit execution language such as “fix it and test it end-to-end” continues afterward when scope and risk remain unchanged, while “analyze only” remains read-only;
-- after initial discovery, first honors any already explicit continuity choice; otherwise records incrementally verifiable checkpoints without asking when continuity does not materially differ, or asks once for the predefined choice with a contextual recommendation when it does; integrated replacement requires an implementation-dedicated checkout and never weakens final safety or migration requirements;
-- establishes the host's native Plan and a measurable native Goal after the objective is stable and before tracked-writer dispatch; the Plan records phases/waves with one top-level item `in_progress`, while concurrent workers are represented by native agent/thread state; Codex requires Goal tools and fails closed before tracked edits when they are unavailable, while Claude Code requires observable native Plan/Goal state;
-- during read-only discovery, before the continuity decision or concrete plan, derives only material quality attributes and constraints from repository/user evidence, records lighter/heavier rationale in the Plan and writer/reviewer assignments, and chooses the smallest durable solution without unsupported performance or scalability claims; writers and reviewers check both hidden expedient debt and speculative overengineering;
-- requires deterministic async/concurrency tests with observable synchronization, bounded timeouts, isolated state, cleanup, virtual time, and relevant CI-like repeat/shuffle/seed; retries diagnose only and never hide flakes;
-- waits for explicit approval when requested by the user or when discovery materially changes scope, behavior, architecture, data, safety/risk, or requires destructive action; approval or authorization covers the stable plan rather than every phase;
-- chooses a proportional shape: one writer plus final independent review for simple work, optional scouts or slices for broader work, and extra specialist review only when risk warrants it;
-- keeps root coordination-only and stops before tracked edits when no writer-capable native delegation is available;
-- routes children by Strong, Balanced, and Fast capabilities while selecting a real host model and, where supported, effort for each dispatch;
-- keeps root at the active host's configured strongest route for the whole run and pins every child explicitly at High or lower, independently from capability tier; Codex children and nested children use `fork_turns="none"` with concise self-contained task context;
-- distinguishes declined patch/fileChange/policy classifications from real native user-only approval gates and never weakens architecture, behavior, tests, validation, or compatibility to avoid approval;
-- reuses an active agent that already owns the same goal and evidence instead of creating overlapping work, except for intentional independent review;
-- delegates all tracked edits, supports disjoint parallel backend/frontend/test/research/implementation workers behind one integration lead, and keeps write scopes disjoint when work is parallel;
-- keeps raw logs, large diffs, debug history, repeated tool calls, and local failures in related-agent repair loops; sends root compact knowledge deltas and escalates only material contract, scope, security, migration, conflict, repeated-failure, or authority decisions;
-- accepts mid-flight status and authorized-behavior details without stopping work; batches related material changes from the same active segment into one affected-scope planning and approval cycle at the next safe boundary while unaffected work continues;
-- runs checks targeted to coherent implementation phases instead of repeatedly running the full suite;
-- runs one full suite after the final mutation and required review, before completion and optional delivery, and refreshes it once only if a later relevant edit occurs;
-- for executable/runtime/user-visible changes, plans the smallest realistic smoke flows, then after the final suite offers every applicable available host/repository testing surface with exactly one evidence-based recommendation while leaving tool selection to the user; smoke supplements automation and later fixes repeat affected smoke;
-- reports all verified, material, actionable adjacent findings separately from the at-most-three execution retrospective findings, and fixes or lowers/blocks readiness for current gaps without automatic scope expansion or CI enforcement;
-- performs a bounded root-owned retrospective after the final suite, checking correctness and avoidable token or resource cost from evidence already available in the run;
-- corrects any current gap before completion and turns only a material, generalizable process improvement into at most one sanitized upstream issue candidate; issue writes need separate approval and PRs are never automatic;
-- invokes `/ant:merge-request` and `/ant:delivery-workflows` in Claude Code or `$merge-request` and `$delivery-workflows` in Codex for their respective PR/MR and merge-conflict responsibilities;
-- finishes with changed areas, checks run, unverified items, retrospective outcome, material upstream feedback state, and delivery state.
+- classifies analysis-only, implementation-authorized, or ambiguous intent;
+- discovers the repository and presents a proportional native Plan before tracked edits;
+- captures essential product/architecture decisions for new applications without a separate brief ceremony;
+- records explicit integrated-replacement semantics when selected;
+- keeps root user-facing and coordination-only while a delegated integration owner writes;
+- routes by strong/balanced/fast capability with supported effort capped at High and fresh task context where available;
+- for authorized implementation, requires an independent strong review, targeted checks, then one final broad suite;
+- keeps implementation readiness separate from optional delivery.
 
-Use it when the user wants a task driven from idea to working, verified implementation. In Claude Code, first establish `best` + `max` for the session with `claude --model best --effort max` or `/model best` plus `/effort max`, then invoke `/ant:implementation-orchestrator`; ensure native Plan/Goal state is observable before tracked writes.
-
-## `brand-design`
-
-Brand design guidance for creating or reviewing websites, apps, decks, documents, social visuals, email signatures, and other visual outputs against the `(ant)` identity.
-
-How it works:
-
-- selects the right brand mode for the medium: core editorial, product/UI, campaign/social, or endorsement;
-- uses the source brand primitives: black/white contrast, mint `#5bffc4`, approved grays, Aktiv Grotesk EX for headline character, Inter for body/UI text, and correct logo variants;
-- loads only the relevant brand references for colors, typography, visual language, digital UI patterns, asset usage, or review;
-- treats bracketed labels, hard rules, typographic hierarchy, and `(ant) crafted` as system elements rather than decoration;
-- pairs with `frontend-best-practices` when implementation quality, accessibility, responsiveness, or framework behavior is in scope;
-- flags missing source assets, unavailable licensed fonts, weak contrast, generic SaaS styling, and misuse of logo or mint-heavy palettes.
-
-Use it when a task asks for an `(ant)` branded design, a redesign toward the `(ant)` identity, or a brand-fit review.
-
-## `frontend-best-practices`
-
-Frontend quality and architecture guidance for React, Next.js, TypeScript, accessibility, forms, i18n, responsive UI, semantic HTML, performance, skeleton loading states, React 19 APIs, and composition patterns.
-
-How it works:
-
-- acts as the single public frontend engineering entrypoint;
-- identifies the relevant frontend surface before loading extra context;
-- loads only the needed references, such as `components.md`, `forms.md`, `accessibility.md`, `next-best-practices/overview.md`, `react-19.md`, or specific rule files;
-- checks UI structure, type boundaries, translations, accessibility, loading states, responsive behavior, and framework-specific Server/Client boundaries.
-
-Use it for frontend implementation, refactoring, and review.
-
-## `laravel-best-practices`
-
-Laravel 12+ backend guidance for architecture, controllers/actions/services, DTOs, Eloquent performance, queues, caching, invalidation, HTTP caching, and backend code review.
-
-How it works:
-
-- acts as the single public Laravel entrypoint;
-- starts with ownership and layer placement before optimizing details;
-- loads architecture, caching, and performance references only as needed;
-- checks thin controllers, action/service boundaries, explicit data contracts, query behavior, cache ownership, invalidation, queues, UTC time handling, and targeted validation.
-
-Use it for Laravel implementation, refactoring, performance work, caching work, and review.
-
-## `delivery-workflows`
-
-Git delivery workflow for resolving merge conflicts with repository context.
-
-How it works:
-
-- inspects branch and dirty state before mutating git state;
-- loads focused conflict-resolution guidance;
-- preserves unrelated user changes;
-- understands both sides before choosing the resolved behavior;
-- validates the affected areas before completing the conflict operation.
-
-Use it for merge-conflict resolution. Invoke `merge-request` directly for every PR/MR creation or update.
+Analysis-only work ends with read-only evidence/findings and no readiness verdict. For implementation, use runtime/visual smoke only when acceptance criteria, changed executable behavior, or repository rules make it relevant. See the [canonical orchestrator guide](orchestrator.md) for host routes, recursive capsules, Goal/preflight behavior, and review invalidation.
 
 ## `merge-request`
 
-GitHub/GitLab Pull Request and Merge Request workflow for creating practical titles and descriptions from the current branch.
+Use for GitHub PR/GitLab MR Preview, Create/update, Observe/status, exact-head observation, and merge-conflict resolution.
 
-How it works:
+- Preview intent is read-only.
+- Explicit create/update intent authorizes only a safely scoped commit/push/create-or-update chain and matching pipeline observation.
+- New objects are Draft by default; ordinary updates preserve readiness.
+- Titles use Conventional Commit style; descriptions are rebuilt from the final target merge-base-to-`HEAD` snapshot.
+- Visible descriptions contain a plain-language summary, rationale, and material impact/risk. Optional technical and verification evidence may be collapsed, but status and gaps remain truthful.
+- Observe/status is read-only and reports failures without retry or repair. Conflict-only mode never creates/updates a provider object or watches pipelines. Resolution, staging, committing, and pushing have distinct authority; remote conflict work starts only from a clean tracked tree/index.
+- In-scope pipeline regressions during an already-authorized Create/update flow return to `implementation-orchestrator` for repair/review/validation before replacement-head observation. Standalone Observe/status only reports or recommends a handoff; it requires a separate user fix request and never invokes repair or retry.
 
-- checks git status, branch, target branch, remote provider, and the target-merge-base-to-final-`HEAD` diff before mutating delivery state;
-- distinguishes a read-only preparation proposal from explicit create/update intent, which performs the safe scoped commit/push/create-or-update chain and observes the matching pipeline/check set for the resolved head within a repository-appropriate bounded registration window;
-- resolves language and target choices from current instruction, repository rules, existing PR/MR state, metadata, and safe defaults; it asks only when a material conflict remains;
-- verifies any orchestrator summary against the repository instead of requiring a handoff schema;
-- uses `glab` for GitLab repositories and `gh` for GitHub repositories;
-- defaults a new MR/PR to Draft unless explicitly ready, while preserving existing readiness on ordinary updates;
-- never implies merge, release, rebase, force-push, or history rewrite from PR/MR creation intent;
-- uses a short Conventional Commit style title;
-- writes the description as a snapshot of the net final diff, excluding intermediate commits, abandoned attempts, and add-then-remove artifacts unless they remain materially relevant;
-- keeps a human-first core for the plain-language outcome, adaptive rationale, and material impact or risk; collapses structured technical review context and detailed verification evidence, while each verification summary exposes its status and material gaps.
-- returns a preview only for preparation intent; for creation/update intent, treats its preview as status rather than duplicate confirmation, owns `glab`/`gh` creation or update and pipeline evidence, and hands MR-diff regressions to the orchestrator for repair.
+## `brand-design`
 
-Use it when the user asks to create or prepare an MR/PR and needs a structured practical description.
+Use for `(ant)` design direction or brand-fit review across websites, apps, UI, documents, decks, and visuals.
 
-## `google-docs`
+The skill covers black/white/mint brand primitives, typography, logo selection, editorial layout, product UI patterns, responsive/accessibility handoff, visual QA, and bundled assets. The canonical public manual and manifest are under `plugins/ant/skills/brand-design/assets/source/`.
 
-Google Docs ingestion workflow for reading and extracting content from a Google Docs URL.
-
-How it works:
-
-- accepts Google Docs document URLs;
-- extracts document text and relevant structure;
-- routes the extracted content into the current task, for example requirements analysis or implementation context;
-- uses native connector/file access when available and falls back to the host's available document-reading flow.
-
-Use it when the user provides a Google Docs URL and wants to read, analyze, or work from that content.
-
-## `asana-task-analyzer`
-
-Asana task analysis workflow for turning an Asana task into implementation-ready context.
-
-How it works:
-
-- accepts an Asana task URL;
-- reads the task body, comments, attachments, and linked context when available;
-- extracts goals, requirements, acceptance criteria, unknowns, and implementation hints;
-- highlights blockers or missing product decisions before implementation starts.
-
-Use it when the user provides an Asana task and wants to understand what needs to be built or fixed.
-
-## Internal References
-
-Files under `references/` are not public skills. They preserve detailed guidance from older narrow skills while keeping the public skill list small and easier for Claude Code and Codex to choose from.
+For implemented product/design work, combine its brand requirements with the normal orchestrated repository workflow rather than a separate frontend entry point.

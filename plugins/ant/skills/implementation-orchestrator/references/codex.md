@@ -1,54 +1,22 @@
-# Codex Routing Adapter
+# Codex Adapter
 
-## Native Plan and Goal
+## Root Route, Plan, And Goal
 
-- For implementation-authorized or later-approved work with a stable objective, use the native Plan first: record phases or waves, dependencies, acceptance behavior, continuity mode, checks, and authorized delivery, with one top-level item `in_progress`. Actual concurrent workers are represented by native agent/thread state.
-- Before any tracked-writer dispatch, the native Goal tools (`get_goal`, `create_goal`, `update_goal`) must be exposed. Inspect the current Goal with `get_goal` first and reuse a semantically matching active Goal.
-- If no Goal is active, create one whose objective states the verifiable outcome, acceptance conditions, material constraints, required checks, and only delivery already authorized. Omit `token_budget` unless the user explicitly requested one.
-- If the Goal tools are unavailable, report the host limitation and fail closed before tracked edits; read-only discovery and planning may continue. Goal tools are mandatory for tracked implementation: do not continue with Plan alone, fabricate Goal state, or dispatch a writer without them.
-- Never overwrite, complete, or block an unrelated active Goal. If the active Goal conflicts with the verified Plan, pause tracked execution and ask the user to resolve it.
-- Use `update_goal` with `complete` only after the Goal's scoped implementation, required review, final validation, retrospective, and included delivery are actually complete. Use `blocked` only when Codex's native repeated-blocker rule is met, never for ordinary approvals or clarifications.
-- Stable in-scope follow-ups amend the active Plan and Goal; material scope or contract changes require a delta decision and authorization.
+- Root must be verifiably running `gpt-5.6-sol` at High for the entire orchestrated run. Accept only authoritative host/session/task metadata or an explicit current host selection; model self-identification is not evidence. If the exact route cannot be verified, fail closed before tracked-writer dispatch.
+- Record phases, dependencies, acceptance behavior, continuity, checks, and authorized delivery in native Plan with one top-level item in progress.
+- After the objective and Plan are stable, inspect or create a matching immutable native Goal before dispatch. Complete it only when its matching objective is genuinely achieved. Never replace, complete, or block an unrelated unfinished Goal. If one occupies the slot, pause; root asks whether to finish the current Goal and queue a separate follow-on task, or use native user/system controls to end or resolve the current Goal. Create a new Goal only after native state reports no unfinished Goal. A material objective/public-contract delta pauses/checkpoints affected work and uses the same root decision; stable changes update Plan/assignments. Never use `complete` or `blocked` to clear a collision or material delta. Unaffected disjoint work may continue only within the unchanged Goal.
 
-## Root and child routing
+## Routing And Recursive Capsule
 
-- Select or verify the already-running root at task/session level before orchestration begins. In the current Codex catalog, root runs `gpt-5.6-sol` at `High`. Native spawn selectors control children only; they cannot change an already-running root. Treat these identifiers as the active Codex policy, not the shared host-neutral workflow contract. If root control is not exposed, report that the Sol High route is unverified.
-- Pin every child and nested child with the active spawn surface's explicit native model and reasoning-effort selectors; never let one inherit root High.
-- Every Codex dispatch, including nested dispatch, must set `fork_turns="none"`. Do not omit it or use `all` or a positive bounded history value. Supply a concise, self-contained assignment with every task-relevant fact instead of relying on conversation history.
-- Routes:
-  - Strong work → `gpt-5.6-sol` at `High`: architecture, security, complex root cause, migrations, high-risk or cross-contract integration judgment/adjudication, and the mandatory independent final review.
-  - Normal implementation and integration leads, including leads owning stable shared files/contracts → `gpt-5.6-luna` at `High`.
-  - Every other Codex child → `gpt-5.6-luna` at proportional `High`, `Medium`, or `Low` effort.
-  - There is no Terra route or fallback. Cap every child at `High`.
-- If Sol, Luna, the requested effort, or `fork_turns="none"` cannot be enforced, do not dispatch and report the limitation.
+- Pin every child and nested child with an explicit model and effort, never above High, and `fork_turns="none"`. Use a fresh task-local context with no conversational-history inheritance.
+- Route strong judgment, architecture, security, migration, and independent final review to `gpt-5.6-sol` at High. Route integration and normal implementation to `gpt-5.6-luna` at High. Route narrow work to Luna at proportional High, Medium, or Low. There is no Terra route or fallback.
+- Every assignment must include the full recursive capsule: exact model/effort and `fork_turns="none"`; fresh-context/isolation rule; measurable outcome, acceptance, non-goals, write ownership and shared boundaries; targeted checks; explicit nested-delegation permission and permitted Luna/Sol routes with effort ceiling; and report topology. If nested delegation is not explicit, return the need to the parent. Nested children receive the full capsule recursively, instantiated with their own selected model, effort, preflight, ownership, and allowed routes, and never inherit history.
+- Routine operational communication and repair/test/re-review loops remain local. The integration owner consolidates worker/tester deltas. Settled compact deltas go to the parent; material, disputed, authority, public-contract, security, migration, or repeated-failure issues escalate to root. Root dispatches/receives the independent reviewer; ordinary actionable findings/fix evidence may go directly to the integration owner, while the settled final reviewer verdict goes to root and the reviewer never writes fixes. Writer/tester peer messaging is optional only where native support exists and the owner authorizes compact evidence/check questions; otherwise peers route through the owner. Peers never reassign ownership or adjudicate scope.
+- The same underlying defect or check still unresolved after two completed local repair-and-verification cycles escalates to root. Distinct or successfully resolved routine failures stay local; evidence conflicts, material scope, or authority ambiguity escalate immediately.
+- If Sol, Luna, the exact effort, `fork_turns="none"`, fresh context, or the root route cannot be enforced, do not dispatch. Never allow root effort to leak through inheritance.
 
-## User-facing decisions
+## Decisions And Recovery
 
-- For a material implementation-continuity decision, use `request_user_input` or the active mode's equivalent native structured choice when available. Include every viable mode, its implications, and exactly one task-context recommendation. If no structured choice is available, ask the same complete choices as a self-contained final text question. Tool absence never permits hiding alternatives in commentary or relying on a prior plan or a bare confirmation.
-- Only root may address the user or formulate a user-facing question. Children and nested children return decision escalations only to their parent using the shared evidence/options/recommendation/paused-scope shape. Root adjudicates from repository evidence, the stable authorized plan, and prior user decisions before asking the user.
-- An immediate ordinary `yes`, `continue`, or equivalent approves a concrete root question when the confirmation is genuinely unambiguous; no exact incantation is required.
-- For implementation continuity, a bare `yes` or `continue` selects a mode only when the immediately preceding self-contained, user-visible question explicitly and unambiguously maps it to one mode; otherwise require the option number or label.
-
-## Execution policy versus approval gates
-
-- Distinguish Codex execution-policy results from real native approval gates. A declined patch, `fileChange`, or policy classification is not proof that the user must approve and must not be converted into a request for special wording.
-- Keep the same intended architecture, behavior, and verification. Use only coherent in-policy mechanical steps, or return the full shared escalation packet — evidence, viable options and tradeoffs, a recommendation, and the exact paused scope — to the parent for escalation through parents to root. Never weaken the result or split patches to bypass policy.
-- If a history-free child encounters a genuine host provenance gate that only the user can satisfy, it returns the full escalation packet to its parent for escalation to root. Do not restart it with inherited history, let root perform the tracked edit, or pretend a relayed approval satisfies native provenance.
-
-## Practical Codex shapes
-
-- **Simple:** Sol High root discovery and planning → one Luna implementer at proportional effort → independent Sol High review and final validation.
-- **Larger or ambiguous:** parallel Luna scouts → a Luna High integration lead owning stable shared files/contracts plus disjoint Luna backend/frontend/test workers; only high-risk or cross-contract integration judgment escalates to Sol High. Peer repair loops and compact knowledge deltas to root precede an independent Sol High review.
-
-## Runtime smoke mapping
-
-For executable, runtime, or user-visible changes, after the final suite and before readiness:
-
-1. Inspect the actual repository and host capabilities and offer every applicable available surface. Keep the offer limited to available surfaces:
-   - repository-native or standalone Playwright: repeatable browser flows against the local/CI-like app;
-   - Browser/in-app semantic web automation: rendered web behavior and accessibility-oriented interaction;
-   - Chrome control: an existing signed-in browser profile and its real session state;
-   - Computer Use: desktop or non-DOM whole-application UI.
-2. State the exact Plan flows, preconditions, expected observables, side effects or auth/data constraints, and evidence to capture. Give exactly one evidence-based recommendation and let the user choose, unless an explicit prior tool choice applies.
-3. After selection, run the smallest realistic smoke scenarios and return environment, repository head, expected versus observed results, side effects, gaps, and screenshots for meaningful checkpoints or failures when supported. Screenshots supplement assertions and must not expose secrets or private data.
-4. A required smoke that fails, is unavailable, or is declined affects readiness; an optional declined smoke is unverified without an invented blocker. A smoke-discovered gap returns to implementation and requires targeted checks, focused review, a refreshed final suite, and repeat of the affected smoke after mutation.
+- Root uses native structured input for material choices when available. Children return evidence, options, recommendation, and paused scope only through parents.
+- After review starts, a tracked mutation invalidates affected review evidence and any final-suite result. Targeted checks, same-reviewer affected-area review when available, and one refreshed final suite are required; root directly verifies the final-suite gate.
+- Recover interruptions/compaction from native Plan/Goal, git/worktree/index state, checkpoints, reports, and actual diff; reverify route and ownership before resuming and avoid status polling.

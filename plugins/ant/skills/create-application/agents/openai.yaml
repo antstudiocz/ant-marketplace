@@ -1,4 +1,0 @@
-interface:
-  display_name: "(ant) Create Application"
-  short_description: "Plan a new app or app surface"
-  default_prompt: "Use $create-application to clarify this app idea, choose architecture, and prepare an orchestration handoff."

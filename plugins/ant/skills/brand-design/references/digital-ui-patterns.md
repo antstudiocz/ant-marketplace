@@ -115,8 +115,7 @@ Motion should feel like quick editorial assembly:
 
 For frontend code:
 
-1. Use `ant:frontend-best-practices` alongside this skill.
-2. Inspect existing design tokens/components before adding new ones.
-3. Map brand choices into the project's token system.
-4. Verify contrast, keyboard/focus states, responsive fit, layout stability, and absence of overlap.
-5. Use screenshots or browser checks for visual work when a local target is available. For deck-like outputs, check multiple slides, not just the first viewport.
+1. Inspect existing design tokens, components, framework conventions, and accessibility patterns before adding new ones.
+2. Map brand choices into the project's token system and preserve semantic HTML and accessible interaction behavior.
+3. Verify contrast, keyboard/focus states, responsive fit, layout stability, loading/error states, and absence of overlap.
+4. Use screenshots or browser checks for visual work when a local target is available. For deck-like outputs, check multiple slides, not just the first viewport.

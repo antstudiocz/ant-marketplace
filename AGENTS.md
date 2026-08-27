@@ -1,178 +1,85 @@
-# Ant Marketplace - Development Instructions
+# Ant Marketplace Maintainer Instructions
 
-## Project Structure
+## Communication And Scope
 
-```
-.claude-plugin/
-  marketplace.json    # Claude marketplace catalog
-.agents/plugins/
-  marketplace.json    # Codex repo marketplace catalog
+- Keep final responses concise and lead with outcome, material risks, checks, and next step.
+- Investigate before conclusions. Analysis/review requests stay read-only; implementation requests authorize only in-scope local edits and non-destructive validation.
+- Preserve unrelated work. Ask before destructive actions, external writes, delivery, material scope expansion, migrations, or compatibility breaks.
+- Prefer the smallest durable fix. Do not hide failures by weakening checks, assertions, architecture, or compatibility.
+
+## Repository Architecture
+
+The plugin exposes exactly three public skills:
+
+- `implementation-orchestrator` — end-to-end discovery, planning, delegated implementation, review, validation, and optional delivery coordination;
+- `merge-request` — PR/MR Preview, Create/update, Observe/status, exact-head pipeline observation, and merge-conflict resolution;
+- `brand-design` — `(ant)` brand direction, assets, implementation handoff, and visual QA.
+
+```text
+.claude-plugin/marketplace.json
+.agents/plugins/marketplace.json
 plugins/ant/
-  agents/             # Five declarative Claude execution profiles for the orchestrator only
-  .claude-plugin/
-    plugin.json       # Claude plugin metadata with version
-  .codex-plugin/
-    plugin.json       # Codex plugin metadata with matching version
-  commands/           # Claude command aliases only; avoid duplicates of skill names
-  skills/             # Shared Claude/Codex public skill folders
-    */agents/         # Codex skill UI metadata such as openai.yaml
-    */references/     # Shared lifecycle and concise host adapters
-assets/               # Shared README and branding assets
+  .claude-plugin/plugin.json
+  .codex-plugin/plugin.json
+  agents/                  # Five internal Claude execution profiles
+  skills/
+    implementation-orchestrator/
+    merge-request/
+    brand-design/
 ```
 
-## Orchestrator Maintenance
+- Keep orchestration instruction-only. Do not add a custom runtime, hooks, persisted state, event log, lease protocol, compatibility reader, generated validator, or synthetic eval framework.
+- Keep the orchestrator semantic core host-neutral. Shared policy routes by strong/balanced/fast capability and proportional supported effort; exact models, aliases, and environment preflights belong only in its two adapters, internal Claude profiles, and active documentation.
+- Claude root runs `best` at `max`; children use the five plugin-scoped Opus/Sonnet profiles after the adapter's override preflight, with `ant:fast` routed to Sonnet Low. Codex root runs `gpt-5.6-sol` at High; all children use explicit Sol/Luna model and effort selectors with `fork_turns="none"`, and there is no Terra fallback. Every child remains capped at High.
+- Root is coordination-only and the sole user-facing adjudicator during orchestration. A native delegated integration owner performs tracked edits; an independent strong reviewer performs final review.
+- Routine operational communication, worker/tester coordination, repairs, targeted checks, and re-review remain inside the workstream. The integration owner consolidates worker/tester deltas; root receives settled compact deltas or material escalations. The reviewer may send actionable findings/fix evidence to the integration owner but never writes fixes.
+- Every child assignment carries a recursive routing capsule covering the exact active-adapter route/effort, fresh isolated context, ownership boundaries, nested-delegation permission and permitted routes, and report/escalation topology. Nested children receive it recursively and never inherit conversational history.
+- Root route verification uses authoritative host/session/task metadata or explicit current host selection, never model self-identification. A mandatory exact route that cannot be verified blocks tracked-writer dispatch.
+- Codex creates an immutable native Goal after the stable Plan and before tracked-writer dispatch. Claude native goal support is optional and its absence must not block writes.
+- Never replace, complete, or block an unrelated unfinished Goal. On Codex Goal collision or material delta, pause affected work; root asks whether to finish the current Goal and queue a follow-on task or use native user/system controls to end/resolve it, and creates a new Goal only after native state reports no unfinished Goal. Stable changes stay in Plan/assignments.
+- Use native Plan for phases/waves, native agent state for concurrency, targeted checks after coherent phases, and the repository-wide final suite once after final edits and review.
+- Any tracked mutation after independent review invalidates affected review evidence and the final-suite result. Require targeted checks, same-reviewer affected-area review where available, and one refreshed final suite; root directly verifies the final-suite gate.
+- `merge-request` exclusively owns both PR/MR delivery and merge-conflict resolution. Do not add public aliases or duplicate delivery workflows.
+- Preserve all usable brand assets. The canonical brand manual is `plugins/ant/skills/brand-design/assets/source/ant-brand.md` with `manifest.json` beside it.
 
-- Keep `implementation-orchestrator` instruction-only: one public `SKILL.md`, one host-neutral `references/lifecycle.md`, two concise host adapters (`references/codex.md` and `references/claude.md`), and only the five small declarative Claude execution profiles in `plugins/ant/agents/`. Do not add a custom runtime, persisted state contract, event log, lease protocol, compatibility reader, generated validator, or synthetic eval framework.
-- Keep the shared workflow's semantic core host-neutral. Route by `strong`, `balanced`, and `fast` capabilities; permit native selectors or aliases only in the two host adapters and user documentation as non-binding examples, never as shared capability contracts.
-- Require intake classification as analysis-only, implementation-authorized, or ambiguous. Every implementation still gets read-only discovery and a proportional plan before tracked edits; explicit execution intent may authorize implementation after that plan is presented when scope and risk remain unchanged. For new or materially changed behavior, also require user-needs brainstorming, all material non-repo-discoverable questions, and deeper technical analysis before the plan.
-- After initial read-only discovery and before the concrete plan, make a proportionate implementation-continuity decision: record an explicit user choice, avoid a ceremonial question when the modes do not materially differ, and otherwise obtain the user's explicit choice. Record the mode and its implications in the plan, native goal envelope, and writer assignment; integrated replacement needs explicit acceptance and a checkout dedicated to the implementation, without weakening final safety or migration requirements.
-- For implementation-authorized or later-approved work, establish a host-native goal envelope only after the plan is stable and before tracked-writer dispatch. It complements native planning and authorization, never creates custom state, excludes analysis-only or unresolved ambiguous work, and closes only after scoped implementation, review, final validation, retrospective, and any authorized delivery complete.
-- Use the host-native Plan for phases or waves with one top-level `in_progress` item and the native Goal for the measurable outcome; represent concurrency with native agent/thread state. Stable in-scope follow-ups amend both, while material scope or contract changes require a delta decision and authorization.
-- Treat an approved `create-application` brief or user-supplied concrete plan as product input, not automatic write authorization. Explicit end-to-end implementation intent may authorize execution after repository verification and plan presentation; requests to propose a plan or wait for approval still pause. Do not repeat approval for every phase inside the stable plan.
-- Keep the root coordination-only while `implementation-orchestrator` is active. If no writer-capable native delegation is available, stop before tracked edits and report a blocker; never fall back to root writes or imply independent review.
-- Keep root as the sole user-facing adjudicator. Delegated agents never communicate with or formulate questions for the user; they escalate evidence, options, a recommendation, and paused scope only to their parent until root can resolve the decision from repository evidence, the stable authorized plan, and prior user choices. Root batches only genuinely new material authority into one question. Treat patch/fileChange/policy denials separately from native user-only approval gates, and never weaken architecture, behavior, tests, validation, or compatibility to avoid approval.
-- Support disjoint parallel backend/frontend/test/research/implementation workers behind one integration lead when contracts are stable. Keep raw logs, large diffs, debug history, repeated tool calls, and local failures in related-agent repair loops; send root compact knowledge deltas and escalate only material architecture, scope, public-contract, security, migration, conflict, repeated-failure, or authority decisions.
-- Run the root orchestrator at the active host adapter's defined model and reasoning effort for the entire run. Select every child's native model and, where supported, effort explicitly through the host adapter, cap children at `High`, and prevent root effort from leaking through inheritance; capability tier and effort are independent. Codex dispatches, including nested dispatches, must use `fork_turns="none"` and concise self-contained task context; never inherit conversation history.
-- Run targeted checks after coherent implementation phases. After the final tracked mutation and required review, run the broad/full suite once on the final tree before completion and optional delivery; refresh it only after a later relevant mutation.
-- After the final suite, require a bounded root-owned retrospective of correctness and total token/resource efficiency before completion or delivery. Only material, actionable, generalizable findings may become sanitized upstream issue candidates; issue writes need separate explicit approval, and retrospective PRs require a separately authorized maintenance flow.
-- Mid-flight status/questions and details within authorized behavior must not pause work. Batch related material changes or corrections received during the same active segment into one affected-scope discovery, brainstorming, analysis, delta-plan, and explicit approval cycle at the next safe boundary; pause only affected writes while unrelated work continues, and never delay an urgent stop or safety correction.
-- Invoke plugin skills through their host-visible identifiers: Claude Code `/ant:merge-request` and Codex `$merge-request` exclusively own PR/MR creation and updates; Claude Code `/ant:delivery-workflows` and Codex `$delivery-workflows` own merge-conflict resolution only. Do not add aliases or forwarding bridges between them.
-- When a clean breaking redesign is approved, remove obsolete paths and documentation instead of retaining parallel behavior.
+## Skill Maintenance
+
+- Add a public skill only for a distinct workflow/domain entry point. Prefer a reference under an existing skill when the topic belongs there.
+- Public skills require `plugins/ant/skills/<name>/SKILL.md`; optional Codex UI metadata belongs in `agents/openai.yaml`.
+- Do not register individual skills in marketplace catalogs; plugin discovery uses `plugins/ant/.codex-plugin/plugin.json` and the Claude plugin root.
+- Do not create same-name command aliases. Reference another public skill with its host-visible identifier.
+- Keep comments and guidance focused on non-obvious intent, invariants, constraints, or tradeoffs.
+
+## Documentation
+
+- Keep `README.md`, `docs/skills.md`, `docs/install.md`, and `docs/orchestrator.md` aligned with current behavior.
+- `CLAUDE.md` imports this file with `@AGENTS.md`; do not duplicate the contract.
+- Historical release notes are immutable. Add a new release note for each release.
+- For version-sensitive framework, SDK, API, CLI, or cloud claims, consult current primary documentation or installed source.
 
 ## Pull Requests
 
-- Always use the host-visible `/ant:merge-request` (Claude Code) or `$merge-request` (Codex) skill when preparing, creating, or updating a PR/MR.
-- Write PR/MR titles in Conventional Commit style and keep PR/MR descriptions in English by default, unless the user explicitly requests another language.
-- Use the Merge Request skill's human-first description format: visible plain-language summary, adaptive rationale, and material impact or risk after the `---` separator; structured technical context and detailed verification evidence may be collapsed, but verification status and every material gap must be readable in its summary.
-- Write every new or updated PR/MR description as a snapshot of the final diff from the target branch merge base to final `HEAD`. Do not narrate intermediate commits, abandoned attempts, or artifacts that were added and later removed unless they remain relevant to migration or reviewer truth.
+- Use the host-visible `merge-request` skill for every PR/MR Preview, Create/update, Observe/status, or Conflict resolution request.
+- Observe/status is read-only: it may inspect provider metadata and boundedly observe the existing exact head, but never mutates the worktree/provider or retries/repairs failures. Remote conflict reproduction may use the merge-generated index/worktree state under explicit conflict intent; that is not `git add` authority. Staging, commit, and push remain separate.
+- Titles use Conventional Commit style. Descriptions default to English and represent the final merge-base-to-`HEAD` snapshot.
+- Keep the visible description human-first: summary, rationale, and material impact/risk; collapse only useful technical and verification detail while keeping status and gaps truthful.
 
-## Adding a New Skill
+## Validation And Release
 
-Prefer a new public skill only for a distinct workflow or domain entrypoint. If the topic belongs under frontend, Laravel, delivery, or orchestration, add it as a reference under the existing umbrella skill instead.
+During implementation, run only checks affected by the coherent change. The final repository-wide suite is:
 
-1. **Create skill folder and SKILL.md:**
-   ```
-   plugins/ant/skills/my-skill/SKILL.md
-   ```
-
-2. **SKILL.md format:**
-   ```markdown
-   ---
-   name: my-skill
-   description: Short description for skill discovery
-   ---
-
-   # Skill Title
-
-   Instructions for Claude Code and Codex to follow...
-   ```
-
-3. **Do not register skills in marketplace.json.**
-   - Claude discovers `plugins/ant/skills/*/SKILL.md` from the plugin root.
-   - Codex discovers the same folder through `plugins/ant/.codex-plugin/plugin.json` → `"skills": "./skills/"`.
-   - Explicit skill lists in the Claude marketplace can duplicate the same public skills.
-
-4. **Update README.md** - add to Available Skills table.
-
-5. **Release new version** (see below).
-
-## Adding Umbrella Skill References
-
-Detailed guidance that should not appear as a public skill belongs in a `references/` file under the owning umbrella skill:
-
-```
-plugins/ant/skills/frontend-best-practices/references/my-topic.md
-plugins/ant/skills/laravel-best-practices/references/my-topic.md
-plugins/ant/skills/delivery-workflows/references/my-topic.md
-```
-
-Do not name internal reference files `SKILL.md`; Codex and Claude Code may discover those as public skills.
-
-## Adding a New Command
-
-Commands are optional Claude aliases. Do not create a command with the same name as a public skill; Claude treats `commands/*.md` as flat skill files and this duplicates the exposed skill. Use commands only for meaningful alternate names such as `asana-task` → `asana-task-analyzer`.
-
-1. **Create command file:**
-   ```
-   plugins/ant/commands/my-command.md
-   ```
-
-2. **Command format:**
-   ```markdown
-   ---
-   description: "Short description"
-   disable-model-invocation: true
-   ---
-
-   Invoke the ant:my-skill skill and follow it exactly as presented to you.
-   ```
-
-## Releasing a New Version
-
-**Version files to update:**
-- `plugins/ant/.claude-plugin/plugin.json` → `"version": "X.Y.Z"` (Claude plugin update authority)
-- `plugins/ant/.codex-plugin/plugin.json` → `"version": "X.Y.Z"` (Codex plugin version)
-- `.claude-plugin/marketplace.json` → `"metadata.version": "X.Y.Z"` (marketplace display metadata)
-
-**Version bumping:**
-- **Major (X.0.0)** - Breaking changes
-- **Minor (X.Y.0)** - New features (new skills)
-- **Patch (X.Y.Z)** - Bug fixes, improvements
-
-**Release process:**
-
-1. **Update all version files to the same version:**
-   - `plugins/ant/.claude-plugin/plugin.json`
-   - `plugins/ant/.codex-plugin/plugin.json`
-   - `.claude-plugin/marketplace.json` metadata section
-
-   Claude Code resolves plugin version from `plugins/ant/.claude-plugin/plugin.json` first. Keep marketplace metadata aligned for readability, but do not rely on it as the plugin update authority.
-
-2. **Validate:**
-   ```bash
-   claude plugin validate .
-   claude plugin validate ./plugins/ant
-   jq empty .agents/plugins/marketplace.json .claude-plugin/marketplace.json plugins/ant/.claude-plugin/plugin.json plugins/ant/.codex-plugin/plugin.json
-   ```
-
-3. **Commit, push and create release:**
-   ```bash
-   git add -A && git commit -m "feat/fix: description"
-   git push origin master
-   gh release create vX.Y.Z --title "vX.Y.Z" --notes "## Changes
-   - Description of changes"
-   ```
-
-**Users update with Claude Code:**
-```
-/plugin marketplace update ant-marketplace
-/plugin update ant@ant-marketplace
-/reload-plugins
-```
-
-**Users update with Codex:**
-Rerun the Codex install command for `antstudiocz/ant-marketplace/plugins/ant`.
-
-## Testing Locally
-
-During implementation, run only checks affected by the current coherent change. Treat the two plugin validations below as the final repository-wide suite and run them once against the final tree; rerun them only if a later relevant edit invalidates the result.
-
-Claude Code:
-```
+```bash
 claude plugin validate .
 claude plugin validate ./plugins/ant
-claude --plugin-dir ./plugins/ant
+jq empty .agents/plugins/marketplace.json .claude-plugin/marketplace.json plugins/ant/.claude-plugin/plugin.json plugins/ant/.codex-plugin/plugin.json
 ```
 
-Codex:
-- verify JSON manifests with `jq empty`;
-- rerun the plugin install command for the `plugins/ant` path;
-- restart Codex or open a new session so updated skills are loaded.
+Keep these versions identical:
 
-## Skill Best Practices
+- `plugins/ant/.claude-plugin/plugin.json`;
+- `plugins/ant/.codex-plugin/plugin.json`;
+- `.claude-plugin/marketplace.json` `metadata.version`.
 
-- Keep public skills few and broad enough to be chosen reliably.
-- Use `AskUserQuestion` tool for user choices with predefined options.
-- For simple text input, just ask directly.
-- Reference other skills with `ant:skill-name` or `superpowers:skill-name`.
-- Add `**Announce at start:**` for clarity on what skill is being used.
+Use semantic versioning: major for breaking changes, minor for new compatible functionality, patch for fixes/improvements. A release requires explicit delivery authority before commit, push, or `gh release create`; never add AI attribution or co-author trailers.
+
+Users update Claude Code with marketplace/plugin update and reload commands. Codex users rerun the install command for `antstudiocz/ant-marketplace/plugins/ant` and restart/open a new session.
