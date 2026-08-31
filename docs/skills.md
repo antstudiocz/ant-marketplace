@@ -15,10 +15,10 @@ It:
 - keeps root user-facing and coordination-only while a delegated integration owner writes;
 - routes by strong/balanced/fast capability with supported effort capped at High and requires fresh isolated task-local context for every child and nested child;
 - leaves the Codex root model and effort to the developer (`gpt-5.6-sol` at High is recommended) while requiring explicit, enforceable child routes;
-- for authorized implementation, requires an independent strong review, targeted checks, then one final broad suite;
+- for authorized implementation, requires an independent strong review, targeted checks, then exactly one risk-appropriate candidate-bound broad gate (local broad suite or qualifying exact-candidate CI);
 - keeps implementation readiness separate from optional delivery.
 
-Analysis-only work ends with read-only evidence/findings and no readiness verdict. For implementation, use runtime/visual smoke only when acceptance criteria, changed executable behavior, or repository rules make it relevant. See the [canonical orchestrator guide](orchestrator.md) for host routes, recursive capsules, Goal/preflight behavior, and review invalidation.
+Analysis-only work ends with read-only evidence/findings and no readiness verdict. Existing automated browser/E2E tests are selected through normal risk-based validation; agent-driven interactive browser smoke runs only when explicitly requested or required by repository/acceptance criteria. See the [canonical orchestrator guide](orchestrator.md) for candidate identity, CI substitution, host routes, recursive capsules, Goal/preflight behavior, and review invalidation.
 
 ## `merge-request`
 
@@ -30,6 +30,7 @@ Use for GitHub PR/GitLab MR Preview, Create/update, Observe/status, exact-head o
 - Titles use Conventional Commit style; descriptions are rebuilt from the final target merge-base-to-`HEAD` snapshot.
 - Visible descriptions contain a plain-language summary, rationale, and material impact/risk. Optional technical and verification evidence may be collapsed, but status and gaps remain truthful.
 - Observe/status is read-only and reports failures without retry or repair. Conflict-only mode never creates/updates a provider object or watches pipelines. Resolution, staging, committing, and pushing have distinct authority; remote conflict work starts only from a clean tracked tree/index.
+- When implementation selects CI for its single broad gate, `merge-request` owns the separately authorized pre-gate publication/update of the frozen candidate, preserves Draft-by-default readiness, and then observes the exact tested SHA; without that authority or qualifying evidence, local broad validation remains mandatory.
 - In-scope pipeline regressions during an already-authorized Create/update flow return to `implementation-orchestrator` for repair/review/validation before replacement-head observation. Standalone Observe/status only reports or recommends a handoff; it requires a separate user fix request and never invokes repair or retry.
 
 ## `brand-design`
