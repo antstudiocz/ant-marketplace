@@ -17,7 +17,7 @@ claude plugin marketplace add antstudiocz/ant-marketplace --scope user
 claude plugin install ant@ant-marketplace --scope user
 ```
 
-For orchestrator startup, use the host-specific route and preflight in the [canonical guide](orchestrator.md); Claude root uses `best` at `max` and Codex root requires a verified Sol High route.
+For orchestrator startup, use the host-specific route and preflight in the [canonical guide](orchestrator.md); Claude root uses `best` at `max`, while Codex root model and effort are developer-selected (`gpt-5.6-sol` at High is recommended). Child routing remains mandatory and fail-closed.
 
 ## Codex
 
@@ -55,4 +55,4 @@ After loading a fresh session, confirm the plugin exposes only:
 - `merge-request`;
 - `brand-design`.
 
-Maintainers validate the repository and plugin manifests using the commands in [AGENTS.md](../AGENTS.md). Version 12.0.0 is instruction-only and needs no orchestration database, runtime, migration, or global helper installation.
+Maintainers validate the repository and plugin manifests using the commands in [AGENTS.md](../AGENTS.md). Version 12.0.1 is instruction-only and needs no orchestration database, runtime, migration, or global helper installation.
