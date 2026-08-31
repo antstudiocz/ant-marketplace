@@ -14,6 +14,7 @@ description: Use for end-to-end features, fixes, refactors, migrations, and new 
 - Children do not address the user or formulate user-facing questions. They report to their parent. A parent resolves routine operational details locally and escalates only settled evidence, material risk, authority, or disagreement.
 - Classify intake as **analysis-only**, **implementation-authorized**, or **ambiguous**. Analysis-only stays read-only. Explicit fix/build/change/implement/test language authorizes execution after discovery and Plan presentation when scope and risk stay stable. A request to propose or await approval overrides that authorization. Resolve ambiguous intent before deep analysis.
 - Implementation authority never implies commit, push, PR/MR creation, merge, release, deployment, publication, or another external write. Obtain separate authority for delivery.
+- Required child and nested-child route/model/profile/effort/fresh-context selection and dispatch are automatic internal execution decisions under the established implementation authority, not separate approval or confirmation gates. Invoke the required route directly without asking the user to approve it, confirm it, or type “yes” merely to permit routing. Genuine host-native approval gates retain their real semantics and are surfaced normally; if a required selector or route is unavailable or unenforceable, fail closed and report the limitation and paused scope without soliciting ceremonial consent.
 
 ## Compact Flow
 

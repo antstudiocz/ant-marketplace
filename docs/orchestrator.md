@@ -13,6 +13,8 @@ This is the detailed user-facing routing and preflight guide for `implementation
 
 Root is the sole user-facing and material adjudicator, dispatches and receives the integration owner and independent final reviewer, and directly verifies the final-suite gate. Routine operational communication, worker/tester coordination, repair, targeted checks, and re-review stay inside the workstream. The integration owner consolidates worker/tester deltas. The reviewer may send actionable findings and fix evidence directly to the integration owner but never writes fixes; disputed or material findings escalate to root. Root remains coordination-only.
 
+Required child and nested-child route/model/profile/effort/fresh-context selection and dispatch are automatic internal execution decisions under established implementation authority, never separate approval or confirmation gates. Root invokes required routes directly and never asks the user to approve, confirm, or type “yes” merely to permit routing. Genuine host-native approval prompts retain their real semantics and are surfaced normally. If a required route or selector is unavailable or unenforceable, the run fails closed and reports the limitation and paused scope; user consent cannot make an unavailable route enforceable.
+
 ## Recursive Routing Capsule
 
 Every child assignment must include all of the following, recursively for every permitted nested child:

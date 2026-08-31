@@ -24,6 +24,8 @@ Codex never replaces, completes, or blocks an unrelated unfinished Goal. If one 
 
 Exactly one integration owner owns shared contracts and shared files. Root adjudicates and verifies but never becomes the fallback writer. The integration owner consolidates worker/tester deltas and keeps routine operations local.
 
+Required child and nested-child route/model/profile/effort/fresh-context selection and dispatch are automatic internal execution decisions under the established implementation authority. They are never a separate approval or confirmation gate: the root invokes required routes directly and does not ask the user to approve, confirm, or type “yes” merely to permit routing. Genuine host-native approval gates retain their real semantics and are surfaced normally. If a required selector or route is unavailable or unenforceable, fail closed and report the limitation and paused scope; user consent cannot make an unavailable route enforceable.
+
 ## 4. Recursive Delegation And Communication
 
 Every child assignment carries a complete recursive **routing capsule**:
