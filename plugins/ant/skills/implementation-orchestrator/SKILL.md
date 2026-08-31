@@ -22,10 +22,11 @@ description: Use for end-to-end features, fixes, refactors, migrations, and new 
 3. For new or materially changed behavior, resolve material users, workflows, edge cases, non-goals, and product decisions. For a new application, load [new-application.md](references/new-application.md).
 4. Load [lifecycle.md](references/lifecycle.md), choose continuity, and present a proportional native Plan. Integrated replacement needs explicit acceptance and a dedicated checkout; remove obsolete paths without shims.
 5. Load exactly one active-host adapter immediately before the first host-specific Goal, delegation, or routing decision: [codex.md](references/codex.md) or [claude.md](references/claude.md).
-6. Verify the mandatory root route from authoritative host/session/task metadata or an explicit current host selection. Model self-identification is not evidence. Fail closed before tracked-writer dispatch when the exact route cannot be verified.
-7. For authorized implementation, establish or reuse the host-native Goal envelope, respecting collision and delta rules, then dispatch one integration owner with a complete recursive routing capsule. Add disjoint workers only when contracts and ownership are stable.
-8. Run targeted checks after coherent phases. After the last mutation, obtain independent review, repair material findings, invalidate and refresh affected evidence as required, then run the repository-wide final suite once on the final tree.
-9. Perform a concise root-owned retrospective, report adjacent findings separately, and perform only separately authorized delivery.
+6. Apply the active adapter's root policy: Claude keeps its mandatory verified root gate; Codex root model and effort are developer-selected, with `gpt-5.6-sol` at High as recommended guidance only.
+7. Before tracked-writer dispatch, enforce every child and nested-child model, effort, availability, fresh context, and Codex `fork_turns="none"` requirement.
+8. For authorized implementation, establish or reuse the host-native Goal envelope, respecting collision and delta rules, then dispatch one integration owner with a complete recursive routing capsule. Add disjoint workers only when contracts and ownership are stable.
+9. Run targeted checks after coherent phases. After the last mutation, obtain independent review, repair material findings, invalidate and refresh affected evidence as required, then run the repository-wide final suite once on the final tree.
+10. Perform a concise root-owned retrospective, report adjacent findings separately, and perform only separately authorized delivery.
 
 ## Plan, Goal, And Change Control
 
