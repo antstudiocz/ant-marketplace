@@ -55,4 +55,4 @@ After loading a fresh session, confirm the plugin exposes only:
 - `merge-request`;
 - `brand-design`.
 
-Maintainers validate the repository and plugin manifests using the commands in [AGENTS.md](../AGENTS.md). Version 12.2.0 is instruction-only and needs no orchestration database, runtime, migration, or global helper installation.
+Maintainers validate the repository and plugin manifests using the commands in [AGENTS.md](../AGENTS.md). Version 12.2.1 is instruction-only and needs no orchestration database, runtime, migration, or global helper installation.
