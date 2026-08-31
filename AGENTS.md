@@ -40,6 +40,7 @@ plugins/ant/
 
 ## Skill Maintenance
 
+- Follow the [instruction-authoring guide](docs/instruction-authoring.md) when creating or changing plugin instructions.
 - Add a public skill only for a distinct workflow/domain entry point. Prefer a reference under an existing skill when the topic belongs there.
 - Public skills require `plugins/ant/skills/<name>/SKILL.md`; optional Codex UI metadata belongs in `agents/openai.yaml`.
 - Do not register individual skills in marketplace catalogs; plugin discovery uses `plugins/ant/.codex-plugin/plugin.json` and the Claude plugin root.
