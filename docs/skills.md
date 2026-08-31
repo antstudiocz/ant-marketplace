@@ -13,7 +13,8 @@ It:
 - captures essential product/architecture decisions for new applications without a separate brief ceremony;
 - records explicit integrated-replacement semantics when selected;
 - keeps root user-facing and coordination-only while a delegated integration owner writes;
-- routes by strong/balanced/fast capability with supported effort capped at High and fresh task context where available;
+- routes by strong/balanced/fast capability with supported effort capped at High and requires fresh isolated task-local context for every child and nested child;
+- leaves the Codex root model and effort to the developer (`gpt-5.6-sol` at High is recommended) while requiring explicit, enforceable child routes;
 - for authorized implementation, requires an independent strong review, targeted checks, then one final broad suite;
 - keeps implementation readiness separate from optional delivery.
 

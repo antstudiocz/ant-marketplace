@@ -44,7 +44,7 @@ The canonical routing, Goal, recursive delegation, review-invalidation, and prov
 - [Skill guide](docs/skills.md)
 - [Orchestrator guide](docs/orchestrator.md)
 - [Installation and updates](docs/install.md)
-- [12.0.0 release notes](docs/releases/12.0.0.md)
+- [12.0.1 release notes](docs/releases/12.0.1.md)
 
 ## Update
 
