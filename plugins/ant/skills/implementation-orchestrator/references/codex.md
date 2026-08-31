@@ -3,7 +3,7 @@
 ## Root Guidance, Plan, And Goal
 
 - Codex root model and effort are the developer's choice. `gpt-5.6-sol` at High is recommended guidance only; differing or unknown root settings do not block tracked-writer dispatch.
-- Record phases, dependencies, acceptance behavior, continuity, checks, and authorized delivery in native Plan with one top-level item in progress.
+- Establish the native Plan before any tracked edit and keep it as the single live, user-visible TODO checklist: concise, proportional top-level phases/waves with explicit `pending`, `in_progress`, and `completed` transitions and exactly one top-level item `in_progress` while work is active. Root updates it at phase/wave start and completion, stable in-scope Plan changes, recovery/resume, and applicable review, final-suite, and delivery transitions. Native agent/thread state, not the Plan, represents concurrency; completion transitions require matching evidence.
 - After the objective and Plan are stable, inspect or create a matching immutable native Goal before dispatch. Complete it only when its matching objective is genuinely achieved. Never replace, complete, or block an unrelated unfinished Goal. If one occupies the slot, pause; root asks whether to finish the current Goal and queue a separate follow-on task, or use native user/system controls to end or resolve the current Goal. Create a new Goal only after native state reports no unfinished Goal. A material objective/public-contract delta pauses/checkpoints affected work and uses the same root decision; stable changes update Plan/assignments. Never use `complete` or `blocked` to clear a collision or material delta. Unaffected disjoint work may continue only within the unchanged Goal.
 
 ## Routing And Recursive Capsule
@@ -19,4 +19,4 @@
 
 - Root uses native structured input for material choices when available. Children return evidence, options, recommendation, and paused scope only through parents.
 - After review starts, a tracked mutation invalidates affected review evidence and any final-suite result. Targeted checks, same-reviewer affected-area review when available, and one refreshed final suite are required; root directly verifies the final-suite gate.
-- Recover interruptions/compaction from native Plan/Goal, git/worktree/index state, checkpoints, reports, and actual diff; reverify route and ownership before resuming and avoid status polling.
+- Recover interruptions/compaction by reconciling the native Plan against authoritative Goal, git/worktree/index state, native agent/thread state, checkpoints, reports, and actual diff; correct stale transitions and preserve exactly one active top-level phase/wave before resuming. Reverify route and ownership and avoid status polling. Analysis-only may present a requested Plan but must not establish or advance implementation lifecycle state.

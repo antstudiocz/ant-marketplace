@@ -4,7 +4,7 @@ This reference owns the shared implementation lifecycle. Apply repository instru
 
 ## 1. Discovery And Planning
 
-Before tracked edits, read repository instructions, inspect branch/worktree state, separate unrelated changes, trace contracts and checks, diagnose the actual cause, and present a proportional native Plan. New behavior also needs users, workflows, edge cases, acceptance criteria, and non-goals. A user plan is product input, not automatic write authority; explicit implementation intent authorizes execution after the Plan checkpoint when scope and risk remain stable.
+Before tracked edits, read repository instructions, inspect branch/worktree state, separate unrelated changes, trace contracts and checks, diagnose the actual cause, and establish a concise, proportional native Plan as the single live, user-visible TODO checklist. Top-level items represent phases or waves, use explicit `pending`, `in_progress`, and `completed` transitions, and have exactly one top-level item `in_progress` while implementation work is active. Do not mirror it in a custom TODO/PLAN.md file, status ledger, or persisted substitute. New behavior also needs users, workflows, edge cases, acceptance criteria, and non-goals. A user plan is product input, not automatic write authority; explicit implementation intent authorizes execution after the Plan checkpoint when scope and risk remain stable. Analysis-only may present a requested Plan as read-only output but does not establish or advance implementation lifecycle state.
 
 ## 2. Implementation Continuity
 
@@ -14,7 +14,7 @@ Choose after discovery and before the concrete Plan:
 - **Integrated replacement:** cleanly replace obsolete behavior in a dedicated checkout after explicit acceptance; remove old paths without fallback shims.
 - **Isolated handoff:** prepare an artifact or separate workspace when direct integration is out of scope.
 
-Record the mode and implications in the Plan, Goal envelope, and integration-owner assignment. Do not ask ceremonially when modes have no material difference.
+Record the mode and implications in the native Plan, Goal envelope, and integration-owner assignment. Do not ask ceremonially when modes have no material difference.
 
 ## 3. Goal Envelope And Ownership
 
@@ -40,7 +40,7 @@ Ordinary subagent completion results return to the caller; explicit host-native 
 
 ## 5. Execution And Mid-flight Changes
 
-The integration owner verifies the Plan against the real tree, preserves unrelated work, and runs targeted checks after coherent phases. A material mid-flight change pauses affected writers, collects a checkpoint and actual diff, resolves the Plan/Goal delta, then explicitly resumes or hands off ownership. Unaffected disjoint work may continue. Status questions and stable details do not pause work; urgent stop or safety corrections apply immediately.
+The integration owner verifies the native Plan against the real tree, preserves unrelated work, and reports settled phase/wave evidence and any stable Plan delta to root. Root keeps the Plan as the live checklist and updates it at phase/wave start and completion, stable in-scope Plan changes, recovery/resume, and applicable review, final-suite, and delivery transitions. Top-level Plan items never duplicate individual worker status; native agent/thread state remains the concurrency source. A material mid-flight change pauses affected writers, collects a checkpoint and actual diff, resolves the Plan/Goal delta, updates the Plan, then explicitly resumes or hands off ownership. Unaffected disjoint work may continue. Status questions and stable details do not pause work; urgent stop or safety corrections apply immediately.
 
 If a writer is silent or interrupted, recover the latest checkpoint, inspect actual git/worktree state and diff, and reassign overlap only after the writer is known stopped or ownership is explicitly handed off. Elapsed time never proves abandonment. The same underlying defect or check still unresolved after two completed local repair-and-verification cycles escalates to root; distinct or successfully resolved routine failures stay local. Evidence conflicts, material scope, or authority ambiguity escalate immediately.
 
@@ -52,7 +52,7 @@ Classify failed checks as current-change, pre-existing, flaky/infrastructure, cr
 
 ## 7. Interruption And Compaction Recovery
 
-Root recovers from native Plan/Goal state, git/worktree/index state, integration-owner checkpoints, worker/tester reports, reviewer findings, and actual diffs. Reconfirm route, Goal ownership, write ownership, review validity, and the next Plan phase before resuming. Do not poll status repeatedly or treat stale reports as current state.
+Root reconciles the native Plan before resuming: compare its transitions and next phase against authoritative Goal state, git/worktree/index state, native agent/thread state, integration-owner checkpoints, worker/tester reports, reviewer findings, and actual diffs. Correct stale or unsupported Plan states, preserve exactly one active top-level phase/wave, and only mark a phase/wave completed when matching evidence exists. Reconfirm route, Goal ownership, write ownership, review validity, and the next Plan phase before resuming. Do not poll status repeatedly or treat stale reports as current state.
 
 ## 8. Completion
 
