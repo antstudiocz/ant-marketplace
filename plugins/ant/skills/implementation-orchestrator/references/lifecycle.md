@@ -4,7 +4,25 @@ This reference owns the shared implementation lifecycle. Apply repository instru
 
 ## 1. Discovery And Planning
 
-Before tracked edits, read repository instructions, inspect branch/worktree state, separate unrelated changes, trace contracts and checks, diagnose the actual cause, and establish a concise, proportional native Plan as the single live, user-visible TODO checklist. If requested/required interactive smoke is discovered during discovery or planning, load exactly one active-host adapter and complete its environment/browser preflight before presenting that Plan; otherwise defer adapter loading until the first host-specific Goal, delegation, or routing decision. Top-level items represent phases or waves, use explicit `pending`, `in_progress`, and `completed` transitions, and have exactly one top-level item `in_progress` while implementation work is active. Do not mirror it in a custom TODO/PLAN.md file, status ledger, or persisted substitute. New behavior also needs users, workflows, edge cases, acceptance criteria, and non-goals. A user plan is product input, not automatic write authority; explicit implementation intent authorizes execution after the Plan checkpoint when scope and risk remain stable. Analysis-only may present a requested Plan as read-only output but does not establish or advance implementation lifecycle state.
+- Before tracked edits, read repository instructions and inspect branch/worktree state.
+- Separate unrelated changes before planning.
+- Trace affected contracts and checks, then diagnose the actual cause.
+- Establish a concise, proportional native Plan as the single live, user-visible TODO checklist.
+- If interactive smoke is requested or required during discovery, load one active-host adapter and complete its environment/browser preflight before presenting the Plan.
+- Otherwise, defer adapter loading until the first host-specific Goal, delegation, or routing decision.
+- Use lifecycle phases or waves as top-level Plan items.
+- Give every Plan item an explicit `pending`, `in_progress`, or `completed` state.
+- Keep exactly one top-level item `in_progress` while implementation work is active.
+- Before dispatching any tracked implementation writer, root must write or update the host-native Plan through its structured mechanism.
+- Root must then inspect the authoritative native Plan state.
+- Dispatch only when exactly one top-level item is `in_progress` and every other top-level item is appropriately `pending` or `completed` for the current phase.
+- Treat commentary or prose such as a narrated checklist, assignment, intention to create a Plan, or statement that the Plan is stable as non-evidence.
+- If the native Plan write or inspection fails, or its state is unknown or unverifiable, fail closed before dispatch.
+- Do not mirror the Plan in a custom TODO/PLAN.md file, status ledger, or persisted substitute.
+- New behavior also needs users, workflows, edge cases, acceptance criteria, and non-goals.
+- A user Plan is product input, not automatic write authority.
+- Explicit implementation intent authorizes execution after the Plan checkpoint when scope and risk remain stable.
+- Analysis-only may present a requested Plan as read-only output but does not establish or advance implementation lifecycle state.
 
 ## 2. Implementation Continuity
 
@@ -18,9 +36,21 @@ Record the mode and implications in the native Plan, Goal envelope, and integrat
 
 ## 3. Goal Envelope And Ownership
 
-The active host adapter owns native Goal creation/reuse, availability behavior, mutability, and closure. Create or reuse a matching Goal only after objective and Plan are stable and before tracked-writer dispatch when the adapter requires or supports it. The envelope records measurable outcome, acceptance, constraints, checks, continuity, ownership, and delivery already authorized.
+- The active host adapter owns native Goal creation, reuse, availability, mutability, and closure.
+- If the active adapter requires a native Goal, it owns Goal inspection, reuse or creation, reinspection, evidence, and failure behavior before dispatch.
+- If the active adapter treats Goal support as optional, missing Goal support does not block dispatch.
+- Treat commentary or prose such as a narrated Goal, assignment, intention to create a Goal, or statement that the Goal matches as non-evidence.
+- The envelope records measurable outcome, acceptance, constraints, checks, continuity, ownership, and delivery already authorized.
 
-Codex never replaces, completes, or blocks an unrelated unfinished Goal. If one occupies the slot, pause tracked work. Root must ask whether to finish the current Goal and queue a separate follow-on task, or use native user/system controls to end or resolve the current Goal; create a new Goal only after native state reports no unfinished Goal. Claude never supersedes an unrelated optional Goal; use a fresh session/task or explicit user-native replacement. A material objective/public-contract change that no longer fits the immutable Goal pauses affected writers, checkpoints the actual diff, and requires the same root decision: finish and queue a follow-on, or use native controls to end/resolve the current Goal. Never misuse `complete` or `blocked`. Stable in-objective changes update Plan and assignments.
+- Codex never replaces, completes, or blocks an unrelated unfinished Goal.
+- If an unrelated Goal occupies the slot, pause tracked work.
+- Root must ask whether to finish the current Goal and queue a separate follow-on task, or use native controls to end or resolve it.
+- Create a new Goal only after native state reports no unfinished Goal.
+- Claude never supersedes an unrelated optional Goal; use a fresh session/task or explicit user-native replacement.
+- If a material objective or public-contract change no longer fits the immutable Goal, pause affected writers and checkpoint the actual diff.
+- Resolve that delta with the same root choice: finish and queue a follow-on, or use native controls to end or resolve the current Goal.
+- Never misuse `complete` or `blocked` to clear a collision or material delta.
+- Keep stable in-objective changes in the Plan and assignments.
 
 Exactly one integration owner owns shared contracts and shared files. Root adjudicates and verifies but never becomes the fallback writer. The integration owner consolidates worker/tester deltas and keeps routine operations local.
 
