@@ -4,7 +4,7 @@
 
 - Root must run `best` at `max` for the entire run, selected with `claude --model best --effort max` or `/model best` plus `/effort max`. `best` resolves dynamically to Fable where available, otherwise current Opus; do not use `opusplan`.
 - Verify that route from authoritative host/session/task metadata or an explicit current host selection. Model self-identification is not evidence. If the mandatory exact root route cannot be verified, fail closed before tracked-writer dispatch.
-- Use native Plan for phases, dependencies, acceptance behavior, continuity, checks, and authorized delivery with one top-level item in progress. Native Goal support is optional; never supersede an unrelated optional Goal. Use a fresh session/task or explicit user-native replacement. Material objective/public-contract changes need a checkpoint, actual diff, Plan/Goal delta, and separate follow-on authorization.
+- Establish the native Plan before any tracked edit and keep it as the single live, user-visible TODO checklist: concise, proportional top-level phases/waves with explicit `pending`, `in_progress`, and `completed` transitions and exactly one top-level item `in_progress` while work is active. Root updates it at phase/wave start and completion, stable in-scope Plan changes, recovery/resume, and applicable review, final-suite, and delivery transitions. Native agent/thread state, not the Plan, represents concurrency; completion transitions require matching evidence. Native Goal support is optional; never supersede an unrelated optional Goal. Use a fresh session/task or explicit user-native replacement. Material objective/public-contract changes need a checkpoint, actual diff, Plan/Goal delta, and separate follow-on authorization.
 
 ## Routing And Recursive Capsule
 
@@ -29,4 +29,4 @@
 
 - Only root communicates with the user. Treat permission denials and native user-only gates according to their actual semantics; never weaken the plan or let root become a tracked writer.
 - After review starts, tracked mutation invalidates affected review evidence and any final-suite result. Run targeted checks, obtain same-reviewer affected-area review when available, and one refreshed final suite; root directly verifies the gate.
-- Recover interruptions/compaction from native Plan/Goal when available, git/worktree/index state, checkpoints, reports, and actual diff; reverify route and ownership before resuming and avoid status polling.
+- Recover interruptions/compaction by reconciling the native Plan against authoritative Goal when available, git/worktree/index state, native agent/thread state, checkpoints, reports, and actual diff; correct stale transitions and preserve exactly one active top-level phase/wave before resuming. Reverify route and ownership and avoid status polling. Analysis-only may present a requested Plan but must not establish or advance implementation lifecycle state.

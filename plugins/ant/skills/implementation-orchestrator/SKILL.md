@@ -18,21 +18,22 @@ description: Use for end-to-end features, fixes, refactors, migrations, and new 
 ## Compact Flow
 
 1. Read repository instructions and inspect git state, relevant behavior, contracts, and checks without tracked edits. Protect unrelated work.
-2. Analysis-only ends with a read-only evidence/findings report and any requested Plan; do not enter Goal, writing, review, final-suite, retrospective, delivery, or readiness gates.
+2. Analysis-only ends with a read-only evidence/findings report and any requested Plan; do not enter Goal, implementation Plan/TODO lifecycle state, writing, review, final-suite, retrospective, delivery, or readiness gates.
 3. For new or materially changed behavior, resolve material users, workflows, edge cases, non-goals, and product decisions. For a new application, load [new-application.md](references/new-application.md).
 4. Load [lifecycle.md](references/lifecycle.md), choose continuity, and present a proportional native Plan. Integrated replacement needs explicit acceptance and a dedicated checkout; remove obsolete paths without shims.
 5. Load exactly one active-host adapter immediately before the first host-specific Goal, delegation, or routing decision: [codex.md](references/codex.md) or [claude.md](references/claude.md).
 6. Verify the mandatory root route from authoritative host/session/task metadata or an explicit current host selection. Model self-identification is not evidence. Fail closed before tracked-writer dispatch when the exact route cannot be verified.
-7. For authorized implementation, establish or reuse the host-native Goal envelope, respecting collision and delta rules, then dispatch one integration owner with a complete recursive routing capsule. Add disjoint workers only when contracts and ownership are stable.
+7. For authorized implementation, establish the host-native Plan/TODO checklist before any tracked edit, then establish or reuse the host-native Goal envelope, respecting collision and delta rules, and dispatch one integration owner with a complete recursive routing capsule. Add disjoint workers only when contracts and ownership are stable.
 8. Run targeted checks after coherent phases. After the last mutation, obtain independent review, repair material findings, invalidate and refresh affected evidence as required, then run the repository-wide final suite once on the final tree.
 9. Perform a concise root-owned retrospective, report adjacent findings separately, and perform only separately authorized delivery.
 
 ## Plan, Goal, And Change Control
 
-- Plans state the measurable outcome, acceptance behavior, continuity mode, constraints, affected areas, risks, checks, ownership, and authorized delivery. Use native Plan phases/waves with one top-level item in progress; native agent state represents concurrency.
+- The host-native Plan is the single live, user-visible TODO checklist for an active implementation run. Establish it before tracked edits and keep it concise and proportional: top-level items represent lifecycle phases or waves, not individual workers or duplicate status ledgers. Every item uses explicit `pending`, `in_progress`, or `completed` state, with exactly one top-level item `in_progress` while work is active; native agent/thread state represents concurrency. Root owns Plan updates at phase/wave start and completion, stable in-scope Plan changes, recovery/resume, and applicable review, final-suite, and delivery transitions. Mark an item `completed` only when matching git, check, review, or delivery evidence supports it. Do not create a custom TODO/PLAN.md file, status ledger, or persisted substitute.
+- Plans state the measurable outcome, acceptance behavior, continuity mode, constraints, affected areas, risks, checks, ownership, and authorized delivery. Analysis-only may include a requested Plan as read-only output, but must not establish or advance implementation lifecycle state.
 - Codex must complete only the matching active Goal after its objective is genuinely achieved; it must never replace, complete, or block an unrelated unfinished Goal. If one occupies the Goal slot, pause tracked work. Root asks whether to finish the current Goal and queue a separate follow-on task, or use native user/system controls to end or resolve the current Goal; create a new Goal only after native state reports no unfinished Goal. Claude must not supersede an unrelated optional Goal; use a fresh session/task or explicit user-native replacement.
 - A material objective or public-contract change that no longer fits the immutable Goal pauses affected writers, captures a checkpoint and actual diff, and uses the same root decision: finish the current Goal and queue a follow-on, or use native user/system controls to end/resolve it. Never misuse `complete` or `blocked` to clear a collision or material delta. Stable in-objective changes update Plan and assignments; unaffected disjoint work may continue only within the unchanged Goal.
-- Material mid-flight input pauses affected writers, collects the latest checkpoint and actual diff, resolves the Plan/Goal delta, and explicitly resumes or hands off ownership. Unaffected disjoint work may continue.
+- Material mid-flight input pauses affected writers, collects the latest checkpoint and actual diff, resolves the Plan/Goal delta, updates the native Plan, and explicitly resumes or hands off ownership. Unaffected disjoint work may continue.
 - Any tracked mutation after independent review starts invalidates affected review evidence and any final-suite result. Run targeted checks, obtain affected-area review from the same independent reviewer when available, and run one refreshed final suite. Root directly verifies and observes that gate; a writer report alone is insufficient.
 
 ## Recursive Delegation Contract
@@ -53,7 +54,7 @@ The same underlying defect or check still unresolved after two completed local r
 
 - Resolve discoverable decisions from repository evidence and prior choices. Ask one consolidated question only for genuinely new material behavior, scope, architecture, migration, risk, destructive action, external write, or native user-only gate.
 - Policy/tool denials are not automatically user-approval gates. Preserve intended behavior and verification; never weaken architecture, tests, compatibility, or validation.
-- On interruption or compaction, reconstruct from native Plan/Goal state, current git/worktree state, the latest checkpoints and reports, and actual diffs. Reconfirm ownership and route before resuming; do not status-poll or assume elapsed time proves abandonment.
+- On interruption or compaction, reconcile the native Plan against authoritative Goal, current git/worktree/index state, native agent/thread state, latest checkpoints and reports, and actual diffs; correct stale transitions before resuming. Reconfirm ownership and route before resuming; do not status-poll or assume elapsed time proves abandonment.
 
 ## Completion
 
