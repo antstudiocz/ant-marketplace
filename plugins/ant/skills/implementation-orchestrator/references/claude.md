@@ -8,6 +8,7 @@
 
 ## Routing And Recursive Capsule
 
+- After implementation authority is established and the Plan/Goal gates are satisfied, required child and nested-child profile/model/effort routes are automatic internal execution decisions and must be dispatched directly without asking the user to approve, confirm, or type “yes” merely to permit routing. Genuine host-native approval gates retain their real semantics and are surfaced normally. Preserve Claude’s mandatory root and child preflight gates; if a required profile, selector, or route is unavailable or cannot be enforced, fail closed and report the limitation and paused scope rather than requesting consent.
 - Dispatch every child with a fresh, concise, self-contained assignment through exactly one plugin-scoped profile; children and nested children remain capped at High and never inherit conversational history.
 
 | Role | Profile | Exact route |
