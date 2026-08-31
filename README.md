@@ -35,7 +35,7 @@ Invoke `/ant:skill-name` in Claude Code or `$skill-name` in Codex.
 | `merge-request` | Read-only PR/MR previews, scoped create/update delivery, exact-head pipeline observation, or intelligent local/remote conflict resolution. |
 | `brand-design` | Designing or reviewing websites, apps, decks, documents, visuals, and UI against the `(ant)` identity and bundled assets. |
 
-The orchestrator classifies intent, keeps root coordination-only, and uses an integration owner, independent review, targeted checks, and one final broad suite. `merge-request` covers read-only Preview and Observe/status, scoped Create/update, and conflict resolution with separate authority boundaries.
+The orchestrator classifies intent, keeps root coordination-only, and uses an integration owner, independent review, targeted checks, and one risk-appropriate candidate-bound broad gate. `merge-request` covers read-only Preview and Observe/status, scoped Create/update, and conflict resolution with separate authority boundaries.
 
 The canonical routing, Goal, recursive delegation, review-invalidation, and provider preflight matrix is in the [orchestrator guide](docs/orchestrator.md). Installation details are in [installation](docs/install.md).
 
@@ -44,7 +44,7 @@ The canonical routing, Goal, recursive delegation, review-invalidation, and prov
 - [Skill guide](docs/skills.md)
 - [Orchestrator guide](docs/orchestrator.md)
 - [Installation and updates](docs/install.md)
-- [12.1.1 release notes](docs/releases/12.1.1.md)
+- [12.2.0 release notes](docs/releases/12.2.0.md)
 
 ## Update
 
