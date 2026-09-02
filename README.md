@@ -31,11 +31,11 @@ Invoke `/ant:skill-name` in Claude Code or `$skill-name` in Codex.
 
 | Skill | Use it for |
 |---|---|
-| `implementation-orchestrator` | New applications, features, fixes, refactors, migrations, and remediation that need discovery, a presented Plan, delegated tracked edits, independent review, final validation, and optional delivery. |
+| `implementation-orchestrator` | New applications, features, fixes, refactors, migrations, and remediation that need discovery, a root-owned Git-tracked durable plan, delegated tracked edits, independent review, final validation, and optional delivery. |
 | `merge-request` | Read-only PR/MR previews, scoped create/update delivery, exact-head pipeline observation, or intelligent local/remote conflict resolution. |
 | `brand-design` | Designing or reviewing websites, apps, decks, documents, visuals, and UI against the `(ant)` identity and bundled assets. |
 
-The orchestrator classifies intent, keeps root coordination-only, and uses an integration owner, independent review, targeted checks, and one risk-appropriate candidate-bound broad gate. `merge-request` covers read-only Preview and Observe/status, scoped Create/update, and conflict resolution with separate authority boundaries.
+The orchestrator classifies intent, asks about material unknowns, keeps root coordination-only, and uses a root-owned durable plan, required Codex Goal safety, an integration owner, independent review, targeted checks, and one risk-appropriate candidate-bound broad gate. Host-provided planning UI is never required. `merge-request` covers read-only Preview and Observe/status, scoped Create/update, and conflict resolution with separate authority boundaries.
 
 The canonical routing, Goal, recursive delegation, review-invalidation, and provider preflight matrix is in the [orchestrator guide](docs/orchestrator.md). Installation details are in [installation](docs/install.md).
 
@@ -44,7 +44,7 @@ The canonical routing, Goal, recursive delegation, review-invalidation, and prov
 - [Skill guide](docs/skills.md)
 - [Orchestrator guide](docs/orchestrator.md)
 - [Installation and updates](docs/install.md)
-- [12.2.1 release notes](docs/releases/12.2.1.md)
+- [13.0.0 release notes](docs/releases/13.0.0.md)
 
 ## Update
 

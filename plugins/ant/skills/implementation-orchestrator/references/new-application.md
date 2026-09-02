@@ -40,9 +40,9 @@ Choose the smallest architecture that satisfies verified workflows and constrain
 
 Do not run a ritual comparison of languages, containers, or frameworks. Explain only decisions that affect delivery, operations, compatibility, or future change cost.
 
-## Plan Input
+## Durable Plan Input
 
-Feed the main lifecycle a concise product/architecture capsule:
+After repository discovery and resolution of every material non-repo-discoverable question, root presents a concise chat plan and records this capsule in the durable plan README and complementary documents:
 
 - users and outcomes;
 - primary workflows and acceptance criteria;
@@ -52,4 +52,6 @@ Feed the main lifecycle a concise product/architecture capsule:
 - selected smallest architecture and material tradeoffs;
 - non-goals, open decisions, risks, and verification strategy.
 
-This capsule is input to the normal proportional Plan. It does not create a separate brief-approval or handoff cycle and does not grant write authority.
+Do not dispatch while a material product, architecture, security, migration, compatibility, or operational decision remains unresolved. Root asks the user for every such gap that repository/environment evidence cannot settle, records the answer or explicit deferral in the durable plan, and resumes only when the affected acceptance and ownership are clear.
+
+This capsule is input to the normal proportional lifecycle and is not a separate brief-approval or handoff cycle. The durable plan is the shared tracked planning gate; it does not grant write authority to children. Root owns plan writes, while the integration owner owns implementation writes.

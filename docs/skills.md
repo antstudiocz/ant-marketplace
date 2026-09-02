@@ -9,16 +9,16 @@ Use for work that should finish as a reviewed and verified implementation: new a
 It:
 
 - classifies analysis-only, implementation-authorized, or ambiguous intent;
-- discovers the repository and presents a proportional native Plan before tracked edits;
+- discovers the repository, asks about material unknowns, and records a root-owned durable plan before tracked edits;
 - captures essential product/architecture decisions for new applications without a separate brief ceremony;
 - records explicit integrated-replacement semantics when selected;
 - keeps root user-facing and coordination-only while a delegated integration owner writes;
 - routes by strong/balanced/fast capability with supported effort capped at High and requires fresh isolated task-local context for every child and nested child;
 - leaves the Codex root model and effort to the developer (`gpt-5.6-sol` at High is recommended) while requiring explicit, enforceable child routes;
-- for authorized implementation, requires an independent strong review, targeted checks, then exactly one risk-appropriate candidate-bound broad gate (local broad suite or qualifying exact-candidate CI);
+- requires Codex's native Goal safety gate (Claude Goal is optional), an independent strong review, targeted checks, then exactly one risk-appropriate candidate-bound broad gate (local broad suite or qualifying exact-candidate CI);
 - keeps implementation readiness separate from optional delivery.
 
-Analysis-only work ends with read-only evidence/findings and no readiness verdict. Existing automated browser/E2E tests are selected through normal risk-based validation; agent-driven interactive browser smoke runs only when explicitly requested or required by repository/acceptance criteria. See the [canonical orchestrator guide](orchestrator.md) for candidate identity, CI substitution, host routes, recursive capsules, Goal/preflight behavior, and review invalidation.
+Analysis-only work ends with read-only evidence/findings and no readiness verdict. Existing automated browser/E2E tests are selected through normal risk-based validation; agent-driven interactive browser smoke runs only when explicitly requested or required by repository/acceptance criteria. See the [canonical orchestrator guide](orchestrator.md) for durable-plan checkpoints, candidate identity, CI substitution, host routes, recursive capsules, Goal/preflight behavior, and review invalidation.
 
 ## `merge-request`
 
