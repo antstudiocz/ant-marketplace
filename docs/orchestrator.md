@@ -1,71 +1,64 @@
 # Implementation Orchestrator
 
-This is the detailed user-facing routing and preflight guide for `implementation-orchestrator`. The skill remains instruction-only: no custom runtime, hooks, persisted state, event log, lease protocol, compatibility reader, generated validator, or synthetic evaluator.
+This is the detailed user-facing guide for `implementation-orchestrator`. The skill remains instruction-only: it uses a human-readable Git-tracked plan, not a custom runtime, hooks, machine state schema, event log, lease protocol, compatibility reader, generated validator, or synthetic evaluator.
 
 ## Lifecycle And Authority
 
-1. Classify **analysis-only**, **implementation-authorized**, or **ambiguous** intent.
-2. Discover repository instructions, git state, contracts, risks, and checks without edits; establish a concise, proportional native Plan as the single live, user-visible TODO checklist before tracked edits.
-3. Choose continuity: in-place evolution, integrated replacement (explicit acceptance and dedicated checkout), or isolated handoff. If requested/required interactive smoke is discovered during discovery or planning, load exactly one active-host adapter early enough to complete its browser/environment preflight before presenting the Plan; otherwise defer adapter loading until the first host-specific Goal, delegation, or routing decision. Do not retain unauthorized fallback paths or shims.
-4. For authorized work, establish the host-native Goal where required, dispatch one integration owner, and use disjoint workers only with stable contracts and ownership.
-5. Run targeted checks after coherent phases, updating the Plan at phase/wave transitions; after final edits and independent review, freeze one candidate and verify exactly one risk-appropriate broad gate (local broad suite or qualifying exact-candidate CI) with matching Plan evidence. If CI is selected, `merge-request` owns the separately authorized pre-gate candidate publication/update before exact-tested-SHA observation; without that authority or qualifying CI, use the local broad gate.
-6. Perform a bounded retrospective and keep delivery separate from implementation readiness.
+1. Classify the request as **analysis-only**, **implementation-authorized**, or **ambiguous**.
+2. Discover repository instructions, git state, contracts, risks, and checks without edits. For new or material work, ask about every material fact not discoverable in the repository/environment.
+3. Present a concise chat plan, then create the detailed root-owned bundle at `docs/implementation-plans/YYYY/MM/<slug>/README.md`. Add `specification.md`, `decisions.md`, `implementation.md`, and `progress.md` for substantial work. The README is the stable entrypoint and the supporting files are complementary.
+4. Resolve material decisions before dispatch. The durable plan is the shared planning gate; host-provided planning UI is optional and never blocks work. Codex additionally requires a matching native Goal; Claude Goal support is optional.
+5. Select continuity (in-place evolution, accepted integrated replacement in a dedicated checkout, or isolated handoff) and record its implications in the plan and, when Codex or an opted-in native Goal is in use, its Goal. Do not retain unauthorized fallback paths or shims.
+6. After the durable-plan gate and, for Codex or an opted-in native Goal, its matching Goal gate, dispatch one integration owner and only disjoint workers with complete recursive capsules. Children read plan files and report evidence; root alone writes plan/progress/checkpoints.
+7. Run targeted checks after coherent phases. Root updates the plan at decision resolution, phase start/completion, stable delta, recovery, review readiness, and immediately before freeze.
+8. Obtain independent strong review, freeze one candidate, and verify exactly one risk-appropriate broad gate (local suite or qualifying exact-candidate CI). Do not mutate the plan after freeze merely to record terminal gate results.
+9. Perform the root-owned retrospective and keep delivery separate from implementation readiness.
 
-Root is the sole user-facing and material adjudicator, dispatches and receives the integration owner and independent final reviewer, and directly verifies the candidate-bound broad gate. Routine operational communication, worker/tester coordination, repair, targeted checks, and re-review stay inside the workstream. The integration owner consolidates worker/tester deltas. The reviewer may send actionable findings and fix evidence directly to the integration owner but never writes fixes; disputed or material findings escalate to root. Root remains coordination-only.
-
-Required child and nested-child route/model/profile/effort/fresh-context selection and dispatch are automatic internal execution decisions under established implementation authority, never separate approval or confirmation gates. Root invokes required routes directly and never asks the user to approve, confirm, or type “yes” merely to permit routing. Genuine host-native approval prompts retain their real semantics and are surfaced normally. If a required route or selector is unavailable or unenforceable, the run fails closed and reports the limitation and paused scope; user consent cannot make an unavailable route enforceable.
+Root is the sole user-facing and material adjudicator. Root owns decisions, applicable Goal lifecycle, phase status, recovery, candidate freeze, final-gate verification, retrospective, and readiness, but may not write source, tests, configuration, or general documentation. The integration owner writes and consolidates those implementation areas. The independent strong reviewer never writes fixes. The plan directory is root-write/child-read-only.
 
 ## Recursive Routing Capsule
 
-Every child assignment must include all of the following, recursively for every permitted nested child:
+Every child assignment, recursively, includes:
 
-| Capsule field | Required content |
+| Field | Required content |
 |---|---|
-| Route | Exact active-adapter model/profile and effort selector; Codex also requires `fork_turns="none"`. |
-| Context | Fresh isolated task-local context; no conversational-history inheritance. |
-| Ownership | Measurable outcome, acceptance behavior, non-goals, exact write ownership, shared-resource boundaries, and targeted checks. |
-| Delegation | Explicit yes/no. If yes, permitted nested routes and effort ceiling plus the same complete capsule requirement. If absent/no, return the need to the parent and do not delegate. |
-| Reporting | Routine operations and repair/test/re-review loops stay local; settled compact deltas go to the parent/integration owner; material, disputed, authority, public-contract, security, migration, or repeated-failure issues escalate to root. |
+| Route | Exact active-adapter model/profile and effort; Codex `fork_turns="none"`. |
+| Context | Fresh isolated task-local context; no history inheritance. |
+| Ownership | Measurable outcome, acceptance, non-goals, exact write ownership, shared boundaries, and targeted checks. |
+| Plan boundary | Plan directory explicitly marked root-only for writes and read-only for the child. |
+| Delegation | Explicit yes/no; if yes, permitted nested routes, effort ceiling, and a complete recursive capsule. |
+| Reporting | Checkpoint shape: phase/status, files/areas, validation, discoveries/decisions, proposed plan delta, risks/blockers. |
 
-Nested children receive the capsule recursively and never inherit history. Every child remains capped at High. Children do not address the user or formulate user-facing questions.
+Routine repair/test/re-review stays local. Settled deltas return to the parent/integration owner. Material, disputed, authority, public-contract, security, migration, or repeated-failure issues escalate to root. Every child remains capped at High; unavailable or unenforceable routes fail closed.
 
 ## Host Matrix And Preflight
 
-| Host/role | Exact route | Mandatory preflight |
+| Host/role | Exact route | Required preflight |
 |---|---|---|
-| Claude root | `best` + `max` | Start with `claude --model best --effort max` or select `/model best` and `/effort max`; verify from authoritative host/session/task metadata or explicit current host selection. `opusplan` is not a route. |
-| Claude strong/reviewer | `ant:strong-high` → `opus` + `high` | Hard gates: Claude 2.1.219+, verified root `best` + `max`, ordinary root-level `Agent`, `CLAUDE_CODE_SUBAGENT_MODEL` unset or exactly `inherit` (never empty), per-invocation model omitted or exact profile, global `CLAUDE_CODE_EFFORT_LEVEL` entirely unset, and exact profile/allowlist/cap/runtime metadata. |
-| Claude integration | `ant:balanced-high` → `sonnet` + `high` | Same exact override, allowlist, cap, fresh-context, and capsule checks. |
-| Claude bounded | `ant:balanced-medium` → `sonnet` + `medium`; `ant:controlled-low`/`ant:fast` → `sonnet` + `low` | `CLAUDE_CODE_EFFORT_LEVEL` must be entirely unset; exact Medium/Low comes only from profile frontmatter. `ant:fast` is only for narrow non-judgment-sensitive work. |
-| Codex root | Developer-selected; recommended `gpt-5.6-sol` + High | Root model and effort do not gate dispatch; root-route checks are not applicable. |
-| Codex strong/reviewer | `gpt-5.6-sol` + High | Explicit model, effort, `fork_turns="none"`, fresh context, and complete capsule. |
-| Codex integration | `gpt-5.6-luna` + High | Explicit model, effort, `fork_turns="none"`, fresh context, and complete capsule. |
-| Codex narrow | `gpt-5.6-luna` + High/Medium/Low | Proportional explicit effort, never above High. There is no Terra route or fallback. |
+| Claude root | `best` + `max` | Verify current host/session/task metadata; `opusplan` is not a route. |
+| Claude strong/reviewer | `ant:strong-high` → `opus` + `high` | Claude ≥2.1.219, verified root route, ordinary `Agent`, exact profile/allowlist/cap/isolation, no conflicting model/effort environment overrides. |
+| Claude integration | `ant:balanced-high` → `sonnet` + `high` | Same exact child route, fresh-context, isolation, and capsule checks. |
+| Claude bounded | `ant:balanced-medium` → `sonnet` + `medium`; `ant:controlled-low`/`ant:fast` → `sonnet` + `low` | Profile supplies effort; global `CLAUDE_CODE_EFFORT_LEVEL` is unset. |
+| Codex strong/reviewer | `gpt-5.6-sol` + High | Explicit model, effort, fresh context, isolation, complete capsule, and `fork_turns="none"`. |
+| Codex integration | `gpt-5.6-luna` + High | Same explicit route and capsule checks. |
+| Codex narrow | `gpt-5.6-luna` + proportional High/Medium/Low | Never above High; no Terra fallback. |
 
-For Claude, fail closed when its mandatory root route cannot be enforced. For every adapter, fail closed when any child or nested-child model, effort, availability, fresh context, isolation, or Codex `fork_turns="none"` cannot be enforced. Correct and discard a child result when observable runtime metadata exposes a mismatch before re-dispatching.
+Claude requires `CLAUDE_CODE_SUBAGENT_MODEL` unset or exactly `inherit`, per-invocation model omitted or matching the selected profile, and no auto-added teammate metadata. If exact routing cannot be enforced, stop before tracked work. Codex root model/effort is developer-selected; its required native Goal remains fail-closed.
 
-For every Claude profile, `CLAUDE_CODE_SUBAGENT_MODEL` has precedence but accepts only unset or exactly `inherit` (route-neutral and continued to invocation/frontmatter); an empty value, `auto`, and every other present value block the complete run. Per-invocation child model is omitted or exactly the selected profile. Keep `CLAUDE_CODE_EFFORT_LEVEL` entirely unset so profile frontmatter controls exact effort. Plain ordinary subagent completion returns go to the caller; optional named `SendMessage` is the explicit peer exception. Planned nesting requires Claude 2.1.219+, sufficient `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`, named `Agent` children, and `SendMessage` support. Preferred topology keeps teams off and uses local named messaging; if teams are enabled or any named/`SendMessage`/nested capability is unavailable, use unnamed ordinary fallback (`subagent_type` selected, runtime `name` omitted), with sequential owner work and fresh unnamed reviewer/owner redispatch. Frontmatter `name` is not runtime `Agent` `name`; auto-added names or teammate metadata invalidate the dispatch. If exact unnamed dispatch cannot be enforced, hard stop.
+## Durable Plan And Goal Rules
 
-## Plan And Goal Rules
+The plan README must contain the stable measurable objective, acceptance, scope/non-goals, continuity, repository findings/analysis, material decisions and rationale/open questions, ownership, risks, checks, current phase/status, a `Resume from here` exact next action, and relative links to supporting docs. Use proportionate statuses: `specifying`, `ready`, `in_progress`, `blocked`, `completed`, or `superseded`. An unresolved material decision blocks its affected scope. Root reconciles the plan with Codex Goal, or with an optional native Goal confirmed in use: stable in-objective deltas update the plan; material outcome/public-contract deltas pause work and use applicable Goal collision rules. Plan-file creation/update authority applies only to the planning bundle and never authorizes product implementation or delivery; analysis-only remains read-only.
 
-The native Plan is a short, phase-based checklist that root updates and verifies before a tracked writer starts. The visible state must show one active phase; prose, narrated checklists, assignments, or intentions are not proof. If the native state cannot be verified, the workflow stops rather than falling back to prose.
+Codex uses `get_goal`/`create_goal` to inspect or establish a matching Goal and `update_goal` only for terminal `complete` or `blocked` closure. Those operations do not represent phase progress. Never replace, complete, or block an unrelated unfinished Goal; ask root/user to resolve the collision through native controls. Claude's optional Goal is non-blocking, applies these rules only when confirmed in use, and never overrides the durable plan.
 
-When the active host requires a Goal, its adapter verifies a matching active objective or creates one when the slot is empty. Optional Goal support remains non-blocking. Missing or unverifiable required state stops dispatch. See the [canonical lifecycle](../plugins/ant/skills/implementation-orchestrator/references/lifecycle.md) and [Codex adapter](../plugins/ant/skills/implementation-orchestrator/references/codex.md) for host-specific behavior.
+## Review And Candidate Validation
 
-Unrelated Goals are never replaced, completed, or blocked. Material objective changes pause the affected work; stable changes remain in the native Plan and assignments. The canonical lifecycle defines recovery, ownership, and escalation.
+Tracked mutation after review begins invalidates affected review and candidate evidence. Repair findings, rerun targeted checks, obtain affected-area re-review, update the plan, and freeze a new candidate. Select the single broad gate from blast radius, reversibility, test-selection confidence, and environment parity: low-blast-radius, reversible, high-confidence, parity-aligned work may use the smallest qualifying gate; shared/public, hard-to-reverse, low-confidence, or parity-gapped work needs broader or risk-specific evidence. CI substitutes for the local broad suite only with separately authorized publication, an exact tested SHA/source mapping, equivalent or broader coverage, present successful required jobs, and passing targeted/risk-specific checks. Missing, skipped, neutral, timed-out, mismatched, or incomplete CI is unverified. Delivery belongs exclusively to `merge-request`.
 
-## Candidate-Bound Review And Validation
+Existing browser/E2E automation is ordinary risk-based validation. Side-effecting or interactive smoke runs only when explicitly requested or required by repository/acceptance criteria. If applicable, the active adapter preflights URL/start health, worktree/port, browser, auth, data, side effects, cleanup, and evidence; scenarios state actions and expected postconditions. Required smoke affects readiness; optional smoke may remain unverified.
 
-After independent review starts, any tracked mutation invalidates affected review evidence and the current candidate's validation evidence. Run targeted checks, obtain affected-area review from the same independent reviewer when available, then freeze and identify one final candidate (the exact tree/SHA to assess). Every tracked implementation receives exactly one broad final gate: the local broad suite or an exact-candidate CI pipeline. Risk determines the breadth and surface of that gate; avoid duplicate equivalent broad runs. The local broad suite is required/default when qualifying CI is unavailable, delivery is not authorized, provider evidence is unavailable, or repository policy specifically requires it. Periodic/default-branch full suites remain a repository responsibility, not an automatic orchestrator runtime requirement.
+## Recovery And Completion
 
-CI can substitute for the local broad suite only when the final tree is committed and pushed and matches the provider source head; the tested SHA and authoritative current source-to-tested mapping are known (source head or authoritative synthetic test-merge/merged-result SHA); pipeline coverage is known equivalent to or broader than required broad commands; relevant required jobs are present and not merely absent, skipped, or neutral; targeted local and risk-specific tests passed; and the terminal result is successful. Missing, timed-out, mismatched, or incomplete CI is unverified.
+On interruption or compaction, root reconciles the plan with Codex Goal state, or optional native Goal state confirmed in use, plus git/worktree/index, native task state, child reports, reviewer findings, and actual diffs; correct stale state, preserve one active phase, confirm ownership/routes, update `progress.md`, and resume only with current evidence. Root directly verifies the single broad gate, records retrospective/adjacent findings, and gives exactly one verdict: **NOT READY**, **CONDITIONALLY READY**, **READY TO DEPLOY**, or **DEPLOYED & VERIFIED**.
 
-Use proportional risk, without numeric scoring: simple risk has narrow blast radius, private/local behavior, strong test-selection confidence, easy reversibility, and environment parity; medium risk touches shared/public contracts or multiple consumers, or has moderate reversibility, confidence, or parity; high risk has broad blast radius, shared/public API impact, data/security/migration consequences, difficult rollback, low test-selection confidence, or material parity gaps. Increase targeted and risk-specific evidence as risk rises.
-
-Existing automated browser/E2E tests are ordinary automated validation. Agent-driven interactive browser smoke runs only when explicitly requested by the user or explicitly required by repository/acceptance criteria. If neither applies, do not preflight or run it. Once requested/required, put each scenario's action and expected postcondition in the Plan; the active-host adapter preflights URL, start command/running health, worktree/port, browser surface, authentication/session, test data, side effects, cleanup, and evidence location as soon as known and rechecks immediately before smoke. Use semantic/web-first verification and visual inspection when visual behavior matters. Screenshots show meaningful resulting states and failures by default and supplement assertions. Do not screenshot every click unless explicitly requested. Required smoke affects readiness if it fails or cannot run; optional smoke may be unverified without blocking unaffected implementation.
-
-After review/freeze and any required pre-gate publication, exact-candidate CI observation and independent browser smoke may run concurrently when they test the same immutable candidate and neither depends on the other. If smoke requires a CI-produced preview/deployment, wait for that dependency. Any later tracked source/config mutation creates a new candidate and invalidates affected review plus all candidate-bound broad-gate and smoke evidence; repeat targeted checks, affected-area re-review, and final candidate gates. A final readiness verdict is exactly one of **NOT READY**, **CONDITIONALLY READY**, **READY TO DEPLOY**, or **DEPLOYED & VERIFIED**.
-
-## New-Application Intake
-
-For a new application, capture users, outcomes, primary workflows, data/auth/integrations/operations, acceptance criteria, edge cases, and non-goals before the Plan. Keep the smallest architecture and hand off to the normal orchestrated lifecycle.
+For new applications, use [new-application intake](../plugins/ant/skills/implementation-orchestrator/references/new-application.md) to capture users, workflows, data/security, operations, architecture, acceptance, and non-goals before the durable plan.

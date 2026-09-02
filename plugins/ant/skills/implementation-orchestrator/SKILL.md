@@ -9,33 +9,25 @@ description: Use for end-to-end features, fixes, refactors, migrations, and new 
 
 ## Authority And Roles
 
-- Root is the sole user-facing adjudicator and directly verifies final validation; the integration owner writes and consolidates, and the independent reviewer never writes fixes.
-- Children report to their parent and do not address the user. Use the ownership and escalation rules in [lifecycle.md](references/lifecycle.md).
+- Root is the sole user-facing adjudicator. Root writes the durable planning bundle, owns decisions, Goal lifecycle, phase status, recovery, freeze, final gate verification, retrospective, and readiness; root does not write source, tests, configuration, or general documentation.
+- The integration owner writes and consolidates the implementation. Children read the plan directory and return evidence/proposed deltas; they never edit plan files. The independent strong reviewer never writes fixes.
 - Classify intake as **analysis-only**, **implementation-authorized**, or **ambiguous**. Keep delivery authority separate from implementation authority.
-- Apply required child routing as defined by the active adapter. Preserve native approval semantics and fail closed when required selectors or state cannot be enforced.
+- Apply required child routing from the active adapter. Preserve native approval semantics and fail closed when required selectors or state cannot be enforced.
 
 ## Compact Flow
 
-1. Read repository instructions and inspect git state, contracts, risks, and checks without edits. Protect unrelated work.
-2. End analysis-only requests with read-only evidence; do not enter the implementation lifecycle.
-3. For new or materially changed behavior, resolve users, workflows, acceptance, edge cases, non-goals, and continuity. For a new application, load [new-application.md](references/new-application.md).
-4. Load [lifecycle.md](references/lifecycle.md). If interactive smoke is requested or required, load one active-host adapter early enough for its preflight; otherwise load the adapter before the first host-specific decision.
-5. Present the proportional native Plan, then pass the host-native Plan/Goal gates before tracked-writer dispatch. Follow the active adapter ([codex.md](references/codex.md) or [claude.md](references/claude.md)) for host-specific proof and fail-closed behavior.
-6. Enforce every child route, effort, availability, fresh context, isolation, and Codex `fork_turns="none"` requirement. Dispatch one integration owner with a complete recursive capsule; add disjoint workers only when ownership is stable.
-7. Run targeted checks after coherent phases. After final mutation, obtain independent review, freeze one candidate, and verify the single broad gate required by [lifecycle.md](references/lifecycle.md). Refresh candidate-bound evidence after later mutations.
+1. Read repository instructions and inspect git state, contracts, risks, and checks without edits; protect unrelated work.
+2. For new or materially changed behavior, discover facts first and ask root/user every material non-repo-discoverable question in digestible rounds until all material decisions are resolved. Record repository findings, analysis, decisions, and rationale before tracked implementation.
+3. Establish the stable durable plan bundle at `docs/implementation-plans/YYYY/MM/<slug>/README.md`, with supporting documents proportionate to the work. Present a concise chat plan, then record the detailed checkpoint.
+4. Load [lifecycle.md](references/lifecycle.md) and the active host adapter. Codex must pass its required native Goal gate; Claude Goal is optional. Host-provided planning UI is never a dependency.
+5. Enforce every child route, effort, availability, fresh context, isolation, and Codex `fork_turns="none"` requirement. Dispatch one integration owner with a complete recursive capsule; add disjoint workers only when ownership is stable.
+6. Root updates the durable plan at decision resolution, phase transitions, stable deltas, recovery, review readiness, and immediately before candidate freeze. Children report only through their parent.
+7. After independent review and final mutation, freeze one candidate and verify the single broad gate required by [lifecycle.md](references/lifecycle.md). Any later plan edit creates a new candidate and invalidates candidate-bound evidence.
 8. Perform the root-owned retrospective and only separately authorized delivery.
 
-## Plan, Goal, And Change Control
+## Durable Plan, Goal, And Change Control
 
-The host-native Plan and Goal gates, collision rules, change control, recovery, and recursive routing capsule are defined in [lifecycle.md](references/lifecycle.md). Codex proof and native operations are defined in [codex.md](references/codex.md); Claude proof and routing are defined in [claude.md](references/claude.md). Do not treat prose status or a child report as lifecycle evidence.
-
-## Candidate-Bound Validation
-
-Use the single candidate-bound broad gate and failure handling defined in [lifecycle.md](references/lifecycle.md). The root verifies the gate directly.
-
-## Decisions And Recovery
-
-Follow the decision, failure, and recovery rules in [lifecycle.md](references/lifecycle.md) and the active adapter. Preserve native approval semantics; unavailable or unverifiable required state fails closed.
+The durable-plan contract, Goal collision rules, change control, recovery, recursive routing capsule, and candidate-bound validation are defined in [lifecycle.md](references/lifecycle.md). Codex operations are in [codex.md](references/codex.md); Claude behavior is in [claude.md](references/claude.md). Host-provided planning UI mirroring, if used, is optional and non-authoritative; omission is preferred. Do not treat prose status or a child report as lifecycle evidence.
 
 ## Completion
 

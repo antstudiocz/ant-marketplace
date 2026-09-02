@@ -28,12 +28,12 @@ plugins/ant/
     brand-design/
 ```
 
-- Keep orchestration instruction-only. Do not add a custom runtime, hooks, persisted state, event log, lease protocol, compatibility reader, generated validator, or synthetic eval framework.
+- Keep orchestration instruction-only. Do not add a custom runtime, hooks, machine-persisted state schema, event log, lease protocol, compatibility reader, generated validator, or synthetic eval framework. Human-authored planning bundles tracked in Git under `docs/implementation-plans/` are allowed and are the durable planning record.
 - Keep the orchestrator semantic core host-neutral. Shared policy routes by strong/balanced/fast capability and proportional effort; exact routes and preflights belong in the active adapters and documentation.
 - Keep every child capped at High and require the active adapter's explicit route and isolation rules.
-- Root is coordination-only and the sole user-facing adjudicator during orchestration. A native delegated integration owner performs tracked edits; an independent strong reviewer performs final review.
+- Root is coordination-only and the sole user-facing adjudicator during orchestration. A native delegated integration owner performs tracked source/config/test/general-document edits; an independent strong reviewer performs final review. Root may write only the scoped planning bundle and its progress/checkpoint documents as the narrow tracked coordination exception.
 - Keep child routing, ownership, review, and escalation inside the orchestrator's recursive capsule; the integration owner writes and consolidates, while root adjudicates and verifies.
-- Treat authoritative host-native Plan and Goal state as lifecycle gates. Prose status, narrated checklists, and assignments are not substitutes. Plan/Goal and candidate-bound rules are in [`lifecycle.md`](plugins/ant/skills/implementation-orchestrator/references/lifecycle.md); Codex operations are in [`codex.md`](plugins/ant/skills/implementation-orchestrator/references/codex.md).
+- Treat the root-owned Git-tracked durable plan and required native Goal state as lifecycle gates. Prose status, narrated checklists, and assignments are not substitutes. Durable-plan, Goal, and candidate-bound rules are in [`lifecycle.md`](plugins/ant/skills/implementation-orchestrator/references/lifecycle.md); Codex operations are in [`codex.md`](plugins/ant/skills/implementation-orchestrator/references/codex.md).
 - Preserve unrelated Goals and material objective changes; never clear a collision by completing or blocking the Goal. Follow the canonical lifecycle and active-host adapter.
 - `merge-request` exclusively owns both PR/MR delivery and merge-conflict resolution. Do not add public aliases or duplicate delivery workflows.
 - Preserve all usable brand assets. The canonical brand manual is `plugins/ant/skills/brand-design/assets/source/ant-brand.md` with `manifest.json` beside it.
