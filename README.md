@@ -4,7 +4,7 @@
 
 <h3 align="center">Three focused workflow skills for Claude Code and Codex</h3>
 
-`(ant)` provides an instruction-only plugin for verified implementation, GitHub/GitLab delivery, merge-conflict resolution, and `(ant)` brand work.
+`(ant)` provides an instruction-only plugin for reviewed implementation, GitHub/GitLab delivery, merge-conflict resolution, and `(ant)` brand work.
 
 ## Install
 
@@ -16,14 +16,14 @@ Claude Code:
 /reload-plugins
 ```
 
-Codex, global or project scope:
+Codex CLI:
 
 ```bash
-bunx codex-marketplace add antstudiocz/ant-marketplace/plugins/ant --plugin --global
-bunx codex-marketplace add antstudiocz/ant-marketplace/plugins/ant --plugin --project
+codex plugin marketplace add antstudiocz/ant-marketplace
+codex plugin add ant@ant-marketplace
 ```
 
-Restart Codex or open a new session after installation/update. See [installation](docs/install.md).
+Restart Codex or open a new session after installation/update. See [installation](docs/install.md) for desktop and local marketplace options.
 
 ## Public Skills
 
@@ -35,7 +35,7 @@ Invoke `/ant:skill-name` in Claude Code or `$skill-name` in Codex.
 | `merge-request` | Read-only PR/MR previews, scoped create/update delivery, exact-head pipeline observation, or intelligent local/remote conflict resolution. |
 | `brand-design` | Designing or reviewing websites, apps, decks, documents, visuals, and UI against the `(ant)` identity and bundled assets. |
 
-The orchestrator classifies intent, asks about material unknowns, keeps root coordination-only, and uses a root-owned durable plan, required Codex Goal safety, an integration owner, independent review, targeted checks, and one risk-appropriate candidate-bound broad gate. Host-provided planning UI is never required. `merge-request` covers read-only Preview and Observe/status, scoped Create/update, and conflict resolution with separate authority boundaries.
+The orchestrator classifies intent, asks only about material unknowns, keeps root coordination-only, and uses a root-owned durable plan, Codex's required native Goal, an integration owner, independent review, targeted checks, and one risk-appropriate candidate gate. `merge-request` covers read-only Preview and Observe/status, scoped Create/update, and conflict resolution with separate authority boundaries.
 
 The canonical routing, Goal, recursive delegation, review-invalidation, and provider preflight matrix is in the [orchestrator guide](docs/orchestrator.md). Installation details are in [installation](docs/install.md).
 

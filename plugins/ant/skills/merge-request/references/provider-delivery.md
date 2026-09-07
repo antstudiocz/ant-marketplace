@@ -1,18 +1,14 @@
-# Provider Delivery And Observation
+# Provider delivery and observation
 
-Use this reference for create/update or Observe/status. Preview and conflict-only modes do not use provider mutation or pipeline observation. Observe/status is purely diagnostic: dirty unrelated work is non-blocking, and it must not fetch, retry, invoke repair, or mutate anything. Keep create/update provider mutations limited to the resolved repository, source branch, target, title, body, and explicitly requested readiness.
+Use this reference for Create/update or Observe/status. Preview and conflict-only modes do not mutate providers or observe pipelines. Limit Create/update mutations to the resolved repository, branch, target, title, body, and explicitly requested readiness. Never add AI attribution or co-author trailers.
 
-For candidate-bound validation, always report the provider source head and the actual tested SHA separately. The tested SHA may be the source head or an authoritative synthetic test-merge/merged-result commit; never infer success from checks on another SHA, an empty rollup, or an absent pipeline. If create/update causes no content change and existing candidate-bound validation evidence is still fresh, it may be reused rather than blindly rerunning identical local checks. A content change creates a new candidate and invalidates affected review, broad-gate, and smoke evidence.
+## Snapshot and description
 
-Provider CI is qualifying replacement evidence for a local broad gate only when the committed/pushed final tree matches the provider source head, the tested SHA and authoritative current source-to-tested mapping are known, coverage is equivalent to or broader than the required broad commands, required jobs are present and not merely skipped or neutral, targeted local and risk-specific checks passed, and the terminal result is successful. Otherwise report CI as unverified and retain the local broad-gate requirement.
+Build the title and body from the complete final target merge-base-to-`HEAD` snapshot. If a CLI needs a file, use a task-specific directory from `mktemp -d`; the temporary file is never part of the worktree.
 
-## Description Files
+For Create/update, isolate scoped work before staging. Stage only the requested paths or hunks; if unrelated pre-staged or mixed work cannot be isolated, stop and report it. Run feasible targeted validation, or reuse fresh candidate-bound evidence when the operation made no content change.
 
-When a provider CLI benefits from a file, create a task-specific temporary directory with `mktemp -d` and a descriptive filename, for example `description_path="$(mktemp -d)/<task-slug>-description.md"`. Do not use a fixed shared temporary description path. Remove the temporary artifact when safe; it is never part of the worktree.
-
-## GitLab
-
-Inspect an existing MR before updating it. For create/update, use current `glab` capabilities and verify uncertain flags with local help. Read the task-specific file into a variable when `glab` needs description text:
+For GitLab, inspect the existing MR before updating it. Use current `glab` help for uncertain flags:
 
 ```bash
 mr_description="$(< "$description_path")"
@@ -20,26 +16,23 @@ glab mr create --title "type(scope): summary" --description "$mr_description" --
 glab mr update <id-or-branch> --title "type(scope): summary" --description "$mr_description" --yes
 ```
 
-Omit `--draft` only for explicitly ready creation. Change existing readiness only on explicit request. Metadata-only updates need no source commit or push.
-
-## GitHub
+For GitHub:
 
 ```bash
 gh pr create --title "type(scope): summary" --body-file "$description_path" --base <target> --draft
 gh pr edit <id-or-url-or-branch> --title "type(scope): summary" --body-file "$description_path"
 ```
 
-Omit `--draft` only for explicitly ready creation. Use readiness commands only for an explicit readiness change. Metadata-only updates need no source commit or push.
+Omit `--draft` only when explicitly authorized to create ready. Metadata-only updates need no source commit or push.
 
-## Exact-Head Observation (Create/update Or Observe/status)
+## Exact-head observation
 
-1. Establish one finite overall deadline or budget from repository guidance, or use a conservative bounded default. This single budget covers registration and terminal observation; never reset or extend it after a head change.
-2. Resolve the provider object's current source head SHA and record it separately from any tested SHA.
-3. Until the deadline, wait for matching checks/pipeline to register, then observe only the exact tested SHA/OID mapped authoritatively to that source head. Empty rollups or missing pipelines are pending/unverified, never success.
-4. Bound every poll/watch command by the remaining budget; never use an indefinite watch.
-5. Re-read the provider head while observing. If it changes, switch to the new head only within remaining time and report the final observed head truthfully.
-6. On terminal failure/cancellation, capture failing check/job identity and useful diagnostics. Classify current-diff regression, flaky/infrastructure, credentials, or external state. Neither create/update nor Observe/status authorizes retry. Observe/status may only describe/recommend a future repair handoff and requires a separate user fix request before invoking `implementation-orchestrator`; an authorized create/update regression may return to that workflow for repair.
+1. Set one finite total budget for registration and terminal observation. Never reset it after a head change.
+2. Resolve the provider source head and actual tested SHA separately.
+3. Observe only checks or a pipeline whose tested SHA is authoritatively mapped to that source head. Empty or absent checks are pending/unverified.
+4. Re-read the provider head while observing. If it changes, follow the new head only within the remaining budget.
+5. On failure or timeout, report the exact head, tested SHA, failing check/job and useful diagnostics. Classify current-diff, infrastructure, credentials, or external-state causes; do not retry.
 
-For GitHub, keep the PR source `headRefOid` separate from the tested commit. Discover each check/workflow run's actual commit OID and the authoritative PR test-merge OID when applicable and exposed; poll and qualify the actual tested OID, never merely `headRefOid`. CI is qualifying evidence only when the provider exposes an authoritative current source-head-to-tested-OID mapping. Missing tested-OID, a required test-merge OID, mapping, or provider-version fields fail closed as unverified. For GitLab, resolve `diff_refs.head_sha`, select a matching MR pipeline (normally `merge_request_event`), capture its exact pipeline ID and tested SHA (including an authoritative synthetic test-merge/merged-result SHA where applicable), and poll that ID. Observe/status never stages, commits, pushes, creates, updates, fetches, changes readiness, retries, invokes repair, or mutates the worktree/provider.
+GitLab normally uses the MR pipeline matching `diff_refs.head_sha` and `merge_request_event`; record its ID and tested SHA. GitHub requires the PR `headRefOid` and each check's actual commit OID to be kept separate, including an authoritative test-merge OID when exposed. Missing source-to-tested mapping, required test-merge data, or provider fields makes CI unverified.
 
-If registration or terminal observation exceeds the budget, report the exact head and last known state as unverified external state, specifically `no pipeline/checks registered` when none appeared. Never report green from absence or from a different head.
+CI can replace a local broad gate only when the final pushed tree matches the provider source head, the tested mapping is authoritative, coverage is equivalent or broader, required jobs are successful, and targeted/risk checks passed. Otherwise retain the local gate. Observe/status never fetches, retries, repairs, or mutates anything.

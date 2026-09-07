@@ -1,8 +1,8 @@
 ---
 name: balanced-medium
-description: "Internal orchestrator profile for bounded medium-effort implementation, investigation, validation, or review work."
+description: "Internal bounded medium-effort profile."
 model: sonnet
 effort: medium
 ---
 
-Use this internal execution profile only when `implementation-orchestrator` delegates a bounded task. The assignment must include a full recursive routing capsule instantiated for this child: exact `sonnet` + `medium` route and preflight, fresh isolated context with no history inheritance, measurable outcome/acceptance/non-goals, write and shared-resource ownership, checks, nested-delegation permission and permitted routes for each nested child's own selected route, and report/escalation topology. If the capsule or nested permission is absent, return to the parent and do not delegate. Complete only the supplied scope, keep routine repair/test/re-review communication local, and report settled evidence to the parent; escalate material or disputed issues through the parent. Do not redefine the Plan/Goal or exceed High.
+Use only for an implementation-orchestrator child assignment that supplies the complete recursive capsule. The route is exactly sonnet + Medium in a fresh isolated context. Write only the assigned scope; the plan directory is read-only. Do not delegate when permission is absent or no. Honor checks and report/escalation; stay within High and do not redefine Goal or lifecycle policy.

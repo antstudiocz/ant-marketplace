@@ -1,46 +1,23 @@
-# Conflict Resolution
+# Conflict resolution
 
-Use for local conflicts or conflicts reported by a remote GitHub PR/GitLab MR. Analyze both sides' intent; never blindly accept ours/theirs. Conflict-only mode never creates/updates a provider object or observes pipelines.
+Use for local conflicts or conflicts reported by a GitHub PR/GitLab MR. Analyze both sides' intent; never accept ours/theirs blindly. Conflict-only mode never creates/updates a provider object or observes pipelines.
 
-## Authority And Safety
+## Authority and preparation
 
-- A local conflict-resolution request authorizes resolving conflict markers.
-- Explicit remote conflict-resolution intent authorizes the clean-preflight fetch/checkout/safe fast-forward and the merge-generated index/worktree mutation needed to reproduce conflicts. That mechanical merge index state is not `git add` stage authority.
-- Marking resolutions with `git add`, committing, and pushing each remain separately authorized. Never force-push, reset, rebase, or rewrite history without explicit authority.
-- Conflict-only provider restrictions remain in force: do not create/update the PR/MR, change readiness, retry checks, or observe pipelines.
-- Before remote work, require a clean index, tracked worktree, and untracked-file state. If dirty, stop and offer to continue after isolation.
+- A local request authorizes resolving conflict markers. `git add`, commit, push, readiness changes, and provider mutation remain separate authorities.
+- Explicit remote conflict intent authorizes clean-state preflight, resolving the provider source branch, target ref, and current head, fetching those exact refs, checking out the source branch, fast-forwarding it safely to the provider head, and creating the merge-generated index/worktree needed to reproduce conflicts. It does not authorize staging or history rewrite.
+- Before remote work, require a clean tracked worktree, index, and untracked-file state. If dirty, stop and request isolation.
+- Never force-push, reset, rebase, or rewrite history without explicit authority.
 
-## Detect And Inventory
+## Analyze and resolve
 
-Local mode:
+1. Inventory all local unmerged paths with `git diff --name-only --diff-filter=U`; read each file fully and identify binary conflicts.
+2. For remote work, validate provider metadata, fetch the exact source and target refs, check out the source branch, fast-forward it safely to the provider head, and run `git merge --no-commit --no-ff <target-ref>`. If clean, leave the merge in progress and report it.
+3. For each conflict, determine base/current/incoming intent, inspect callers/contracts/docs/tests, and classify simple complementary edits versus semantic or contract changes.
+4. Apply only resolutions supported by that analysis. Escalate binary, permission, schema, behavior, or otherwise ambiguous conflicts for adjudication.
 
-```bash
-git diff --name-only --diff-filter=U
-```
+## Validate and report
 
-Record the complete original unmerged set, read each file fully, inventory every marker block, and identify binary conflicts separately. If no paths are unmerged, report that and stop.
+Before staging, reread every original conflict file, search for remaining markers, and inspect the complete resolution diff and status. Run the smallest relevant checks. If staging is unauthorized, leave intentional working-tree resolutions with unmerged index entries and say so. After authorized `git add`, verify no unmerged paths remain; commit and push still need their own authority.
 
-Remote mode:
-
-1. Validate provider URL and clean state.
-2. Read provider metadata for source, target, and current head.
-3. Fetch exact refs, check out the source branch, update only by safe fast-forward, then run `git merge --no-commit --no-ff <target-ref>` to reproduce conflicts without creating a merge commit.
-4. If clean, stop with the merge still in progress and report the merge-generated index state. Do not run `git add`, `git commit`, `git push`, or provider mutation/observation.
-
-If preparation would overwrite work, switch repositories, or require history rewrite, stop and ask.
-
-## Analyze And Resolve
-
-For every file, explain its role; determine base/current/incoming intent; search callers, contracts, docs, and tests; classify simple complementary edits versus complex behavior/contract/schema/permission/error changes; and propose a resolution preserving compatible intent. Binary conflicts and semantic ambiguity require root/user adjudication before choosing a side or artifact. Delegate disjoint analysis only when explicitly permitted with fresh self-contained context; uncertain analysis is complex.
-
-Apply simple resolutions only after blast-radius checks. Present complex conflicts to root with both intents, dependencies/tests, proposed code, tradeoffs, recommendation, and paused scope. Do not let the root become a tracked writer for unrelated implementation work.
-
-## Validate And Report
-
-Before any explicit `git add`, reread every original unmerged file, search for remaining markers, and inspect the complete working-tree resolution diff and status including unrelated changes. Run smallest relevant checks. Merge-generated index entries are not an explicit `git add`; for resolved text conflicts without stage authority, report worktree resolutions while intentionally retaining unmerged index/U entries.
-
-Report resolved files, decisions, checks, gaps, and current merge state. If stage authority is absent, state explicitly that working-tree resolutions are prepared while the index remains unmerged. After authorized `git add`, verify no unmerged paths remain and inspect the scoped staged result; commit and push still require their own authority.
-
-## Clean Merge Truth
-
-A clean merge means only that Git produced no conflicts for the reproduced merge. It does not prove semantic correctness, passing checks, readiness, or delivery. Report the clean merge state and all unperformed actions truthfully.
+A clean merge proves only that Git found no textual conflicts. Report resolved files, decisions, checks, gaps, and the current merge/index state without implying semantic correctness or delivery.
