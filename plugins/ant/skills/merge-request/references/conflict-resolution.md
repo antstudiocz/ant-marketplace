@@ -1,23 +1,18 @@
 # Conflict resolution
 
-Use for local conflicts or conflicts reported by a GitHub PR/GitLab MR. Analyze both sides' intent; never accept ours/theirs blindly. Conflict-only mode never creates/updates a provider object or observes pipelines.
+Use for local conflicts or conflicts reported on a GitHub PR/GitLab MR. The [skill entrypoint](../SKILL.md) owns mode and authority boundaries.
 
-## Authority and preparation
+## Preparation
 
-- A local request authorizes resolving conflict markers. `git add`, commit, push, readiness changes, and provider mutation remain separate authorities.
-- Explicit remote conflict intent authorizes clean-state preflight, resolving the provider source branch, target ref, and current head, fetching those exact refs, checking out the source branch, fast-forwarding it safely to the provider head, and creating the merge-generated index/worktree needed to reproduce conflicts. It does not authorize staging or history rewrite.
-- Before remote work, require a clean tracked worktree, index, and untracked-file state. If dirty, stop and request isolation.
-- Never force-push, reset, rebase, or rewrite history without explicit authority.
+A local conflict request permits resolving the conflicted files. Explicit remote conflict intent also permits fetching the exact provider source/target refs, safely fast-forwarding the source checkout to the provider head, and reproducing the target integration with `git merge --no-commit --no-ff <target-ref>`.
 
-## Analyze and resolve
+Use a clean tracked worktree, index and untracked-file state before remote reproduction; isolate unrelated work first. If the merge is clean, leave it in progress unless completing it is already authorized. These preparation permissions do not grant staging or history rewrite.
 
-1. Inventory all local unmerged paths with `git diff --name-only --diff-filter=U`; read each file fully and identify binary conflicts.
-2. For remote work, validate provider metadata, fetch the exact source and target refs, check out the source branch, fast-forward it safely to the provider head, and run `git merge --no-commit --no-ff <target-ref>`. If clean, leave the merge in progress and report it.
-3. For each conflict, determine base/current/incoming intent, inspect callers/contracts/docs/tests, and classify simple complementary edits versus semantic or contract changes.
-4. Apply only resolutions supported by that analysis. Escalate binary, permission, schema, behavior, or otherwise ambiguous conflicts for adjudication.
+## Resolution and evidence
 
-## Validate and report
+- Inventory every unmerged path, including binary conflicts. Determine base/current/incoming intent and relevant contracts before resolving; never accept ours/theirs blindly.
+- Apply only supported resolutions. Escalate binary conflicts and unresolved permission, schema, behavior or contract choices for adjudication.
+- Before staging, reread the original conflict files, check for remaining markers, inspect the complete resolution diff and run the smallest relevant checks.
+- Without staging authority, leave intentional working-tree resolutions with unmerged index entries and report them. After authorized staging, verify no unmerged paths remain; commit and push still require their own authority.
 
-Before staging, reread every original conflict file, search for remaining markers, and inspect the complete resolution diff and status. Run the smallest relevant checks. If staging is unauthorized, leave intentional working-tree resolutions with unmerged index entries and say so. After authorized `git add`, verify no unmerged paths remain; commit and push still need their own authority.
-
-A clean merge proves only that Git found no textual conflicts. Report resolved files, decisions, checks, gaps, and the current merge/index state without implying semantic correctness or delivery.
+Report resolution decisions, checks, gaps and current merge/index state. A clean textual merge alone proves neither semantic correctness nor delivery.
