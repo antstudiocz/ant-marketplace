@@ -7,6 +7,9 @@ This reference owns shared orchestration policy. Apply repository instructions f
 - Inspect repository instructions, worktree/index state, contracts, risks, and affected checks before tracked edits. Preserve unrelated changes.
 - Classify intent as analysis-only, implementation-authorized, or ambiguous. Analysis-only work stays read-only. Separate implementation authority from delivery authority.
 - For new or materially changed behavior, resolve material decisions that the repository and environment cannot answer. Ask only those questions; an unresolved decision blocks its affected scope.
+- Root may ask material questions asynchronously during planning or implementation. An unresolved decision pauses only its affected scope; independent authorized work may continue. Questioning never expands host mode or permission bounds.
+- During implementation-authorized work with an existing plan, record each pending decision, its optional-preference or required-decision/approval status, and affected scope in the plan and assignments. After a reasonable opportunity to answer, an optional preference may use a stated reasonable assumption; silence or a default option never supplies required consent. Required scope stays pending until the answer or approval arrives.
+- During implementation-authorized work with an existing plan, reconcile answers before affected work continues, including late replies: update the plan, affected assignments, and evidence, then re-check any decision-bound work.
 - Root creates and owns one plan bundle at `docs/implementation-plans/YYYY/MM/<slug>/README.md` before tracked implementation. It records scope, acceptance, non-goals, continuity, findings, decisions, ownership, risks, checks, phase/status, and the next action. Supporting files are optional and complementary.
 - Root alone writes the plan bundle and its progress/checkpoint files. The plan is the lifecycle record; prose status or assignments are not substitutes.
 

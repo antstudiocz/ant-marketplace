@@ -15,6 +15,8 @@ The orchestrator:
 
 Analysis-only work ends with evidence and findings and does not create or advance implementation state. New applications use the conditional [new-application intake](../plugins/ant/skills/implementation-orchestrator/references/new-application.md).
 
+Material questions are scoped to the affected work: independent authorized work can continue while dependent scope waits, optional preferences can proceed after a stated reasonable assumption, and required decisions or approvals remain pending. During implementation, answers, including late replies, are reconciled into the plan and affected evidence. The shared policy is in the [lifecycle reference](../plugins/ant/skills/implementation-orchestrator/references/lifecycle.md); host-specific async input and fallback behavior is in the [Codex adapter](../plugins/ant/skills/implementation-orchestrator/references/codex.md).
+
 ## Authority
 
 Root is the sole user-facing adjudicator. Root owns decisions, plan checkpoints, Goal lifecycle, recovery, freeze, final verification, retrospective, and readiness, and writes only the scoped plan bundle. The integration owner writes scoped source, configuration, tests, and general documentation. The independent strong reviewer reads and reports findings but never writes fixes. Children read the plan and report to their parent; they cannot write the plan directory.
