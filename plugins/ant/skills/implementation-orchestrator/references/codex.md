@@ -9,10 +9,14 @@ This adapter owns Codex-specific Goal, model, effort, and tool behavior. The sha
 
 ## Goal
 
-- For every implementation-authorized run, verify the durable plan, then inspect the native Goal slot with `get_goal`.
-- Reuse a matching active Goal. If none exists, create one automatically with `create_goal` under established user/host authorization for automatic Goal creation, without asking again, then reinspect it with `get_goal`.
-- If Goal creation or verification is unavailable, forbidden, mismatched, or unverifiable, report the concrete blocker and do not dispatch tracked work or claim that a Goal exists. Never replace, complete, or block an unrelated active Goal.
+- For every implementation-authorized run, verify the durable plan, then inspect the native Goal slot with `get_goal`. Native Goals are default-on for this route.
+- Reuse a matching active Goal. After classifying the inspected slot, use `create_goal` and reinspect with `get_goal` only for a verified empty slot or a slot containing a terminally completed Goal, with no unfinished unrelated Goal collision, when the tool is available and established user/host authorization covers automatic creation. Do not create through an unrelated or unverified state. Do not ask for consent solely for this optional Goal when that authority is already established, and never claim that the plugin grants consent.
+- Apply the shared lifecycle classification for verified absence, unavailable capability or authority, unknown or unverifiable state, unrelated active Goals, explicit Goal requirements, and analysis-only work. Do not claim a Goal exists when verification fails.
 - `update_goal` is terminal-only (`complete` or `blocked`); it cannot represent phase progress or clear a collision.
+
+## Recovery
+
+- After interruption or compaction, use `get_goal` when available and apply the shared lifecycle recovery and Goal classification before resuming.
 
 ## Routes
 

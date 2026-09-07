@@ -13,13 +13,17 @@ This reference owns shared orchestration policy. Apply repository instructions f
 - Root creates and owns one plan bundle at `docs/implementation-plans/YYYY/MM/<slug>/README.md` before tracked implementation. It records scope, acceptance, non-goals, continuity, findings, decisions, ownership, risks, checks, phase/status, and the next action. Supporting files are optional and complementary.
 - Root alone writes the plan bundle and its progress/checkpoint files. The plan is the lifecycle record; prose status or assignments are not substitutes.
 
-The plan and any required native Goal must describe the same measurable outcome. A stable in-scope change updates the plan. A material outcome or public-contract change pauses the affected work and resolves the Goal/authority before resuming.
+The plan and any native Goal, when one is established, describe the same measurable outcome. A stable in-scope change updates the plan. A material outcome or public-contract change pauses the affected work and resolves the Goal/authority before resuming.
 
 ## Goal and continuity
 
 - Choose continuity before implementation: in-place evolution, an explicitly accepted integrated replacement in a dedicated checkout, or isolated handoff.
-- For every Codex implementation, inspect the native Goal after the plan is ready. Reuse a matching active Goal; if none exists, create one automatically under established user/host authorization for automatic Goal creation, without asking again, then reinspect it.
-- Never replace, complete, or block an unrelated active Goal. If the host cannot create or verify the required Goal, report the concrete blocker and stop tracked dispatch; host permissions and controls take precedence over skill instructions.
+- The active host adapter owns whether native Goals are default-on or optional and how their tools are preflighted. When the adapter calls for Goal handling, inspect the actual slot after the plan is ready and classify the result before implementation:
+  - A verified matching active Goal may be reused.
+  - A verified empty slot or a slot containing a terminally completed Goal, with no unfinished unrelated Goal collision, permits creation when the adapter and host authorize it. A verified empty slot or an unavailable optional capability, permission, or creation authority permits otherwise-authorized work to continue under the root-owned plan. Record the native Goal as absent or unavailable as applicable and state that automatic continuation is not guaranteed.
+  - An unknown or unverifiable slot is reported as unverified; do not call it absent or claim that a Goal exists. Otherwise-authorized work may continue under the plan only when the adapter and host permit that optional fallback.
+  - An unrelated active Goal is preserved. Root separately assesses safe isolation and host continuation before affected work proceeds; never continue through or repurpose the unrelated Goal.
+- An explicit user requirement for a native Goal remains unmet until a matching Goal is established and verified; the durable plan is not a substitute. The plugin never grants consent. Analysis-only work stays read-only and does not create or advance a native Goal. A durable Markdown plan preserves coordination memory but does not provide native scheduling or continuation.
 - Codex Goal closure is terminal (`complete` or `blocked`). Do not use it to simulate phase progress; the plan remains authoritative. Optional native Goal behavior on other hosts applies only when that host confirms it is in use.
 
 ## Dispatch capsule
@@ -48,6 +52,6 @@ Escalate the same underlying defect or check after two completed local repair-an
 
 ## Recovery and completion
 
-After interruption or compaction, reconcile the plan with Goal state, git state, native task state, reports, findings, and the actual diff. Correct stale phase/ownership information, update the plan checkpoint, and resume only with current evidence.
+After interruption or compaction, reconcile the plan with actual native Goal state when available, git state, native task state, reports, findings, and the actual diff. Apply the same Goal classification: verified absence is absent, an unavailable optional capability is unavailable, and an unknown or unverifiable slot is unverified. Preserve unrelated Goals and separately reassess safe isolation and host continuation before resuming affected work. An explicit native Goal requirement remains unmet until verification succeeds. Correct stale phase/ownership information, update the plan checkpoint, and resume only with current evidence; any optional fallback reports that automatic continuation is not guaranteed.
 
 Root verifies the selected final gate, records the retrospective, and gives exactly one verdict: **NOT READY**, **CONDITIONALLY READY**, **READY TO DEPLOY**, or **DEPLOYED & VERIFIED**. Delivery, merge, release, and deployment remain separately authorized and belong to `merge-request`.

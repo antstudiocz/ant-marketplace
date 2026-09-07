@@ -4,7 +4,7 @@ The plugin exposes exactly three public entry points. Choose the one that owns t
 
 ## `implementation-orchestrator`
 
-Use for features, fixes, refactors, migrations, remediation, and new applications that need a reviewed and verified implementation. It establishes a root-owned durable plan, applies the host's Goal and route rules, delegates one integration owner, obtains independent review, runs proportional checks, and verifies one final candidate gate. Analysis-only work remains read-only. Read the [orchestrator guide](orchestrator.md) for the lifecycle and host adapters.
+Use for features, fixes, refactors, migrations, remediation, and new applications that need a reviewed and verified implementation. It establishes a root-owned durable plan, applies the host's Goal and route rules, delegates one integration owner, obtains independent review, runs proportional checks, and verifies one final candidate gate. On Codex, native Goals are default-on when available and authorized; otherwise-authorized work can continue under the durable plan with no guaranteed automatic continuation. Analysis-only work remains read-only. Read the [orchestrator guide](orchestrator.md) for the lifecycle and host adapters.
 
 ## `merge-request`
 

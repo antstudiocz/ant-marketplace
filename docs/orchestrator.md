@@ -21,7 +21,7 @@ Material questions are scoped to the affected work: independent authorized work 
 
 Root is the sole user-facing adjudicator. Root owns decisions, plan checkpoints, Goal lifecycle, recovery, freeze, final verification, retrospective, and readiness, and writes only the scoped plan bundle. The integration owner writes scoped source, configuration, tests, and general documentation. The independent strong reviewer reads and reports findings but never writes fixes. Children read the plan and report to their parent; they cannot write the plan directory.
 
-The plan and Goal describe the same measurable outcome. Codex requires a matching native Goal for every implementation: after the plan is ready, reuse one or create it automatically under established user/host authorization for automatic Goal creation, without asking again. If the host cannot create or verify it, report the concrete blocker and stop tracked dispatch. An unrelated active Goal is never replaced, completed, or blocked. Host permissions and controls take precedence.
+The plan and any established Goal describe the same measurable outcome. Goal handling follows the [shared lifecycle](../plugins/ant/skills/implementation-orchestrator/references/lifecycle.md) and active host adapter. On Codex, Goals are default-on through the [Codex adapter](../plugins/ant/skills/implementation-orchestrator/references/codex.md); optional fallback remains subject to host authority and truthful reporting. A Goal never grants permission or replaces the plan, and unrelated Goals remain protected. Host permissions and controls take precedence.
 
 ## Routing
 
