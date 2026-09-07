@@ -18,7 +18,7 @@ Use this skill for implementation work. For analysis or review, investigate and 
 5. Dispatch one integration owner with a complete routing capsule. Add disjoint workers only when ownership is clear and the active adapter permits them. Every child is fresh, isolated, explicitly routed, and capped at High; the plan directory is read-only to children.
 6. The owner implements and consolidates scoped source, configuration, tests, and general documentation. Root remains coordination-only; an independent strong reviewer reads the candidate and never fixes it.
 7. Run targeted checks after coherent changes. Review findings or tracked mutations require affected re-review and refreshed evidence. Freeze one exact candidate and verify one risk-appropriate broad gate.
-8. Classify the requested endpoint as implementation-only, draft PR/MR create/update, or explicitly merge-ready. Apply the endpoint completion criteria in the shared [lifecycle](references/lifecycle.md); provider descriptions and finite observation belong to [merge-request](../merge-request/SKILL.md). Root reports implementation readiness separately from provider delivery.
+8. Classify the requested endpoint as implementation-only, draft PR/MR create/update, or explicitly merge-ready. Apply the endpoint completion and final-reporting criteria in the shared [lifecycle](references/lifecycle.md); provider descriptions and finite observation belong to [merge-request](../merge-request/SKILL.md). Root reports the endpoint-specific outcome separately from provider delivery.
 
 ## Ownership
 
@@ -27,4 +27,4 @@ Use this skill for implementation work. For analysis or review, investigate and 
 - The independent strong reviewer reports findings to the owner/root and does not write fixes.
 - Codex Goal behavior follows [codex.md](references/codex.md); shared Goal and authority rules follow [lifecycle.md](references/lifecycle.md).
 
-Follow the shared lifecycle for authority, routing, candidate identity, and the final verdict.
+Follow the shared lifecycle for authority, routing, candidate identity, handoff provenance, and endpoint-specific final reporting.
