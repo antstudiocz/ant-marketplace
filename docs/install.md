@@ -43,4 +43,4 @@ Claude Code:
 
 Codex: refresh or upgrade the configured marketplace, then reinstall/enable the plugin and restart the host.
 
-After a fresh session, verify that only `implementation-orchestrator`, `merge-request`, and `brand-design` are exposed. Maintainers use the checks in [`AGENTS.md`](../AGENTS.md). Version 13.0.0 is instruction-only and needs no runtime, migration, hook, or database setup.
+After a fresh session, verify that only `implementation-orchestrator`, `merge-request`, and `brand-design` are exposed. Maintainers use the checks in [`AGENTS.md`](../AGENTS.md). The plugin is instruction-only and needs no runtime, migration, hook, or database setup.
