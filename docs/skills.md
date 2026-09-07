@@ -8,7 +8,7 @@ Use for features, fixes, refactors, migrations, remediation, and new application
 
 ## `merge-request`
 
-Use for PR/MR Preview, Create/update, Observe/status, exact-head checks, and local or remote conflict resolution. Preview and Observe/status are read-only. Create/update, conflict preparation, staging, commit, push, readiness change, and merge each retain their own authority. See the [merge-request skill](../plugins/ant/skills/merge-request/SKILL.md) for mode routing.
+Use for PR/MR Preview, Create/update, Observe/status, exact-head checks, and local or remote conflict resolution. Preview and Observe/status are read-only. Create/update, conflict preparation, staging, commit, push, readiness change, and merge each retain their own authority. The shared lifecycle owns implementation-only, draft, and explicit merge-ready completion; provider descriptions and finite exact-head observation are defined in the [provider-delivery reference](../plugins/ant/skills/merge-request/references/provider-delivery.md). See the [merge-request skill](../plugins/ant/skills/merge-request/SKILL.md) for mode routing.
 
 ## `brand-design`
 
