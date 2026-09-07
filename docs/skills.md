@@ -1,42 +1,15 @@
 # Skills
 
-The plugin exposes exactly three public entry points. Use the narrowest one that owns the requested outcome.
+The plugin exposes exactly three public entry points. Choose the one that owns the requested outcome.
 
 ## `implementation-orchestrator`
 
-Use for work that should finish as a reviewed and verified implementation: new applications, features, fixes, refactors, migrations, and remediation.
-
-It:
-
-- classifies analysis-only, implementation-authorized, or ambiguous intent;
-- discovers the repository, asks about material unknowns, and records a root-owned durable plan before tracked edits;
-- captures essential product/architecture decisions for new applications without a separate brief ceremony;
-- records explicit integrated-replacement semantics when selected;
-- keeps root user-facing and coordination-only while a delegated integration owner writes;
-- routes by strong/balanced/fast capability with supported effort capped at High and requires fresh isolated task-local context for every child and nested child;
-- leaves the Codex root model and effort to the developer (`gpt-5.6-sol` at High is recommended) while requiring explicit, enforceable child routes;
-- requires Codex's native Goal safety gate (Claude Goal is optional), an independent strong review, targeted checks, then exactly one risk-appropriate candidate-bound broad gate (local broad suite or qualifying exact-candidate CI);
-- keeps implementation readiness separate from optional delivery.
-
-Analysis-only work ends with read-only evidence/findings and no readiness verdict. Existing automated browser/E2E tests are selected through normal risk-based validation; agent-driven interactive browser smoke runs only when explicitly requested or required by repository/acceptance criteria. See the [canonical orchestrator guide](orchestrator.md) for durable-plan checkpoints, candidate identity, CI substitution, host routes, recursive capsules, Goal/preflight behavior, and review invalidation.
+Use for features, fixes, refactors, migrations, remediation, and new applications that need a reviewed and verified implementation. It establishes a root-owned durable plan, applies the host's Goal and route rules, delegates one integration owner, obtains independent review, runs proportional checks, and verifies one final candidate gate. On Codex, native Goals are default-on when available and authorized; otherwise-authorized work can continue under the durable plan with no guaranteed automatic continuation. Analysis-only work remains read-only. Read the [orchestrator guide](orchestrator.md) for the lifecycle and host adapters.
 
 ## `merge-request`
 
-Use for GitHub PR/GitLab MR Preview, Create/update, Observe/status, exact-head observation, and merge-conflict resolution.
-
-- Preview intent is read-only.
-- Explicit create/update intent authorizes only a safely scoped commit/push/create-or-update chain and matching pipeline observation.
-- New objects are Draft by default; ordinary updates preserve readiness.
-- Titles use Conventional Commit style; descriptions are rebuilt from the final target merge-base-to-`HEAD` snapshot.
-- Visible descriptions contain a plain-language summary, rationale, and material impact/risk. Optional technical and verification evidence may be collapsed, but status and gaps remain truthful.
-- Observe/status is read-only and reports failures without retry or repair. Conflict-only mode never creates/updates a provider object or watches pipelines. Resolution, staging, committing, and pushing have distinct authority; remote conflict work starts only from a clean tracked tree/index.
-- When implementation selects CI for its single broad gate, `merge-request` owns the separately authorized pre-gate publication/update of the frozen candidate, preserves Draft-by-default readiness, and then observes the exact tested SHA; without that authority or qualifying evidence, local broad validation remains mandatory.
-- In-scope pipeline regressions during an already-authorized Create/update flow return to `implementation-orchestrator` for repair/review/validation before replacement-head observation. Standalone Observe/status only reports or recommends a handoff; it requires a separate user fix request and never invokes repair or retry.
+Use for PR/MR Preview, Create/update, Observe/status, exact-head checks, and local or remote conflict resolution. Preview and Observe/status are read-only. Create/update, conflict preparation, staging, commit, push, readiness change, and merge each retain their own authority. The shared lifecycle owns implementation-only, draft, and explicit merge-ready completion; provider descriptions and finite exact-head observation are defined in the [provider-delivery reference](../plugins/ant/skills/merge-request/references/provider-delivery.md). See the [merge-request skill](../plugins/ant/skills/merge-request/SKILL.md) for mode routing.
 
 ## `brand-design`
 
-Use for `(ant)` design direction or brand-fit review across websites, apps, UI, documents, decks, and visuals.
-
-The skill covers black/white/mint brand primitives, typography, logo selection, editorial layout, product UI patterns, responsive/accessibility handoff, visual QA, and bundled assets. The canonical public manual and manifest are under `plugins/ant/skills/brand-design/assets/source/`.
-
-For implemented product/design work, combine its brand requirements with the normal orchestrated repository workflow rather than a separate frontend entry point.
+Use for `(ant)` design direction, asset selection, or brand-fit review across websites, apps, UI, documents, decks, and visuals. The source manual and manifest are under `plugins/ant/skills/brand-design/assets/source/`. Implemented product work still follows the normal orchestrated repository workflow.

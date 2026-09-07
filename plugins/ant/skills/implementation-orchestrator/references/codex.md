@@ -1,33 +1,35 @@
-# Codex Adapter
+# Codex adapter
 
-## Root Guidance, Durable Plan, And Goal
+This adapter owns Codex-specific Goal, model, effort, and tool behavior. The shared rules are in [lifecycle.md](lifecycle.md).
 
-- Codex root model and effort are the developer's choice. `gpt-5.6-sol` at High is recommended guidance only.
-- Verify the root-owned durable plan bundle before any tracked-writer dispatch. It must have a stable README entrypoint, resolved material decisions, current phase, ownership, acceptance, risks, and checks. Host-provided planning UI is optional only and has zero blocking or evidentiary role.
-- Inspect the native Goal slot with `get_goal` after durable-plan verification. Reuse only an active Goal whose stable measurable objective matches the implementation and references the repo-relative plan README.
-- If the slot is empty, create the matching Goal with `create_goal`, then reinspect it with `get_goal`. Missing, mismatched, unavailable, or unverifiable required Goal state fails closed before dispatch.
-- Codex currently exposes Goal creation/reading and terminal closure (`update_goal` with `complete` or `blocked`), not explicit step mutation. `update_goal` is terminal-only: never use it to simulate phase progress, clear collisions, or record a stable delta.
-- Only an adapter-inspected, dedicated nonterminal Goal checkpoint mutation may mirror root's durable-plan phase checkpoints. Current Codex tools do not expose that capability, so its absence is non-blocking and the durable plan remains authoritative. `blocked` follows host repeated-blocker semantics and never clears a collision.
-- Never replace, complete, or block an unrelated unfinished Goal. Pause and ask root/user to finish it and queue a follow-on or use native controls to end/resolve it. A material objective/public-contract delta follows the same rule.
-- Stable in-objective changes update the root-owned durable plan and assignments. Root updates the plan at decision resolution, phase transitions, stable deltas, recovery, review readiness, and immediately before freeze.
+## Clarification questions
 
-## Routing And Recursive Capsule
+- When available, map asynchronous clarification to `request_user_input_async`: it returns immediately and receives the user's answer as a later message. Ask concise bundled questions with options when useful, and follow the live host's current interaction guidance. Root remains the sole user-facing adjudicator; do not use the question tool for commentary or progress updates.
+- Tool availability and host mode limits govern. If asynchronous input is unavailable, use permitted native input or a plain user question; never force Plan-only `request_user_input` in Default mode, expand Plan mode permissions, or simulate an asynchronous runtime.
 
-- After the durable-plan and required Codex Goal gates pass, invoke required Luna/Sol child and nested-child routes directly. The shared capsule, ownership, read-only plan boundary, review, recovery, and validation rules are in [lifecycle.md](lifecycle.md).
-- Pin every child and nested child with an explicit model and effort, never above High, and `fork_turns="none"`. Every assignment uses fresh isolated context and explicitly states whether nested delegation is allowed.
-- Route strong judgment, architecture, security, migration, and independent final review to `gpt-5.6-sol` at High.
-- Route integration and normal implementation to `gpt-5.6-luna` at High.
-- Route narrow work to Luna at proportional High, Medium, or Low. There is no Terra route or fallback.
-- Do not dispatch if any required child route, effort, availability, fresh context, isolation, or `fork_turns="none"` selector cannot be enforced.
-- Children read plan files but cannot edit the plan directory. Their checkpoint report includes phase/status, files/areas, validation, discoveries/decisions, proposed plan delta, and risks/blockers.
+## Goal
 
-## Decisions And Recovery
+- For every implementation-authorized run, verify the durable plan, then inspect the native Goal slot with `get_goal`. Native Goals are default-on for this route.
+- Reuse a matching active Goal. After classifying the inspected slot, use `create_goal` and reinspect with `get_goal` only for a verified empty slot or a slot containing a terminally completed Goal, with no unfinished unrelated Goal collision, when the tool is available and established user/host authorization covers automatic creation. Do not create through an unrelated or unverified state. Do not ask for consent solely for this optional Goal when that authority is already established, and never claim that the plugin grants consent.
+- Apply the shared lifecycle classification for verified absence, unavailable capability or authority, unknown or unverifiable state, unrelated active Goals, explicit Goal requirements, and analysis-only work. Do not claim a Goal exists when verification fails.
+- `update_goal` is terminal-only (`complete` or `blocked`); it cannot represent phase progress or clear a collision.
 
-- Root uses native structured input for material choices when available, but the durable Markdown plan remains authoritative and tracked. Children return evidence, options, recommendation, and paused scope through parents.
-- On compaction or interruption, reconcile the durable plan with Codex Goal state, git state, native task state, checkpoints, findings, and actual diffs before resuming; update `progress.md` as a root-owned recovery checkpoint.
-- Follow [lifecycle.md](lifecycle.md) for candidate freeze, review invalidation, candidate-bound validation, and interactive smoke.
+## Recovery
 
-## Interactive Browser Smoke
+- After interruption or compaction, use `get_goal` when available and apply the shared lifecycle recovery and Goal classification before resuming.
 
-- Existing automated browser/E2E tests remain ordinary risk-based validation. Any side-effecting or agent-driven interactive smoke runs only when explicitly requested or required by repository/acceptance criteria; otherwise do not preflight or run it.
-- Use the shared lifecycle smoke and recovery rules, with the internal Codex browser surface as the host-specific browser surface.
+## Routes
+
+Use a fresh isolated context and `fork_turns="none"` for every child. Never exceed High or dispatch when the selected route cannot be enforced.
+
+| Role | Model | Effort |
+|---|---|---|
+| Integration owner | `gpt-5.6-luna` | High |
+| Strong reviewer or strong judgment | `gpt-5.6-sol` | High |
+| Bounded investigation, validation, or narrow work | `gpt-5.6-luna` | High, Medium, or Low as proportionate |
+
+The root model and effort are developer-selected. There is no Terra route or fallback. Every assignment carries the complete capsule from [lifecycle.md](lifecycle.md), including write ownership, the root-only plan boundary, delegation permission, checks, and report/escalation path.
+
+## Smoke
+
+Existing browser/E2E automation is ordinary risk-based validation. Run interactive smoke only when explicitly requested or required by acceptance criteria, using the internal Codex browser where available and the shared lifecycle preflight.

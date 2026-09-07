@@ -1,8 +1,8 @@
-# Installation And Updates
+# Installation and updates
 
 ## Claude Code
 
-Inside Claude Code:
+From Claude Code:
 
 ```text
 /plugin marketplace add antstudiocz/ant-marketplace
@@ -17,25 +17,21 @@ claude plugin marketplace add antstudiocz/ant-marketplace --scope user
 claude plugin install ant@ant-marketplace --scope user
 ```
 
-For orchestrator startup, use the host-specific route and preflight in the [canonical guide](orchestrator.md); Claude root uses `best` at `max`, while Codex root model and effort are developer-selected (`gpt-5.6-sol` at High is recommended). The root-owned durable plan is the shared planning gate, Codex additionally requires its native Goal, and child routing remains mandatory and fail-closed.
-
 ## Codex
 
-Global install:
+The current Codex CLI supports marketplace sources directly:
 
 ```bash
-bunx codex-marketplace add antstudiocz/ant-marketplace/plugins/ant --plugin --global
+codex plugin marketplace add antstudiocz/ant-marketplace
+codex plugin marketplace list
+codex plugin add ant@ant-marketplace
 ```
 
-Project install:
+Then install or enable `ant` from the configured marketplace using the CLI or Codex desktop Plugins Directory. For a repository-local marketplace, use the repo's `.agents/plugins/marketplace.json`; restart Codex or the desktop app after installing or updating. See the [official plugin packaging guide](https://developers.openai.com/plugins/build/plugins) for current CLI and desktop behavior.
 
-```bash
-bunx codex-marketplace add antstudiocz/ant-marketplace/plugins/ant --plugin --project
-```
+If the installed CLI does not expose `codex plugin marketplace`, update it or use the desktop Plugins Directory. Do not edit `config.toml` by hand when the CLI can manage the source.
 
-Restart Codex or open a new session. Tracked orchestration requires the repository's durable plan, Codex Goal and delegation tools; host-provided planning UI is not required. Detailed routing, fresh-context capsules, and fail-closed preflight are in the [canonical guide](orchestrator.md).
-
-## Update
+## Updates and verification
 
 Claude Code:
 
@@ -45,14 +41,6 @@ Claude Code:
 /reload-plugins
 ```
 
-Codex: rerun the same install command with the same scope, then restart or open a new session.
+Codex: refresh or upgrade the configured marketplace, then reinstall/enable the plugin and restart the host.
 
-## Verify
-
-After loading a fresh session, confirm the plugin exposes only:
-
-- `implementation-orchestrator`;
-- `merge-request`;
-- `brand-design`.
-
-Maintainers validate the repository and plugin manifests using the commands in [AGENTS.md](../AGENTS.md). Version 13.0.0 is instruction-only and needs no orchestration database, runtime, migration, hook, or global helper installation. Durable plans are ordinary human-readable Markdown under each repository's `docs/implementation-plans/` directory.
+After a fresh session, verify that only `implementation-orchestrator`, `merge-request`, and `brand-design` are exposed. Maintainers use the checks in [`AGENTS.md`](../AGENTS.md). The plugin is instruction-only and needs no runtime, migration, hook, or database setup.

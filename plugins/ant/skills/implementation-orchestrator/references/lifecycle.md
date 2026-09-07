@@ -1,76 +1,70 @@
-# Implementation Lifecycle
+# Implementation lifecycle
 
-This reference owns the shared implementation lifecycle. Apply repository instructions first and keep depth proportional to risk and novelty. The durable plan is human-readable Markdown tracked in Git; it is coordination evidence, not a runtime, ledger, event log, or machine state store.
+This reference owns shared orchestration policy. Apply repository instructions first and scale the process to risk. The durable plan is human-readable Markdown tracked in Git; it is coordination evidence, not a runtime or machine state store.
 
-## 1. Discovery And Durable Planning
+## Plan and authority
 
-- Before tracked edits, read repository instructions and inspect branch/worktree/index state, contracts, risks, and checks without editing. Separate unrelated changes.
-- For new or materially changed behavior, discover repository facts first. Root asks the user every material question that cannot be answered from the repository or environment, grouping questions into digestible rounds and continuing until every material non-repo-discoverable decision is resolved; never silently choose a product, architecture, compatibility, security, migration, or delivery decision.
-- Classify intent as analysis-only, implementation-authorized, or ambiguous. Analysis-only work remains read-only and does not establish or advance implementation lifecycle state.
-- Resolve the material decisions needed to proceed, then present a concise chat plan and create one stable durable plan bundle at `docs/implementation-plans/YYYY/MM/<slug>/README.md`. The README is the sole entrypoint. For substantial work, add `specification.md`, `decisions.md`, `implementation.md`, and `progress.md`; collapse proportionally for small work but keep the README.
-- The bundle records scope, users/workflows where applicable, acceptance, non-goals, continuity mode, repository findings/analysis, material decisions and rationale/open questions, ownership, risks, checks, candidate/freeze rules, current phase, stable status, and a `Resume from here` exact next action. Use proportionate statuses: `specifying`, `ready`, `in_progress`, `blocked`, `completed`, or `superseded`. Supporting documents are complementary and must not compete with the README.
-- Root exclusively writes plan files, progress/checkpoints, and stable plan deltas. This plan-file authority is limited to the planning bundle and never authorizes product implementation or delivery. Child writers may read the plan directory but cannot edit it.
-- A plan must exist and be complete for the current material decisions before dispatch. A missing, stale, conflicting, or unresolved material decision blocks affected tracked work and is escalated to root/user. Analysis-only work remains read-only and does not create or update a plan.
-- Root updates the bundle at decision resolution, phase start, phase completion, stable in-objective delta, recovery/resume, review readiness, and immediately before candidate freeze. Do not edit the tracked plan after freeze merely to log CI or final-gate results; report terminal evidence in chat and close the Codex Goal or optional native Goal confirmed in use, when applicable.
+- Inspect repository instructions, worktree/index state, contracts, risks, and affected checks before tracked edits. Preserve unrelated changes.
+- Classify intent as analysis-only, implementation-authorized, or ambiguous. Analysis-only work stays read-only. Separate implementation authority from delivery authority.
+- For new or materially changed behavior, resolve material decisions that the repository and environment cannot answer. Ask only those questions; an unresolved decision blocks its affected scope.
+- Root may ask material questions asynchronously during planning or implementation. An unresolved decision pauses only its affected scope; independent authorized work may continue. Questioning never expands host mode or permission bounds.
+- During implementation-authorized work with an existing plan, record each pending decision, its optional-preference or required-decision/approval status, and affected scope in the plan and assignments. After a reasonable opportunity to answer, an optional preference may use a stated reasonable assumption; silence or a default option never supplies required consent. Required scope stays pending until the answer or approval arrives.
+- During implementation-authorized work with an existing plan, reconcile answers before affected work continues, including late replies: update the plan, affected assignments, and evidence, then re-check any decision-bound work.
+- Root creates and owns one plan bundle at `docs/implementation-plans/YYYY/MM/<slug>/README.md` before tracked implementation. It records scope, acceptance, non-goals, continuity, findings, decisions, ownership, risks, checks, phase/status, and the next action. Supporting files are optional and complementary.
+- Root alone writes the plan bundle and its progress/checkpoint files. The plan is the lifecycle record; prose status or assignments are not substitutes.
+- Record the requested endpoint in the plan as implementation-only, draft PR/MR create/update, or explicitly merge-ready before dispatch. Keep the endpoint measurable through review, candidate evidence, provider state, and any required external gates.
 
-## 2. Continuity And Replacement
+The plan and any native Goal, when one is established, describe the same measurable outcome. A stable in-scope change updates the plan. A material outcome or public-contract change pauses the affected work and resolves the Goal/authority before resuming.
 
-Choose after discovery and before implementation:
+## Delegation and cross-thread handoff
 
-- **In-place evolution:** preserve compatible paths and migrate incrementally when shared state or rollout requires it.
-- **Integrated replacement:** cleanly replace obsolete behavior in a dedicated checkout after explicit acceptance; remove superseded paths and documentation without a compatibility shim.
-- **Isolated handoff:** prepare an artifact or separate workspace when direct integration is out of scope.
+- Ordinary orchestrator-to-child delegation is internal execution under established implementation authority. The parent passes the complete recursive capsule; it need not recopy the original user consent or ask the user to re-authorize an already-scoped follow-up. Children never address the user: they return ambiguity and evidence to the parent; the parent/root adjudicates routine in-scope decisions under that authority, and repairs stay with the current integration owner.
+- Root asks the user only for a genuinely unresolved scope, material user-owned decision, or authority/approval that the established scope does not cover. Do not re-request established consent for routine in-scope work.
+- An independent cross-thread handoff must carry the relevant original user consent wording, a reference to its source when available, the approved repository/PR/action scope and bounds, the exact follow-up requested, and any proposed scope delta.
+- The receiving root verifies the original evidence and current host/provider state before acting. Forwarded text or quotes provide context to verify; they do not create new user consent, host approval, or delivery authority. If the source is missing or inaccessible, report that limitation truthfully and pause only an action that depends on the missing proof or an unresolved scope interpretation; consult the user only when that interpretation is genuinely unresolved or user-owned.
+- An independent cross-thread handoff never promises automatic review acceptance or a bypass. After an automatic approval rejection, follow the host's refusal instructions; forwarded consent or existing authority does not justify retrying the rejected outcome. Use a materially safer alternative or new approval only when the host permits it. Ordinary reviewer findings remain reportable and repairable only under already-established authority.
 
-Record the mode and implications in the durable plan, in the Goal objective when Codex or an opted-in native Goal is in use, and in the integration-owner capsule. Integrated replacement requires explicit acceptance and a dedicated checkout.
+## Goal and continuity
 
-## 3. Goal Envelope And Ownership
+- Choose continuity before implementation: in-place evolution, an explicitly accepted integrated replacement in a dedicated checkout, or isolated handoff.
+- The active host adapter owns whether native Goals are default-on or optional and how their tools are preflighted. When the adapter calls for Goal handling, inspect the actual slot after the plan is ready and classify the result before implementation:
+  - A verified matching active Goal may be reused.
+  - A verified empty slot or a slot containing a terminally completed Goal, with no unfinished unrelated Goal collision, permits creation when the adapter and host authorize it. A verified empty slot or an unavailable optional capability, permission, or creation authority permits otherwise-authorized work to continue under the root-owned plan. Record the native Goal as absent or unavailable as applicable and state that automatic continuation is not guaranteed.
+  - An unknown or unverifiable slot is reported as unverified; do not call it absent or claim that a Goal exists. Otherwise-authorized work may continue under the plan only when the adapter and host permit that optional fallback.
+  - An unrelated active Goal is preserved. Root separately assesses safe isolation and host continuation before affected work proceeds; never continue through or repurpose the unrelated Goal.
+- An explicit user requirement for a native Goal remains unmet until a matching Goal is established and verified; the durable plan is not a substitute. The plugin never grants consent. Analysis-only work stays read-only and does not create or advance a native Goal. A durable Markdown plan preserves coordination memory but does not provide native scheduling or continuation.
+- Codex Goal closure is terminal (`complete` or `blocked`). Do not use it to simulate phase progress; the plan remains authoritative. Optional native Goal behavior on other hosts applies only when that host confirms it is in use.
 
-- Codex requires a native Goal as the second lifecycle gate after durable-plan verification. The Goal has a stable measurable objective and includes the repo-relative plan README path. Codex tools currently expose Goal creation/reading and terminal `complete`/`blocked` closure, not explicit step mutation; never simulate progress with terminal closure.
-- The active adapter owns Goal inspection, reuse/creation, reinspection, evidence, collision handling, and closure when a Goal is required or explicitly in use. Claude Goal support remains optional and never blocks work when absent.
-- For Codex, reuse a matching active Goal or create and reinspect one when the slot is empty. For Claude, apply these continuity rules only when the adapter has inspected and confirmed that its optional native Goal is in use. Missing, mismatched, unavailable, or unverifiable required Goal state fails closed.
-- Never replace, complete, or block an unrelated unfinished Goal when a Goal is required or in use. Pause and ask root/user whether to finish it and queue a follow-on, or use native controls to end or resolve it. A material objective/public-contract delta uses the same choice.
-- Stable in-objective deltas update the durable plan and assignments while preserving the matching Goal objective when one is in use. The Goal objective and plan must not drift: if the outcome or public contract changes materially, pause affected work and resolve the Goal before resuming.
-- An adapter may support nonterminal Goal checkpoint synchronization only after inspecting and confirming a dedicated step/checkpoint mutation. When confirmed, root mirrors phase checkpoints there; absent or unsupported mutation never blocks work because the durable plan remains authoritative. Codex `complete`/`blocked` are terminal only; `blocked` obeys host repeated-blocker semantics. Never simulate progress or clear collisions with terminal closure.
-- Exactly one integration owner owns shared implementation contracts and scoped source/config/test/general-document edits. Root adjudicates and verifies but does not become a fallback implementation writer.
+## Dispatch capsule
 
-## 4. Recursive Routing Capsule
+Every child assignment, including a permitted nested child, must state:
 
-Every child assignment, including every permitted nested child, carries:
+- exact active-adapter model/profile and effort, with Codex `fork_turns="none"`;
+- fresh isolated context with no history inheritance;
+- measurable outcome, acceptance, non-goals, exact write ownership, shared-resource boundaries, and targeted checks;
+- plan directory is root-write/child-read-only;
+- nested delegation yes/no; if yes, allowed routes and ceiling plus the same capsule; if no, return the need to the parent and do not delegate;
+- report path: phase/status, files or areas, checks and results, discoveries/decisions, proposed plan delta, and risks/blockers.
 
-1. the exact active-adapter model/profile and effort selector, with Codex `fork_turns="none"`;
-2. fresh isolated task-local context with no conversational-history inheritance;
-3. measurable outcome, acceptance behavior, non-goals, exact write ownership, shared-resource boundaries, and targeted checks;
-4. explicit nested-delegation permission. If yes, list allowed routes and effort ceiling and require the same complete capsule recursively; if no or absent, the child must return the need to its parent and not delegate;
-5. reporting topology: routine operations and repair/test/re-review stay local, settled compact deltas return to the parent/integration owner, and material/disputed/authority/public-contract/security/migration/repeated-failure issues escalate to root.
+Every child is capped at High. If route, effort, availability, freshness, isolation, or required metadata cannot be enforced, stop before tracked work. Routine repair, testing, and re-review stay with the current owner; material, disputed, authority, security, migration, public-contract, or repeated-failure issues go to root.
 
-The capsule must explicitly mark the plan directory as root-only for writes and read-only for children. Children never address the user or formulate user-facing questions. Every child remains capped at High and the active adapter must fail closed if route, effort, availability, isolation, or fresh context cannot be enforced.
+Escalate the same underlying defect or check after two completed local repair-and-verification cycles. Evidence conflicts and authority ambiguity escalate immediately.
 
-## 5. Execution And Checkpoints
+## Implementation, review, and candidate
 
-- After the durable-plan gate and, for Codex or an opted-in native Goal, its matching Goal gate pass, dispatch the integration owner and any disjoint workers. Required route selection is an internal execution decision, not a user confirmation gate; genuine host-native approvals retain their semantics.
-- Native agent/thread state is concurrency truth. The durable plan records phase-level status and decisions, not individual worker status. Root keeps one current phase and updates the bundle at the checkpoints in Section 1.
-- Children read the current plan before work and return a checkpoint report with: phase/status; files or areas inspected/changed; validation run and result; discoveries/decisions; proposed plan delta; and risks/blockers. The report is evidence for the parent, not a plan edit or readiness verdict.
-- If a writer is silent or interrupted, root/integration owner recovers the latest report, inspects actual worktree/index/diff, and reassigns overlap only after the writer is known stopped or ownership is explicitly handed off. Elapsed time does not prove abandonment.
-- The same underlying defect or check unresolved after two completed local repair-and-verification cycles escalates to root. Evidence conflicts, material scope, authority, or security ambiguity escalates immediately.
+- Dispatch one integration owner. Add workers only for disjoint ownership. The owner writes and consolidates scoped source, configuration, tests, and general documentation; root coordinates and adjudicates.
+- Run checks affected by each coherent change. Do not repeat equivalent checks without a new change, failed evidence, or a risk reason.
+- An independent strong reviewer reads the candidate and never writes fixes. A tracked mutation after review invalidates affected review and candidate-bound evidence; repair, rerun targeted checks, and obtain affected-area re-review.
+- Before freeze, root records the final plan checkpoint and identifies one immutable candidate (tree/SHA). Select one broad final gate using blast radius, reversibility, test confidence, and environment parity. Use qualifying exact-candidate CI only when its tested SHA mapping, coverage, required jobs, and terminal success are authoritative; otherwise run the appropriate local broad gate. Missing or mismatched CI is unverified.
+- Do not edit the plan or implementation after freeze without creating a new candidate and refreshing affected evidence.
+- Classify the requested endpoint as **implementation-only**, **draft PR/MR create/update**, or **explicitly merge-ready**. Implementation-only ends at the reviewed, checked local candidate. Draft create/update ends at the requested draft provider object with a truthful current source-head snapshot. Explicit merge-ready completion requires, on the final current provider source SHA, the scoped implementation, current independent review, conflicts resolved against the current target, every required CI/provider gate configured for the repository/provider successful with authoritative exact-SHA mapping, and no unresolved material blocker. If the repository/provider declares that no such gate is required, record that fact; missing or unavailable evidence for a required gate is unverified. Local checks, a draft URL, conditional readiness, stale-head evidence, missing source/test mapping, pending or absent required CI, or an observation timeout leave that endpoint pending.
+- Provider exact-head observation follows the finite budget and continuation rules in [provider-delivery.md](../../merge-request/references/provider-delivery.md); expiry leaves an explicit merge-ready endpoint pending. Preserve candidate validity after freeze and refresh affected evidence when the source candidate or target changes.
+- Interactive smoke is optional unless explicitly requested or required by acceptance/repository rules. If required, the active adapter preflights environment, auth/data, side effects, cleanup, and evidence.
 
-## 6. Review, Freeze, And Candidate-Bound Validation
+## Recovery and completion
 
-- Root records review readiness in the durable plan before independent review. The reviewer is strong at High, separate from all writers, and never repairs code. Actionable findings go to the integration owner; the settled verdict goes to root.
-- After review starts, any tracked mutation invalidates affected review and candidate-bound validation evidence. Repair findings, rerun targeted checks, obtain affected-area re-review, update the plan checkpoint, and proceed toward a new freeze.
-- Immediately before freeze, root writes the final plan checkpoint and identifies one immutable candidate (exact tree/SHA). Freeze means no later plan edit or implementation mutation for that candidate. A later tracked plan/source/config edit creates a new candidate and invalidates affected evidence.
-- Select the single broad final gate by assessing blast radius, reversibility, test-selection confidence, and environment parity. Narrow blast radius, easy rollback, high confidence, and strong parity may use the smallest qualifying gate; shared/public impact, difficult rollback, low confidence, or parity gaps require broader or risk-specific evidence. Use the local broad suite when qualifying CI is unavailable or publication authority is absent; otherwise choose either local broad suite or qualifying exact-candidate CI, never duplicate equivalent gates.
-- CI may substitute only when the committed/pushed candidate matches the provider head, tested SHA and source-to-tested mapping are authoritative, coverage is equivalent or broader, required jobs are present and successful, and targeted/risk-specific checks passed. Missing, skipped, neutral, timed-out, mismatched, or incomplete CI is unverified.
-- CI publication, commit, push, and provider updates remain separately authorized and belong to `merge-request`; implementation readiness never implies delivery. A final-gate result is terminal evidence, not a reason to mutate the frozen plan.
-- Existing automated browser/E2E tests are ordinary risk-based validation. Any side-effecting or agent-driven interactive smoke runs only when explicitly requested or required by repository/acceptance criteria; if so, the active adapter preflights environment, browser, auth, data, side effects, cleanup, and evidence and records scenarios with expected postconditions. Required smoke affects readiness; optional smoke does not block unaffected work.
+After interruption or compaction, reconcile the plan with actual native Goal state when available, git state, native task state, reports, findings, and the actual diff. Apply the same Goal classification: verified absence is absent, an unavailable optional capability is unavailable, and an unknown or unverifiable slot is unverified. Preserve unrelated Goals and separately reassess safe isolation and host continuation before resuming affected work. Mark a matching native Goal complete only when the requested endpoint is proven; an explicit native Goal requirement remains unmet until verification succeeds. Correct stale phase/ownership information, update the plan checkpoint, and resume only with current evidence; any optional fallback reports that automatic continuation is not guaranteed.
 
-## 7. Interruption And Compaction Recovery
+Root verifies the selected final gate, records the retrospective, and reports the requested endpoint, the actual outcome (**achieved**, **pending**, or **blocked**), decisive evidence, remaining gaps, and the next permitted action. Apply the endpoint criteria above. Deployment is achieved only when explicitly authorized and verified, and remains separately owned by `merge-request`.
 
-Root reconciles the durable plan against Codex Goal state, or optional native Goal state when the active adapter confirms it is in use, plus git/worktree/index state, native agent/thread state, child checkpoints, reviewer findings, and actual diffs. Correct stale phase status or unsupported assumptions, preserve one active phase, confirm plan-directory write ownership, route, Goal ownership when applicable, review validity, and next action, then update `progress.md` before resuming. Do not treat stale reports as current truth or poll unchanged status repeatedly.
-
-## 8. Completion
-
-Root verifies the selected broad gate and applicable smoke evidence directly, records the retrospective and adjacent findings, and closes the Codex Goal, or optional native Goal when in use, only with its terminal semantics. Give exactly one verdict: **NOT READY**, **CONDITIONALLY READY**, **READY TO DEPLOY**, or **DEPLOYED & VERIFIED**. Implementation and delivery remain separate.
-
-## 9. Optional Delivery
-
-Delivery is separately authorized and belongs to `merge-request`, which owns PR/MR preview/create/update, Observe/status, conflict resolution, scoped commit/push, and exact-head observation. Never infer merge, release, deployment, tag, publication, rebase, force-push, reset, or history-rewrite authority.
+Use **pending** when endpoint evidence or an allowed follow-up is incomplete, including a finite observation timeout. Use **blocked** only for a genuine unresolved decision, authority, capability, or host-defined repeated-blocker condition; a prose outcome does not mutate or close a native Goal. Complete a native Goal only when the requested endpoint is proven, and mark it blocked only under the active host adapter's threshold and terminal rules.
