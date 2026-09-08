@@ -1,0 +1,7 @@
+# Release 13.1.2
+
+User explicitly authorized admin merge of PR #76 and release. Scope: patch release of merged autonomous approval fixes, synchronized three manifest versions and new immutable release note. No further feature changes. Root owns this plan and delivery; Luna High owner writes only the manifests/release note, Sol High reviewer is read-only. No child delegation or plan writes. Native Goal not requested; durable plan is the record.
+
+Acceptance: PR #76 merged and included in release ancestry; version 13.1.2 matches both plugin manifests and marketplace metadata; existing notes preserved; new notes link merged PR. Validate JSON/version agreement and plugin manifests; independent review before commit/push/tag/release. Status: implementation in progress. Next: owner prepares release files on current master, reviewer checks, root freezes and publishes version commit plus v13.1.2 GitHub release. User release authority covers this scoped delivery.
+
+Final checkpoint: independent Sol review passed, owner stopped. Root verified both Claude validators, all JSON, three-way version agreement, whitespace and #76 ancestry. Historical notes unchanged; v13.1.1 to pre-release HEAD includes only merged #76. Release candidate ready to freeze; next action commit scoped manifests/new note/plan, push master normally and publish v13.1.2 at exact release SHA. No edits after freeze; terminal publication verification reported in chat.
