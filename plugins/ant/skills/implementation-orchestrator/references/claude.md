@@ -18,4 +18,4 @@ Use one fresh isolated child context per assignment and never exceed High. The a
 
 ## Smoke
 
-Existing browser/E2E automation is ordinary risk-based validation. Run interactive smoke only when explicitly requested or required by acceptance criteria; preflight the environment and side effects when it applies.
+Existing browser/E2E automation is ordinary risk-based outcome evidence. Choose appropriate interaction evidence automatically when changed behavior and risk require it: use existing browser/E2E automation or interactive smoke as suitable, including realistic states defined by the shared lifecycle; do not require a special smoke request. Preflight the environment and side effects when it applies. Evidence gathering never expands authority; reuse established authority and obtain appropriate explicit authorization for effects outside it, with destructive or data-loss actions explicitly authorized under the authority rules.
