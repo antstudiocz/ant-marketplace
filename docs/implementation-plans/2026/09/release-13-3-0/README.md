@@ -1,0 +1,9 @@
+# Plugin 13.3.0 release
+
+User explicitly requested admin merge and release. PR 79 was admin-squash-merged at 8685e276c0dc429e3fd9467511f6b5dff0101eeb; latest release is v13.2.1 at de134f632f2ea5388e10f77433f500d692193130. User subsequently requested a concrete before/after Ant Brain MR description example; root read MR 683 and provided the comparison while preparing this already-authorized release.
+
+Scope: compatible minor instruction feature version 13.3.0, three synchronized version manifests, concise new release notes linked to verified included merged PR79, README release link. No instruction/runtime changes, host installation or app deployment. Root owns this plan and delivery. Fresh Luna High owner edits only scoped metadata/docs; fresh Sol High reviewer is read-only. No nested delegation. Native Goal not requested.
+
+Acceptance: versions identical at13.3.0, manifests valid, historical notes preserved, release commit descends from PR79 merge, tag points to exact release commit, GitHub release published with scoped notes. Cadence: one small metadata increment, independent review, validators/jq/diffcheck, immutable commit, push/tag/release readback. Actual example is based on existing MR description, not a renewed code review; do not mutate Ant Brain MR.
+
+Status: metadata owner completed scoped changes. Independent review found one release-note accuracy issue (incorrectly denying public-skill behavior changes); owner removed that claim, and root verified the exact correction. Both Claude validators, four-manifest JSON parse, synchronized version checks, and diff check passed. Candidate frozen for scoped release commit, push, annotated tag, and GitHub publication. Delivery result is recorded in the task to avoid mutating the frozen candidate. Retrospective: compatible instruction feature warrants minor 13.3.0; no source or historical-release edits were required.
