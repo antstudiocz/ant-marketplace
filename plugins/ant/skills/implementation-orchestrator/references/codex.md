@@ -7,6 +7,10 @@ This adapter owns Codex-specific Goal, model, effort, and tool behavior. The sha
 - When available, map asynchronous clarification to `request_user_input_async`: it returns immediately and receives the user's answer as a later message. Ask concise bundled questions with options when useful, and follow the live host's current interaction guidance. Root remains the sole user-facing adjudicator; do not use the question tool for commentary or progress updates.
 - Tool availability and host mode limits govern. If asynchronous input is unavailable, use permitted native input or a plain user question; never force Plan-only `request_user_input` in Default mode, expand Plan mode permissions, or simulate an asynchronous runtime.
 
+## Parent communication
+
+- Children report progress, findings, blockers, and requested scope changes through `collaboration.send_message` to their verified parent; when that channel is unavailable, use the child final response. Use `send_message_to_thread` only for a genuine independent task handoff after verifying a non-empty destination thread ID; never use it to contact `/root` or with an empty or guessed ID.
+
 ## Goal
 
 - For every implementation-authorized run, verify the durable plan. Inspect the native Goal slot with `get_goal` only when the user explicitly requests a Goal or the current task already has one in use; an absent Goal does not block authorized work.

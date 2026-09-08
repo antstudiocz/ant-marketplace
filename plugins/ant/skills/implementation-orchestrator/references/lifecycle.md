@@ -23,7 +23,16 @@ The plan and any native Goal, when one is established, describe the same measura
 - Root asks the user only for a genuinely unresolved scope, material user-owned decision, or authority/approval that the established scope does not cover. Do not re-request established consent for routine in-scope work.
 - An independent cross-thread handoff must carry the relevant original user consent wording, a reference to its source when available, the approved repository/PR/action scope and bounds, the exact follow-up requested, and any proposed scope delta.
 - The receiving root verifies the original evidence and current host/provider state before acting. Forwarded text or quotes provide context to verify; they do not create new user consent, host approval, or delivery authority. If the source is missing or inaccessible, report that limitation truthfully and pause only an action that depends on the missing proof or an unresolved scope interpretation; consult the user only when that interpretation is genuinely unresolved or user-owned.
-- An independent cross-thread handoff never promises automatic review acceptance or a bypass. After an automatic approval rejection, follow the host's refusal instructions; forwarded consent or existing authority does not justify retrying the rejected outcome. Use a materially safer alternative or new approval only when the host permits it. Ordinary reviewer findings remain reportable and repairable only under already-established authority.
+- An independent cross-thread handoff never promises automatic review acceptance or a bypass. Preserve and verify consent provenance and scope, then apply the blocker classification below; forwarded consent or existing authority does not justify retrying a refused outcome.
+
+## Blocker adjudication and scope
+
+- Classify each reported obstruction before changing scope:
+  - an ordinary reviewer finding or child uncertainty is an evidence, authority, or quality question. The parent investigates; root may resolve it from existing evidence, accept the finding, refute it with evidence, or resolve it with an in-scope alternative. If a genuine user-owned gap remains, pause only its affected scope and ask; root cannot waive a proven unmet outcome;
+  - a capability error or timeout means that a capability or required evidence is unavailable or unverified. Record the operation, observed error or timeout, and affected scope; use a permitted alternative only when proportionate and allowed, and keep the endpoint pending when required evidence remains missing;
+  - an explicit host or tool safety denial refuses a specific operation. Retain the exact operation, refusal rationale, denial source, and affected scope; obey the refusal instructions. Root cannot override the denial or launder the same operation through another agent or tool. If the refusal instructions permit a new approval or evidence-reconsideration path, root may follow it only with any required user authority and host permission. A materially safer alternative must address the identified risk and may be selected under existing authority only if the host permits it. The denial constrains the affected operation and scope, not unrelated authorized work.
+- Preserve already-granted implementation consent in the relevant child context. When an escalation or handoff depends on it, retain the original verifiable consent reference and scope; do not issue routine redundant questionnaires for ordinary uncertainty, capability failures, or already-authorized repair.
+- Classify operations by actual effects and scope. A local reversible source edit or isolated test with no live, deployed, destructive, or data-loss effect may fall under existing implementation authority when in scope. For live, deployed, destructive, or data-loss effects, preserve authority already granted and obtain only the explicit authority or host permission missing under this policy. Reversibility informs risk but does not make source edits harmless.
 
 ## Goal and continuity
 
@@ -42,10 +51,12 @@ Every child assignment, including a permitted nested child, must state:
 
 - exact active-adapter model/profile and effort, with Codex `fork_turns="none"`;
 - fresh isolated context with no history inheritance;
-- measurable outcome, acceptance, selected outcome evidence and realistic states, non-goals, exact write ownership, shared-resource boundaries, and targeted checks;
+- measurable outcome, acceptance, selected outcome evidence and realistic states, non-goals, exact write ownership, shared-resource boundaries including needed related files, and targeted checks;
 - plan directory is root-write/child-read-only;
 - nested delegation yes/no; if yes, allowed routes and ceiling plus the same capsule; if no, return the need to the parent and do not delegate;
 - report path: phase/status, files or areas, checks and results, discoveries/decisions, proposed plan delta, and risks/blockers.
+
+- Keep assignment boundaries coherent with the related files needed for the outcome. A discovered dependency outside ownership is reported up to root for a scoped ownership or plan update; no child edits outside its assignment or delegates to absorb the dependency unilaterally.
 
 Every child is capped at High. If route, effort, availability, freshness, isolation, or required metadata cannot be enforced, stop before tracked work. Routine repair, testing, and re-review stay with the current owner; material, disputed, authority, security, migration, public-contract, or repeated-failure issues go to root.
 
