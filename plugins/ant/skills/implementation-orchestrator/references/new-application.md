@@ -11,6 +11,6 @@ Capture the facts that change architecture or acceptance:
 - integrations, secrets, jobs, webhooks, retries, rate limits, deployment, observability, backups, and recovery where relevant;
 - acceptance criteria, non-goals, unresolved decisions, and the smallest architecture that satisfies them.
 
-Use repository evidence before asking. Do not run a generic technology questionnaire or compare frameworks without a decision it would change. For a prototype, record which safeguards are intentionally deferred; for production, resolve data safety, authorization, recovery, and operational ownership before implementation.
+Use repository evidence before asking. Do not run a generic technology questionnaire or compare frameworks without a decision it would change. Resolve only consequential user-owned product, ownership, data-safety, authorization, recovery, or operational decisions that the repository and environment cannot answer. Choose routine technical details from evidence and proportional risk. For a prototype, record which safeguards are intentionally deferred; for production, resolve data safety, authorization, recovery, and operational ownership before implementation.
 
 Root records this intake in the durable plan. It is not a separate brief-approval ceremony and does not grant child write authority.
