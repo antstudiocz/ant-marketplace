@@ -29,6 +29,8 @@ codex plugin add ant@ant-marketplace
 
 Then install or enable `ant` from the configured marketplace using the CLI or Codex desktop Plugins Directory. For a repository-local marketplace, use the repo's `.agents/plugins/marketplace.json`; restart Codex or the desktop app after installing or updating. See the [official plugin packaging guide](https://developers.openai.com/plugins/build/plugins) for current CLI and desktop behavior.
 
+Orchestrated implementation uses the repository's durable plan. Native Goal handling is optional unless explicitly requested or already established for the current task, so missing optional Goal support does not block otherwise-authorized work; an explicitly requested Goal remains pending until established and verified.
+
 If the installed CLI does not expose `codex plugin marketplace`, update it or use the desktop Plugins Directory. Do not edit `config.toml` by hand when the CLI can manage the source.
 
 ## Updates and verification

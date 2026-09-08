@@ -9,14 +9,14 @@ This adapter owns Codex-specific Goal, model, effort, and tool behavior. The sha
 
 ## Goal
 
-- For every implementation-authorized run, verify the durable plan, then inspect the native Goal slot with `get_goal`. Native Goals are default-on for this route.
-- Reuse a matching active Goal. After classifying the inspected slot, use `create_goal` and reinspect with `get_goal` only for a verified empty slot or a slot containing a terminally completed Goal, with no unfinished unrelated Goal collision, when the tool is available and established user/host authorization covers automatic creation. Do not create through an unrelated or unverified state. Do not ask for consent solely for this optional Goal when that authority is already established, and never claim that the plugin grants consent.
+- For every implementation-authorized run, verify the durable plan. Inspect the native Goal slot with `get_goal` only when the user explicitly requests a Goal or the current task already has one in use; an absent Goal does not block authorized work.
+- Reuse a matching active Goal. After classifying the inspected slot, use `create_goal` and reinspect with `get_goal` only for a verified empty slot or a slot containing a terminally completed Goal, with no unfinished unrelated Goal collision, when the user explicitly requested the Goal and the tool is available. Do not create through an unrelated or unverified state, and never claim that the plugin grants consent. If no Goal was requested, do not ask for one or create one.
 - Apply the shared lifecycle classification for verified absence, unavailable capability or authority, unknown or unverifiable state, unrelated active Goals, explicit Goal requirements, and analysis-only work. Do not claim a Goal exists when verification fails.
 - `update_goal` is terminal-only (`complete` or `blocked`); it cannot represent phase progress or clear a collision.
 
 ## Recovery
 
-- After interruption or compaction, use `get_goal` when available and apply the shared lifecycle recovery and Goal classification before resuming.
+- After interruption or compaction, use `get_goal` when a Goal was explicitly requested or is already in use, then apply the shared lifecycle recovery and Goal classification before resuming. Otherwise reconcile the durable plan and native task state without creating a Goal.
 
 ## Routes
 

@@ -10,7 +10,7 @@ This skill owns PR/MR delivery and conflict resolution. State the requested mode
 ## Modes
 
 - **Preview:** prepare title, description and readiness without mutations or pipeline observation. Read the [description rules](references/provider-delivery.md#description).
-- **Create/update:** perform the authorized scoped commit/push/provider update and bounded observation. New PRs/MRs default to draft; preserve existing readiness unless a change is authorized. Read [provider delivery](references/provider-delivery.md).
+- **Create/update:** an explicit request authorizes the safely scoped commit/push/provider create or update and bounded observation for the already agreed repository scope and targets resolved from the instructions, repository/provider context, or safe defaults. New PRs/MRs default to draft; preserve existing readiness unless a readiness change is explicitly authorized. It does not authorize unrelated repositories, merge, release, deployment, or history rewrite. Read [provider delivery](references/provider-delivery.md).
 - **Observe/status:** inspect current-head provider metadata and checks only. No fetch, retry, repair or local/provider mutation. Read [exact-head observation](references/provider-delivery.md#exact-head-observation).
 - **Conflict resolution:** follow [conflict resolution](references/conflict-resolution.md). Conflict preparation alone grants no staging, commit, push, provider-update or pipeline-observation authority.
 

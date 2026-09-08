@@ -1,6 +1,6 @@
 # Claude Code adapter
 
-This adapter owns Claude-specific model, effort, and dispatch behavior. The shared rules are in [lifecycle.md](lifecycle.md). Native Goal support is optional unless the current host confirms it is in use.
+This adapter owns Claude-specific model, effort, and dispatch behavior. The shared rules are in [lifecycle.md](lifecycle.md). Native Goal support is optional unless the user explicitly requests it or the current host confirms that the current task already has one in use.
 
 ## Root and child preflight
 

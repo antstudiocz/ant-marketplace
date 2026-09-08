@@ -12,7 +12,7 @@ Use this skill for implementation work. For analysis or review, investigate and 
 ## Workflow
 
 1. Read repository instructions, inspect the current worktree and contracts, and identify risks and affected checks.
-2. If a material decision is not discoverable, ask only for that decision. Do not run a generic questionnaire.
+2. If consequential user-owned intent or authority is not discoverable, ask only for that decision. Resolve routine in-scope technical choices from evidence; do not run a generic questionnaire.
 3. Classify the request, choose continuity (in-place, accepted integrated replacement, or isolated handoff), and establish the root-owned plan at `docs/implementation-plans/YYYY/MM/<slug>/README.md` before tracked edits. Use [new-application.md](references/new-application.md) only for a new application or major app-like surface.
 4. For Codex, read [codex.md](references/codex.md) and apply its Goal handling and route preflight. For Claude Code, read [claude.md](references/claude.md). The shared lifecycle is in [lifecycle.md](references/lifecycle.md); load it for tracked orchestration, review, recovery, or candidate validation.
 5. Dispatch one integration owner with a complete routing capsule. Add disjoint workers only when ownership is clear and the active adapter permits them. Every child is fresh, isolated, explicitly routed, and capped at High; the plan directory is read-only to children.
