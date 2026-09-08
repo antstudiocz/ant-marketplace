@@ -16,7 +16,7 @@ This skill owns PR/MR delivery and conflict resolution. State the requested mode
 
 ## Authority and completion
 
-Existing action-specific authority carries forward. Delivery does not imply merge, release, tag, publication, deployment or history rewrite; rebase, force-push and reset require explicit authority. For an authorized release, read the [release-note rules](references/provider-delivery.md#release-notes).
+Existing action-specific authority carries forward. Delivery does not imply merge, release, tag, publication, deployment or history rewrite; rebase, force-push and reset require explicit authority. For an authorized release, read the [release-publication rules](references/provider-delivery.md#release-publication).
 
 The orchestrator's [lifecycle](../implementation-orchestrator/references/lifecycle.md#implementation-review-and-candidate) owns implementation, repair, review and endpoint criteria. Distinguish draft delivery from an explicit merge-ready request; neither local checks nor an observation timeout proves the latter complete.
 
