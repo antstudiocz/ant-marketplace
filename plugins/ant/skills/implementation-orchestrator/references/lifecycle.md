@@ -18,6 +18,13 @@ This reference owns shared orchestration policy. Apply repository instructions f
 
 The plan and any native Goal, when one is established, describe the same measurable outcome. A stable in-scope change updates the plan. A material outcome or public-contract change pauses the affected work and resolves the Goal/authority before resuming.
 
+## Simplicity and architecture
+
+- For target-project implementation, minimize understanding, operational, and maintenance complexity by choosing the simplest maintainable complete design that satisfies verified current requirements. Reuse existing mechanisms and justify each significant new layer, abstraction, dependency, configuration surface, or generality with concrete requirements and evidence for current needs rather than hypothetical future needs. Preserve semantics, correctness, safety, security, reliability, compatibility, and agreed scope; a larger architecture or merge request alone does not justify framework machinery.
+- When implementation materially increases conceptual or operational complexity, reconsider the architecture before polishing support subsystems. Under the selected cadence, gather proportionate early evidence that the core path works end to end and integrates with existing mechanisms before deep support-subsystem polishing; this is a reuse and feasibility check, not a requirement to run the full pipeline early.
+- Before freeze and the final gate, the implementer and independent reviewer each ask what can safely be removed, combined, or simplified, including unnecessary layers, duplicate state, unjustified genericity, and tests without meaningful unique coverage. Implement material safe simplifications within scope, then refresh affected checks, evidence, and review. Do not remove useful tests, set line-count goals, introduce cosmetic churn, or iterate without a new material finding.
+- Completion requires no known material unjustified complexity. Retain concise evidence for necessary complexity where it matters and judge benefit and risk proportionally. This code and design review is separate from the process retrospective and is not a new ceremony, framework, or evaluation mechanism.
+
 ## Delegation and cross-thread handoff
 
 - Ordinary orchestrator-to-child delegation is internal execution under established implementation authority. The parent passes the complete recursive capsule; it need not recopy the original user consent or ask the user to re-authorize an already-scoped follow-up. Children never address the user: they return ambiguity and evidence to the parent; the parent/root adjudicates routine in-scope decisions under that authority, and repairs stay with the current integration owner. A child-to-root escalation is internal adjudication, not an automatic user-question gate; root investigates, tests, and chooses an in-scope option before asking only when human intent or authority is genuinely missing.
@@ -54,6 +61,7 @@ Every child assignment, including a permitted nested child, must state:
 - exact active-adapter model/profile and effort, with Codex `fork_turns="none"`;
 - fresh isolated context with no history inheritance;
 - measurable outcome, acceptance, selected outcome evidence and realistic states, non-goals, exact write ownership, shared-resource boundaries including needed related files, and targeted checks;
+- the applicable [simplicity and architecture review](#simplicity-and-architecture) before freeze and the final gate;
 - plan directory is root-write/child-read-only;
 - nested delegation yes/no; if yes, allowed routes and ceiling plus the same capsule; if no, return the need to the parent and do not delegate;
 - report path: phase/status, files or areas, checks and results, discoveries/decisions, proposed plan delta, and risks/blockers.
