@@ -6,7 +6,7 @@ Read only the sections relevant to the requested mode. The [skill entrypoint](..
 
 Use Conventional Commit titles and concise English by default, subject to the resolved repository/user language. Build the description from the complete final target merge-base-to-`HEAD` diff and refresh it when that snapshot changes. Never add AI attribution or co-author trailers.
 
-Every PR/MR body has visible `Summary`, `Rationale`, and `Impact/risk` sections in that order. Put the exact `## Release notes` section immediately after the visible impact/risk section. Keep material risks, failed checks, pending gates, and unavailable evidence visible in `Impact/risk`; detailed implementation context and verification evidence follow in collapsed HTML details blocks. Localized headings are fine for the visible human-facing sections, but the release-note headings below remain exact English for deterministic extraction.
+Every PR/MR body has visible `Summary`, `Rationale`, and `Impact/risk` sections in that order. Put the exact `## Release notes` section immediately after the visible impact/risk section. Keep material risks, failed checks, pending gates, and unavailable evidence visible in `Impact/risk`; detailed implementation context and verification evidence follow in collapsed HTML details blocks. Localized headings are fine for the visible human-facing sections, but the release-note headings below remain exact English for deterministic extraction. New authoring uses the canonical headings `Added`, `Changed`, `Fixed`, and `Internal changes`. Consumers should add canonical-heading support before a producer switches its default, while continuing to read the legacy aliases `New features`, `Improvements`, and `Fixes` for existing content during rollout.
 
 - **Summary:** the problem and resulting behavior.
 - **Rationale:** why the change is needed and the relevant decision or tradeoff.
@@ -19,20 +19,20 @@ Write release notes from the final target merge-base-to-`HEAD` snapshot. Refresh
 ```markdown
 ## Release notes
 
-### New features
+### Added
 - User-facing entry ready to publish.
 
-### Improvements
+### Changed
 - User-facing entry ready to publish.
 
-### Fixes
+### Fixed
 - User-facing entry ready to publish.
 
 ### Internal changes
 - Entry for a material internal change that belongs in release communication.
 ```
 
-Use only the category headings that have entries. Keep each bullet ready to publish and include availability, an off-by-default feature flag, or required user action in that bullet when applicable. Keep entry prose in the selected description language while preserving the exact English headings. When the final snapshot has no release impact, use exactly `No release impact.` under `## Release notes` and omit all category headings. Never infer no impact from a missing, malformed, or ambiguous section; require manual review instead.
+Use only the category headings that have entries. Classify a new capability as `Added`, a deliberate change to existing behavior, design, or performance as `Changed`, and a documented deviation from expected behavior as `Fixed`. Visual regressions, timeout handling, and similar repairs belong in `Fixed` when they correct expected behavior; do not duplicate the same repair or frame it as an improvement. For new notes, classify from the final diff's intent and expected-behavior evidence. When synthesizing existing notes, preserve an explicit source category; require manual review only when the evidence conflicts or remains genuinely ambiguous. Keep each bullet ready to publish and include availability, an off-by-default feature flag, or required user action in that bullet when applicable. Keep entry prose in the selected description language while preserving the exact English headings. `Internal changes` is separate from public delivery and is excluded by public consumers. When the final snapshot has no release impact, use exactly `No release impact.` under `## Release notes` and omit all category headings. Never infer no impact from a missing, malformed, or ambiguous section; require manual review instead.
 
 Do not put JSON, a custom schema, duplicated machine payload, a level-2 heading, or a details block inside the release-note content. The consumer ends the section at the next level-2 heading or the first HTML `<details>` block, so place implementation context and detailed verification after the release notes in collapsed blocks such as:
 
