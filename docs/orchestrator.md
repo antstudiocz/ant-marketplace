@@ -35,7 +35,7 @@ The shared [blocker adjudication policy](../plugins/ant/skills/implementation-or
 
 ## Routing
 
-Every child receives a complete capsule: exact model/profile and effort, fresh isolated context, outcome and acceptance, selected verification cadence from the [cadence policy](../plugins/ant/skills/implementation-orchestrator/references/lifecycle.md#verification-cadence), outcome evidence and realistic states required by the [shared evidence and quality policy](../plugins/ant/skills/implementation-orchestrator/references/lifecycle.md#evidence-and-quality), risk-needed early evidence/review/probes and deferred routine checks, non-goals, write ownership, checks, root-only plan boundary, delegation permission, and reporting/escalation path. Children remain capped at High.
+Every child receives the complete [dispatch capsule](../plugins/ant/skills/implementation-orchestrator/references/lifecycle.md#dispatch-capsule), including its compact delegated authorization context and the route, outcome, evidence, boundaries, checks, delegation, and reporting fields it defines. Children remain capped at High.
 
 For Codex, the normal owner is `gpt-5.6-luna` at High and the independent strong reviewer is `gpt-5.6-sol` at High. Narrow work uses Luna at proportional High, Medium, or Low. For Claude Code, the owner is `ant:balanced-high` (`sonnet` + High) and the reviewer is `ant:strong-high` (`opus` + High); bounded profiles are selected by the adapter. If the exact route, freshness, isolation, or required host metadata cannot be enforced, stop before tracked work.
 
