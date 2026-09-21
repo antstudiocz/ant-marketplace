@@ -29,7 +29,7 @@ Use a fresh isolated context and `fork_turns="none"` for every child. Never exce
 | Role | Model | Effort |
 |---|---|---|
 | Integration owner | `gpt-5.6-luna` | High |
-| Strong reviewer or strong judgment | `gpt-5.6-sol` | High |
+| Strong reviewer or strong judgment | `gpt-6-astra` | Low |
 | Bounded investigation, validation, or narrow work | `gpt-5.6-luna` | High, Medium, or Low as proportionate |
 
 The root model and effort are developer-selected. There is no Terra route or fallback. Every assignment carries the complete capsule from [lifecycle.md](lifecycle.md), including write ownership, the root-only plan boundary, delegation permission, checks, and report/escalation path.
