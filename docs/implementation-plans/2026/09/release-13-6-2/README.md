@@ -1,0 +1,11 @@
+# Release 13.6.2
+
+User explicitly authorized PR creation, admin merge and release for Luna 6 and Astra Medium routing. Latest published tag v13.6.1 and origin/master 97f0b83 confirmed. Use isolated checkout from current master to preserve stale original checkout and unrelated changes. Compatible patch release follows existing routing release convention.
+
+Scope: active Codex adapter and orchestrator guide, three synchronized version manifests, new 13.6.2 release notes. Acceptance: Luna 6 owner/bounded roles; Astra Medium for every strong review/judgment including high-risk; version 13.6.2; reviewed and locally validated candidate; PR merged by explicit admin authority; published tag/release matches verified merged commit. Link merged PR in published release notes. No changes to unrelated delivery guidance or historical notes.
+
+Root owns this plan and delivery. Fresh isolated Luna High integration owner owns scoped implementation/release files; fresh isolated Astra Medium reviewer is read-only. Children cannot delegate or edit plan. Incremental low-risk instruction/metadata change; no runtime probes/tests needed, no deferred checks. Simplicity review uses existing routing mechanism. Final gate: both plugin validators, JSON parsing, synchronized versions and diff whitespace. Observe provider checks/rules with a finite ten-minute budget. No native Goal requested or in use.
+
+Status: owner preparation, independent review, freeze/checks, scoped commit and PR, provider observation, admin merge, release and readback.
+
+Pre-delivery checkpoint: owner completed only scoped files; independent Astra Medium review passed with no findings. Simplicity and synchronized versions confirmed. GitHub master protection requires one code-owner approval, admin enforcement disabled; no required status checks and no branch rules returned. Explicit admin-merge authority will bypass approval. Candidate freezes after this checkpoint; final local gate precedes commit/push and provider observation. Retrospective: isolated current-master checkout avoids reverting newer released work; minimal route and metadata changes suffice. Final delivery readbacks will be reported without post-freeze source mutations.

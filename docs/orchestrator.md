@@ -37,7 +37,7 @@ The shared [blocker adjudication policy](../plugins/ant/skills/implementation-or
 
 Every child receives the complete [dispatch capsule](../plugins/ant/skills/implementation-orchestrator/references/lifecycle.md#dispatch-capsule), including its compact delegated authorization context and the route, outcome, evidence, boundaries, checks, delegation, and reporting fields it defines. Children remain capped at High.
 
-For Codex, the normal owner is `gpt-5.6-luna` at High and the independent strong reviewer is `gpt-6-astra` at Low. Narrow work uses Luna at proportional High, Medium, or Low. For Claude Code, the owner is `ant:balanced-high` (`sonnet` + High) and the reviewer is `ant:strong-high` (`opus` + High); bounded profiles are selected by the adapter. If the exact route, freshness, isolation, or required host metadata cannot be enforced, stop before tracked work.
+For Codex, the normal owner is `gpt-6-luna` at High and the independent strong reviewer or strong-judgment role is `gpt-6-astra` at Medium. Narrow work uses Luna at proportional High, Medium, or Low. For Claude Code, the owner is `ant:balanced-high` (`sonnet` + High) and the reviewer is `ant:strong-high` (`opus` + High); bounded profiles are selected by the adapter. If the exact route, freshness, isolation, or required host metadata cannot be enforced, stop before tracked work.
 
 ## Validation and delivery
 
