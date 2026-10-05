@@ -2,7 +2,7 @@
   <img src="assets/logo.svg" alt="(ant)" width="200">
 </p>
 
-<h3 align="center">Three focused workflow skills for Claude Code and Codex</h3>
+<h3 align="center">Five focused workflow skills for Claude Code and Codex</h3>
 
 `(ant)` provides an instruction-only plugin for reviewed implementation, GitHub/GitLab delivery, merge-conflict resolution, and `(ant)` brand work.
 
@@ -32,10 +32,12 @@ Invoke `/ant:skill-name` in Claude Code or `$skill-name` in Codex.
 | Skill | Use it for |
 |---|---|
 | `implementation-orchestrator` | New applications, features, fixes, refactors, migrations, and remediation that need discovery, a root-owned Git-tracked durable plan, delegated tracked edits, independent review, final validation, and optional delivery. |
+| `test-design` | Decide whether automated coverage adds useful protection, then choose scenarios, an observable oracle, and an appropriate layer. |
+| `test-maintenance` | Clean up, repair, or optimize existing tests when requested or needed for the agreed implementation. |
 | `merge-request` | Read-only PR/MR previews, scoped create/update delivery, exact-head pipeline observation, or intelligent local/remote conflict resolution. |
 | `brand-design` | Designing or reviewing websites, apps, decks, documents, visuals, and UI against the `(ant)` identity and bundled assets. |
 
-The orchestrator classifies intent, derives the original goal and completion criteria, selects proportional outcome evidence from the changed surface and risk, asks only about consequential missing human intent or impacts outside established authority, keeps root coordination-only, and uses a root-owned durable plan, an optional native Goal when explicitly requested or already in use, an integration owner, independent whole-outcome review, targeted checks, and one risk-appropriate candidate gate. For target-project code, it selects the simplest maintainable complete design for verified current needs and requires a pre-freeze simplicity review with concrete justification for significant complexity. Missing or unavailable optional Goal support never blocks otherwise-authorized work under the plan; an explicitly requested Goal remains pending until established and verified. `merge-request` covers read-only Preview and Observe/status, scoped Create/update, and conflict resolution with separate authority boundaries.
+The orchestrator classifies intent, derives the original goal and completion criteria, selects proportional outcome evidence from the changed surface and risk, asks only about consequential missing human intent or impacts outside established authority, keeps root coordination-only, and uses a root-owned durable plan, an optional native Goal when explicitly requested or already in use, an integration owner, independent whole-outcome review, targeted checks, and one risk-appropriate candidate gate. For target-project code, it selects the simplest maintainable complete design for verified current needs and requires a pre-freeze simplicity review with concrete justification for significant complexity. Missing or unavailable optional Goal support never blocks otherwise-authorized work under the plan; an explicitly requested Goal remains pending until established and verified. `merge-request` covers read-only Preview and Observe/status, scoped Create/update, and conflict resolution with separate authority boundaries. Automated coverage follows the shared test-quality policy: `test-design` routes through planning and independent review, while `test-maintenance` applies only to requested or in-scope cleanup.
 
 The canonical routing, Goal, recursive delegation, review-invalidation, and provider preflight matrix is in the [orchestrator guide](docs/orchestrator.md). Installation details are in [installation](docs/install.md).
 

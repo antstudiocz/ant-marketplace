@@ -1,10 +1,20 @@
 # Skills
 
-The plugin exposes exactly three public entry points. Choose the one that owns the requested outcome.
+The plugin exposes five public entry points. Choose the one that owns the requested outcome.
 
 ## `implementation-orchestrator`
 
 Use for features, fixes, refactors, migrations, remediation, and new applications that need a reviewed and verified implementation. It establishes a root-owned durable plan, derives the original goal and completion criteria, selects proportional outcome evidence from the changed surface and risk, applies the host's route rules and any applicable Goal rules, delegates one integration owner, obtains independent whole-outcome review, repairs in-scope findings, runs proportional checks, and verifies one final candidate gate. For target-project code, it also applies the canonical [simplicity and architecture review](../plugins/ant/skills/implementation-orchestrator/references/lifecycle.md#simplicity-and-architecture) before freeze. On Codex, missing or unavailable optional Goal support never blocks otherwise-authorized work under the durable plan; an explicitly requested Goal remains pending until established and verified. Analysis-only work remains read-only while investigating accessible unknowns. Ordinary findings, capability failures, safety denials, and explicitly permitted recovery notices follow the shared [blocker adjudication policy](../plugins/ant/skills/implementation-orchestrator/references/lifecycle.md#blocker-adjudication-and-scope). Read the [orchestrator guide](orchestrator.md) for the lifecycle and host adapters.
+
+When automated coverage is proposed, changed, or reviewed, the orchestrator routes through [test-design](../plugins/ant/skills/test-design/SKILL.md) and the shared [test-quality policy](../plugins/ant/skills/implementation-orchestrator/references/test-quality.md). [test-maintenance](../plugins/ant/skills/test-maintenance/SKILL.md) applies only to requested or in-scope cleanup, repair, or optimization.
+
+## `test-design`
+
+Use to decide whether automated coverage is needed and design or review meaningful scenarios, oracles, test layers, mocks, and synchronization for a specific change. Existing coverage and repository conventions come first. The shared [test-quality policy](../plugins/ant/skills/implementation-orchestrator/references/test-quality.md) is canonical.
+
+## `test-maintenance`
+
+Use for requested cleanup, repair, or optimization of existing tests, or when required by the agreed implementation. It does not trigger broad cleanup during unrelated implementation. Follow the shared [test-quality policy](../plugins/ant/skills/implementation-orchestrator/references/test-quality.md) when preserving distinct regression protection and classifying failures.
 
 ## `merge-request`
 
