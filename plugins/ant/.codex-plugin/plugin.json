@@ -1,7 +1,7 @@
 {
   "name": "ant",
   "version": "13.6.2",
-  "description": "Three (ant) skills for verified implementation, GitHub/GitLab delivery and conflict resolution, and brand design.",
+  "description": "Five (ant) skills for verified implementation, test design and maintenance, GitHub/GitLab delivery and conflict resolution, and brand design.",
   "author": {
     "name": "(ant)",
     "description": "full-service digital agency"
@@ -26,7 +26,7 @@
   "interface": {
     "displayName": "(ant)",
     "shortDescription": "Shared (ant) skills for Codex and Claude Code.",
-    "longDescription": "Three focused skills for proportional implementation orchestration, PR/MR delivery plus conflict resolution, and professional (ant) brand design.",
+    "longDescription": "Five focused skills for proportional implementation orchestration, test design and maintenance, PR/MR delivery plus conflict resolution, and professional (ant) brand design.",
     "developerName": "(ant)",
     "category": "Productivity",
     "capabilities": [
@@ -34,7 +34,7 @@
       "Write"
     ],
     "defaultPrompt": [
-      "Use the relevant (ant) skill for implementation, PR/MR or conflict work, or brand design."
+      "Use the relevant (ant) skill for implementation, test design or maintenance, PR/MR or conflict work, or brand design."
     ],
     "brandColor": "#5BFFC4"
   }

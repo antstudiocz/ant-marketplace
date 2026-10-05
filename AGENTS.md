@@ -6,7 +6,7 @@ This file owns repository-wide invariants. Skill behavior belongs in the relevan
 ## Scope and structure
 
 - Preserve unrelated changes. Implementation authority covers completion of the requested local scope and its routine technical decisions, repairs, review, checks, and recovery across phases and agents; delivery, destructive actions, migrations, and compatibility breaks need explicit authority. An explicit PR/MR Create/update request carries the delivery authority defined by `merge-request` for the already agreed repository scope.
-- The plugin exposes exactly three public skills: `implementation-orchestrator`, `merge-request`, and `brand-design`.
+- The plugin exposes five public skills: `implementation-orchestrator`, `test-design`, `test-maintenance`, `merge-request`, and `brand-design`.
 - Keep the plugin instruction-only. Do not add a runtime, hooks, machine state, event log, lease protocol, compatibility reader, generated validator, or synthetic evaluation framework.
 - Keep `CLAUDE.md` as the `@AGENTS.md` import; do not duplicate this contract.
 - Preserve the brand corpus. `plugins/ant/skills/brand-design/assets/source/ant-brand.md` and its adjacent `manifest.json` are canonical.
