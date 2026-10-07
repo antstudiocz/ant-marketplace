@@ -10,11 +10,11 @@ When automated coverage is proposed, changed, or reviewed, the orchestrator rout
 
 ## `test-design`
 
-Use to decide whether automated coverage is needed and design or review meaningful scenarios, oracles, test layers, mocks, and synchronization for a specific change. Existing coverage and repository conventions come first. The shared [test-quality policy](../plugins/ant/skills/implementation-orchestrator/references/test-quality.md) is canonical.
+Use to decide whether automated coverage adds distinct protection and design or review meaningful scenarios, oracles, test layers, mocks, and synchronization for a specific change. A test is not required for every change; the shared [test-quality policy](../plugins/ant/skills/implementation-orchestrator/references/test-quality.md) is canonical.
 
 ## `test-maintenance`
 
-Use for requested cleanup, repair, or optimization of existing tests, or when required by the agreed implementation. It does not trigger broad cleanup during unrelated implementation. Follow the shared [test-quality policy](../plugins/ant/skills/implementation-orchestrator/references/test-quality.md) when preserving distinct regression protection and classifying failures.
+Use for requested cleanup, repair, or optimization of existing tests, or when required by the agreed implementation. It does not trigger broad cleanup during unrelated implementation. The shared [test-quality policy](../plugins/ant/skills/implementation-orchestrator/references/test-quality.md) allows deleting tests with no meaningful protection without replacement and defines how to preserve distinct contracts during consolidation.
 
 ## `merge-request`
 

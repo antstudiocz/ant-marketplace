@@ -5,7 +5,7 @@ description: Decide whether automated tests add useful protection, and design or
 
 # Test Design
 
-Use this skill to decide whether coverage is warranted and to select meaningful scenarios, an observable oracle, and an appropriate test layer. For cleanup, repair, or optimization of existing tests, use [test-maintenance](../test-maintenance/SKILL.md).
+Use this skill to decide whether automated coverage adds distinct protection, then select meaningful scenarios, an observable oracle, and an appropriate test layer. A test is not required for every implementation change. For cleanup, repair, or optimization of existing tests, use [test-maintenance](../test-maintenance/SKILL.md).
 
 Follow the shared [test-quality policy](../implementation-orchestrator/references/test-quality.md). Inspect repository guidance and existing tests before proposing coverage. Tie each proposed test to a distinct failure it can detect; account for setup side effects, mock boundaries, synchronization, and whether the assertion proves the contract. Keep recommendations proportional and use the project's documented commands.
 

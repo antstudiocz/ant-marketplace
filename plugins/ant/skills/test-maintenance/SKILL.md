@@ -9,6 +9,6 @@ Use this skill only for requested cleanup, repair, or optimization, or when such
 
 Analysis-only work stays read-only. For implementation-authorized maintenance, follow the [implementation-orchestrator lifecycle](../implementation-orchestrator/SKILL.md); this skill supplies the test-specific decisions within that workflow and grants no delivery authority.
 
-Follow the shared [test-quality policy](../implementation-orchestrator/references/test-quality.md) to distinguish reusable setup from distinct scenarios, preserve regression protection and synchronization, classify failures, and bound performance claims.
+Apply the shared [test-quality policy](../implementation-orchestrator/references/test-quality.md) to decide which tests to remove, combine, or retain. Tests without meaningful regression protection can be removed without replacement; consolidation must preserve distinct contracts.
 
 Use repository-defined commands and run checks proportional to the affected tests. Report protections removed, combined, or retained and any unresolved failures without claiming unsupported suite-wide improvement.
