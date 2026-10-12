@@ -22,6 +22,10 @@ This adapter owns Codex-specific Goal, model, effort, and tool behavior. The sha
 
 - After interruption or compaction, use `get_goal` when a Goal was explicitly requested or is already in use, then apply the shared lifecycle recovery and Goal classification before resuming. Otherwise reconcile the durable plan and native task state without creating a Goal.
 
+## Preflight
+
+Apply the shared [preflight](lifecycle.md#preflight-and-outcome-evidence). For Codex-specific preflight, check whether the available tools and execution capabilities can run the lifecycle-selected narrow boundary probe; do not infer support from the model name or assume unavailable execution continues in background.
+
 ## Routes
 
 Use a fresh isolated context and `fork_turns="none"` for every child. Never exceed High or dispatch when the selected route cannot be enforced.
