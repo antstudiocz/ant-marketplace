@@ -11,9 +11,11 @@ The orchestrator:
 3. records a root-owned plan before tracked edits;
 4. applies the active adapter's Goal preflight when applicable, plus the child-route preflight;
 5. dispatches a fresh, isolated integration owner and keeps root coordination-only;
-6. obtains independent strong review, refreshes affected checks after changes, and verifies one risk-appropriate final gate.
+6. obtains independent opposite-provider overall review, adds focused specialists when the actual risks call for them, refreshes affected checks after changes, and verifies one risk-appropriate final gate.
 
 Before implementation or analysis, it derives the goal, scenarios, and observable completion criteria, then selects proportional outcome evidence for the changed surface and risk. The [shared evidence and quality policy](../plugins/ant/skills/implementation-orchestrator/references/lifecycle.md#evidence-and-quality) requires fact-checked claims, realistic-state verification for changed user-visible behavior, and independent whole-outcome review; unknowns and material limitations remain visible. In-scope findings are repaired and reverified under existing authority.
+
+The [independent review policy](../plugins/ant/skills/implementation-orchestrator/references/review.md) records source-author provider provenance and requires a verified overall reviewer from the other provider. It selects specialists from actual diff risks, requires findings to cite evidence and receive confirmed/refuted/unverified dispositions, and refreshes only evidence affected by a candidate change. For changed user flows, it distinguishes a real product flow from response or screenshot proxies, and provider processing from UI-only checks.
 
 The existing plan tracks a short set of required outcome scenarios with candidate/environment, evidence, and status. The orchestrator preflights the relevant checkout and target, existing fixes, and any production API/worker revisions or active skill origin that could change the decision. It selects narrow early real-boundary probes from risk; unknown or stale required evidence remains pending. Capacity recovery uses observed agent state, and follow-ups preserve the user's requested delivery granularity and endpoint. The [Codex adapter](../plugins/ant/skills/implementation-orchestrator/references/codex.md#preflight) owns host-specific checks.
 
@@ -29,7 +31,7 @@ Questions are limited to consequential missing human intent or impacts outside e
 
 ## Authority
 
-Root is the sole user-facing adjudicator. Root owns decisions, plan checkpoints, Goal lifecycle, recovery, freeze, final verification, retrospective, and readiness, and writes only the scoped plan bundle. The integration owner writes scoped source, configuration, tests, and general documentation. The independent strong reviewer reads and reports findings but never writes fixes. Children read the plan and report to their parent; they cannot write the plan directory.
+Root is the sole user-facing adjudicator. Root owns decisions, plan checkpoints, Goal lifecycle, recovery, freeze, final verification, retrospective, and readiness, and writes only the scoped plan bundle. The integration owner writes scoped source, configuration, tests, and general documentation. The independent overall reviewer reads and reports findings but never writes fixes; conditional specialists review only selected risk areas. Children read the plan and report to their parent; they cannot write the plan directory.
 
 A user's explicit instruction takes precedence over a skill-owned workflow preference and can change the scoped plan or endpoint; the [shared lifecycle](../plugins/ant/skills/implementation-orchestrator/references/lifecycle.md) records the impacts and any pending evidence within higher-priority safety and permission bounds.
 
@@ -41,7 +43,7 @@ The shared [blocker adjudication policy](../plugins/ant/skills/implementation-or
 
 Every child receives the complete [dispatch capsule](../plugins/ant/skills/implementation-orchestrator/references/lifecycle.md#dispatch-capsule), including its compact delegated authorization context and the route, outcome, evidence, boundaries, checks, delegation, and reporting fields it defines. Children remain capped at High.
 
-For Codex, the normal owner is `gpt-6-luna` at High and the independent strong reviewer or strong-judgment role is `gpt-6-astra` at Medium. Narrow work uses Luna at proportional High, Medium, or Low. For Claude Code, the owner is `ant:balanced-high` (`sonnet` + High) and the reviewer is `ant:strong-high` (`opus` + High); bounded profiles are selected by the adapter. If the exact route, freshness, isolation, or required host metadata cannot be enforced, stop before tracked work.
+For Codex, the normal owner is `gpt-6-luna` at High and `gpt-6-astra` at Medium is an OpenAI strong-judgment route. For Claude Code, the owner is `ant:balanced-high` (`sonnet` + High) and `ant:strong-high` (`opus` + High) is an Anthropic strong-judgment route. Either route can serve as overall reviewer when its provider is opposite the implementation author and it meets the independence requirements; otherwise use a verified route from the other provider. Narrow work uses adapter-supported routes capped at High. A noncompliant reviewer route leaves required review pending while independent authorized implementation and checks may continue; do not dispatch an assignment whose route cannot be enforced.
 
 ## Validation and delivery
 

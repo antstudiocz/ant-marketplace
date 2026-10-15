@@ -18,6 +18,6 @@ This skill owns PR/MR delivery and conflict resolution. State the requested mode
 
 Existing action-specific authority carries forward. Delivery does not imply merge, release, tag, publication, deployment or history rewrite; rebase, force-push and reset require explicit authority. For an authorized release, read the [release-publication rules](references/provider-delivery.md#release-publication).
 
-The orchestrator's [lifecycle](../implementation-orchestrator/references/lifecycle.md#implementation-review-and-candidate) owns implementation, repair, review and endpoint criteria. Distinguish draft delivery from an explicit merge-ready request; neither local checks nor an observation timeout proves the latter complete.
+The orchestrator's [lifecycle](../implementation-orchestrator/references/lifecycle.md#implementation-review-and-candidate) owns implementation, repair, review and endpoint criteria. Use its [canonical review policy](../implementation-orchestrator/references/review.md) for finding evidence and dispositions. Distinguish draft delivery from an explicit merge-ready request; neither local checks nor an observation timeout proves the latter complete.
 
 Report the requested outcome, provider URL when applicable, actions, decisive evidence, material gaps and next step. Use the observation reference for CI evidence; report the merge/index state for conflicts. State when no provider mutation occurred.
