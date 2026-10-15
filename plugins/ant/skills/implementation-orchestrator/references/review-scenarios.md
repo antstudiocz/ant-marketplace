@@ -2,7 +2,7 @@
 
 These small manual examples check how the [review policy](review.md) is applied. Inputs and expected decisions below are examples; they are not executed tests or evidence of a real review.
 
-- **Specialist selection** — Input: a SQL migration changes a query and a separate edit changes only a label. Expected: select data/SQL review for the migration; do not add specialists for the label-only edit by default.
+- **Specialist selection** — Input: a SQL migration changes a query and a separate edit changes only a label. Expected: briefly explain why data/SQL review is useful for the migration; do not add specialists for the label-only edit by default. Ask whether the query plan preserves bounded scans, scope the question to the changed query and related schema, and request representative `EXPLAIN` output, a measurement, or concrete static evidence; report unavailable evidence without presuming the conclusion.
 - **Independent first pass** — Input: a frozen candidate, task objective, contracts, and outcome evidence are ready; the implementer says the patch is correct and another reviewer has findings. Expected: give the overall reviewer the objective, candidate, contracts, and evidence without either conclusion.
 - **Finding disposition** — Input: a focused reproduction disproves a reported failure; another provider path cannot be accessed. Expected: mark the first finding refuted with reproduction evidence; mark the second unverified and retain the access gap.
 - **Author differs from root** — Input: an OpenAI integration owner works under a Claude root. Expected: record OpenAI as source-author provider and route the overall review to Anthropic.
