@@ -1,0 +1,29 @@
+# Independent review
+
+This reference owns review selection, independence, findings, and review evidence. The shared [lifecycle](lifecycle.md) owns implementation authority, candidate freeze, repair, and final outcome.
+
+## Select reviewers
+
+- Assign one independent overall reviewer to assess the objective, required scenarios, candidate, contracts, and evidence. The review covers the whole outcome, not only changed lines.
+- Record implementation authorship from the actual owner route and substantive changes, not root's provider. For a single-provider candidate, the overall reviewer must be from the other provider: OpenAI-authored work is reviewed by Anthropic, and Anthropic-authored work by OpenAI. For mixed authorship, route review so each consequential contribution is covered by an opposite-provider reviewer; report any uncovered segment.
+- The active adapter owns the concrete route and preflight. Verify provider/model identity, availability, and required read-only capability before dispatch. Preserve an explicit user model choice even when it conflicts with the cross-provider requirement: report the unmet requirement to root, who honors the choice and records the coverage gap. Do not silently substitute a model, change route, use an unapproved external route, or bypass a host control. Ask the user only if a consequential decision remains genuinely unresolved. If cross-provider review cannot be enforced, report that coverage as unavailable or unverified and leave the required review outcome pending; other authorized implementation and checks may continue.
+- Root selects a specialist only when the actual change or risk needs focused expertise. Possible areas include architecture; data; SQL/performance; locking/concurrency; cache; security/tenant isolation; frontend/accessibility; integration/recovery; migration/operations; and test quality. Use relevant existing skills for the question, give each specialist a short assignment and read-only ownership, and inspect related paths as needed. Report expertise or evidence gaps. The overall reviewer remains accountable for the whole outcome; specialists add targeted evidence, not votes.
+- The overall review's first pass receives the objective/task, immutable candidate, relevant contracts, and evidence. Do not include implementer assurances or peer-review conclusions. Specialists likewise inspect their assigned question independently before receiving others' conclusions.
+
+## Findings and repair
+
+- A useful finding states the trigger, impact, affected source or contract, and supporting evidence. Assess severity from the evidenced trigger and plausible impact, not reviewer count or confidence scores. Give a bounded reproduction or measurement when direct evidence needs one; distinguish observation from inference.
+- The implementer verifies each finding and proposes or makes any in-scope repair. The independent reviewer verifies the repair. Root adjudicates evidence disputes and decides whether the acceptance criteria are met; reviewer agreement, votes, or confidence scores are not proof.
+- Disposition each finding as **confirmed**, **refuted**, or **unverified**, with the evidence and reason. Keep credible potentially material unverified findings visible for root adjudication. Do not mark the affected outcome achieved or merge-ready solely because a finding could not be reproduced or was raised by one reviewer. A draft may proceed under its existing authority with the material gap stated; the affected broader outcome remains pending until root resolves the evidence or the risk.
+- Bound review and repair to the evidence: do not repeat a round without a material new finding, changed candidate, or new evidence. Escalate unresolved evidence disputes to root. This does not waive a proven unmet outcome or broaden implementation authority.
+- A candidate change invalidates review and evidence only where its impact can reach. Re-review and rerun affected checks; preserve unrelated evidence with a concrete impact rationale. Review after a tracked mutation must identify the candidate it covers.
+
+## Outcome evidence
+
+- Match each claim to evidence for the actual changed behavior and candidate. A `200` response, screenshot, passing test, or other proxy alone does not establish an end-user flow.
+- For changed user flows, interact with the running product through each relevant final scenario. Distinguish create from reuse and repeat/idempotent behavior, UI behavior from provider end-to-end processing, and synthetic fixtures from production data. Follow the active adapter's browser route. Report unavailable access or side-effect limits as gaps.
+- Preserve prior browser evidence after a test-only change only when the affected behavior is demonstrably unchanged; state the impact rationale. Keep evidence tied to candidate and environment when that can affect the result.
+- Before handoff, state the final candidate and runtime/environment identity, or why runtime evidence does not apply; the overall reviewer provider/model and scope; checks performed or not applicable; and browser-flow coverage or why it does not apply. This is a concise evidence inventory, not a required artifact format.
+- Apply the separate [worked review scenarios](review-scenarios.md) as manual decision examples. Their inputs and expected decisions are instructional examples, not evidence that a review, test, or browser flow was actually run.
+
+Consider a compact sample of historical pull requests for future calibration only when evidence supports the need; this policy does not claim measured reviewer accuracy or prescribe an evaluation system.

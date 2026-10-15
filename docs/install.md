@@ -31,6 +31,8 @@ Then install or enable `ant` from the configured marketplace using the CLI or Co
 
 Orchestrated implementation uses the repository's durable plan. Native Goal handling is optional unless explicitly requested or already established for the current task, so missing optional Goal support does not block otherwise-authorized work; an explicitly requested Goal remains pending until established and verified.
 
+Cross-provider review requires an authenticated, verifiable route to the other model provider. The orchestrator checks provider/model identity and read-only capability for each review; it does not install another CLI, configure credentials, or change the route automatically. If no compliant route is available, the review gap remains visible and any required cross-provider review stays pending.
+
 If the installed CLI does not expose `codex plugin marketplace`, update it or use the desktop Plugins Directory. Do not edit `config.toml` by hand when the CLI can manage the source.
 
 ## Updates and verification

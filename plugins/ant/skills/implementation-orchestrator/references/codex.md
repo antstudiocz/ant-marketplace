@@ -33,10 +33,12 @@ Use a fresh isolated context and `fork_turns="none"` for every child. Never exce
 | Role | Model | Effort |
 |---|---|---|
 | Integration owner | `gpt-6-luna` | High |
-| Strong reviewer or strong judgment | `gpt-6-astra` | Medium |
+| OpenAI strong judgment or focused review | `gpt-6-astra` | Medium |
 | Bounded investigation, validation, or narrow work | `gpt-6-luna` | High, Medium, or Low as proportionate |
 
 The root model and effort are developer-selected. There is no Terra route or fallback. Every assignment carries the complete capsule from [lifecycle.md](lifecycle.md), including write ownership, the root-only plan boundary, delegation permission, checks, and report/escalation path.
+
+For independent overall review, follow the [review policy](review.md). Use a verified route from the provider opposite the implementation author: Codex models can review Anthropic-authored work, while OpenAI-authored work requires an Anthropic route. The default Claude Code CLI route is a fresh `claude --model opus --effort high --permission-mode plan --tools Read Grep Glob` session; verify its authenticated provider/model identity. Preserve an explicit user model choice under the canonical policy. A focused review supplements the overall review; a strong-judgment route may serve as overall reviewer when its provider is opposite the source author and it meets the independence requirements.
 
 ## Smoke
 
