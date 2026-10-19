@@ -33,10 +33,20 @@ Use a fresh isolated context and `fork_turns="none"` for every child. Never exce
 | Role | Model | Effort |
 |---|---|---|
 | Integration owner | `gpt-6-luna` | High |
-| Strong reviewer or strong judgment | `gpt-6-astra` | Medium |
+| OpenAI strong judgment or focused review | `gpt-6-astra` | Medium |
 | Bounded investigation, validation, or narrow work | `gpt-6-luna` | High, Medium, or Low as proportionate |
 
 The root model and effort are developer-selected. There is no Terra route or fallback. Every assignment carries the complete capsule from [lifecycle.md](lifecycle.md), including write ownership, the root-only plan boundary, delegation permission, checks, and report/escalation path.
+
+For independent overall review, follow the [review policy](review.md). Use a verified route from the provider opposite the implementation author: Codex models can review Anthropic-authored work, while OpenAI-authored work requires an Anthropic route. The default Claude Code CLI route is a fresh, noninteractive read-only invocation:
+
+```bash
+claude -p --safe-mode --restricted --model opus --effort high --permission-mode dontAsk --tools 'Read,Grep,Glob' --allowedTools 'Read,Grep,Glob' --strict-mcp-config --no-session-persistence --output-format stream-json --verbose
+```
+
+Launch from the immutable candidate directory. Supply the complete [dispatch capsule](lifecycle.md#dispatch-capsule), relevant repository instructions (including `AGENTS.md`), contracts, evidence, and candidate/base diff paths inside that scoped root; do not rely on workspace auto-discovery. Use `--add-dir` only for an exact additional path required by the review, after verifying its scope. If a required input cannot be read or a permission denial occurs, leave affected review coverage unverified.
+
+Inspect initialization for model, tools, permission mode, and MCP servers. Inspect the final result's model usage for canonical model and provider, plus errors and permission denials. Treat these as route evidence; do not rely on the reviewer's self-report. The assignment requests a review and final report only: return the report in the response, with no planning workflow, plan/report-file changes, `ExitPlanMode`, `Explore`, or nested agents. Do not count the route as independent if its identity or restrictions cannot be verified. Preserve an explicit user model choice under the canonical policy. A focused review supplements the overall review; a strong-judgment route may serve as overall reviewer when its provider is opposite the source author and it meets the independence requirements.
 
 ## Smoke
 
