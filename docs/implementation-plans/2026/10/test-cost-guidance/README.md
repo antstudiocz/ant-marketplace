@@ -69,3 +69,20 @@ not prove future agent decisions or performance improvement. Final document
 checks repeat after this plan checkpoint; provider snapshots remain separate
 from implementation validation. No known material source finding remains;
 independent review is pending, not accepted by inference.
+
+## Explicit merge and release authorization (2026-10-20)
+
+User instructed "admin mergni to PR a udělej release" after the published draft
+and external-review limitation were reported. This supersedes the prior no-merge/
+no-release endpoint for this scoped work; it does not authorize sending private
+inputs to Claude or bypass the host denial. PR97 was admin squash merged at
+0bcf1ec. The known external review gap remains disclosed.
+
+Prepare patch release13.8.1 on chore/release-13-8-1 from current master0bcf1ec.
+Owner changes only the three synchronized version fields, new release notes and
+README release link; root updates this plan, validates, creates/attaches and
+admin merges release preparation PR, then publishes tag/release at the verified
+merge commit. No additional skill behavior or project/MR changes. Preserve
+historical notes. Docs-only plugin/JSON/version/link checks are the final gate;
+no new empirical speed or model-behavior claims. External review remains
+unavailable under the explicit host denial; no retry/substitution will bypass it.
