@@ -14,7 +14,7 @@ Use to decide whether automated coverage adds distinct protection and design or 
 
 ## `test-maintenance`
 
-Use for requested cleanup, repair, or optimization of existing tests, or when required by the agreed implementation. It does not trigger broad cleanup during unrelated implementation. The shared [test-quality policy](../plugins/ant/skills/implementation-orchestrator/references/test-quality.md) allows deleting tests with no meaningful protection without replacement and defines how to preserve distinct contracts during consolidation.
+Use for requested cleanup, repair, or optimization of existing tests, or when required by the agreed implementation. It does not trigger broad cleanup during unrelated implementation. The shared [test-quality policy](../plugins/ant/skills/implementation-orchestrator/references/test-quality.md) allows deleting tests with no meaningful protection without replacement, separates cleanup value from measured performance, and defines how to preserve distinct contracts during consolidation.
 
 ## `merge-request`
 
