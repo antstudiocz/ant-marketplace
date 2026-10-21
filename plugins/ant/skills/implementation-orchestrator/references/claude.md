@@ -16,7 +16,17 @@ This adapter owns Claude-specific model, effort, and dispatch behavior. The shar
 
 For independent overall review, follow the [review policy](review.md). Use a verified route from the provider opposite the implementation author: Claude models can review OpenAI-authored work, while Anthropic-authored work requires an OpenAI route. The default Codex CLI route is a fresh `codex exec` session with an explicitly selected verified OpenAI model and `--sandbox read-only`; verify identity, availability, and the effort ceiling before dispatch. Preserve an explicit user model choice under the canonical policy. A focused review supplements the overall review; a strong-judgment route may serve as overall reviewer when its provider is opposite the source author and it meets the independence requirements.
 
-Use one fresh isolated child context per assignment and never exceed High. The assignment must include the complete capsule from [lifecycle.md](lifecycle.md), including plan-directory read-only access, exact ownership, checks, delegation permission, and reporting. The independent reviewer never writes fixes.
+## Read-only research dispatch
+
+For a Claude Code researcher, use a fresh, noninteractive `claude -p` process rather than implementation-only agent profiles. Check `claude -p --help` for current options and honor an explicit user model/effort choice within host support and governing repository limits. The read-only route uses safe and restricted modes, a read-only tool allowlist, no MCP configuration, and denied permission prompts:
+
+```text
+claude -p --safe-mode --restricted --model MODEL_VALUE --effort EFFORT_VALUE --permission-mode dontAsk --tools 'Read,Grep,Glob' --allowedTools 'Read,Grep,Glob' --strict-mcp-config --no-session-persistence --output-format stream-json --verbose
+```
+
+Replace the placeholders with the verified requested route and pass the complete dispatch packet on stdin, including the research instructions and applicable repository guidance because safe mode disables their automatic discovery. Do not add write, shell, network, MCP, or remote-control capabilities. Inspect host output for the actual model, usage, errors, and permission denials; if the route or restrictions cannot be verified, mark that perspective unavailable. This is a research-only route and does not change the implementation profiles or lifecycle above.
+
+For implementation child assignments, use one fresh isolated context per assignment and never exceed High. The assignment must include the complete capsule from [lifecycle.md](lifecycle.md), including plan-directory read-only access, exact ownership, checks, delegation permission, and reporting. The independent reviewer never writes fixes.
 
 ## Smoke
 

@@ -1,6 +1,6 @@
 # Implementation orchestrator guide
 
-`implementation-orchestrator` coordinates implementation work that should finish as a reviewed and verified candidate. The entrypoint is intentionally short; the [shared lifecycle reference](../plugins/ant/skills/implementation-orchestrator/references/lifecycle.md) owns detailed policy, and the [Codex](../plugins/ant/skills/implementation-orchestrator/references/codex.md) and [Claude Code](../plugins/ant/skills/implementation-orchestrator/references/claude.md) adapters own host-specific behavior.
+`implementation-orchestrator` coordinates implementation work that should finish as a reviewed and verified candidate. For broad, read-only system research, use [`deep-research`](../plugins/ant/skills/deep-research/SKILL.md). The entrypoint is intentionally short; the [shared lifecycle reference](../plugins/ant/skills/implementation-orchestrator/references/lifecycle.md) owns detailed policy, and the [Codex](../plugins/ant/skills/implementation-orchestrator/references/codex.md) and [Claude Code](../plugins/ant/skills/implementation-orchestrator/references/claude.md) adapters own host-specific behavior.
 
 ## What happens
 
