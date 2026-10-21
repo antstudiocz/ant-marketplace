@@ -1,12 +1,16 @@
 # Skills
 
-The plugin exposes five public entry points. Choose the one that owns the requested outcome.
+The plugin exposes six public entry points. Choose the one that owns the requested outcome.
 
 ## `implementation-orchestrator`
 
 Use for features, fixes, refactors, migrations, remediation, and new applications that need a reviewed and verified implementation. It establishes a root-owned durable plan, tracks required outcome scenarios, preflights the relevant checkout and target, selects proportional evidence, and preserves user delivery preferences through recovery. It delegates one integration owner, obtains independent whole-outcome review, repairs in-scope findings, and verifies one risk-appropriate candidate gate. The canonical [review policy](../plugins/ant/skills/implementation-orchestrator/references/review.md) covers cross-provider reviewer selection, conditional specialists, evidence-based findings, and affected review refresh. Missing or stale required evidence remains pending. Read the [orchestrator guide](orchestrator.md) for the lifecycle and host adapters.
 
 When automated coverage is proposed, changed, or reviewed, the orchestrator routes through [test-design](../plugins/ant/skills/test-design/SKILL.md) and the shared [test-quality policy](../plugins/ant/skills/implementation-orchestrator/references/test-quality.md). [test-maintenance](../plugins/ant/skills/test-maintenance/SKILL.md) applies only to requested or in-scope cleanup, repair, or optimization.
+
+## `deep-research`
+
+Use for read-only, end-to-end investigation of a codebase, architecture, or incident when broad discovery and independent specialists can improve a decision. It pins a shared evidence baseline, matches evidence to claims, preserves the difference between source facts, runtime measurements, inference, and unknowns, and reports alternatives with ranked next steps. It does not authorize changes to the investigated system; use [implementation-orchestrator](../plugins/ant/skills/implementation-orchestrator/SKILL.md) when code changes are part of the requested outcome.
 
 ## `test-design`
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "(ant) Deep Research"
+  short_description: "Investigate systems with independent evidence reviews"
+  default_prompt: "Use $deep-research to investigate this system question and recommend next steps."

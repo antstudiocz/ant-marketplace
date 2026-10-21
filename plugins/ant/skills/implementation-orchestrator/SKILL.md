@@ -7,7 +7,7 @@ description: Use for features, fixes, refactors, migrations, remediation, or new
 
 **Announce at start:** Say you are using the implementation orchestrator and will keep the workflow proportional to the task.
 
-Use this skill for implementation work. For analysis or review, apply the shared [evidence and quality policy](references/lifecycle.md#evidence-and-quality) and [independent review policy](references/review.md), investigate and report without changing the repository. Keep implementation authority separate from delivery authority.
+Use this skill for implementation work. For broad, read-only system research, use [`deep-research`](../deep-research/SKILL.md). For focused analysis or review, apply the shared [evidence and quality policy](references/lifecycle.md#evidence-and-quality) and [independent review policy](references/review.md), investigate and report without changing the repository. Keep implementation authority separate from delivery authority.
 
 ## Workflow
 

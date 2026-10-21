@@ -1,0 +1,14 @@
+{
+  ".claude-plugin/marketplace.json": "5535632a80050e15599a30e1e2efaac02a5861c8958b3cfd131ee3e56d55e170",
+  "AGENTS.md": "1c2de989fc834d1a704c9218f79e8e93b454ebbc359ee44359cc65e671186e27",
+  "README.md": "785cdca4d6fd460cbd36ec1e5374a215b165d88900ea2d2cc0277b2bd63821db",
+  "docs/install.md": "13e641f552dd9f265bd58f480a08ef8a0762d5f37a5bb5294015dfe33109a931",
+  "docs/orchestrator.md": "19274bdf16c61d53689f5e1c7cc3ac5a8013148f576530d75a72d4aa02f897de",
+  "docs/skills.md": "76ecefb22b759178c12421408e2fdfceefb6fef9ad58080932e4517d0ea35950",
+  "plugins/ant/.claude-plugin/plugin.json": "dec4f36cb9f67f8434c0e64f007f8f20826f74ad4ea2650ec06031e874e2e3f5",
+  "plugins/ant/.codex-plugin/plugin.json": "87eab10b3d40fd7eb29fa74e3843b227106dbabce75480f6eb931291045876a7",
+  "plugins/ant/skills/implementation-orchestrator/SKILL.md": "0fc37c671dbfdb7e72559b23dd111623123c0d82e1805c58003f743465c61cd0",
+  "plugins/ant/skills/implementation-orchestrator/references/claude.md": "a53ad18becfe7bd793d2bcb160eae26198aa23681d380346113847a8e6063df1",
+  "plugins/ant/skills/deep-research/SKILL.md": "29c376d4cfb7189b3ef7e6cc7e92bf72f62531d39541c6bb0f24388f5b7ec2c5",
+  "plugins/ant/skills/deep-research/agents/openai.yaml": "035dffcad22710413a198fef15187b4de5bfaf59182118fdf3f4eac973a8d0d9"
+}
