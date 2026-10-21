@@ -22,3 +22,6 @@ The initial uncommitted draft lived in temporary storage and was lost after a ho
 
 ## Status
 Native Goal active; reviewed candidate frozen and validated, Draft PR delivery in progress.
+
+## Authorized release continuation
+User explicitly authorized admin merge of PR99 and publishing a new marketplace version. PR99 merged as282ac175932be5e111c1fa5532d57263bd8ad3f6. New native Goal covers release13.9.0 and a concise colleague-facing draft; no chat message delivery authorized. Integration owner edits only three package versions, current release index and release notes; root reviews and handles release PR/tag/GitHub release. Verify published tag target and inclusion of PR99.
