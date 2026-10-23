@@ -2,6 +2,8 @@
 
 `implementation-orchestrator` coordinates implementation work that should finish as a reviewed and verified candidate. For broad, read-only system research, use [`deep-research`](../plugins/ant/skills/deep-research/SKILL.md). The entrypoint is intentionally short; the [shared lifecycle reference](../plugins/ant/skills/implementation-orchestrator/references/lifecycle.md) owns detailed policy, and the [Codex](../plugins/ant/skills/implementation-orchestrator/references/codex.md) and [Claude Code](../plugins/ant/skills/implementation-orchestrator/references/claude.md) adapters own host-specific behavior.
 
+For an explicitly invoked central chat coordinating work across multiple chats, use [`development-coordinator`](../plugins/ant/skills/development-coordinator/SKILL.md). It maintains the initiative checkpoint and scopes cross-chat handoffs; each implementation chat uses this orchestrator for its own code, review, and candidate verification. `development-coordinator` is explicit-only and does not replace this lifecycle or the separate [merge-request](../plugins/ant/skills/merge-request/SKILL.md) delivery skill.
+
 ## What happens
 
 The orchestrator:

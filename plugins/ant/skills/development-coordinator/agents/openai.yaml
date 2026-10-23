@@ -1,0 +1,7 @@
+interface:
+  display_name: "Koordinace vývoje"
+  short_description: "Koordinuje schválenou práci napříč chaty"
+  default_prompt: "Use $development-coordinator to coordinate an approved multi-chat development effort."
+
+policy:
+  allow_implicit_invocation: false
