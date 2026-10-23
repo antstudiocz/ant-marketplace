@@ -1,6 +1,6 @@
 interface:
-  display_name: "Koordinace vývoje"
-  short_description: "Koordinuje schválenou práci napříč chaty"
+  display_name: "(ant) Development Coordinator"
+  short_description: "Coordinate cross-chat work and verified outcomes"
   default_prompt: "Use $development-coordinator to coordinate an approved multi-chat development effort."
 
 policy:
