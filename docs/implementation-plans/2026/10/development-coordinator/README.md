@@ -13,7 +13,7 @@ Explicit invocation establishes one coordinator, ordinary feature request does n
 Skill quick_validate, explicit invocation metadata inspection, manual forward scenarios, repository plugin validation and JSON consistency, links and diff check; independent overall review. No app runtime/performance claims for instruction-only change. Version remains 13.9.0 until separately authorized release.
 
 ## Checkpoint
-Fresh clone main c94c899, original dirty checkout untouched. Implementation pending. Default Codex integration route Luna High; independent opposite-provider Claude review, identity/tools must be verified. No nested implementation delegation.
+Fresh clone default branch master c94c899, original dirty checkout untouched. Implementation pending. Default Codex integration route Luna High; independent opposite-provider Claude review, identity/tools must be verified. No nested implementation delegation.
 
 ## Candidate verification
 The isolated Luna High owner added the coordinator plus one reference and aligned seven-skill inventories/docs/descriptions; versions remain 13.9.0. Root verified no changes in original checkout. Explicit invocation is configured with Claude `disable-model-invocation: true` (official https://code.claude.com/docs/en/skills) and Codex `policy.allow_implicit_invocation: false` (installed skill-creator openai_yaml reference). No automatic background monitor, permission grant, runtime or duplicated implementation workflow.
@@ -27,3 +27,5 @@ Keep this instruction-only scope small and linked to canonical lifecycle rather 
 
 ## Scoped independent forwardcheck
 Fresh Astra Medium simulated four normal/failure cases without external effects. Confirmed one ambiguous sentence could suppress an already-authorized continuation of idle unfinished work. Integration owner narrowed it to preserve user pauses/stops/archives while allowing a bounded authorized reminder after actual-state checks. Root retains external opposite-provider overall review as pending; the first-party pass does not replace it. Task metadata and comment templates remain optional and do not grant write authority. Draft delivery carries this limitation visibly.
+
+Provider target verification: GitHub default branch is master, not main. Initial PR creation against main failed without creating an object. Corrected target to verified master; scoped source branch push succeeded. No history rewrite or other source changes.
