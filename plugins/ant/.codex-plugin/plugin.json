@@ -1,7 +1,7 @@
 {
   "name": "ant",
   "version": "13.9.0",
-  "description": "Six (ant) skills for deep research, verified implementation, test design and maintenance, GitHub/GitLab delivery and conflict resolution, and brand design.",
+  "description": "Seven (ant) skills for explicit multi-chat coordination, deep research, verified implementation, test design and maintenance, GitHub/GitLab delivery and conflict resolution, and brand design.",
   "author": {
     "name": "(ant)",
     "description": "full-service digital agency"
@@ -28,7 +28,7 @@
   "interface": {
     "displayName": "(ant)",
     "shortDescription": "Shared (ant) skills for Codex and Claude Code.",
-    "longDescription": "Six focused skills for evidence-led system research, proportional implementation orchestration, test design and maintenance, PR/MR delivery plus conflict resolution, and professional (ant) brand design.",
+    "longDescription": "Seven focused skills for explicit multi-chat coordination, evidence-led system research, proportional implementation orchestration, test design and maintenance, PR/MR delivery plus conflict resolution, and professional (ant) brand design.",
     "developerName": "(ant)",
     "category": "Productivity",
     "capabilities": [
@@ -36,7 +36,7 @@
       "Write"
     ],
     "defaultPrompt": [
-      "Use the relevant (ant) skill for deep research, implementation, test design or maintenance, PR/MR or conflict work, or brand design."
+      "Use the relevant (ant) skill for explicit development coordination, deep research, implementation, test design or maintenance, PR/MR or conflict work, or brand design."
     ],
     "brandColor": "#5BFFC4"
   }
