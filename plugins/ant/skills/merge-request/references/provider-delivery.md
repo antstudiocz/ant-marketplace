@@ -12,6 +12,8 @@ Every PR/MR body has visible `Summary`, `Rationale`, and `Impact/risk` sections 
 - **Rationale:** why the change is needed and the relevant decision or tradeoff.
 - **Impact/risk:** practical user and technical impact, compatibility or rollout risk, safeguards, and any material verification gap.
 
+Within visible `Impact/risk`, always include `Post-deployment actions:` with the required follow-up steps, such as manual migrations, configuration changes, backfills, restarts, or verification. State `No post-deployment actions required.` when the final diff and relevant deployment procedure support that conclusion. If requirements cannot be verified, state what remains unknown and what must be checked; never turn missing evidence into a claim that no action is needed. Use the selected description language for the label and content. Documenting these steps does not authorize their execution; the [skill's authority boundaries](../SKILL.md#authority-and-completion) still apply.
+
 ### Release notes section
 
 Write release notes from the final target merge-base-to-`HEAD` snapshot. Refresh them when the scope changes; do not append an implementation diary or preserve notes for removed work. The section has this shape:
