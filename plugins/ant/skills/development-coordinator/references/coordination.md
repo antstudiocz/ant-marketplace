@@ -4,6 +4,33 @@ Use these short forms only when they reduce ambiguity. Keep the initiative's exi
 
 Use “realization chat” for a separate user-owned task carrying a workstream; an internal delegated agent is a different role and follows its parent-agent route.
 
+## Chat titles and status icons
+
+Treat the semantic title and its leading status icon as separate controls:
+
+- Propose a short, understandable base title that names the actual task. Prefix `[MODULE]` only when the effort is exclusively about one module. Always get the user's approval or alternative before applying a proposed semantic/base title, including when first naming a chat; proposing a title does not apply it.
+- When the user's authorization covers status-label management, each tracked realization chat owns and updates its own one leading icon as meaningful verified progress changes. Carry the original user authorization and its bounds in the handoff; a coordinator or callback cannot create or expand it. Preserve the approved base title, use the host's native rename tool, and do not ask again for each authorized icon-only update.
+- When reconciling a relevant status report, the central coordinator checks the reported chat's icon and corrects a forgotten or stale icon as a fallback under that same authorization. This is event-driven reconciliation, not recurring polling; do not create a monitoring schedule.
+- Change the icon only when a meaningful verified status report or authoritative evidence supports it. If the host or state cannot be verified, record it as unknown. Do not guess from stale evidence, use recurring polling, or revive archived chats.
+
+| Icon | Use when verified state is |
+|---|---|
+| 🔎 | Analysis is active, including active investigation. |
+| 🛠️ | Implementation is active. |
+| 🧪 | Final tests/review are active, or CI is pending/running. CI progress is qualification, not a blocker or user wait. |
+| ✅ | The agreed endpoint is merge-ready. This does not mean merged or deployed. Routine merge approval can remain pending while the icon stays ✅. |
+| ⏳ | The next step needs an actual user decision, approval, or input. This includes completed analysis awaiting a decision to implement, a draft or implementation-only endpoint awaiting the user's next decision, or a direction such as “don't implement yet; let's discuss and wait for me.” Preserve the analysis/result and exact endpoint in the record; ⏳ does not imply merge-readiness. |
+| 🛑 | A verified condition genuinely prevents progress. A running CI job alone is not blocked. |
+| 💤 | The user explicitly deferred the whole scope represented by the chat until later. Keep it paused until new user instruction; never resume it automatically. A request to wait for discussion or a decision about implementation is ⏳, not 💤. |
+
+Apply state precedence in this order: explicit deferral of the whole chat scope; a verified merge-ready endpoint awaiting only routine merge approval (✅); a genuine blocker or actual user decision/input wait; otherwise the active phase. When a blocker and a user wait coincide, use ⏳ if user input is the condition that will allow progress; otherwise use 🛑 for the independent blocker. If merge readiness is invalidated by a confirmed new finding, changed scope, or conflict, withdraw ✅ and show the verified current phase. A ready endpoint awaiting only the routine merge decision remains ✅, not ⏳. After an achieved endpoint that is neither merge-ready nor waiting on the user, and after a verified merge with no active follow-up, remove the leading status icon and record the actual outcome in the initiative checkpoint. If authorized follow-up continues in a phase with no matching icon in this glossary, leave the icon off and record the real phase; do not map it to a nearby state. Never use ✅ as a generic completed, merged, or deployed label. Icon changes convey coordination state only; they never authorize merge, deployment, or task closure.
+
+## Restricted CLI authentication
+
+A no-sign-in result from a restricted sandbox describes that execution environment; it does not establish that the user's account is signed out. Diagnose it with a read-only CLI authentication/status check or equivalent non-mutating provider-access check, using the same CLI outside the restricted sandbox in a host-supported context with access to the normal sign-in state, already permitted or approved by the host. Report only the resulting state (signed in, signed out, unknown, or denied); do not expose account identifiers.
+
+If that check or context is unavailable or denied, record the auth state as unknown or denied and leave dependent work pending. Ask the user to sign in only after a read-only check outside the restricted sandbox confirms signed-out state. Never rerun the original or any effectful operation to test authentication. Retry an effectful operation only when existing user authority covers it and authoritative evidence confirms the earlier attempt had no effect. This guidance does not authorize elevated execution, external effects, or bypassing a denied action.
+
 ## Initiative checkpoint
 
 ```markdown

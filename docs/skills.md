@@ -4,7 +4,7 @@ The plugin exposes seven public entry points. Choose the one that owns the reque
 
 ## `development-coordinator`
 
-Invoke explicitly in the central chat when coordinating a multi-chat development effort. It keeps a plain Markdown initiative checkpoint, scopes handoffs to approved chats, and reconciles reports against verified evidence. It does not implement code; realization chats use [implementation-orchestrator](../plugins/ant/skills/implementation-orchestrator/SKILL.md), and PR/MR delivery stays with [merge-request](../plugins/ant/skills/merge-request/SKILL.md). See its [coordination record and handoff guidance](../plugins/ant/skills/development-coordinator/references/coordination.md).
+Invoke explicitly in the central chat when coordinating a multi-chat development effort. It keeps a plain Markdown initiative checkpoint, scopes handoffs to approved chats, and reconciles reports against verified evidence. It does not implement code; realization chats use [implementation-orchestrator](../plugins/ant/skills/implementation-orchestrator/SKILL.md), and PR/MR delivery stays with [merge-request](../plugins/ant/skills/merge-request/SKILL.md). See the [workflow guide](development-coordinator.md) for how the roles fit together and the [coordination record and handoff guidance](../plugins/ant/skills/development-coordinator/references/coordination.md) for canonical operating rules.
 
 ## `implementation-orchestrator`
 

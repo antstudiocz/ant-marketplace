@@ -43,11 +43,12 @@ Invoke `/ant:skill-name` in Claude Code or `$skill-name` in Codex.
 
 The canonical routing, Goal, recursive delegation, review-invalidation, and provider preflight matrix is in the [orchestrator guide](docs/orchestrator.md). Installation details are in [installation](docs/install.md).
 
-`development-coordinator` is explicitly invoked in the central chat to organize approved chats and track the agreed outcome. It does not code; implementation and delivery remain with their existing skills.
+`development-coordinator` is explicitly invoked in the central chat to organize approved chats and track the agreed outcome. It does not code; implementation and delivery remain with their existing skills. See the [workflow guide](docs/development-coordinator.md) for the complete flow.
 
 ## Documentation
 
 - [Skill guide](docs/skills.md)
+- [Development coordinator workflow](docs/development-coordinator.md)
 - [Orchestrator guide](docs/orchestrator.md)
 - [Installation and updates](docs/install.md)
 - [13.9.0 release notes](docs/releases/13.9.0.md)
