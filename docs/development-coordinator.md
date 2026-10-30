@@ -1,42 +1,40 @@
 # Development coordinator
 
-The development coordinator is an explicitly invoked role for one central chat that keeps an approved multi-chat effort coherent. It maintains the shared checkpoint, gives each workstream a clear owner, and brings verified results back to the user. It does not become the implementation or delivery owner.
+The development coordinator keeps one approved multi-chat effort aligned. The central chat uses the initiative's designated record and reconciles evidence; the record's owner maintains it. Realization chats own the work assigned to them. Use this role only when the user explicitly invokes it.
 
-## How the work moves
+## How work moves
+
+This is a conceptual overview, not an authorization or status state machine. The [canonical coordination reference](../plugins/ant/skills/development-coordinator/references/coordination.md) defines native handoff and readback steps, permission boundaries, status precedence, evidence gates, and closeout rules.
 
 ```mermaid
 flowchart TD
-    U[User agrees outcome and scope] --> C[Central coordinator records scope and reconciles reports and icons]
-    C --> R{What work is needed?}
-    R -->|Investigation| A[Realization chat doing analysis: gather evidence and recommend]
-    R -->|Product change| I[Realization chat: implement with implementation-orchestrator]
-    A --> L[Realization chat updates its own authorized icon as progress changes]
-    A --> DI{Does the user want implementation?}
-    DI -->|No or not yet| L
-    DI -->|Yes, with scope| I
-    I --> V[Independent reviewer reviews; realization chat verifies candidate]
-    I --> L
-    V --> P{PR/MR action in scope and authorized?}
-    P -->|Yes| M[Realization chat follows merge-request for scoped PR/MR work]
-    P -->|No or not needed| L
-    M --> L
-    L --> C
-    C --> G{Agreed endpoint achieved and evidence verified?}
-    G -->|Yes| Q{Follow-through requested and authorized?}
-    G -->|No or still pending| Z[Report achieved, pending, or blocked endpoint and next action]
-    Q -->|Yes| F[Coordinator: authorized task update or requested archive]
-    Q -->|No| Z
-    F --> Z
+    U[User agrees outcome, scope, and permissions] --> C[Coordinator reads the checkpoint and actual Goal]
+    C --> H[Coordinator sends scoped work through a verified, authorized handoff]
+    H --> W[Realization chat analyzes or implements approved scope]
+    W --> V[Run review and verification that apply to the agreed outcome]
+    V --> P[Realization verifies Goal and checkpoint; reports icon, evidence, gaps, and remaining work]
+    P --> R[Coordinator reconciles current evidence, chat state, title, and permissions]
+    R --> N{What is the next authorized step?}
+    N -->|Assigned work remains with the current owner| W
+    N -->|A separate scoped handoff is needed and authorized| H
+    N -->|Essential user decision or input is needed| A[Ask with the source-chat link, PR/MR link, exact action, and reason; routine merge approval stays ✅]
+    A -->|After the user responds| C
+    N -->|Record the achieved endpoint and its actual status| E[Keep analysis, draft, merge-ready, merged, and deployed distinct]
+    E -->|Canonical merge-ready criteria pass and merge is separately authorized| M[Authorized realization owner performs the merge; verify with the provider]
+    M -->|Provider confirms merge| F[Run authorized closeout; use 🧹 only for authorized cleanup]
+    M -->|Merge is unconfirmed| E
 ```
 
-The user sets the outcome, scope, and permissions. The central coordinator assigns only approved chats, keeps the checkpoint current, and reconciles each report against evidence. An analysis chat is a realization chat doing analysis: it investigates and reports, and does not silently turn a recommendation into implementation authority. If implementation is chosen, a realization chat owns the implementation plan, source changes, review, and candidate checks. When PR/MR delivery is in scope and authorized, that realization chat follows `merge-request`; the central coordinator reconciles the resulting evidence and endpoint.
+Analysis produces evidence and a recommendation; it does not authorize implementation. Start implementation only within user-approved scope, using [implementation-orchestrator](../plugins/ant/skills/implementation-orchestrator/SKILL.md). PR/MR delivery stays with the realization chat using [merge-request](../plugins/ant/skills/merge-request/SKILL.md).
 
-## Evidence and decisions
+## Reports and decisions
 
-Keep verified facts, hypotheses, unknowns, and user decisions distinct. A report is an input to reconcile, not proof of more authority. A green historical check, a running CI job, or a teammate's claim cannot establish the current candidate's readiness. Preserve the distinctions between implemented, reviewed, merge-ready, merged, released, and deployed. The coordinator does not perform realization-chat PR/MR delivery, and delivery, merge, release, and deployment actions each require their applicable user authority. Ask the user only for a decision or permission that is actually missing; continue independent authorized work while that decision is pending.
+On start and continuation, each realization chat checks its actual Goal and checkpoint under the host's canonical lifecycle. It reports the verified endpoint, its own status icon when authorized, evidence, and remaining work to the coordinator. A completed Goal does not end an effort that still has feasible authorized work. Do not duplicate a canceled Goal, claim an unsupported resume, invent a blocker, or keep repeating an unanswered question.
+
+The coordinator reconciles a report against current evidence and the shared record. A report triggers verification; it does not grant authority or prove readiness by itself. Ask only for a decision or input that is actually needed, with links to the source chat and relevant PR/MR, the exact operation, and why it is needed.
 
 ## Titles, status, and closeout
 
-Propose a clear base title for the actual effort and get approval before first setting or changing it. When the user's authorization covers status-label management, each tracked realization chat updates its own leading icon from verified progress; the coordinator checks it while reconciling relevant reports and corrects a forgotten or stale label as a fallback under that same authorization. Waiting for the user's discussion or implementation decision is ⏳; 💤 means explicit deferral of the chat's whole scope. A draft or implementation-only endpoint awaiting the user's next decision is ⏳ and is not merge-ready. See the [canonical icon glossary and title rules](../plugins/ant/skills/development-coordinator/references/coordination.md#chat-titles-and-status-icons) for endpoint, terminal, and precedence behavior.
+Get approval before applying or changing a chat's semantic base title. Realization chats own ordinary updates to their leading status icon; the coordinator checks relevant reports and corrects a stale icon only under the same user-granted authority. Icons show the semantic phase, not whether a task is idle or a sub-operation is running. ✅ means the current candidate is merge-ready, not merged or deployed; it stays ✅ when only routine merge approval remains. Report preview availability separately. ⏳ means an essential user decision/input is needed; 💤 means the user explicitly deferred the whole scope. The [canonical title and icon glossary](../plugins/ant/skills/development-coordinator/references/coordination.md#chat-titles-and-status-icons) defines state meanings, precedence, and terminal behavior.
 
-At closeout, report what the agreed endpoint achieved, what remains pending or blocked, the evidence and limits, and the next action already authorized. Update an agreed task only when its scope and write authority cover that action; archive only a specifically requested target after verifying it is in scope and, where relevant, merged. Neither action implies deployment. Do not describe routine merge approval as a blocker, or a merge-ready result as merged or deployed.
+After provider-confirmed merge, any cleanup still needs its own authority. 🧹 describes that authorized cleanup phase when status-label management is authorized; it grants no cleanup, task-write, merge, or archive permission. Update a task only with verified mapping and write authority, and archive only a specifically requested target. Report incomplete closeout accurately; do not imply deployment without runtime evidence.
