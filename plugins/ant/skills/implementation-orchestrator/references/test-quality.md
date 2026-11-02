@@ -13,9 +13,9 @@ Coverage is not valuable by default. Cosmetic CSS or copy snapshots, static cata
 
 ## Optimize test cost
 
-Test cleanup and performance are separate goals. Remove tests that provide no meaningful protection even when suite speed is unchanged. For a performance change, locate the cost in the test body, compilation, setup, SQL, external processes, or shutdown, then choose a credible opportunity whose likely benefit justifies its implementation and maintenance risk.
+Test cleanup and performance are separate goals. Remove tests that provide no meaningful protection even when suite speed is unchanged. For a performance change, locate the cost in the test body, compilation, setup, SQL, external processes, shutdown, or CI queue/dependency wait, then choose a credible opportunity whose likely benefit justifies its implementation and maintenance risk.
 
-Use existing CI evidence or a small matched sample when measurement is useful; do not build a benchmark harness for routine decisions. Define the metric and scope (for example, test time, job wall time, process RSS, or container/database memory), and report them separately. Treat small, negative, or inconclusive samples as such; reassess the optimization instead of claiming a gain. Do not infer suite-wide savings from a few fixtures.
+Use existing CI evidence or a small matched sample when measurement is useful; do not build a benchmark harness for routine decisions. Define the metric and scope (for example, test time, job wall time, process RSS, or container/database memory), and report them separately. A faster job or lower summed job time alone does not establish a shorter pipeline; use its observed critical path for latency claims. Treat small, negative, or inconclusive samples as such; reassess the optimization instead of claiming a gain. Do not infer suite-wide savings from a few fixtures.
 
 ## Design reliable coverage
 
