@@ -34,9 +34,12 @@ This user-specific example applies only to an initiative whose existing checkpoi
 | Work | Model and effort |
 |---|---|
 | Bounded helper, investigation, validation, or narrow delegation | GPT-6.1 Terra / High |
+| Dedicated browser verification | GPT-6.1 Terra / High |
 | Deep research perspectives | GPT-6.1 Sol / High and Claude Opus / High; no Luna deep-research route |
 | Implementation | Claude Opus / High |
 | Independent implementation review | GPT-6 Astra / Medium when its provider is opposite the verified implementer's provider |
+
+The realization owner dispatches browser verification as a separate Terra route against the current candidate and its actual user-facing flows, using an assistant-owned Codex browser only. Confirm the browser session is assistant-owned before use; if that cannot be verified, report a qualification gap. Terra reports reproducible findings and evidence to the realization owner; Opus makes authorized fixes and Terra retests the affected flows on the changed candidate. Astra separately reviews code and evidence; it is not the browser operator. Record the candidate SHA, URL, scenarios, results, limitations, actual test-agent model/effort, and the app provider under test as distinct facts. If the browser or route is unavailable, report a qualification gap. Do not use personal browser tabs, duplicate a running test, or infer new credential, spend, production, merge, or deployment authority.
 
 The independent implementation review is a separate Astra route dispatched by the realization chat; a reviewer nested under Opus implementation does not qualify. The 🔎 status means analysis is active; it is not a model assignment. The dispatching realization chat distinguishes bounded work from deep research, asking the user if unclear. Deep research stays incomplete until both Sol and Opus contribute with verified model identity and effort. If either route is unavailable or provenance is unverified, report partial work and leave research incomplete unless the user explicitly accepts a partial result; record that choice. Other unsupported routes remain pending until the user explicitly chooses an alternative. For each selected route, report actual model and effort or mark them unverified. Record the exact host-reported Opus version; any Claude Opus version matches this profile unless the user pins one.
 

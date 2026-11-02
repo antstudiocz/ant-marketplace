@@ -64,6 +64,7 @@ Scope and endpoint:
 Authority source and limits:
 Dependencies and inputs:
 Evidence/checks required:
+Browser evidence (when this role applies): <candidate SHA, app/preview URL, scenarios, reproducible results/evidence, limitations; app provider under test separate from test-agent model/effort>
 Report to <verified destination>:
 Read actual Goal and checkpoint on start/continuation:
 Before reporting complete, verify current Goal, checkpoint, own icon (read back), and remaining authorized work:
@@ -81,9 +82,12 @@ This user-specific example applies only to an initiative whose existing checkpoi
 | Role | Model and effort |
 |---|---|
 | Bounded helper, investigation, validation, or narrow delegation | GPT-6.1 Terra / High |
+| Dedicated assistant-owned Codex browser verification | GPT-6.1 Terra / High |
 | Deep research perspectives | GPT-6.1 Sol / High plus Claude Opus / High; do not route deep research to Luna |
 | Implementation | Claude Opus / High |
 | Independent implementation review | GPT-6 Astra / Medium when its provider is opposite the verified implementer's provider |
+
+The realization owner dispatches browser verification as a separate Terra route against the current candidate and agreed user-facing flows. Confirm the session is assistant-owned before use; if ownership cannot be verified, report a qualification gap. Use an assistant-owned Codex browser, not personal tabs. Terra reports reproducible findings and evidence to the realization owner; Opus makes authorized fixes, then Terra retests the affected flows on the changed candidate. Astra separately reviews code and evidence and is not the browser operator. Record the candidate SHA, app/preview URL, scenarios, outcomes, limits, actual tester model/effort, and app provider under test as distinct facts. If the browser or route is unavailable, report a qualification gap; do not silently substitute a route, duplicate a running test, or infer new credential, spend, production, merge, or deployment authority.
 
 The 🔎 icon describes the active semantic phase, not a model route. The dispatching realization chat classifies the assigned task: bounded helper, investigation, validation, or narrow delegation uses Terra; deep research uses both Sol and Opus. If scope is unclear, ask the user. Deep research stays incomplete until both perspectives contribute with verified model identity and effort. If either route is unavailable or provenance is unverified, report partial progress and keep research incomplete unless the user explicitly accepts a partial result; record that choice. Other unsupported routes remain pending until the user explicitly chooses an alternative. Any host-reported Claude Opus version satisfies the family route unless the user pins a version; record the exact actual model and effort, or mark them unverified.
 
