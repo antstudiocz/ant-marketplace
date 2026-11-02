@@ -2,7 +2,7 @@
 
 Use these short forms only when they reduce ambiguity. Keep the initiative's existing record and team's existing tools when they already capture the same information.
 
-Use “realization chat” for a separate user-owned task carrying a workstream; an internal delegated agent is a different role and follows its parent-agent route.
+Use “realization chat” for a separate user-owned task carrying a workstream. An internal delegated agent follows its parent-agent route. If a profile is selected and recorded for the initiative, the coordinator carries it in the handoff and the receiving realization chat applies it to its own newly dispatched role routes; agents spawned inside a role route inherit that route. The profile takes precedence over adapter defaults only for those routes; it does not edit them.
 
 ## Chat titles and status icons
 
@@ -44,7 +44,7 @@ Outcome: <observable result and agreed endpoint>
 Scope: <in / out>
 Goal: <native Goal identity and verified state, or absent / unavailable / unverified>
 Record: <canonical Markdown path and its owner>
-Decisions and authority: <decision, source, bounds, status>
+Decisions and authority: <decision, source, bounds, status; optional model profile selection/pin or accepted partial result and source, or none>
 
 | Chat | Owner | Status | Verified result | Next action |
 |---|---|---|---|---|
@@ -68,10 +68,26 @@ Report to <verified destination>:
 Read actual Goal and checkpoint on start/continuation:
 Before reporting complete, verify current Goal, checkpoint, own icon (read back), and remaining authorized work:
 If user input is needed: source-chat link, PR/MR link, exact operation, and why:
+Model profile (only if recorded under Decisions and authority): <selection, any user-pinned version or accepted partial result, and authorization source, or none>
 Stop when:
 ```
 
 Keep the original human authorization source available to the receiving chat, especially for consequential effects. State proposed work as proposed until the user authorizes it. A handoff can carry existing authorization within its original bounds; it cannot add authority or bypass a refusal.
+
+## Optional per-initiative team profile
+
+This user-specific example applies only to an initiative whose existing checkpoint records the user's selection under “Decisions and authority.” The coordinator carries that recorded choice in the handoff; the receiving realization chat applies it only to its own newly dispatched role routes. Work performed by the coordinator or root realization chat itself stays on that chat's actual host model and outside the profile. The profile does not edit adapter defaults. Agents spawned inside a selected role route inherit that route; other internal agents follow their parent route. If the host cannot dispatch a selected route, leave it pending rather than silently falling back.
+
+| Role | Model and effort |
+|---|---|
+| Bounded helper, investigation, validation, or narrow delegation | GPT-6.1 Terra / High |
+| Deep research perspectives | GPT-6.1 Sol / High plus Claude Opus / High; do not route deep research to Luna |
+| Implementation | Claude Opus / High |
+| Independent implementation review | GPT-6 Astra / Medium when its provider is opposite the verified implementer's provider |
+
+The 🔎 icon describes the active semantic phase, not a model route. The dispatching realization chat classifies the assigned task: bounded helper, investigation, validation, or narrow delegation uses Terra; deep research uses both Sol and Opus. If scope is unclear, ask the user. Deep research stays incomplete until both perspectives contribute with verified model identity and effort. If either route is unavailable or provenance is unverified, report partial progress and keep research incomplete unless the user explicitly accepts a partial result; record that choice. Other unsupported routes remain pending until the user explicitly chooses an alternative. Any host-reported Claude Opus version satisfies the family route unless the user pins a version; record the exact actual model and effort, or mark them unverified.
+
+Before dispatch, confirm that the host supports the requested model and effort. After execution, report the actual model identity and effort or mark either as unverified. Unverified output does not count as a required deep-research perspective or an independent implementation review. Astra is an independent implementation reviewer only when separately dispatched by the realization chat and opposite-provider to the verified actual implementer; a reviewer nested under the Opus implementation route inherits Opus and does not satisfy that independent-review role. If Astra is not opposite-provider, or a requested route is unavailable or its identity cannot be verified, report the gap and leave that route pending until the user explicitly chooses an alternative; do not silently substitute a model or provider. The profile guides future dispatch only: it does not rewrite historical provenance or authorize restarting already-running work.
 
 For a realization chat assigned implementation, include the user-approved outcome and request that it follow `implementation-orchestrator`; that chat owns its implementation plan, coding, review, and candidate verification. Ask the realization chat to return its exact candidate, decisive evidence, unresolved findings, endpoint state, and permitted next action. Route PR/MR work through `merge-request` under its own authority rules.
 
@@ -85,7 +101,7 @@ For an authorized handoff that changes a tracked chat's phase, check whether mes
 
 Only report the full phase-changing handoff delivered after the authorized instruction send and required icon update/title readback succeed. These host operations are not one atomic transaction. If any step fails or its result is unknown, record exactly which steps succeeded, leave the unfinished part pending, and do not imply any unconfirmed step succeeded. Do not attempt the icon write before a confirmed message send. If the status-label update is not authorized, do not change the icon; read back only the unchanged base title and report the instruction-send and icon steps separately, with the icon phase pending. If a send fails or is unknown, do not change the target icon. Retry only a failed, already-authorized step, after checking whether its earlier attempt took effect; never resend a message solely to verify the title.
 
-The realization chat owns ordinary updates to its own status. Its completion report to the central coordinator is a single verified result unit: actual native Goal state per the canonical [Goal and continuity policy](../../implementation-orchestrator/references/lifecycle.md#goal-and-continuity), current checkpoint, its own leading icon updated and read back when authorized, and a report with evidence and remaining work. On start and continuation, inspect the existing actual Goal and checkpoint before deciding what remains. Do not create a duplicate after a Goal was canceled or claim a resume capability the host does not provide. A host-reported Goal or task completion does not close the agreed scope while feasible authorized work or mandatory accepted criteria remain. Do not report final status until such work is done or a real user decision/blocker remains; report partial progress honestly meanwhile. Mark ⏳ or 🛑 only when the specific required user input or verified blocking condition is recorded; never invent a wait or blocker to end work.
+The realization chat owns ordinary updates to its own status. Its completion report to the central coordinator is a single verified result unit: actual native Goal state per the canonical [Goal and continuity policy](../../implementation-orchestrator/references/lifecycle.md#goal-and-continuity), current checkpoint, its own leading icon updated and read back when authorized, and for each selected profile route it dispatched, actual model identity and effort or explicitly unverified provenance. It also reports evidence and remaining work. On start and continuation, inspect the existing actual Goal and checkpoint before deciding what remains. Do not create a duplicate after a Goal was canceled or claim a resume capability the host does not provide. A host-reported Goal or task completion does not close the agreed scope while feasible authorized work or mandatory accepted criteria remain. Do not report final status until such work is done or a real user decision/blocker remains; report partial progress honestly meanwhile. Mark ⏳ or 🛑 only when the specific required user input or verified blocking condition is recorded; never invent a wait or blocker to end work.
 
 The coordinator reconciles each report against current source/provider evidence and the checkpoint; reports trigger verification and do not establish readiness or grant authority. A required live behavior gate for the changed outcome must pass on the current candidate before it can be merge-ready. Fixtures, a rendered landing page, HTTP 200, unrelated green CI, or a limitation note cannot replace or waive that required gate. Select gates from the agreed behavior and risk; this does not require provider E2E for unrelated changes. If the gate is unavailable or fails, keep readiness pending and record the exact missing evidence. Do not keep retrying a genuine wait or repeat the same unanswered question. Ask only for the missing decision or access, with the source-chat link, relevant PR/MR link, exact operation, and why it is needed; continue independent authorized work while it waits.
 

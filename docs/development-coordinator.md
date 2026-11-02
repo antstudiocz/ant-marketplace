@@ -27,6 +27,21 @@ flowchart TD
 
 Analysis produces evidence and a recommendation; it does not authorize implementation. Start implementation only within user-approved scope, using [implementation-orchestrator](../plugins/ant/skills/implementation-orchestrator/SKILL.md). PR/MR delivery stays with the realization chat using [merge-request](../plugins/ant/skills/merge-request/SKILL.md).
 
+## Optional per-initiative team profile
+
+This user-specific example applies only to an initiative whose existing checkpoint records the user's selection under “Decisions and authority.” The coordinator carries it in the handoff; the receiving realization chat applies it only to newly dispatched role routes, ahead of adapter defaults for those routes. Work the coordinator or root realization chat performs itself stays on that chat's actual host model and outside the profile. The profile does not change other routes or global adapter defaults. If the route or its scope is unclear, ask the user; unsupported routes stay pending and are never silently replaced.
+
+| Work | Model and effort |
+|---|---|
+| Bounded helper, investigation, validation, or narrow delegation | GPT-6.1 Terra / High |
+| Deep research perspectives | GPT-6.1 Sol / High and Claude Opus / High; no Luna deep-research route |
+| Implementation | Claude Opus / High |
+| Independent implementation review | GPT-6 Astra / Medium when its provider is opposite the verified implementer's provider |
+
+The independent implementation review is a separate Astra route dispatched by the realization chat; a reviewer nested under Opus implementation does not qualify. The 🔎 status means analysis is active; it is not a model assignment. The dispatching realization chat distinguishes bounded work from deep research, asking the user if unclear. Deep research stays incomplete until both Sol and Opus contribute with verified model identity and effort. If either route is unavailable or provenance is unverified, report partial work and leave research incomplete unless the user explicitly accepts a partial result; record that choice. Other unsupported routes remain pending until the user explicitly chooses an alternative. For each selected route, report actual model and effort or mark them unverified. Record the exact host-reported Opus version; any Claude Opus version matches this profile unless the user pins one.
+
+Use the [handoff capsule and routing safeguards](../plugins/ant/skills/development-coordinator/references/coordination.md#optional-per-initiative-team-profile) for host-availability checks, provider independence, and unsupported-route handling. If Astra is not opposite-provider to the verified implementer, report the independence gap and wait for the user's explicit choice. Existing running work and historical review evidence keep their actual model identity; a preference for future dispatch does not restart either.
+
 ## Reports and decisions
 
 On start and continuation, each realization chat checks its actual Goal and checkpoint under the host's canonical lifecycle. It reports the verified endpoint, its own status icon when authorized, evidence, and remaining work to the coordinator. A completed Goal does not end an effort that still has feasible authorized work. Do not duplicate a canceled Goal, claim an unsupported resume, invent a blocker, or keep repeating an unanswered question.
