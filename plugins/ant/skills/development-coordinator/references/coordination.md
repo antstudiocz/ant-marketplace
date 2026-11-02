@@ -6,10 +6,23 @@ Use “realization chat” for a separate user-owned task carrying a workstream.
 
 ## Chat titles and status icons
 
-Treat the semantic title and its leading status icon as separate controls:
+Treat the semantic base title and its prefixes as separate controls. The category rule is active only when the initiative checkpoint records the user's selected vocabulary and authorization source/bounds for applying it. Without that record, category prefixes are not a default and require their own authority. When active, every participating chat in that selected workflow, including the central coordinator and its tracked realization chats, includes a bracketed work-category prefix. Keep the base short and understandable, naming the actual task. The central coordinator proposes the base title and gets user approval before first applying or later changing it; execution chats never rewrite an approved semantic base.
 
-- Propose a short, understandable base title that names the actual task. Prefix `[MODULE]` only when the effort is exclusively about one module. Always get the user's approval or alternative before applying a proposed semantic/base title, including when first naming a chat; proposing a title does not apply it.
-- Each tracked realization chat owns ordinary updates to its own leading icon only when the user's authorization covers status-label management. Carry the original consent and bounds in the handoff. On a relevant report or an explicitly authorized phase-changing handoff, the coordinator may set/correct the icon only under that same status-label authority; an invocation, callback, or report cannot create or expand it. Preserve the approved base title and use the host's native rename tool.
+Examples for the selected team (use the actual category list recorded in the initiative checkpoint):
+
+| Work | Category prefix |
+|---|---|
+| Product-owned work | The owning module, for example `[MARKETING]` |
+| Cross-module or general work | `[GENERAL]` |
+| CI, tests, or pipelines | `[CI]` |
+| Release coordination | `[RELEASE]` |
+| Sentry work that needs both identifiers | `[SENTRY][MODULE]` |
+
+The category set is selected-team configuration, not a universal vocabulary for all adopters. Ask the coordinator/user when the work category is unclear. The central coordinator applies or corrects category prefixes within the recorded authority; execution chats keep the assigned category. Category-prefix writes do not require a separate semantic-base-title approval when the checkpointed authority covers them, and they must preserve the base. The leading phase icon is a separate control updated only under its own authority. A title may look like `🔎 [GENERAL] Reconcile report handoffs` or `[CI] Verify test pipelines`.
+
+After any title write, read back the native title and verify the assigned category prefix, unchanged semantic base, and icon if the icon write was authorized. Record a failed or unknown update as pending; do not report it as complete.
+
+- Each tracked realization chat owns ordinary updates to its leading icon only when the user's authorization covers status-label management. Carry the original consent and bounds in the handoff. On a relevant report or an explicitly authorized phase-changing handoff, the coordinator may set/correct the icon only under that same status-label authority; an invocation, callback, or report cannot create or expand it. Preserve the approved category and base title and use the host's native rename tool.
 - Reconcile icons only when a relevant status report arrives or a phase-changing handoff is being delivered. This is event-driven, not recurring polling; do not create a monitoring schedule.
 - Change the icon only when a meaningful verified status report or authoritative evidence supports it. If the host or state cannot be verified, record it as unknown. Do not guess from stale evidence, use recurring polling, or revive archived chats.
 
@@ -44,10 +57,10 @@ Outcome: <observable result and agreed endpoint>
 Scope: <in / out>
 Goal: <native Goal identity and verified state, or absent / unavailable / unverified>
 Record: <canonical Markdown path and its owner>
-Decisions and authority: <decision, source, bounds, status; optional model profile selection/pin or accepted partial result and source, or none>
+Decisions and authority: <decision/source/bounds; selected category vocabulary and prefix permission, or none; optional model profile selection/pin or accepted partial result and source, or none>
 
-| Chat | Owner | Status | Verified result | Next action |
-|---|---|---|---|---|
+| Chat | Owner | Approved base and category | Status | Verified result | Next action |
+|---|---|---|---|---|---|
 
 Open questions or gaps: <decision, evidence, or explicit none>
 Next coordinator action: <one action and its condition>
@@ -67,8 +80,9 @@ Evidence/checks required:
 Browser evidence (when this role applies): <candidate SHA, app/preview URL, scenarios, reproducible results/evidence, limitations; app provider under test separate from test-agent model/effort>
 Report to <verified destination>:
 Read actual Goal and checkpoint on start/continuation:
-Before reporting complete, verify current Goal, checkpoint, own icon (read back), and remaining authorized work:
+Before reporting complete, verify current Goal, checkpoint, assigned category, own icon, title prefixes/base readback after any title write, and remaining authorized work:
 If user input is needed: source-chat link, PR/MR link, exact operation, and why:
+Title category (only when checkpointed authority applies): <assigned category prefix and authorization source/bounds, or none>
 Model profile (only if recorded under Decisions and authority): <selection, any user-pinned version or accepted partial result, and authorization source, or none>
 Stop when:
 ```
@@ -100,12 +114,12 @@ For a realization chat assigned implementation, include the user-approved outcom
 For an authorized handoff that changes a tracked chat's phase, check whether message delivery and status-label management are each authorized. The coordinator then performs these separate steps in order:
 
 1. Send the scoped instruction to the verified chat using its native messaging route.
-2. If status-label management is authorized, set the appropriate leading status icon while preserving the approved semantic title.
-3. Read back the native title and verify the intended icon and unchanged base title; if icon management is unauthorized, verify only the unchanged base title.
+2. If checkpointed category-prefix authority applies, apply or correct the assigned category. If status-label management is authorized, set the appropriate leading icon. Preserve the approved semantic base title.
+3. Read back the native title and verify the assigned category prefix, unchanged base title, and the intended icon if its update was authorized; if a prefix update was unauthorized, verify that prefix remained unchanged.
 
-Only report the full phase-changing handoff delivered after the authorized instruction send and required icon update/title readback succeed. These host operations are not one atomic transaction. If any step fails or its result is unknown, record exactly which steps succeeded, leave the unfinished part pending, and do not imply any unconfirmed step succeeded. Do not attempt the icon write before a confirmed message send. If the status-label update is not authorized, do not change the icon; read back only the unchanged base title and report the instruction-send and icon steps separately, with the icon phase pending. If a send fails or is unknown, do not change the target icon. Retry only a failed, already-authorized step, after checking whether its earlier attempt took effect; never resend a message solely to verify the title.
+Only report the full phase-changing handoff delivered after the authorized instruction send and required category/icon updates and title readback succeed. These host operations are not one atomic transaction. If any step fails or its result is unknown, record exactly which steps succeeded, leave the unfinished part pending, and do not imply any unconfirmed step succeeded. Do not change title prefixes before a confirmed message send. If category or status-label updates are unauthorized, leave those prefixes unchanged; read back the category and base, plus icon if authorized, and report any required prefix step as pending. If a send fails or is unknown, do not change the target title. Retry only a failed, already-authorized step, after checking whether its earlier attempt took effect; never resend a message solely to verify the title.
 
-The realization chat owns ordinary updates to its own status. Its completion report to the central coordinator is a single verified result unit: actual native Goal state per the canonical [Goal and continuity policy](../../implementation-orchestrator/references/lifecycle.md#goal-and-continuity), current checkpoint, its own leading icon updated and read back when authorized, and for each selected profile route it dispatched, actual model identity and effort or explicitly unverified provenance. It also reports evidence and remaining work. On start and continuation, inspect the existing actual Goal and checkpoint before deciding what remains. Do not create a duplicate after a Goal was canceled or claim a resume capability the host does not provide. A host-reported Goal or task completion does not close the agreed scope while feasible authorized work or mandatory accepted criteria remain. Do not report final status until such work is done or a real user decision/blocker remains; report partial progress honestly meanwhile. Mark ⏳ or 🛑 only when the specific required user input or verified blocking condition is recorded; never invent a wait or blocker to end work.
+The realization chat owns ordinary updates to its own status. Its completion report to the central coordinator is a single verified result unit: actual native Goal state per the canonical [Goal and continuity policy](../../implementation-orchestrator/references/lifecycle.md#goal-and-continuity), current checkpoint, and, when the category rule applies, its assigned category prefix preserved and read back if the title changed. It also reports its own leading icon updated and read back when authorized, and for each selected model-profile route it dispatched, actual model identity and effort or explicitly unverified provenance, along with evidence and remaining work. On start and continuation, inspect the existing actual Goal and checkpoint before deciding what remains. Do not create a duplicate after a Goal was canceled or claim a resume capability the host does not provide. A host-reported Goal or task completion does not close the agreed scope while feasible authorized work or mandatory accepted criteria remain. Do not report final status until such work is done or a real user decision/blocker remains; report partial progress honestly meanwhile. Mark ⏳ or 🛑 only when the specific required user input or verified blocking condition is recorded; never invent a wait or blocker to end work.
 
 The coordinator reconciles each report against current source/provider evidence and the checkpoint; reports trigger verification and do not establish readiness or grant authority. A required live behavior gate for the changed outcome must pass on the current candidate before it can be merge-ready. Fixtures, a rendered landing page, HTTP 200, unrelated green CI, or a limitation note cannot replace or waive that required gate. Select gates from the agreed behavior and risk; this does not require provider E2E for unrelated changes. If the gate is unavailable or fails, keep readiness pending and record the exact missing evidence. Do not keep retrying a genuine wait or repeat the same unanswered question. Ask only for the missing decision or access, with the source-chat link, relevant PR/MR link, exact operation, and why it is needed; continue independent authorized work while it waits.
 
@@ -114,6 +128,8 @@ After a required fresh qualification and an actually verified merge under existi
 ## Optional project task
 
 Use Asana or another connected task system only when it is part of the agreed scope and the required connector and authority are available. Search for an existing task before proposing creation. Before creating a task or materially changing its description, scope, placement, or configured fields, settle those details with the user and preserve approved task text. For finish-driven task status or comment actions, apply the [coordinator's authority rule](../SKILL.md#workflow) and record the original consent source and bounds. Ask only meaningful missing field questions, without a fixed questionnaire.
+
+In Asana, project section placement and the `ANT Prio` custom field are independent. A section named `Vývoj AAA` does not set or imply `ANT Prio = AAA`. Never infer or change that field from the section, task title, or priority label; set or remove `ANT Prio` only when the user explicitly instructs that field change. Apply any change only to the named tasks and read back the field separately from section placement.
 
 Keep the task description concise: what changes, why it matters, expected benefit, decisions or dependencies (with reasons), and what evidence will establish completion. Preserve approved description text. Put material delivery updates in comments rather than rewriting the approved scope. Record a deployment date only after confirmation. Do not infer coverage of every task or PR/MR from samples; establish the relevant inventory. After an authorized write, read back the task and verify its placement, configured fields, and current status. If the connector cannot confirm a value, leave it unknown.
 
