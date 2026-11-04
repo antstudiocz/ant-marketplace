@@ -47,4 +47,4 @@ Claude Code:
 
 Codex: refresh or upgrade the configured marketplace, then reinstall/enable the plugin and restart the host.
 
-After a fresh session, verify that `implementation-orchestrator`, `deep-research`, `test-design`, `test-maintenance`, `merge-request`, and `brand-design` are exposed. Maintainers use the checks in [`AGENTS.md`](../AGENTS.md). The plugin is instruction-only and needs no runtime, migration, hook, or database setup.
+After a fresh session, verify that `development-coordinator`, `implementation-orchestrator`, `deep-research`, `test-design`, `test-maintenance`, `merge-request`, and `brand-design` are exposed. `development-coordinator` is available only when explicitly invoked. Maintainers use the checks in [`AGENTS.md`](../AGENTS.md). The plugin is instruction-only and needs no runtime, migration, hook, or database setup.

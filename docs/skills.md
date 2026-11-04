@@ -1,10 +1,14 @@
 # Skills
 
-The plugin exposes six public entry points. Choose the one that owns the requested outcome.
+The plugin exposes seven public entry points. Choose the one that owns the requested outcome.
+
+## `development-coordinator`
+
+Invoke explicitly in the central chat when coordinating a multi-chat development effort. It keeps a plain Markdown initiative checkpoint, scopes handoffs to approved chats, and reconciles reports against verified evidence. It does not implement code; realization chats use [implementation-orchestrator](../plugins/ant/skills/implementation-orchestrator/SKILL.md), and PR/MR delivery stays with [merge-request](../plugins/ant/skills/merge-request/SKILL.md). See the [workflow guide](development-coordinator.md) for how the roles fit together and the [coordination record and handoff guidance](../plugins/ant/skills/development-coordinator/references/coordination.md) for canonical operating rules.
 
 ## `implementation-orchestrator`
 
-Use for features, fixes, refactors, migrations, remediation, and new applications that need a reviewed and verified implementation. It establishes a root-owned durable plan, tracks required outcome scenarios, preflights the relevant checkout and target, selects proportional evidence, and preserves user delivery preferences through recovery. It delegates one integration owner, obtains independent whole-outcome review, repairs in-scope findings, and verifies one risk-appropriate candidate gate. The canonical [review policy](../plugins/ant/skills/implementation-orchestrator/references/review.md) covers cross-provider reviewer selection, conditional specialists, evidence-based findings, and affected review refresh. Missing or stale required evidence remains pending. Read the [orchestrator guide](orchestrator.md) for the lifecycle and host adapters.
+Use for features, fixes, refactors, migrations, remediation, and new applications that need a reviewed and verified implementation. It establishes a root-owned durable plan, tracks required outcome scenarios, preflights the relevant checkout and target, selects proportional evidence, and preserves user delivery preferences through recovery. It assigns clear ownership, supports useful parallel work across disjoint scopes, obtains independent whole-outcome review, repairs in-scope findings, and verifies one risk-appropriate candidate gate. The canonical [review policy](../plugins/ant/skills/implementation-orchestrator/references/review.md) covers cross-provider reviewer selection, conditional specialists, evidence-based findings, and affected review refresh. Missing or stale required evidence remains pending. Read the [orchestrator guide](orchestrator.md) for the lifecycle and host adapters.
 
 When automated coverage is proposed, changed, or reviewed, the orchestrator routes through [test-design](../plugins/ant/skills/test-design/SKILL.md) and the shared [test-quality policy](../plugins/ant/skills/implementation-orchestrator/references/test-quality.md). [test-maintenance](../plugins/ant/skills/test-maintenance/SKILL.md) applies only to requested or in-scope cleanup, repair, or optimization.
 
