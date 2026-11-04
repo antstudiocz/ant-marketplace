@@ -146,3 +146,14 @@ Direct user update: every coordinated chat title must include a bracketed module
 Asana preference correction: ANT Prio is never set implicitly, including AAA for the Vývoj AAA section. User expressly asked to remove it from the six new tasks; MAIN cleared and read back all six. Only explicit instruction to set ANT Prio authorizes that field. Keep section selection and ANT Prio field independent.
 
 Amendment endpoint: affected source/docs consistency review and checks, commit/push to existing Draft PR101 without merge/release/version change. Prior PR body auto-review rejection remains; do not retry that remote description mutation by another route.
+
+
+## 2026-11-04 proportional-flow amendment
+
+The user explicitly approved applying the proposed simpler workflow and updating this existing PR, and clarified that concurrent tasks must not be limited. This extends the original coordinator-only scope to the shared implementation/review policy needed to avoid contradictory rules. The current follow-up record is [coordinator-proportional-flow](../../11/coordinator-proportional-flow/README.md); earlier version/status entries above are historical.
+
+Current master `fc1be4377f8353c25c49ecd5adea258377c5b997` was integrated normally. Only manifest version/description conflicts needed manual resolution; all three versions remain **13.9.3**, with no release or publication. The policy preserves independent final outcome review, exact-candidate CI, meaningful live browser evidence, existing authority and explicit safety refusals. It removes routine MAIN start permission, artificial concurrency limits, preventive resource accounting, mechanical review ceremonies, and unnecessary production-build prerequisites.
+
+Acceptance covers a normal autonomous execution, a failed test repaired and rechecked only in affected scope, actual resource contention handled when it occurs, and a denied effect remaining denied. Instruction/plugin validation, JSON version parity, affected links and whitespace checks passed. Independent Opus 5.5 review found no material policy issue in these cases; its stale-plan finding is corrected by this amendment. Review was static and scoped to supplied policy files, not a new host/runtime test.
+
+Endpoint: update the same **Draft PR #101** with accurate current evidence. Merge, readiness promotion, release and publication are not part of this follow-up.
