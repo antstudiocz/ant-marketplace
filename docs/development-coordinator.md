@@ -4,18 +4,18 @@ The development coordinator keeps one approved multi-chat effort aligned. The ce
 
 ## How work moves
 
-This is a conceptual overview, not an authorization or status state machine. The [canonical coordination reference](../plugins/ant/skills/development-coordinator/references/coordination.md) defines native handoff and readback steps, permission boundaries, status precedence, evidence gates, and closeout rules.
+This is a conceptual overview, not an authorization or status state machine. Owners act within their assigned scope without routine coordinator start approval. The [canonical coordination reference](../plugins/ant/skills/development-coordinator/references/coordination.md) defines native handoff and readback steps, permission boundaries, status precedence, evidence gates, and closeout rules.
 
 ```mermaid
 flowchart TD
     U[User agrees outcome, scope, and permissions] --> C[Coordinator reads the checkpoint and actual Goal]
     C --> H[Coordinator sends scoped work through a verified, authorized handoff]
-    H --> W[Realization chat analyzes or implements approved scope]
-    W --> V[Run review and verification that apply to the agreed outcome]
+    H --> W[Owners progress assigned scopes autonomously]
+    W --> V[Run applicable checks; review a stable slice when available]
     V --> P[Realization verifies Goal and checkpoint; reports icon, evidence, gaps, and remaining work]
     P --> R[Coordinator reconciles current evidence, chat state, title, and permissions]
     R --> N{What is the next authorized step?}
-    N -->|Assigned work remains with the current owner| W
+    N -->|Assigned work remains with its owner| W
     N -->|A separate scoped handoff is needed and authorized| H
     N -->|Essential user decision or input is needed| A[Ask with the source-chat link, PR/MR link, exact action, and reason; routine merge approval stays ✅]
     A -->|After the user responds| C
@@ -25,7 +25,7 @@ flowchart TD
     M -->|Merge is unconfirmed| E
 ```
 
-Analysis produces evidence and a recommendation; it does not authorize implementation. Start implementation only within user-approved scope, using [implementation-orchestrator](../plugins/ant/skills/implementation-orchestrator/SKILL.md). PR/MR delivery stays with the realization chat using [merge-request](../plugins/ant/skills/merge-request/SKILL.md).
+Analysis produces evidence and a recommendation; it does not authorize implementation. Proceed within the scope already approved by the user without routine start approvals. Coordinate only actual shared-resource contention or dependencies, and keep checkpoint updates to substantive decisions, dependencies, evidence, results, and next actions. Do not impose an artificial limit on concurrent workstreams or add preventive resource forecasts. The realization chat uses [implementation-orchestrator](../plugins/ant/skills/implementation-orchestrator/SKILL.md); PR/MR delivery stays with that chat using [merge-request](../plugins/ant/skills/merge-request/SKILL.md).
 
 ## Optional per-initiative team profile
 

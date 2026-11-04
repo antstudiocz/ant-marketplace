@@ -1,0 +1,11 @@
+# Release 13.9.1
+
+User explicitly authorized admin merge of PR #102 and release on 2026-10-27. PR #102 is merged at 11940791ec1bcea749b80af471afd1ec9fb03885; both provider checks passed on source bacce4b78f66ffbbb383c96265c6606ec4766c26. Previous release is v13.9.0. Patch release clarifies the existing MR-description contract.
+
+Scope: three synchronized manifest versions, README release link, new release notes and this root-owned plan. Root coordinates delivery; fresh integration owner writes the five release files, fresh independent reviewer stays read-only. No nested delegation. No native Goal requested. Preserve historical notes and unrelated work.
+
+Acceptance: version 13.9.1 consistent, concise notes link merged PR #102 and previous/current comparison, validators and JSON/version/diff checks pass, independent review has no material findings. Commit/push a release PR, admin merge under explicit release authority, publish latest non-prerelease tag at the verified merged commit, verify tag and remote versions include #102. No migration or post-deployment action is required for these instruction and metadata changes.
+
+Cadence: one scoped metadata change, independent review, final validation, frozen commit, bounded provider observation up to three minutes, merge and publication readback. Status: merged feature; preparing release metadata. Next: owner edit, review and final gate; publication evidence remains in chat after freeze.
+
+Final checkpoint: owner completed exactly five release files; independent fresh High reviewer found no actionable issues and verified v13.9.0..master contains only #102. Root final gate passed both plugin validators, manifest JSON, all three versions 13.9.1 and whitespace checks. Existing ICON_MISSING warning is non-blocking. GitHub master requires review but declares no required status checks; explicit admin authority covers bypass of the review requirement. No unnecessary runtime or test machinery added. Freeze this six-file candidate, then scoped commit/push/release PR/admin merge and latest release publication. Verify merged ancestry, release/tag identity and remote manifests; record delivery readback in chat without modifying the frozen plan.
