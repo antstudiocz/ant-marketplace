@@ -58,7 +58,7 @@ Outcome: <observable result and agreed endpoint>
 Scope: <in / out>
 Goal: <native Goal identity and verified state, or absent / unavailable / unverified>
 Record: <canonical Markdown path and its owner>
-Decisions and authority: <decision/source/bounds; selected category vocabulary and prefix permission, or none; optional model profile selection/pin or accepted partial result and source, or none; selected task assignee and source, or none>
+Decisions and authority: <decision/source/bounds; selected category vocabulary and prefix permission, or none; optional model profile selection/pin or accepted partial result and source, or none; selected task assignee and source, or none; task destination as verified project and section names and IDs with the user's authority source, or pending, or none>
 Monitoring: <automation identity, schedule, authorization source, and stop condition, or none>
 Open decisions and follow-through: <exact decision/action, what waits on it, chat/PR/MR/task links, first announced, last reminded, response, reminder policy, or none>
 
@@ -80,13 +80,14 @@ Scope and endpoint:
 Authority source and limits:
 Dependencies and inputs:
 Evidence/checks required:
-Final verification evidence (application changes): <candidate SHA, command, environment, URL, scenarios, reproducible results/evidence, CI, review, material limits; app provider under test separate from test-agent model/effort>
+Final verification evidence (application changes): <candidate SHA, command, environment, URL, scenarios, reproducible results/evidence, CI, review, material limits; app provider under test separate from test-agent model/effort; at Ready, the Ready evidence packet with visible actual screenshots or the truthful reason they are absent>
 Report to <verified destination>:
 Read actual Goal and checkpoint on start/continuation:
 Before reporting complete, verify current Goal, checkpoint, assigned category, own icon, title prefixes/base readback after any title write, and remaining authorized work:
 If user input is needed: source-chat link, PR/MR link, exact operation, and why:
 Title category (only when checkpointed authority applies): <assigned category prefix and authorization source/bounds, or none>
 Model profile (only if recorded under Decisions and authority): <selection, any user-pinned version or accepted partial result, and authorization source, or none>
+Task destination (only when the scope involves Asana): <verified project and section names and IDs with the user's authority source, or pending>
 Stop when:
 ```
 
@@ -99,6 +100,7 @@ The first handoff to every newly created realization chat also carries:
 - an explicit instruction to use [`development-executor`](../../development-executor/SKILL.md) and every other skill the scope needs: `deep-research` for broad read-only analysis, `implementation-orchestrator` for approved implementation, `merge-request` for delivery, and applicable project or domain skills. If the chat cannot load a named skill, state that gap instead of assuming the skill applies;
 - the status contract, as the capsule below or a link the chat can open;
 - the model roles from the recorded profile, or `none`;
+- the recorded [task destination](#task-destination), only when the chat's scope involves Asana;
 - the whole approved Goal;
 - the verified coordinator destination;
 - the current authority source and bounds.
@@ -223,7 +225,23 @@ This gate applies to changes in an application. Instruction-only and documentati
 - Count an interrupted run as incomplete, and finish the flows it did not cover on the same candidate.
 - If the application or browser fails, record the exact error, time, and impact and keep Ready pending. Do not silently switch to another browser or workaround.
 
-The owner hands off the candidate SHA, command, environment, URL, scenarios, results, CI, review, and material limits. The coordinator verifies Ready from that handoff and does not repeat the run. Without this gate on the current candidate, the chat is not Ready.
+The owner hands off the candidate SHA, command, environment, URL, scenarios, results, CI, review, and material limits, together with the [Ready evidence packet](#ready-evidence-packet). The coordinator verifies Ready from that handoff and does not repeat the run. Without this gate on the current candidate, the chat is not Ready.
+
+### Ready evidence packet
+
+Every application Ready handoff from the owner to the coordinator, and the coordinator's personal-review message to the user, carries this packet below the status table. It shows the user what the required pass produced. It is neither functional proof by itself nor a replacement for CI.
+
+- Attach or render the relevant screenshots through the host's supported media so the user actually sees them. A list of local paths alone does not count.
+- Use only actual existing screenshots from that pass, matching the current candidate and the reported runtime. Never present a stale, failing, or prototype frame as the successful result; include one only when it is labeled as what it is, to show a defect or limit.
+- Explain the testing briefly: the standard command, URL, backend and runtime, the scenarios or steps actually performed, results, the commit the running application was built from, and material limits.
+- Say which flows used synthetic fixture or demo data and which ran end to end against a live provider.
+- Omit any image that would expose credentials or private customer content.
+- If a safe attachment is unavailable or the change has no relevant UI, state why and supply appropriate technical evidence instead. Never fabricate an image or a result.
+- That exception changes only the evidence format. A required functional pass that is missing still means the chat is not Ready.
+
+The coordinator checks that the packet is present and consistent with the candidate, then relays the owner's images and summary without repeating the testing. If the packet is missing or inconsistent, it keeps Ready pending and returns the exact gap to the owner under existing messaging authority.
+
+The packet grants no authority. It permits no upload to another service, no use of a personal browser or session, and no provider sync or write. A push notification is not this packet; its image stays optional under [Important notifications](#important-notifications).
 
 ## Personal review and finish
 
@@ -297,7 +315,7 @@ HTTP 202 confirms only that the service accepted the message, not that a device 
 
 ## Optional project task
 
-Use Asana or another connected task system only when it is part of the agreed scope and the required connector and authority are available. Ask explicitly before creating every new task, including an analysis task; a work assignment or chat authority is not that consent. Check for an existing duplicate first. Creating no task is the default, and analysis can finish without one. Before creating a task or materially changing its description, scope, placement, or configured fields, settle those details with the user and preserve approved task text. Set an assignee only from the user's explicit selection recorded in the checkpoint, and read that assignee back after the write. For finish-driven task status or comment actions, apply the [coordinator's authority rule](../SKILL.md#workflow) and record the original consent source and bounds. Ask only meaningful missing field questions, without a fixed questionnaire.
+Use Asana or another connected task system only when it is part of the agreed scope and the required connector and authority are available. Ask explicitly before creating every new task, including an analysis task; a work assignment or chat authority is not that consent. Check for an existing duplicate first. A new task also needs an established [task destination](#task-destination) and, in Asana, its [due date and priority choices](#new-task-due-date-and-priority). Creating no task is the default, and analysis can finish without one. Before creating a task or materially changing its description, scope, placement, or configured fields, settle those details with the user and preserve approved task text. Set an assignee only from the user's explicit selection recorded in the checkpoint, and read that assignee back after the write. For finish-driven task status or comment actions, apply the [coordinator's authority rule](../SKILL.md#workflow) and record the original consent source and bounds. Beyond those new-task choices, ask only meaningful missing field questions, without a fixed questionnaire.
 
 In Asana, project section placement and the `ANT Prio` custom field are independent. A section named `Vývoj AAA` does not set or imply `ANT Prio = AAA`. Never infer or change that field from the section, task title, or priority label; set or remove `ANT Prio` only when the user explicitly instructs that field change. Apply any change only to the named tasks and read back the field separately from section placement.
 
@@ -314,6 +332,41 @@ Decision/dependency: <what is needed and why, or none>
 Deployment: <confirmed owner/date, verification, and limitation, or omit>
 Follow-through: <owner and action, or none>
 ```
+
+### Task destination
+
+The task destination is the Asana project and section that new tasks in this workflow use; another connected task system applies this to its equivalent placement. This setup applies when Asana is part of the agreed workflow and its connector is available. Otherwise ask nothing about a destination, record `none` or `pending`, and continue analysis and independent work. A missing destination holds only the creation of a task.
+
+- During setup of a new workflow, ask which project and section new tasks should use, in one concise question bundled with any other missing setup choice.
+- Do not ask when a verified direct user instruction already gives both. If it gives only one, ask for the other.
+- Resolve the answer read-only through the actual task connector and its existing access: confirm the project, confirm that the section belongs to it, and take their actual IDs. Never create a task to test this, put a token in a prompt, or search for credentials.
+- If a name is unknown or matches more than one project or section, ask only for that specific choice.
+- Record both names and IDs and the user's authority source under `Decisions and authority` in the checkpoint.
+- Put the same values in an authorized monitor's [instruction](periodic-monitor-template.md), changing that monitor only through the host's automation tool and under its existing authority.
+- Pass the destination in a handoff only where the receiving chat's scope involves Asana. That chat uses the destination it received and asks the coordinator when it is missing or `pending`.
+- While the destination is unresolved or unverified, record it as `pending`. Never choose a default or infer one from earlier work.
+- Establish the destination before any authorized task creation.
+- When the user directly changes the destination, verify it the same way and update the checkpoint and monitor under the same limits.
+
+Selecting a destination authorizes no task: every new task still needs its own explicit consent. The assignee stays a separate recorded selection.
+
+After an authorized creation, read back the task's actual project and section memberships, separately from its assignee and `ANT Prio`. The section still implies nothing about `ANT Prio`. If a membership is wrong or cannot be confirmed, report that and do not create a second task.
+
+### New task due date and priority
+
+Apply this every time a new Asana task is being created. It does not apply to updating an existing task, and it grants no authority.
+
+- Ask for the due date unless the user already gave a value for that particular task. An explicit “no due date” is a complete answer.
+- Before asking about or writing a priority, read the target project's metadata through the actual task connector and take the field's actual name, ID, type, and options. Never guess a field, option, or ID.
+- Ask for a priority only when that project actually has a genuine priority field, meaning one whose purpose is task priority, and the user has not already answered for that task. An explicit “no priority” is a complete answer.
+- Do not treat WIP, section, size, or `ANT Prio` as that field. `ANT Prio` stays under its own explicit-instruction rule above.
+- If the project has no genuine priority field, ask nothing about priority, add no field, and write no priority into another field.
+- If several fields could be the priority field, ask only the choice that is actually missing.
+- If the project is unresolved or its metadata is unavailable, do not conclude that it has no field. Unless the user already chose no priority for that task, record priority as `pending`. That holds only this task's creation.
+- Put whatever is still missing into one brief question, together with that task's creation consent and any missing [destination](#task-destination) choice. A priority question that depends on an unresolved project follows once the project is verified. This is not a questionnaire for other work, and independent authorized implementation continues while the answer is outstanding.
+- Do not treat an answer here, a destination setting, or an implementation assignment as consent to create the task. It still needs its own explicit consent.
+- Record each answer, including an explicit none, under `Decisions and authority` in the checkpoint, scoped to that task. Pass it in a handoff only to the chat creating that task, and never turn it into a default for other tasks.
+- After creation, read back any due date and priority that were written, separately from the memberships and assignee read back under [Task destination](#task-destination). If a value is wrong or cannot be confirmed, report that and do not create a second task.
 
 ## Closeout
 
