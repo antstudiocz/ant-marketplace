@@ -2,7 +2,7 @@
   <img src="assets/logo.svg" alt="(ant)" width="200">
 </p>
 
-<h3 align="center">Seven focused workflow skills for Claude Code and Codex</h3>
+<h3 align="center">Eight focused workflow skills for Claude Code and Codex</h3>
 
 `(ant)` provides an instruction-only plugin for cross-chat coordination, evidence-led research, reviewed implementation, test quality, GitHub/GitLab delivery, merge-conflict resolution, and `(ant)` brand work.
 
@@ -32,6 +32,7 @@ Invoke `/ant:skill-name` in Claude Code or `$skill-name` in Codex.
 | Skill | Use it for |
 |---|---|
 | `development-coordinator` | Explicitly coordinate one multi-chat development effort from a central chat; keep a durable checkpoint, scoped handoffs, and verified team outcomes aligned. |
+| `development-executor` | Carry a user-owned realization chat through its whole authorized outcome under a verified coordinator handoff and report verified results back. |
 | `implementation-orchestrator` | New applications, features, fixes, refactors, migrations, and remediation that need discovery, a root-owned Git-tracked durable plan, delegated tracked edits, independent review, final validation, and optional delivery. |
 | `deep-research` | Read-only investigation of codebases, architecture, or incidents using broad system discovery, independent specialists, evidence checks, and ranked recommendations. |
 | `test-design` | Decide whether automated coverage adds useful protection, then choose scenarios, an observable oracle, and an appropriate layer. |
@@ -43,7 +44,7 @@ Invoke `/ant:skill-name` in Claude Code or `$skill-name` in Codex.
 
 The canonical routing, Goal, recursive delegation, review-invalidation, and provider preflight matrix is in the [orchestrator guide](docs/orchestrator.md). Installation details are in [installation](docs/install.md).
 
-`development-coordinator` is explicitly invoked in the central chat to organize approved chats and track the agreed outcome. It does not code; implementation and delivery remain with their existing skills. See the [workflow guide](docs/development-coordinator.md) for the complete flow.
+`development-coordinator` is explicitly invoked in the central chat to organize approved chats and track the agreed outcome. It does not code; implementation and delivery remain with their existing skills. Each new realization chat it starts uses `development-executor` and routes its work to those skills. See the [workflow guide](docs/development-coordinator.md) for the complete flow.
 
 ## Documentation
 

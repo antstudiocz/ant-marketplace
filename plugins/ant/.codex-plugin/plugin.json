@@ -1,7 +1,7 @@
 {
   "name": "ant",
   "version": "13.9.3",
-  "description": "Seven (ant) skills for explicit multi-chat coordination, deep research, verified implementation, test design and maintenance, GitHub/GitLab delivery and conflict resolution, and brand design.",
+  "description": "Eight (ant) skills for explicit multi-chat coordination, coordinated chat execution, deep research, verified implementation, test design and maintenance, GitHub/GitLab delivery and conflict resolution, and brand design.",
   "author": {
     "name": "(ant)",
     "description": "full-service digital agency"
@@ -28,7 +28,7 @@
   "interface": {
     "displayName": "(ant)",
     "shortDescription": "Shared (ant) skills for Codex and Claude Code.",
-    "longDescription": "Seven focused skills for explicit multi-chat coordination, evidence-led system research, proportional implementation orchestration, test design and maintenance, PR/MR delivery plus conflict resolution, and professional (ant) brand design.",
+    "longDescription": "Eight focused skills for explicit multi-chat coordination, coordinated chat execution, evidence-led system research, proportional implementation orchestration, test design and maintenance, PR/MR delivery plus conflict resolution, and professional (ant) brand design.",
     "developerName": "(ant)",
     "category": "Productivity",
     "capabilities": [

@@ -1,10 +1,14 @@
 # Skills
 
-The plugin exposes seven public entry points. Choose the one that owns the requested outcome.
+The plugin exposes eight public entry points. Choose the one that owns the requested outcome.
 
 ## `development-coordinator`
 
-Invoke explicitly in the central chat when coordinating a multi-chat development effort. It keeps a plain Markdown initiative checkpoint, scopes handoffs to approved chats, and reconciles reports against verified evidence. It does not implement code; realization chats use [implementation-orchestrator](../plugins/ant/skills/implementation-orchestrator/SKILL.md), and PR/MR delivery stays with [merge-request](../plugins/ant/skills/merge-request/SKILL.md). See the [workflow guide](development-coordinator.md) for how the roles fit together and the [coordination record and handoff guidance](../plugins/ant/skills/development-coordinator/references/coordination.md) for canonical operating rules.
+Invoke explicitly in the central chat when coordinating a multi-chat development effort. It keeps a plain Markdown initiative checkpoint, scopes handoffs to approved chats, and reconciles reports against verified evidence. It does not implement code; realization chats use [development-executor](../plugins/ant/skills/development-executor/SKILL.md) with [implementation-orchestrator](../plugins/ant/skills/implementation-orchestrator/SKILL.md), and PR/MR delivery stays with [merge-request](../plugins/ant/skills/merge-request/SKILL.md). See the [workflow guide](development-coordinator.md) for how the roles fit together and the [coordination record and handoff guidance](../plugins/ant/skills/development-coordinator/references/coordination.md) for canonical operating rules.
+
+## `development-executor`
+
+Use in a separate user-owned realization chat working under a verified `development-coordinator` handoff. It checks the handoff's destination, scope, authority, Goal, and status contract, routes the actual scope to the existing skills, owns the whole authorized outcome, and reports verified results to the coordinator. It is not an internal agent profile and does not replace [implementation-orchestrator](../plugins/ant/skills/implementation-orchestrator/SKILL.md), [deep-research](../plugins/ant/skills/deep-research/SKILL.md), or [merge-request](../plugins/ant/skills/merge-request/SKILL.md).
 
 ## `implementation-orchestrator`
 
