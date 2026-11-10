@@ -4,6 +4,18 @@ Use these short forms only when they reduce ambiguity. Keep the initiative's exi
 
 Use “realization chat” for a separate user-owned task carrying a workstream. An internal delegated agent follows its parent-agent route. If a profile is selected and recorded for the initiative, the coordinator carries it in the handoff and the receiving realization chat applies it to its own newly dispatched role routes; agents spawned inside a role route inherit that route. The profile takes precedence over adapter defaults only for those routes; it does not edit them.
 
+## Roles and escalation
+
+The central coordinator, also called MAIN, owns priorities, scope, authority, cross-task resources, and the quality of the finished handoff. Each realization chat owns its whole task end to end: evidence analysis, implementation on the recorded model profile, independent review, verification, and delivery to the agreed endpoint. Routine repairs and technical choices within the original scope stay with that chat and need no new GO.
+
+Escalate one step at a time:
+
+1. The realization chat sends the coordinator what it cannot resolve from evidence, with the exact operation, why it matters, and the original consent source and bounds.
+2. The coordinator decides within its current authority.
+3. The coordinator asks the user only when genuine user-owned intent or authority remains unresolved, and never repeats a consent question the recorded source already answers. Consent that applies per item, such as for each new [task](#optional-project-task) or [issue](../../implementation-orchestrator/references/lifecycle.md#retrospective), is still asked for each item.
+
+An automatic-review, host, or tool denial stays denied whatever consent exists; handle it under [blocker adjudication](../../implementation-orchestrator/references/lifecycle.md#blocker-adjudication-and-scope). If the coordinator is unreachable or a destination or tool is missing, say so, give the user the ready text, and keep the item pending.
+
 ## Chat titles and status icons
 
 Treat the semantic base title and its prefixes as separate controls. The category rule is active only when the initiative checkpoint records the user's selected vocabulary and authorization source/bounds for applying it. Without that record, category prefixes are not a default and require their own authority. When active, every participating chat in that selected workflow, including the central coordinator and its tracked realization chats, includes a bracketed work-category prefix. Keep the base short and understandable, naming the actual task. The central coordinator proposes the base title and gets user approval before first applying or later changing it; execution chats never rewrite an approved semantic base.
@@ -18,7 +30,7 @@ Examples for the selected team (use the actual category list recorded in the ini
 | Release coordination | `[RELEASE]` |
 | Sentry work that needs both identifiers | `[SENTRY][MODULE]` |
 
-The category set is selected-team configuration, not a universal vocabulary for all adopters. Ask the coordinator/user when the work category is unclear. The central coordinator applies or corrects category prefixes within the recorded authority; execution chats keep the assigned category. Category-prefix writes do not require a separate semantic-base-title approval when the checkpointed authority covers them, and they must preserve the base. The leading phase icon is a separate control updated only under its own authority. A title may look like `🔎 [GENERAL] Reconcile report handoffs` or `[CI] Verify test pipelines`.
+The category set is selected-team configuration, not a universal vocabulary for all adopters. Escalate an unclear work category under [Roles and escalation](#roles-and-escalation). The central coordinator applies or corrects category prefixes within the recorded authority; execution chats keep the assigned category. Category-prefix writes do not require a separate semantic-base-title approval when the checkpointed authority covers them, and they must preserve the base. The leading phase icon is a separate control updated only under its own authority. A title may look like `🔎 [GENERAL] Reconcile report handoffs` or `[CI] Verify test pipelines`.
 
 After any title write, read back the native title and verify the assigned category prefix, unchanged semantic base, and icon if the icon write was authorized. Record a failed or unknown update as pending; do not report it as complete.
 
@@ -30,7 +42,7 @@ After any title write, read back the native title and verify the assigned catego
 |---|---|
 | 🔎 | Analysis is active, including active investigation. |
 | 🛠️ | Implementation or repair is active. |
-| 🕒 | A CI candidate is prepared and its pipeline is queued or pending, waiting for a runner or admission. State the queue state in text. A queue is qualification progress, not a blocker or user wait. |
+| 🕒 | A prepared candidate's qualification is queued and not yet running: its CI pipeline waits for a runner or admission, or its heavy operation waits under [Shared resources](../../implementation-orchestrator/references/lifecycle.md#shared-resources). State the queue state in text. A queue is qualification progress, not a blocker or user wait. |
 | 🧪 | Tests, CI, browser verification, or review are actually running. CI that has not started is 🕒. State the CI state in text. Running CI is qualification, not a blocker or user wait. |
 | ✅ | The whole current agreed endpoint is Ready for the user's personal review: it meets the canonical [merge-ready criteria](../../implementation-orchestrator/references/lifecycle.md#implementation-review-and-candidate). An application change also needs [final functional verification](#final-functional-verification). This does not mean merged or deployed. Routine merge approval can remain pending while the icon stays ✅. |
 | ⏳ | The next step needs an actual user decision, approval, or input. This includes completed analysis awaiting a decision to implement, a draft or implementation-only endpoint awaiting the user's next decision, or a direction such as “don't implement yet; let's discuss and wait for me.” Preserve the analysis/result and exact endpoint in the record; ⏳ does not imply merge-readiness. |
@@ -40,7 +52,7 @@ After any title write, read back the native title and verify the assigned catego
 
 The icon communicates the chat's current semantic phase or endpoint, not whether the chat is idle or every operation currently running. A verified merge-ready endpoint stays ✅ when its chat is idle. It also stays ✅ during an administrative preview restore/rebuild if that activity does not change the candidate or its evidence. Record preview availability/restoration separately; ✅ does not imply that the preview is currently available. A source/review delta, new finding, changed scope, or conflict that affects readiness withdraws ✅; apply the precedence rules below to select the next icon. Do not use 🛠️ merely because any operation is running.
 
-Apply state precedence in this order: explicit deferral of the whole chat scope; an actual essential user decision/input wait (⏳) or genuine blocker (🛑); a verified merge-ready endpoint awaiting only routine merge approval (✅); a verified merged endpoint with the tracked chat’s authorized final administrative cleanup phase in progress (🧹); otherwise the active semantic phase. A routine merge decision does not count as an essential user wait, so a ready endpoint remains ✅. When a blocker and an essential user wait coincide, use ⏳ if user input is the condition that will allow progress; otherwise use 🛑 for the independent blocker. When several gates are open, show the icon of the actual main condition holding the endpoint, chosen by this precedence, and describe each other gate separately in the status text. Among active phases, 🕒 applies only when queued CI is what the candidate is now waiting for; while repair, tests, browser verification, or review is actually running, use that phase's icon and report the queue in text. After an achieved endpoint that is neither merge-ready nor waiting on the user, and after a verified merge with no remaining authorized follow-up, remove the leading status icon and record the actual outcome in the initiative checkpoint. If authorized follow-up continues in a phase with no matching icon in this glossary, leave the icon off and record the real phase; do not map it to a nearby state. Record the work type/outcome (for example, analysis or implementation) separately from the semantic phase shown by the icon. There is no 📋 “completed analysis” state: active analysis is 🔎 and completed analysis awaiting a user decision is ⏳. Never use ✅ as a generic completed, merged, or deployed label. Icon changes convey coordination state only; they never authorize merge, deployment, archive, or task closure.
+Apply state precedence in this order: explicit deferral of the whole chat scope; an actual essential user decision/input wait (⏳) or genuine blocker (🛑); a verified merge-ready endpoint awaiting only routine merge approval (✅); a verified merged endpoint with the tracked chat’s authorized final administrative cleanup phase in progress (🧹); otherwise the active semantic phase. A routine merge decision does not count as an essential user wait, so a ready endpoint remains ✅. When a blocker and an essential user wait coincide, use ⏳ if user input is the condition that will allow progress; otherwise use 🛑 for the independent blocker. When several gates are open, show the icon of the actual main condition holding the endpoint, chosen by this precedence, and describe each other gate separately in the status text. Among active phases, 🕒 applies only when a queue is what the candidate is now waiting for; while repair, tests, browser verification, or review is actually running, use that phase's icon and report the queue in text. After an achieved endpoint that is neither merge-ready nor waiting on the user, and after a verified merge with no remaining authorized follow-up, remove the leading status icon and record the actual outcome in the initiative checkpoint. If authorized follow-up continues in a phase with no matching icon in this glossary, leave the icon off and record the real phase; do not map it to a nearby state. Record the work type/outcome (for example, analysis or implementation) separately from the semantic phase shown by the icon. There is no 📋 “completed analysis” state: active analysis is 🔎 and completed analysis awaiting a user decision is ⏳. Never use ✅ as a generic completed, merged, or deployed label. Icon changes convey coordination state only; they never authorize merge, deployment, archive, or task closure.
 
 ## Restricted CLI authentication
 
@@ -78,12 +90,13 @@ If a different active coordinator is recorded, confirm a handover with the user 
 Outcome and owner:
 Scope and endpoint:
 Authority source and limits:
+Actor and context: <project, tenant, provider, endpoint, source, candidate, runtime as relevant; identity tied to consent or evidence>
 Dependencies and inputs:
 Evidence/checks required:
 Final verification evidence (application changes): <candidate SHA, command, environment, URL, scenarios, reproducible results/evidence, CI, review, material limits; app provider under test separate from test-agent model/effort; at Ready, the Ready evidence packet with visible actual screenshots or the truthful reason they are absent>
 Report to <verified destination>:
 Read actual Goal and checkpoint on start/continuation:
-Before reporting complete, verify current Goal, checkpoint, assigned category, own icon, title prefixes/base readback after any title write, and remaining authorized work:
+Before reporting complete, verify current Goal, checkpoint, assigned category, own icon, title prefixes/base readback after any title write, remaining authorized work, and the short retrospective:
 If user input is needed: source-chat link, PR/MR link, exact operation, and why:
 Title category (only when checkpointed authority applies): <assigned category prefix and authorization source/bounds, or none>
 Model profile (only if recorded under Decisions and authority): <selection, any user-pinned version or accepted partial result, and authorization source, or none>
@@ -97,7 +110,7 @@ Keep the original human authorization source available to the receiving chat, es
 
 The first handoff to every newly created realization chat also carries:
 
-- an explicit instruction to use [`development-executor`](../../development-executor/SKILL.md) and every other skill the scope needs: `deep-research` for broad read-only analysis, `implementation-orchestrator` for approved implementation, `merge-request` for delivery, and applicable project or domain skills. If the chat cannot load a named skill, state that gap instead of assuming the skill applies;
+- an explicit instruction to use [`development-executor`](../../development-executor/SKILL.md) and every other skill the scope needs: `deep-research` for broad read-only analysis when uncertainty or risk justifies it, `implementation-orchestrator` for approved implementation, `merge-request` for delivery, and applicable project or domain skills. If the chat cannot load a named skill, state that gap instead of assuming the skill applies;
 - the status contract, as the capsule below or a link the chat can open;
 - the model roles from the recorded profile, or `none`;
 - the recorded [task destination](#task-destination), only when the chat's scope involves Asana;
@@ -106,28 +119,28 @@ The first handoff to every newly created realization chat also carries:
 - the current authority source and bounds.
 
 ```text
-Status icons: 🕒 CI candidate queued, waiting for runner/admission · 🧪 tests/CI/browser/review running · 🛑 real blocker · 🔎 analysis · 🛠️ implementation/repair · ✅ whole scope Ready for personal review · ⏳ actual user decision/input · 💤 explicit whole-task deferral · 🧹 merged, finish pending.
-Use one icon for the actual main holding condition and state other gates separately. Queued CI alone is never 🛑.
-Report to the coordinator at whole-scope Ready, an analysis proposal, a fully authorized completion, or a real blocker, one row per task, in Czech: Úkol a odkazy | Co se řeší | Stav | Na co se čeká | Další krok / doporučení.
+Status icons: 🕒 candidate qualification queued, waiting for CI runner/admission or heavy-work admission · 🧪 tests/CI/browser/review running · 🛑 real blocker · 🔎 analysis · 🛠️ implementation/repair · ✅ whole scope Ready for personal review · ⏳ actual user decision/input · 💤 explicit whole-task deferral · 🧹 merged, finish pending.
+Use one icon for the actual main holding condition and state other gates separately. A queue alone is never 🛑.
+Report to the coordinator at whole-scope Ready, an analysis proposal, a fully authorized completion, a real blocker, or needed coordination, one row per task, in Czech: Úkol a odkazy | Co se řeší | Stav | Na co se čeká | Další krok / doporučení.
 ```
 
 The capsule conveys meanings only: a title or icon write still needs its recorded authority, and the [glossary](#chat-titles-and-status-icons) stays canonical. Do not paste the full policy into the handoff.
 
 ## Optional per-initiative team profile
 
-This user-specific example applies only to an initiative whose existing checkpoint records the user's selection under “Decisions and authority.” The coordinator carries that recorded choice in the handoff; the receiving realization chat applies it only to its own newly dispatched role routes. Work performed by the coordinator or root realization chat itself stays on that chat's actual host model and outside the profile. The profile does not edit adapter defaults. Agents spawned inside a selected role route inherit that route; other internal agents follow their parent route. If the host cannot dispatch a selected route, leave it pending rather than silently falling back.
+This user-specific example applies only to an initiative whose existing checkpoint records the user's selection under “Decisions and authority.” The coordinator carries that recorded choice in the handoff; the receiving realization chat applies it only to its own newly dispatched role routes. Work performed by the coordinator or root realization chat itself stays on that chat's actual host model and outside the profile. The profile does not edit adapter defaults. Agents spawned inside a selected role route inherit that route; other internal agents follow their parent route. If the host cannot dispatch a selected route, leave it pending rather than silently falling back. Decisions this section reserves for the user reach the user through the coordinator under [Roles and escalation](#roles-and-escalation).
 
 | Role | Model and effort |
 |---|---|
 | Bounded helper, investigation, validation, or narrow delegation | GPT-6.1 Terra / High |
-| Dedicated assistant-owned Codex browser verification | GPT-6.1 Terra / High |
+| Dedicated real-app browser verification through Playwright | GPT-6.1 Terra / High |
 | Deep research perspectives | GPT-6.1 Sol / High plus Claude Opus / High; do not route deep research to Luna |
 | Implementation | Claude Opus / High |
 | Independent implementation review | GPT-6.1 Sol / High when its provider is opposite the verified implementer's provider |
 
-The realization owner dispatches browser verification as a separate Terra route against the current candidate and agreed user-facing flows. Confirm the session is assistant-owned before use; if ownership cannot be verified, report a qualification gap. Use an assistant-owned Codex browser, not personal tabs. Terra reports reproducible findings and evidence to the realization owner; Opus makes authorized fixes, then Terra retests the affected flows on the changed candidate. Sol separately reviews code and evidence and is not the browser operator. Record the candidate SHA, app/preview URL, scenarios, outcomes, limits, actual tester model/effort, and app provider under test as distinct facts. If the browser or route is unavailable, report a qualification gap; do not silently substitute a route, duplicate a running test, or infer new credential, spend, production, merge, or deployment authority.
+The realization owner dispatches browser verification to an actual independent Terra / High child, which runs its own supported Playwright path against the current candidate and agreed user-facing flows under [final functional verification](#final-functional-verification). Playwright is the selected route, not an emergency workaround, and Terra does not wait for an in-app browser. Headless or interactive follows the flow under that section, and Terra stays the tester in either mode. Terra reports reproducible findings and evidence to the realization owner; Opus makes authorized fixes, then Terra retests the affected flows on the changed candidate. Sol separately reviews code and evidence and is not the browser operator. Record the candidate SHA, app/preview URL, browser mode, scenarios, outcomes, limits, actual tester model/effort, and app provider under test as distinct facts. If the route, Playwright, or assistant ownership cannot be verified in Terra's own context, report a qualification gap; do not silently substitute a route, duplicate a running test, or infer new credential, spend, production, merge, or deployment authority.
 
-The 🔎 icon describes the active semantic phase, not a model route. The dispatching realization chat classifies the assigned task: bounded helper, investigation, validation, or narrow delegation uses Terra; deep research uses both Sol and Opus. If scope is unclear, ask the user. Deep research stays incomplete until both perspectives contribute with verified model identity and effort. If either route is unavailable or provenance is unverified, report partial progress and keep research incomplete unless the user explicitly accepts a partial result; record that choice. Other unsupported routes remain pending until the user explicitly chooses an alternative. Any host-reported Claude Opus version satisfies the family route unless the user pins a version; record the exact actual model and effort, or mark them unverified.
+The 🔎 icon describes the active semantic phase, not a model route. The dispatching realization chat classifies the assigned task: bounded helper, investigation, validation, or narrow delegation uses Terra; deep research, only when [proportionate analysis](../../implementation-orchestrator/references/lifecycle.md#evidence-and-quality) selects it, uses both Sol and Opus. If scope is unclear, ask the coordinator. Selected deep research stays incomplete until both perspectives contribute with verified model identity and effort. If either route is unavailable or provenance is unverified, report partial progress and keep research incomplete unless the user explicitly accepts a partial result; record that choice. Other unsupported routes remain pending until the user explicitly chooses an alternative. Any host-reported Claude Opus version satisfies the family route unless the user pins a version; record the exact actual model and effort, or mark them unverified.
 
 Before dispatch, confirm that the host supports the requested model and effort. After execution, report the actual model identity and effort or mark either as unverified. Unverified output does not count as a required deep-research perspective or an independent implementation review. Sol is an independent implementation reviewer only when separately dispatched by the realization chat and opposite-provider to the verified actual implementer; a reviewer nested under the Opus implementation route inherits Opus and does not satisfy that independent-review role. If Sol or another route from its provider authored a consequential part of the candidate, do not call a Sol review of that part independent: preserve existing opposite-provider coverage, report the conflict, and use another review route only when the user approves it. If a requested route is unavailable or its identity cannot be verified, report the gap and leave that route pending until the user explicitly chooses an alternative; do not silently substitute a model or provider. The profile guides future dispatch only: it does not rewrite historical provenance, authorize restarting already-running work, or invalidate a review that remains valid under the [review policy](../../implementation-orchestrator/references/review.md).
 
@@ -143,7 +156,7 @@ For an authorized handoff that changes a tracked chat's phase, check whether mes
 
 Only report the full phase-changing handoff delivered after the authorized instruction send and required category/icon updates and title readback succeed. These host operations are not one atomic transaction. If any step fails or its result is unknown, record exactly which steps succeeded, leave the unfinished part pending, and do not imply any unconfirmed step succeeded. Do not change title prefixes before a confirmed message send. If category or status-label updates are unauthorized, leave those prefixes unchanged; read back the category and base, plus icon if authorized, and report any required prefix step as pending. If a send fails or is unknown, do not change the target title. Retry only a failed, already-authorized step, after checking whether its earlier attempt took effect; never resend a message solely to verify the title.
 
-The realization chat owns ordinary updates to its own status. Its completion report to the central coordinator is a single verified result unit: actual native Goal state per the canonical [Goal and continuity policy](../../implementation-orchestrator/references/lifecycle.md#goal-and-continuity), current checkpoint, and, when the category rule applies, its assigned category prefix preserved and read back if the title changed. It also reports its own leading icon updated and read back when authorized, and for each selected model-profile route it dispatched, actual model identity and effort or explicitly unverified provenance, along with evidence and remaining work. On start and continuation, inspect the existing actual Goal and checkpoint before deciding what remains. Do not create a duplicate after a Goal was canceled or claim a resume capability the host does not provide. A host-reported Goal or task completion does not close the agreed scope while feasible authorized work or mandatory accepted criteria remain. Do not report final status until such work is done or a real user decision/blocker remains; report partial progress honestly meanwhile. Mark ⏳ or 🛑 only when the specific required user input or verified blocking condition is recorded; never invent a wait or blocker to end work.
+The realization chat owns ordinary updates to its own status. Its completion report to the central coordinator is a single verified result unit: actual native Goal state per the canonical [Goal and continuity policy](../../implementation-orchestrator/references/lifecycle.md#goal-and-continuity), current checkpoint, and, when the category rule applies, its assigned category prefix preserved and read back if the title changed. It also reports its own leading icon updated and read back when authorized, and for each selected model-profile route it dispatched, actual model identity and effort or explicitly unverified provenance, along with evidence, remaining work, and the [retrospective](../../implementation-orchestrator/references/lifecycle.md#retrospective) when the report is its final handoff. On start and continuation, inspect the existing actual Goal and checkpoint before deciding what remains. Do not create a duplicate after a Goal was canceled or claim a resume capability the host does not provide. A host-reported Goal or task completion does not close the agreed scope while feasible authorized work or mandatory accepted criteria remain. Do not report final status until such work is done or a real user decision/blocker remains; report partial progress honestly meanwhile. Mark ⏳ or 🛑 only when the specific required user input or verified blocking condition is recorded; never invent a wait or blocker to end work.
 
 The coordinator reconciles each report against current source/provider evidence and the checkpoint; reports trigger verification and do not establish readiness or grant authority. A required live behavior gate for the changed outcome must pass on the current candidate before it can be merge-ready. Fixtures, a rendered landing page, HTTP 200, unrelated green CI, or a limitation note cannot replace or waive that required gate. Select gates from the agreed behavior and risk; this does not require provider E2E for unrelated changes. For an application change, [final functional verification](#final-functional-verification) defines this gate. If the gate is unavailable or fails, keep readiness pending and record the exact missing evidence. Do not keep retrying a genuine wait, and repeat an unanswered question only as a due reminder under [authorized monitoring](#authorized-monitoring). Ask only for the missing decision or access, with the source-chat link, relevant PR/MR link, exact operation, and why it is needed; continue independent authorized work while it waits.
 
@@ -163,7 +176,7 @@ On each continuation or authorized monitoring run, establish current scope from 
 
 Before a handoff, verify the destination and the original scoped authority. Give an inactive owner the specific remaining work and verify that it took over. Do not repeat an instruction to an active owner unless there is new scope, authority, or a dependency.
 
-Keep one owner per resource, PR/MR, and QA environment. The coordinator never implements, diagnoses, tests, merges, or cleans up on an owner's behalf.
+Keep one owner per resource, PR/MR, and QA environment. The coordinator never implements, diagnoses, tests, merges, or cleans up on an owner's behalf; its read-only load measurement for [shared-resource admission](../../implementation-orchestrator/references/lifecycle.md#shared-resources) is coordination.
 
 ## Authorized monitoring
 
@@ -217,13 +230,19 @@ The only exception is a host that explicitly supports and permits dedicated CI s
 
 This gate applies to changes in an application. Instruction-only and documentation-only changes need no application browser run.
 
-- Run the final pass over the whole changed user flow in the repository's actual documented development application, using its standard command (for example `make dev` where the repository documents it).
+- Run the final pass over the whole changed user flow on the actual current candidate in the repository's actual documented development application, using its standard command (for example `make dev` where the repository documents it).
 - Use the real backend and the runtime that flow depends on.
-- Use the owner's own isolated slot, the repository's standard sanitized database, and the owner's own assistant-owned browser under the active adapter's route (the internal Codex browser on Codex).
-- Treat mock APIs, static prototypes, component fixtures, screenshots, and green CI as supplemental. None of them replaces this pass.
+- Use the owner's own isolated slot and its own isolated data in the repository's standard sanitized database.
+- Drive the application with an assistant-owned browser on a supported route: the one a recorded [team profile](#optional-per-initiative-team-profile) selects, otherwise the active adapter's. Never use the user's browser or profile.
+- Choose the browser mode from the flow, before the run. Headless fits repeatable real-app end-to-end runs and resource efficiency; interactive browsing fits exploratory, visual, and provider flows. Both keep the same independent tester role, real backend flow, and screenshot evidence.
+- Before the run, verify the host route, the browser dependency, the application context, and assistant ownership in the actual tester's context. A browser that works for the coordinator or another chat proves nothing for this tester.
+- Use a browser dependency already supported in that context. Add no test framework, and install a dependency only under existing authority for that specific install.
+- Capture screenshots of the relevant desktop and mobile views.
+- Treat mock APIs, proxied or stubbed responses, static prototypes, component fixtures, screenshots, and green CI as supplemental. None of them replaces this pass.
 - Obtain the applicable authority for runtime, provider, external-write, or AI-spend effects. The need to test does not imply it.
 - Count an interrupted run as incomplete, and finish the flows it did not cover on the same candidate.
-- If the application or browser fails, record the exact error, time, and impact and keep Ready pending. Do not silently switch to another browser or workaround.
+- If the application or browser fails, record the exact error, time, and impact and keep Ready pending. Do not silently switch to another browser or workaround: a browser failure triggers no automatic change of browser mode, route, or model, and no coordinator takeover.
+- Honor the recorded profile, and take any genuinely unresolved alternative to the coordinator under [Roles and escalation](#roles-and-escalation). Never transfer credentials or sessions to make a browser work, and keep them out of scripts, traces, and evidence.
 
 The owner hands off the candidate SHA, command, environment, URL, scenarios, results, CI, review, and material limits, together with the [Ready evidence packet](#ready-evidence-packet). The coordinator verifies Ready from that handoff and does not repeat the run. Without this gate on the current candidate, the chat is not Ready.
 
@@ -233,7 +252,7 @@ Every application Ready handoff from the owner to the coordinator, and the coord
 
 - Attach or render the relevant screenshots through the host's supported media so the user actually sees them. A list of local paths alone does not count.
 - Use only actual existing screenshots from that pass, matching the current candidate and the reported runtime. Never present a stale, failing, or prototype frame as the successful result; include one only when it is labeled as what it is, to show a defect or limit.
-- Explain the testing briefly: the standard command, URL, backend and runtime, the scenarios or steps actually performed, results, the commit the running application was built from, and material limits.
+- Explain the testing briefly: the standard command, URL, backend and runtime, browser mode, the scenarios or steps actually performed, results, the commit the running application was built from, and material limits.
 - Say which flows used synthetic fixture or demo data and which ran end to end against a live provider.
 - Omit any image that would expose credentials or private customer content.
 - If a safe attachment is unavailable or the change has no relevant UI, state why and supply appropriate technical evidence instead. Never fabricate an image or a result.
@@ -245,7 +264,7 @@ The packet grants no authority. It permits no upload to another service, no use 
 
 ## Personal review and finish
 
-A whole-scope Ready chat stays open and unarchived for the user's personal review. Ready, QA, or partial cleanup does not authorize merge, task closure, or archive. Preserve the environment needed for any promised review.
+A whole-scope Ready chat stays open and unarchived for the user's personal review. Ready, QA, personal review, or partial cleanup does not authorize merge, deployment, task closure, or archive. Preserve the environment needed for any promised review.
 
 The finish package applies when the user has explicitly adopted this finish workflow, that adoption is recorded, and after reviewing the user directly and concretely tells that chat to finish, for example “OK, finish this chat.” That instruction carries the package below without reasking. An exact different sequence from the user replaces it.
 
@@ -271,11 +290,13 @@ A skill never creates a Goal requirement by itself. When the user explicitly ado
 
 Under that requirement, each realization chat:
 
+- Keeps exactly one native Goal for its whole approved scope, plus its own checkpoint.
 - Reads its actual Goal and reuses a matching active one.
 - Creates a Goal only when one is verifiably missing and the host allows it, for the whole currently approved scope, including pure analysis. It never creates a duplicate or invents a token budget.
 - Keeps working through partial results to the whole endpoint.
-- Treats a completed Goal at Ready as neither archive nor merge permission.
-- Applies the shared Goal status rules for completing, pausing, and blocking.
+- Treats a completed Goal at Ready as no merge, deployment, or archive permission, and a blocked Goal as never complete.
+- Applies the shared Goal status rules for completing, pausing, blocking, and collisions through the live tool schema, reporting only a status the tool verified.
+- While waiting for capacity, uses a supported native wait or the coordinator's wakeup, never empty automatic continuation or status loops.
 - Handles changed work without overwriting the active Goal: complete that Goal only if its endpoint was truly achieved, then create a follow-up Goal with the host's tools.
 
 ## Status reports
@@ -294,7 +315,7 @@ Unless the user chooses another form, report meaningful status in Czech as one M
 - State the report's actual time once, in Europe/Prague unless another user time zone is configured.
 - Omit work that is completed, cleaned up, and archived, and keep it in the record's history.
 
-A realization owner reports to the coordinator at whole-scope Ready, an analysis proposal, a fully authorized completion, or a real blocker. Partial results stay in its checkpoint. A final proposal gives the problem, impact, solution, risks, the owner's recommendation, and why.
+A realization owner reports to the coordinator at whole-scope Ready, an analysis proposal, a fully authorized completion, a real blocker, or needed coordination. Partial results stay in its checkpoint. A final proposal gives the problem, impact, solution, risks, the owner's recommendation, and why.
 
 ## Important notifications
 
@@ -371,3 +392,5 @@ Apply this every time a new Asana task is being created. It does not apply to up
 ## Closeout
 
 Report the endpoint in its actual state and link the relevant checkpoint or task when available. Separate verified facts from hypotheses and unknowns. Name required evidence that is still missing and the next action that is already authorized. Do not call an umbrella initiative complete while its agreed work remains open.
+
+Each realization chat's final handoff carries the short [retrospective](../../implementation-orchestrator/references/lifecycle.md#retrospective), which is required for a pure analysis too. The coordinator aggregates those in one existing project-appropriate learning log, or the initiative record when none exists, and adds no per-chat file or framework. It prepares and deduplicates any issue proposal from them automatically, and asks the user before creating each one under that [retrospective rule](../../implementation-orchestrator/references/lifecycle.md#retrospective).
