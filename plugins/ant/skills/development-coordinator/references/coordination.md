@@ -276,7 +276,7 @@ Example from (ant)brain, per the worktrees runbook at `docs/runbooks/worktrees.m
 
 ## Personal review and finish
 
-A whole-scope Ready chat stays open and unarchived for the user's personal review. Ready, QA, personal review, or partial cleanup does not authorize merge, deployment, task closure, or archive. Preserve the environment needed for any promised review.
+A whole-scope Ready chat stays open and unarchived for the user's personal review. Ready, QA, personal review, or partial cleanup does not authorize merge, deployment, task closure, or archive. Preserve the environment needed for any promised review until authorized closeout begins.
 
 The finish package applies when the user has explicitly adopted this finish workflow, that adoption is recorded, and after reviewing the user directly and concretely tells that chat to finish, for example “OK, finish this chat.” That instruction carries the package below without reasking. An exact different sequence from the user replaces it.
 
@@ -284,17 +284,39 @@ The chat's owner performs these steps in order:
 
 1. Verify a fresh current candidate against the [merge-ready criteria](../../implementation-orchestrator/references/lifecycle.md#implementation-review-and-candidate), including passing required CI, current review, and provider protections. Never bypass failed or mismatched CI.
 2. Merge into the target and verify the merge with the provider.
-3. Update or close the existing task for the actual scope, when its mapping is verified.
-4. Perform the owned cleanup described below and verify the result.
+3. Record a short nonsecret outcome in the lasting records first: update or close the existing task for the actual scope when its mapping is verified, and state the outcome in this chat.
+4. Perform the [owned cleanup](#owned-cleanup), verify that every removed target is absent, and record that verification.
 5. Archive the chat last through the actual host tool and read the result back.
 
 Deployment, production, and customer-data changes need separate authority and are not required for archive.
 
-Clean up only the owner's own QA container, volume, network, process, or temporary files, after freshly verifying ownership, current non-use, and that the data is no longer needed. Do not prune or touch foreign or shared resources. Preserve source, evidence, in-progress data, and promised review environments. Explain anything retained.
-
 A real blocker, a failed step, or unverified cleanup of an owned target keeps the chat open and is reported. Archiving never conceals it.
 
-After pure analysis, “analysis is enough, finish this chat” means analytical closeout only: update an existing task, keep the evidence, clean up owned resources, and archive. It makes no fix claim and authorizes no implementation or merge.
+After pure analysis, “analysis is enough, finish this chat” means analytical closeout only: record the outcome in this chat, perform the owned cleanup, and archive last. Update the existing task only when it exists, its mapping to this scope is verified, and the write is authorized; this closeout never creates a task. The analysis survives in this chat and any task updated this way; local evidence copies are removed with the other owned artifacts. It makes no fix claim and authorizes no implementation or merge.
+
+### Owned cleanup
+
+Owned cleanup removes every resource exclusive to this chat's thread. Its scope includes:
+
+- private isolated development or QA containers, networks, processes, routes, and slot reservations;
+- persistent database, credential, and export volumes, and caches;
+- temporary worktrees and branches;
+- working and test artifacts, including local copies of evidence.
+
+Keep the delivered source in the target and the enduring system records: the PR/MR, the task record, and the archived conversation. Shared, foreign, production, and uncertain resources stay outside this destructive scope, as do production or customer data and shared credential material even inside an owned QA volume.
+
+- Inventory the concrete targets first, each by its actual identity, such as a container, volume, process, route, reservation, worktree path, branch, or artifact path. Remove only inventoried targets. Never run a broad prune, force a removal, or delete recursively beyond a verified target.
+- Before removing each target, freshly verify that this thread owns it exclusively and that nothing currently uses it, including this chat's own remaining work and dependencies and any other user, chat, or service.
+- For a worktree or branch, also freshly check for dirty or untracked files, stashes, and commits not landed in the target, and, where relevant, for linked or shared data. Content that is uncertain or outside this scope blocks that deletion.
+- Verify landing only for an intended deliverable. Before deleting the only local copy of an agreed standalone deliverable, preserve it in a lasting record. Intentionally disposable QA artifacts, such as test data, caches, and local evidence copies, need no landing proof and are not retained by default. Analysis has no merge to verify.
+- Treat a target that fails or cannot complete a check as uncertain: leave it and report it.
+- Record the outcome before removal, as the finish steps order. Then remove the scoped targets and verify each is absent.
+- Record the scoped cleanup verification durably in this chat and its checkpoint: each removed target verified absent, each target left and why, and every user exception. Then archive last.
+- This full scope is authorized by the current recorded workflow adoption that covers it or by the user's direct, specific scope. An older, narrower adoption is not broadened retroactively; a direct finish request carries only the effects its applicable adoption or explicit terms actually cover. Ask no new approval for exact targets already authorized this way.
+- Only the user chooses an exception. The mere presence of QA data or evidence does not justify keeping it. An explicit user exception remains authoritative; record it.
+- Report every actual blocker and exception explicitly. An actual blocker keeps the chat open and unarchived.
+
+The coordinator verifies cleanup from the owner's durable record and never cleans up for the owner. Missing owner evidence keeps reconciliation pending. Return the exact gap only to an open owner chat under existing messaging authority; do not reopen or revive a chat whose archive was verified merely because its report has not arrived.
 
 ## Goals in an adopted workflow
 
