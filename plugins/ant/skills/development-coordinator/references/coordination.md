@@ -244,7 +244,7 @@ This gate applies to changes in an application. Instruction-only and documentati
 - If the application or browser fails, record the exact error, time, and impact and keep Ready pending. Do not silently switch to another browser or workaround: a browser failure triggers no automatic change of browser mode, route, or model, and no coordinator takeover.
 - Honor the recorded profile, and take any genuinely unresolved alternative to the coordinator under [Roles and escalation](#roles-and-escalation). Never transfer credentials or sessions to make a browser work, and keep them out of scripts, traces, and evidence.
 
-The owner hands off the candidate SHA, command, environment, URL, scenarios, results, CI, review, and material limits, together with the [Ready evidence packet](#ready-evidence-packet). The coordinator verifies Ready from that handoff and does not repeat the run. Without this gate on the current candidate, the chat is not Ready.
+The owner hands off the candidate SHA, command, environment, actual functioning [URL](#development-and-qa-addresses), scenarios, results, CI, review, and material limits, together with the [Ready evidence packet](#ready-evidence-packet). The coordinator verifies Ready from that handoff and does not repeat the run. Without this gate on the current candidate, the chat is not Ready.
 
 ### Ready evidence packet
 
@@ -261,6 +261,18 @@ Every application Ready handoff from the owner to the coordinator, and the coord
 The coordinator checks that the packet is present and consistent with the candidate, then relays the owner's images and summary without repeating the testing. If the packet is missing or inconsistent, it keeps Ready pending and returns the exact gap to the owner under existing messaging authority.
 
 The packet grants no authority. It permits no upload to another service, no use of a personal browser or session, and no provider sync or write. A push notification is not this packet; its image stays optional under [Important notifications](#important-notifications).
+
+## Development and QA addresses
+
+This applies to a realization owner's isolated development or QA virtual host (vhost). It grants no setup, runtime, configuration, or external authority.
+
+- Name a newly provisioned vhost from a short feature or thread descriptor plus the owner's existing unique worktree slot, for example `meta-oauth-6.localhost` instead of `ant-20261110-6.localhost`. Use the repository's documented naming mechanism.
+- Keep a running review address. Change it only for a concrete reason, such as a collision or broken alignment, and record that reason.
+- Preserve slot isolation. Keep the applicable API host and OAuth redirect or callback address aligned with the hostname, changing them only under existing authority.
+- At handoff, the owner verifies and provides the actual functioning URL for the intended environment, including its actual scheme, port, and path when applicable. The coordinator relays that URL without constructing or rewriting it.
+- If the URL does not work or cannot be verified, report the exact gap instead of a guessed address.
+
+Example from (ant)brain, per the worktrees runbook at `docs/runbooks/worktrees.md` in that repository: the generated localhost name combines the first and last words of the branch name with the stable worktree slot, keeping parallel checkouts short and collision-free without changing `/etc/hosts`. A detached worktree falls back to the repository folder name. When the generated alias is unclear, use custom mode with a readable full hostname whose dot-separated labels contain only alphanumerics and hyphens: `DEV_HOST_MODE=custom DEV_HOST=my-host make worktree-setup`. Set `DEV_API_HOST=...` during that setup when the derived API host needs an override.
 
 ## Personal review and finish
 
