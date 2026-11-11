@@ -16,7 +16,7 @@ This adapter owns Codex-specific Goal, model, effort, and tool behavior. The sha
 - For every implementation-authorized run, verify the durable plan. Inspect the native Goal slot with `get_goal` only when the user explicitly requests a Goal or the current task already has one in use; an absent Goal does not block authorized work.
 - Reuse a matching active Goal. After classifying the inspected slot, use `create_goal` and reinspect with `get_goal` only for a verified empty slot or a slot containing a terminally completed Goal, with no unfinished unrelated Goal collision, when the user explicitly requested the Goal and the tool is available. Do not create through an unrelated or unverified state, and never claim that the plugin grants consent. If no Goal was requested, do not ask for one or create one.
 - Apply the shared lifecycle classification for verified absence, unavailable capability or authority, unknown or unverifiable state, unrelated active Goals, explicit Goal requirements, and analysis-only work. Do not claim a Goal exists when verification fails.
-- `update_goal` is terminal-only (`complete` or `blocked`); it cannot represent phase progress or clear a collision.
+- Read the live `update_goal` schema for the statuses it accepts; it currently offers `complete`, `blocked`, and `paused`. Apply the shared [Goal status rules](lifecycle.md#goal-and-continuity). No status represents phase progress or clears a collision.
 
 ## Recovery
 
@@ -50,4 +50,4 @@ Inspect initialization for model, tools, permission mode, and MCP servers. Inspe
 
 ## Smoke
 
-Existing browser/E2E automation is ordinary risk-based outcome evidence. Choose appropriate interaction evidence automatically when changed behavior and risk require it: use existing browser/E2E automation or interactive smoke as suitable, including realistic states defined by the shared lifecycle; do not require a special smoke request. Use the internal Codex browser where available. Evidence gathering never expands authority; reuse established authority and obtain appropriate explicit authorization for effects outside it, with destructive or data-loss actions explicitly authorized under the authority rules.
+Existing browser/E2E automation is ordinary risk-based outcome evidence. Choose appropriate interaction evidence automatically when changed behavior and risk require it: use existing browser/E2E automation or interactive smoke as suitable, including realistic states defined by the shared lifecycle; do not require a special smoke request. Use the internal Codex browser where available; when a recorded coordinator team profile selects another supported browser route, that route applies and does not depend on the internal browser. Evidence gathering never expands authority; reuse established authority and obtain appropriate explicit authorization for effects outside it, with destructive or data-loss actions explicitly authorized under the authority rules.

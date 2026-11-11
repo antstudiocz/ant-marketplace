@@ -12,7 +12,7 @@
   "plugins": [
     {
       "name": "ant",
-      "description": "Six (ant) skills for deep research, verified implementation, test design and maintenance, GitHub/GitLab delivery and conflict resolution, and brand design.",
+      "description": "Eight (ant) skills for explicit multi-chat coordination, coordinated chat execution, deep research, verified implementation, test design and maintenance, GitHub/GitLab delivery and conflict resolution, and brand design.",
       "source": "./plugins/ant"
     }
   ]

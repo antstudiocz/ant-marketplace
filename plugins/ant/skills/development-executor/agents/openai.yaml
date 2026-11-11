@@ -1,0 +1,4 @@
+interface:
+  display_name: "(ant) Development Executor"
+  short_description: "Deliver a coordinator-assigned outcome and report back"
+  default_prompt: "Use $development-executor to carry out this coordinator-assigned work in this chat."
