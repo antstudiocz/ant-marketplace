@@ -4,15 +4,33 @@ Read only the sections relevant to the requested mode. The [skill entrypoint](..
 
 ## Description
 
-Use Conventional Commit titles and concise English by default, subject to the resolved repository/user language. Build the description from the complete final target merge-base-to-`HEAD` diff and refresh it when that snapshot changes. Never add AI attribution or co-author trailers.
+Use Conventional Commit titles and concise English by default, subject to the resolved repository/user language. Build the description from the complete final target merge-base-to-`HEAD` diff and refresh it, including its evidence, when that snapshot changes. Never add AI attribution or co-author trailers.
 
-Every PR/MR body has visible `Summary`, `Rationale`, and `Impact/risk` sections in that order. Put the exact `## Release notes` section immediately after the visible impact/risk section. Surround the complete release-notes block with standalone Markdown `---` rules, with blank lines around each rule: place one before `## Release notes` and one after its final release-note line, before any details block. Keep material risks, failed checks, pending gates, and unavailable evidence visible in `Impact/risk`; detailed implementation context and verification evidence follow in collapsed HTML details blocks. Localized headings are fine for the visible human-facing sections, but the release-note headings below remain exact English for deterministic extraction. New authoring uses the canonical headings `Added`, `Changed`, `Fixed`, and `Internal changes`. Consumers should add canonical-heading support before a producer switches its default, while continuing to read the legacy aliases `New features`, `Improvements`, and `Fixes` for existing content during rollout. Add consumer support for H4 topic headings before using them in release notes; until then, keep bullets directly under their category heading. Consumers must continue to accept those ungrouped category bullets.
+The body has two layers, identical whichever host or model writes it: short visible bullets and the [screenshot section](#screenshots) for nontechnical readers above the release notes, and concise collapsed technical details for technical and AI readers below them. Keep both proportionate to the change.
 
-- **Summary:** the problem and resulting behavior.
-- **Rationale:** why the change is needed and the relevant decision or tradeoff.
-- **Impact/risk:** practical user and technical impact, compatibility or rollout risk, safeguards, and any material verification gap.
+Treat the entire body, including collapsed details, as a stable description of the change. Describe durable behavior, rationale, material user/data/security/platform effects, required operator actions, and concrete functional limitations that affect a decision. Keep transient CI or gate results, job counts, per-check source/test revision accounting, Draft/Ready/merged state, merge or deployment history, and generic current-production-state disclaimers in the provider UI and separate delivery or readiness report. This does not change the evidence required to assess readiness; a specific unresolved product behavior or functional verification limit remains a description concern.
 
-Within visible `Impact/risk`, always include `Post-deployment actions:` with the required follow-up steps, such as manual migrations, configuration changes, backfills, restarts, or verification. State `No post-deployment actions required.` when the final diff and relevant deployment procedure support that conclusion. If requirements cannot be verified, state what remains unknown and what must be checked; never turn missing evidence into a claim that no action is needed. Use the selected description language for the label and content. Documenting these steps does not authorize their execution; the [skill's authority boundaries](../SKILL.md#authority-and-completion) still apply.
+Every PR/MR body has visible level-2 `Summary`, `Rationale`, `Impact/risk`, and `Verification screenshots` sections in that order, followed by the exact `## Release notes` section. Surround the complete release-notes block with standalone Markdown `---` rules, with blank lines around each rule: place one after the screenshot section, before `## Release notes`, and one after its final release-note line, before any following details block. Localized headings are fine for the visible human-facing sections, but the release-note headings below remain exact English for deterministic extraction. New authoring uses the canonical headings `Added`, `Changed`, `Fixed`, and `Internal changes`. Consumers should add canonical-heading support before a producer switches its default, while continuing to read the legacy aliases `New features`, `Improvements`, and `Fixes` for existing content during rollout. Add consumer support for H4 topic headings before using them in release notes; until then, keep bullets directly under their category heading. Consumers must continue to accept those ungrouped category bullets.
+
+In `Summary`, `Rationale`, and `Impact/risk`, use flat unordered bullets only: no nesting or umbrella items. Each bullet is one short plain-language sentence, targeting 20–25 words; this is a target, not a cap on material information. Lead with the reader outcome or key reason; group facts when they share a practical consequence, and avoid semicolon chains. Aim for one to three `Summary` and `Rationale` bullets. Keep `Impact/risk` brief—typically three to five bullets, with no hard cap—by grouping related risks, required actions, and concrete functional evidence gaps around their practical consequence. Prioritize what changed, what decision or action follows, and any material limitation, especially destructive data effects or recovery limits; do not create separate bullets for each diagnostic or qualifier. The visible layer is a selective decision brief; keep the full functional verification method and operator trace in collapsed details. Move exact variables, counts, commands, identifiers, paths, and full operator steps and completion conditions to collapsed details unless their precision changes the decision. Visible actions still name the responsible owner or dependency and the next step. Example: `The form saves your draft automatically.`
+
+- **Summary:** what changed and the practical behavior or benefit.
+- **Rationale:** why the change is needed and the key decisions or tradeoffs.
+- **Impact/risk:** practical user and technical impact, compatibility or rollout risk, safeguards, required deployment actions, and material verification gaps that affect a decision.
+
+Visibility rules for these bullets:
+
+- Keep material scope expansions and security, platform, or operational constraints visible in plain language; put exact requirements and diagnostics in details unless their precision affects the decision. State causes and outcomes only as strongly as the sources support. Report missing records as undocumented and unavailable operations as unavailable; neither proves refusal, an unperformed check, or unsupported provider capability.
+- Call work a scope expansion only when it exceeds the agreed scope, and call it approved only with evidence of that approval; a new dependency is neither by default.
+- Keep material product behavior limits, human decisions, required deployment actions, and functional verification gaps visible in `Impact/risk`, grouped by consequence where they relate. State what remains uncertain and the action or dependency it creates; put supporting method and detail there or in collapsed details as appropriate. Assess broad gates and CI/check source/test attribution separately.
+- Before drafting, resolve the current provider/source snapshot from authoritative metadata and compare it with the prior description and available functional evidence. Make a brief private coverage note of material behavior changes, concrete operations and affected or derived data, required actions, recovery limits, and functional checks and their scope; assess check applicability for the separate delivery/readiness report.
+- For data-changing work, name the operation and the specific data it affects, including original versus copied data when that distinction changes the outcome; state the practical consequence or recovery limit when material. Vague labels such as “cleanup” must not obscure whether data is replaced or removed.
+- Draft `Impact/risk` from the evidence, then `Summary` and `Rationale`. Preserve qualifiers needed for a truthful decision, state each once in concise plain language, and keep functional and operator trace in details. Preserve the rendered section order above. Before returning, verify all three human sections contain only standalone `- ` bullets—no bare prose, nesting, or numbered items.
+- Include one standalone flat bullet in `Impact/risk` beginning with the localized equivalent of `Post-deployment actions:`. Name the required operator action or dependency; say none are required only when the final diff and relevant deployment procedure support that conclusion. If requirements are unknown, state the concrete check needed. Put full steps and completion or verification conditions in collapsed details or a linked runbook. Describing actions grants no authority to perform them; see the [skill’s authority boundaries](../SKILL.md#authority-and-completion).
+
+### Whole-description review
+
+Before returning a description, route its complete final body—including screenshot captions and collapsed details—through the [lifecycle's independent whole-outcome review](../../implementation-orchestrator/references/lifecycle.md#implementation-review-and-candidate). The read-only reviewer checks the available authoritative source snapshot and provider metadata, material effects and data targets, every concrete operator action and its completion or verification condition, functional evidence and its scope, and consistency of the claims across visible sections, captions, and details. Keep transient provider state and exact CI/source-to-test attribution in the separate delivery or readiness report. Explicitly identify unavailable source or functional verification and leave affected claims unverified. A stored description or metadata alone does not establish review of code, remote state, or production; missing source evidence does not create a requirement or authority to fetch it. Preserve every required action step through its completion or verification in the full description, details, or linked runbook; `Impact/risk` summarizes the practical owner action or dependency. Copy identifiers exactly from authoritative inputs rather than reconstructing them from memory; keep useful functional method and traceability in technical details, and state material behavior limits in plain language in `Impact/risk`. The author repairs findings and refreshes the description and affected evidence, then gets affected re-review under the lifecycle. If review is unavailable, keep the affected description unverified. This review grants no provider-write authority.
 
 ### Release notes section
 
@@ -44,23 +62,67 @@ Write release notes from the final target merge-base-to-`HEAD` snapshot. Refresh
 
 Use only the category headings that have entries. Within a category, use an H4 topic heading to group related notes when it makes them easier to scan; otherwise, put bullets directly under the category. Keep bullets flat and atomic, with each one understandable on its own and retaining any required user action, limitation, availability, or off-by-default flag. Give each topic a concise, meaningful feature or area name and use the same label for that area across categories. Repeat a topic under another category only for distinct changes in that area; do not repeat facts across categories or group unrelated changes together. Do not add empty topics or deeper heading or bullet levels. Classify a new capability as `Added`, a deliberate change to existing behavior, design, or performance as `Changed`, and a documented deviation from expected behavior as `Fixed`. Visual regressions, timeout handling, and similar repairs belong in `Fixed` when they correct expected behavior; do not frame them as improvements. For new notes, classify from the final diff's intent and expected-behavior evidence. When synthesizing existing notes, preserve an explicit source category; require manual review only when the evidence conflicts or remains genuinely ambiguous. Keep entry prose in the selected description language while preserving the exact English headings. `Internal changes` is separate from public delivery and is excluded by public consumers. When the final snapshot has no release impact, use exactly `No release impact.` under `## Release notes`, still surrounded by the same blank-line-separated `---` rules, and omit all category headings. Never infer no impact from a missing, malformed, or ambiguous section; require manual review instead.
 
-Do not put JSON, a custom schema, duplicated machine payload, a level-2 heading, or a details block inside the release-note content. The consumer ends the section at the next level-2 heading or the first HTML `<details>` block, so place implementation context and detailed verification after the release notes in collapsed blocks such as:
+Do not put JSON, a custom schema, duplicated machine payload, a level-2 heading, or a details block inside the release-note content. The consumer locates the exact `## Release notes` heading first and ends the section at the next level-2 heading or HTML `<details>` block after it, so place implementation context and detailed verification after the release notes in collapsed blocks such as:
 
 ```html
 <details>
 <summary>Implementation details</summary>
 
-...technical context...
+...enduring mechanisms, contracts, tradeoffs, and links...
 </details>
 
 <details>
-<summary>Verification — passed, failed, or incomplete</summary>
+<summary>Functional verification</summary>
 
-...commands, results, and remaining evidence...
+...functional method and scope, scenarios, expected and actual behavior, material limits...
 </details>
 ```
 
-Detailed verification may be collapsed, but its status and every material gap must remain visible in `Impact/risk`. Do not use an empty heading or a generic all-green claim in place of evidence.
+The `...` lines are placeholders: replace them with actual content or omit the block. Functional verification detail may be collapsed, but describe concrete behavior limits that affect a decision in concise language in `Impact/risk`, grouping related gaps by practical consequence. Keep broad gate inventories and pass/fail digests in the separate delivery/readiness report.
+
+### Technical details
+
+- Include only enduring mechanisms and contracts, nontrivial tradeoffs, and useful verifiable links such as issues, documentation, or pipelines.
+- Omit a repeated summary, exhaustive path, SHA, or log lists, a chronology of attempts, and host- or model-specific templates. Keep only identifiers essential for traceability.
+
+### Verification evidence
+
+- Briefly describe the functional verification method and scope, reproducible scenarios or steps, expected versus actual behavior, and material limits. Choose scenarios by the change's risk rather than a fixed test scope, and write no technical diary. Assess CI/gate state and exact revision mapping separately.
+- Label each item's kind: real application, backend, or runtime; provider mock or stub; fixture or prototype; API output; or automated test or report. A screenshot of a report or rendered API output does not prove the actual application, and neither CI nor screenshots replace the functional checks the change needs.
+- Assess check applicability against the provider's current source snapshot using authoritative metadata for the separate delivery/readiness report; a “current” or “final” label in prior prose is not evidence. Keep exact tested revisions and per-check source mapping there, not in the MR description. In `Impact/risk`, describe only the practical consequence of a concrete functional behavior or verification gap; group related gaps by that consequence.
+- For documentation, backend, or other changes without meaningful UI, say so briefly and give fitting verifiable evidence, such as command results, API responses, or links to rendered documents.
+
+### Screenshots
+
+The visible screenshot heading stays outside the collapsed group. Inside the group, each capture is one list item: its caption, a blank line, then its image indented under the same item:
+
+```markdown
+## Verification screenshots
+
+<details>
+<summary>Capture kind and tested candidate</summary>
+
+- Short result visible in the first capture
+
+  ![Short description](durable-attachment-url)
+
+- Short result visible in the next capture
+
+  ![Short description](durable-attachment-url)
+
+</details>
+```
+
+The summary, captions, and URLs are placeholders.
+
+- When reformatting existing screenshot evidence without new captures, preserve each media target and its sequence. Change the order only when new evidence or the user's request justifies it, and keep each caption attached to its capture.
+- For UI or user-flow changes, embed relevant captures of the actual tested application in the PR/MR through the provider's supported durable attachment mechanism. Never use local filesystem paths, ephemeral or inaccessible URLs, or fabricated, generated, or decorative images.
+- Caption each capture with one brief plain-language result phrase. Say what was done or seen and the result; omit boilerplate such as "demonstrates" or "verifies," filenames, and obvious control descriptions. Mention desktop or mobile only when the layout matters.
+- State the capture kind, candidate applicability, and shared limits once in the summary or one concise line before the list, as required under [Verification evidence](#verification-evidence). Add only a capture-specific limit as a brief clause on its bullet.
+- Prefer synthetic test data. Before upload, redact secrets, credentials, and private, personal, or customer data, then inspect the actual redacted file being uploaded.
+- Upload only within an authorized Create/update. Preview stays read-only and lists pending captures and uploads instead.
+- Evidence collection grants no extra authority for external or provider test writes, production access, or deployment.
+- Without meaningful UI, or when a browser, capture, or durable upload is unavailable or unauthorized, write one brief bullet under the heading instead of the group, giving the honest reason and the useful evidence that exists, and add no substitute imagery or empty disclosure. Include an unavailable capture in `Impact/risk` only when it changes the review or rollout decision, grouped with its related consequence.
 
 ## Create/update
 
@@ -69,6 +131,8 @@ Stage only scoped paths/hunks. If mixed or pre-staged work cannot be safely isol
 Use structured arguments or a temporary UTF-8 file for multiline bodies so shell interpolation cannot alter their content. Keep temporary files outside the worktree. Metadata-only updates need no source commit or push.
 
 ## Exact-head observation
+
+Report these observations separately from the PR/MR description, in the delivery/readiness report.
 
 - Set one finite registration-and-observation budget per attempt. Source or target changes consume the remaining budget; re-read provider state and refresh affected evidence rather than resetting the timer.
 - Record provider source SHA and actual tested SHA separately, with authoritative mapping between them. GitHub exposes the PR `headRefOid` and check commit, possibly a test-merge commit; GitLab may test the MR head or a merged result. A pipeline's name, branch or success alone does not establish that mapping.
