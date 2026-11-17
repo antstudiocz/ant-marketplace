@@ -29,7 +29,7 @@ This file owns repository-wide invariants. Skill behavior belongs in the relevan
 ## Delivery and validation
 
 - Use `merge-request` for PR/MR Preview, Create/update, Observe/status, and Conflict resolution. Preview and Observe/status are read-only. Follow that skill's explicit Create/update authority for delivery; conflict preparation, readiness changes, merge, release, deployment, and history rewrite remain separate authorities.
-- Use Conventional Commit titles and human-first English descriptions built from the final merge-base-to-`HEAD` snapshot. Keep failed or unrun checks visible.
+- Use Conventional Commit titles and human-first English descriptions built from the final merge-base-to-`HEAD` snapshot. Report failed or unrun checks in the delivery/readiness report.
 - Run checks affected by the coherent change and choose one risk-appropriate final gate; repository-wide suites remain a maintainer/CI responsibility.
 - Repository validation commands are:
 

@@ -27,7 +27,9 @@ belong in this public PR. Preserve the original dirty checkout and open PRs.
 - Three version fields match 13.9.4; public documentation and release notes agree.
 - Plugin/JSON/frontmatter/links/version/diff checks and independent review pass.
 - Create a ready PR for the explicit merge request, observe its exact head with a
-  finite budget, admin squash-merge that head and verify master inclusion.
+  finite budget, require passing exact-head checks, admin squash-merge that head
+  and verify master inclusion. Admin authority bypasses only the provider approval
+  requirement, not failed or pending required checks.
 - Prepare a short colleague message; do not send it or claim automatic reliability.
 
 ## Status
@@ -39,3 +41,20 @@ verified-none/unknown post-deployment action behavior. No runtime gate applies t
 this instruction-only change. The candidate is frozen for independent provider-aware
 review, followed by the authorized PR/admin merge. No native Goal requested/created.
 Review and delivery readback are reported outside this frozen planning snapshot.
+
+## Scenario and delivery checkpoint
+
+- Review ordinary, supported-no-action and unknown-action descriptions against the
+  same flat, visible post-deployment contract.
+- Check header-first and unverified legacy parsers: unverified pre-note details
+  use the captioned flat-list fallback until compatibility is established.
+- Check no-UI/unavailable capture handling and keep real functional limitations.
+- Keep CI/source attribution and failure state in the separate delivery report;
+  failed or pending required gates leave merge-ready incomplete.
+
+PR #106 is open on the first immutable candidate. Overall cross-provider review
+requested bounded clarification of operator detail placement, parser compatibility,
+and review/report scope; this repaired candidate contains those clarifications. The original
+workspace and other PRs remain outside this change. No separate release/tag is
+created by this delivery plan. Final exact-head review/merge readback is retained
+in the delivery report after the planning snapshot is frozen.
