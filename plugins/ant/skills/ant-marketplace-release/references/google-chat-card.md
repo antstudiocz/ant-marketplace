@@ -2,8 +2,11 @@
 
 The card is built from the canonical release evidence: tagged manifests, `docs/releases/<version>.md`
 at the tag, and the complete PR inventory (SKILL.md step 7). Reusable example:
-[card-example.json](card-example.json), the known read-only v13.10.0 example. It is demonstrative only:
-it shows the payload shape for that release and does not establish the delivery state of any announcement.
+[card-example.json](card-example.json), the known read-only v13.10.0 example, preserved exactly as
+approved. It is demonstrative only: it shows the payload shape for that release and does not establish the
+delivery state of any announcement. Its named Fable and Astra roles illustrate one explicitly selected team
+workflow; they are not public defaults. Its middle item illustrates targeted confirmation in that workflow,
+while the underlying lifecycle may already have a rule that material findings block affected work.
 
 Official docs: [Cards v2 `Card`](https://developers.google.com/workspace/chat/api/reference/rest/v1/Card),
 [`spaces.messages.create` (incl. `requestId`)](https://developers.google.com/workspace/chat/api/reference/rest/v1/spaces.messages/create).
