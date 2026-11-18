@@ -28,6 +28,15 @@ Replace the placeholders with the verified requested route and pass the complete
 
 For implementation child assignments, use one fresh isolated context per assignment and never exceed High. The assignment must include the complete capsule from [lifecycle.md](lifecycle.md), including plan-directory read-only access, exact ownership, checks, delegation permission, and reporting. The independent reviewer never writes fixes.
 
+## Selected workflow routes
+
+A [selected review workflow](lifecycle.md#selected-review-workflow) names exact routes for that run only; the table above stays the default. Not every host or account exposes every route, so verify each one before dispatch:
+
+- Plan review or another Anthropic read-only role uses the read-only `claude -p` route above with the requested model and effort.
+- An explicit OpenAI read-only role uses the verified `codex exec --sandbox read-only` route above.
+- A requested authorship or test role uses either an agent profile whose model and effort match exactly or an explicit CLI write route whose exact scoped write tools the host approves. Either route must enforce the assignment's tool and path scope and isolate the plan, supplied as read-only text or kept outside the writable root. A separate checkout or scoped root alone is not a tool boundary. Without such a route, the role is blocked; do not substitute.
+- Report the actual model, provider, and effort evidence that host output exposes. Implementation that a selected plan review covers waits under the lifecycle's [dispatch rule](lifecycle.md#dispatch-capsule).
+
 ## Smoke
 
 Existing browser/E2E automation is ordinary risk-based outcome evidence. Choose appropriate interaction evidence automatically when changed behavior and risk require it: use existing browser/E2E automation or interactive smoke as suitable, including realistic states defined by the shared lifecycle; do not require a special smoke request. Preflight the environment and side effects when it applies. Evidence gathering never expands authority; reuse established authority and obtain appropriate explicit authorization for effects outside it, with destructive or data-loss actions explicitly authorized under the authority rules.

@@ -36,7 +36,7 @@ Use a fresh isolated context and `fork_turns="none"` for every child. Never exce
 | OpenAI strong judgment or focused review | `gpt-6-astra` | Medium |
 | Bounded investigation, validation, or narrow work | `gpt-6-luna` | High, Medium, or Low as proportionate |
 
-The root model and effort are developer-selected. There is no Terra route or fallback. Every assignment carries the complete capsule from [lifecycle.md](lifecycle.md), including write ownership, the root-only plan boundary, delegation permission, checks, and report/escalation path.
+The root model and effort are developer-selected. The defaults include no Terra route, and no route falls back to Terra. Every assignment carries the complete capsule from [lifecycle.md](lifecycle.md), including write ownership, the root-only plan boundary, delegation permission, checks, and report/escalation path.
 
 For independent overall review, follow the [review policy](review.md). Use a verified route from the provider opposite the implementation author: Codex models can review Anthropic-authored work, while OpenAI-authored work requires an Anthropic route. The default Claude Code CLI route is a fresh, noninteractive read-only invocation:
 
@@ -47,6 +47,16 @@ claude -p --safe-mode --restricted --model opus --effort high --permission-mode 
 Launch from the immutable candidate directory. Supply the complete [dispatch capsule](lifecycle.md#dispatch-capsule), relevant repository instructions (including `AGENTS.md`), contracts, evidence, and candidate/base diff paths inside that scoped root; do not rely on workspace auto-discovery. Use `--add-dir` only for an exact additional path required by the review, after verifying its scope. If a required input cannot be read or a permission denial occurs, leave affected review coverage unverified.
 
 Inspect initialization for model, tools, permission mode, and MCP servers. Inspect the final result's model usage for canonical model and provider, plus errors and permission denials. Treat these as route evidence; do not rely on the reviewer's self-report. The assignment requests a review and final report only: return the report in the response, with no planning workflow, plan/report-file changes, `ExitPlanMode`, `Explore`, or nested agents. Do not count the route as independent if its identity or restrictions cannot be verified. Preserve an explicit user model choice under the canonical policy. A focused review supplements the overall review; a strong-judgment route may serve as overall reviewer when its provider is opposite the source author and it meets the independence requirements.
+
+## Selected workflow routes
+
+A [selected review workflow](lifecycle.md#selected-review-workflow) names exact routes for that run only; the table above stays the default. Not every host or account exposes every route, so verify each one before dispatch:
+
+- An OpenAI role uses the requested model and effort, capped at High, after confirming the host offers that model. A non-review role uses a fresh `fork_turns="none"` child; a write role also meets the scoped-write rule below.
+- An OpenAI read-only review role uses that native child only when the host enforces its read-only boundary. Otherwise, before any denial, preflight the same selected model and effort through a permitted fresh `codex exec --sandbox read-only` invocation, or report the role pending. Verify the boundary explicitly; an assignment alone is not sandbox proof. Never route around a host or tool denial.
+- Plan review or another Anthropic read-only role uses the Claude Code CLI route above with the requested model and effort in place of `opus` and `high`, using the same initialization and result checks.
+- A requested authorship or test role needs host-enforced scoped writes in a separate checkout or scoped root, with the plan supplied as read-only text or kept outside the writable root. Without such a route, the role is blocked; do not substitute.
+- Report the actual model, provider, and effort evidence that host output exposes. Implementation that a selected plan review covers waits under the lifecycle's [dispatch rule](lifecycle.md#dispatch-capsule).
 
 ## Smoke
 
