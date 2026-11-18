@@ -1,0 +1,89 @@
+{
+  "cardsV2": [
+    {
+      "cardId": "ant-marketplace-release-v13.10.0-v13.11.0",
+      "card": {
+        "header": {
+          "title": "Novinky v (ant) pluginu"
+        },
+        "sections": [
+          {
+            "header": "13.10.0 · Plánování a review",
+            "widgets": [
+              {
+                "decoratedText": {
+                  "startIcon": { "materialIcon": { "name": "edit_note" } },
+                  "text": "<b>Plán od Fable</b><br>Implementační plán nově připravuje Fable.",
+                  "wrapText": true,
+                  "bottomLabelText": {
+                    "text": "Týká se: <a href=\"https://github.com/antstudiocz/ant-marketplace/blob/v13.10.0/plugins/ant/skills/implementation-orchestrator/SKILL.md\">ant:implementation-orchestrator</a><br>&nbsp;"
+                  }
+                }
+              },
+              {
+                "decoratedText": {
+                  "startIcon": { "materialIcon": { "name": "fact_check" } },
+                  "text": "<b>Potvrzení oprav plánu</b><br>Podstatné opravy plánu projdou cíleným potvrzením.",
+                  "wrapText": true,
+                  "bottomLabelText": {
+                    "text": "Týká se: <a href=\"https://github.com/antstudiocz/ant-marketplace/blob/v13.10.0/plugins/ant/skills/implementation-orchestrator/SKILL.md\">ant:implementation-orchestrator</a><br>&nbsp;"
+                  }
+                }
+              },
+              {
+                "decoratedText": {
+                  "startIcon": { "materialIcon": { "name": "verified" } },
+                  "text": "<b>Finální kontrola od Astry</b><br>Závěrečné review před předáním provádí Astra.",
+                  "wrapText": true,
+                  "bottomLabelText": {
+                    "text": "Týká se: <a href=\"https://github.com/antstudiocz/ant-marketplace/blob/v13.10.0/plugins/ant/skills/implementation-orchestrator/SKILL.md\">ant:implementation-orchestrator</a>"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "header": "13.11.0 · Oznámení vydání",
+            "widgets": [
+              {
+                "decoratedText": {
+                  "startIcon": { "materialIcon": { "name": "campaign" } },
+                  "text": "<b>Nový skill pro vydání</b><br>Náhled vydání marketplace a české oznámení do Google Chatu.",
+                  "wrapText": true,
+                  "bottomLabelText": {
+                    "text": "Týká se: <a href=\"https://github.com/antstudiocz/ant-marketplace/blob/v13.11.0/plugins/ant/skills/ant-marketplace-release/SKILL.md\">ant:ant-marketplace-release</a>"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "widgets": [
+              {
+                "textParagraph": {
+                  "text": "<b>Aktualizujte (ant) plugin na 13.11.0</b> a otevřete novou relaci."
+                }
+              },
+              {
+                "buttonList": {
+                  "buttons": [
+                    {
+                      "text": "Zobrazit release v13.10.0",
+                      "type": "FILLED_TONAL",
+                      "onClick": { "openLink": { "url": "https://github.com/antstudiocz/ant-marketplace/releases/tag/v13.10.0" } }
+                    },
+                    {
+                      "text": "Zobrazit release v13.11.0",
+                      "type": "FILLED_TONAL",
+                      "onClick": { "openLink": { "url": "https://github.com/antstudiocz/ant-marketplace/releases/tag/v13.11.0" } }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

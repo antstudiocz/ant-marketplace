@@ -30,4 +30,4 @@ Use for `(ant)` design direction, asset selection, or brand-fit review across we
 
 ## `ant-marketplace-release`
 
-Use only for releases of this marketplace. Preview is read-only and assembles the verified versions, complete merged-PR inventory, notes, and a Czech Google Chat Cards v2 preview. GitHub writes follow [merge-request](../plugins/ant/skills/merge-request/SKILL.md) under your authority; a Chat send needs separate authorization for an already approved destination and exact content. See the [ant-marketplace-release skill](../plugins/ant/skills/ant-marketplace-release/SKILL.md).
+Use only for releases of this marketplace. Preview is read-only and assembles the verified versions, complete merged-PR inventory, notes, and a Czech Google Chat Cards v2 preview. On request, one combined card can announce two or more already published releases, each verified separately. GitHub writes follow [merge-request](../plugins/ant/skills/merge-request/SKILL.md) under your authority; a Chat send needs separate authorization for an already approved destination and exact content. See the [ant-marketplace-release skill](../plugins/ant/skills/ant-marketplace-release/SKILL.md).
