@@ -7,12 +7,12 @@
   },
   "metadata": {
     "description": "(ant) skills for Claude Code and Codex",
-    "version": "13.10.0"
+    "version": "13.11.0"
   },
   "plugins": [
     {
       "name": "ant",
-      "description": "Six (ant) skills for deep research, verified implementation, test design and maintenance, GitHub/GitLab delivery and conflict resolution, and brand design.",
+      "description": "Seven (ant) skills for deep research, verified implementation, test design and maintenance, GitHub/GitLab delivery and conflict resolution, brand design, and marketplace release announcements.",
       "source": "./plugins/ant"
     }
   ]

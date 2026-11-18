@@ -1,6 +1,6 @@
 # Skills
 
-The plugin exposes six public entry points. Choose the one that owns the requested outcome.
+The plugin exposes seven public entry points. Choose the one that owns the requested outcome.
 
 ## `implementation-orchestrator`
 
@@ -27,3 +27,7 @@ Use for PR/MR Preview, Create/update, Observe/status, exact-head checks, and loc
 ## `brand-design`
 
 Use for `(ant)` design direction, asset selection, or brand-fit review across websites, apps, UI, documents, decks, and visuals. The source manual and manifest are under `plugins/ant/skills/brand-design/assets/source/`. Implemented product work still follows the normal orchestrated repository workflow.
+
+## `ant-marketplace-release`
+
+Use only for releases of this marketplace. Preview is read-only and assembles the verified versions, complete merged-PR inventory, notes, and a Czech Google Chat Cards v2 preview. GitHub writes follow [merge-request](../plugins/ant/skills/merge-request/SKILL.md) under your authority; a Chat send needs separate authorization for an already approved destination and exact content. See the [ant-marketplace-release skill](../plugins/ant/skills/ant-marketplace-release/SKILL.md).
