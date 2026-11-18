@@ -1,6 +1,6 @@
 ---
 name: ant-marketplace-release
-description: Preview, prepare, verify and announce GitHub releases of antstudiocz/ant-marketplace — three synchronized plugin version fields, exact previous..current tag range with every merged PR, docs/releases notes, tag vs GitHub Release vs Latest readback, and a Czech Google Chat Cards v2 announcement. Use only for ant-marketplace releases; GitHub provider writes follow the bundled sibling merge-request skill. Not for other repositories, generic changelogs, or non-release chat messages.
+description: Preview, prepare, verify and announce GitHub releases of antstudiocz/ant-marketplace — three synchronized plugin version fields, exact previous..current tag range with every merged PR, docs/releases notes, tag vs GitHub Release vs Latest readback, and a Czech Google Chat Cards v2 announcement for one release or one combined card for several published releases. Use only for ant-marketplace releases; GitHub provider writes follow the bundled sibling merge-request skill. Not for other repositories, generic changelogs, or non-release chat messages.
 ---
 
 # ant-marketplace release
@@ -23,7 +23,10 @@ Czech Google Chat release card. Anything else is out of scope.
 - This skill owns the Cards v2 assembly and the separately authorized Chat send through a verified Chat app
   or webhook. Card design and the send procedure are in
   [references/google-chat-card.md](references/google-chat-card.md).
-  The example is [references/card-example.json](references/card-example.json).
+  The single-release example is [references/card-example.json](references/card-example.json); the
+  combined example is [references/combined-card-example.json](references/combined-card-example.json).
+- Default to one release per card. Use the combined card only when the user selects two or more
+  published stable releases for one announcement.
 
 ## Authorization rules
 
@@ -85,6 +88,26 @@ Czech Google Chat release card. Anything else is out of scope.
    the README release index and keep all earlier entries. When announcing, read the notes at the tag.
 9. **Existing state**: if the tag already exists and (peeled to its commit) points to the target, reuse it. If it
    points somewhere else, stop. An existing GitHub Release is never re-created or edited silently.
+
+## Combined announcement (two or more releases)
+
+For preview or announcement of already published releases: it composes one card for them and changes no tag,
+release, Latest or Git state. Publish each release separately through the normal flow.
+
+1. **Normalize**: map `13.10.0` and `v13.10.0` to the canonical tag `v13.10.0`. Merge duplicates and
+   disclose that in the preview. Reject or flag invalid versions, missing tags, drafts and prereleases.
+2. **Verify each release independently**: tagged manifests (step 3), notes at the tag (step 8), the
+   peeled tag commit as target, its own preceding stable ancestor tag (step 6), and the complete
+   commit-to-merged-PR mapping (step 7), even when the card omits PR chips.
+3. **No absorption**: a nonconsecutive selection covers only the selected releases; skipped releases are
+   neither shown nor merged into a neighbor's range.
+4. **Order**: sort by numeric SemVer ascending for sections and buttons.
+5. **Current stable**: read Latest (see remote readback) as the verified current stable release for the
+   intended audience and record whether the newest selected release equals it. The card reference decides the update line from that.
+6. **Gaps**: show incomplete or unresolved evidence in the preview. It blocks a production send.
+
+Layout, fallback and send identity are in
+[references/google-chat-card.md](references/google-chat-card.md#combined-card-two-or-more-releases).
 
 ## Publication handoff (via `merge-request`)
 
