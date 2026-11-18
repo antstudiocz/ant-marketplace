@@ -91,7 +91,7 @@ Czech Google Chat release card. Anything else is out of scope.
 
 ## Combined announcement (two or more releases)
 
-Announce-only: it composes one card for releases that are already published and changes no tag,
+For preview or announcement of already published releases: it composes one card for them and changes no tag,
 release, Latest or Git state. Publish each release separately through the normal flow.
 
 1. **Normalize**: map `13.10.0` and `v13.10.0` to the canonical tag `v13.10.0`. Merge duplicates and

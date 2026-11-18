@@ -14,7 +14,7 @@ and must never be reused as a recommendation once a newer stable release exists.
 no-delivery-state and Fable/Astra caveats apply.
 
 Official docs: [Cards v2 `Card`](https://developers.google.com/workspace/chat/api/reference/rest/v1/Card),
-[Cards v2 `Button` (incl. `type`)](https://developers.google.com/workspace/chat/api/reference/rest/v1/cards#Button),
+[Cards v2 `Button` (incl. `type`)](https://developers.google.com/workspace/chat/api/reference/rest/v1/Button),
 [`spaces.messages.create` (incl. `requestId`)](https://developers.google.com/workspace/chat/api/reference/rest/v1/spaces.messages/create),
 [message size limits](https://developers.google.com/workspace/chat/create-messages).
 
@@ -67,7 +67,8 @@ Input is the verified, normalized and ascending-sorted selection from
 - **Header title**: exactly `Novinky v (ant) pluginu`, with no version and no subtitle.
 - **Release sections**: one section per selected release, in ascending SemVer order. Its `header` is plain
   text (no HTML): `<version> · <krátké české téma>`, e.g. `13.10.0 · Plánování a review`.
-- **Changes**: per section, `decoratedText` widgets, each with its own Material `startIcon`, short Czech copy
+- **Changes**: per section, `decoratedText` widgets, each with its own top-aligned Material `startIcon`
+  (`"startIconVerticalAlignment": "TOP"`), short Czech copy
   using the single-card HTML (`<b>Title</b><br>text`) and `wrapText: true`.
 - **Skill label**: `bottomLabelText.text` is `Týká se: ` followed by the skill link(s) pinned to **that
   release's** tag (`/blob/v<version>/`), chosen per item from that release's diff. Append `<br>&nbsp;` only
@@ -157,8 +158,8 @@ Combined:
 - Single: section headers are `Co se mění` and `PR v tomto vydání`.
 - Wherever chips are shown: every PR in the complete inventory (recomputed for the final target, SKILL.md step 7) has exactly one chip, and no other PRs are present.
 - Skill links use `/blob/v<version>/`. The CTA points to `/releases/tag/v<version>`.
-- Combined: title has no version; one plain section per release in ascending order; every change has an
-  icon and a `Týká se: ` label pinned to its own release tag, with `<br>&nbsp;` exactly on non-last changes;
+- Combined: title has no version; one plain section per release in ascending order; every change has a
+  top-aligned icon and a `Týká se: ` label pinned to its own release tag, with `<br>&nbsp;` exactly on non-last changes;
   no PR chips unless requested; at most one update instruction, present only for the verified current
   stable; one `FILLED_TONAL` button per release in the same order; payload within documented limits.
 - No secrets and no destination identifiers in the payload, source or logs.

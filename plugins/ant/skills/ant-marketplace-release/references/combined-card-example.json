@@ -12,46 +12,50 @@
             "widgets": [
               {
                 "decoratedText": {
-                  "startIcon": { "materialIcon": { "name": "edit_note" } },
-                  "text": "<b>Plán od Fable</b><br>Implementační plán nově připravuje Fable.",
+                  "startIcon": { "materialIcon": { "name": "assignment" } },
+                  "startIconVerticalAlignment": "TOP",
+                  "text": "<b>Nezávislá kontrola plánu</b><br>Fable 5.2 High prověří návrh, architekturu a způsob ověření před implementací.",
                   "wrapText": true,
                   "bottomLabelText": {
-                    "text": "Týká se: <a href=\"https://github.com/antstudiocz/ant-marketplace/blob/v13.10.0/plugins/ant/skills/implementation-orchestrator/SKILL.md\">ant:implementation-orchestrator</a><br>&nbsp;"
+                    "text": "Týká se: <a href=\"https://github.com/antstudiocz/ant-marketplace/blob/v13.10.0/plugins/ant/skills/implementation-orchestrator/SKILL.md\">implementation-orchestrator</a><br>&nbsp;"
                   }
                 }
               },
               {
                 "decoratedText": {
                   "startIcon": { "materialIcon": { "name": "fact_check" } },
-                  "text": "<b>Potvrzení oprav plánu</b><br>Podstatné opravy plánu projdou cíleným potvrzením.",
+                  "startIconVerticalAlignment": "TOP",
+                  "text": "<b>Cílená kontrola oprav</b><br>Po opravě podstatného nálezu Fable ověří jen dotčenou část plánu. Práce, která na ní závisí, počká.",
                   "wrapText": true,
                   "bottomLabelText": {
-                    "text": "Týká se: <a href=\"https://github.com/antstudiocz/ant-marketplace/blob/v13.10.0/plugins/ant/skills/implementation-orchestrator/SKILL.md\">ant:implementation-orchestrator</a><br>&nbsp;"
+                    "text": "Týká se: <a href=\"https://github.com/antstudiocz/ant-marketplace/blob/v13.10.0/plugins/ant/skills/implementation-orchestrator/SKILL.md\">implementation-orchestrator</a><br>&nbsp;"
                   }
                 }
               },
               {
                 "decoratedText": {
-                  "startIcon": { "materialIcon": { "name": "verified" } },
-                  "text": "<b>Finální kontrola od Astry</b><br>Závěrečné review před předáním provádí Astra.",
+                  "startIcon": { "materialIcon": { "name": "rate_review" } },
+                  "startIconVerticalAlignment": "TOP",
+                  "text": "<b>Důkladnější závěrečné review</b><br>Astra 6.2 High posoudí funkčnost, architekturu, udržovatelnost a u změn UI také design systém a přístupnost.",
                   "wrapText": true,
                   "bottomLabelText": {
-                    "text": "Týká se: <a href=\"https://github.com/antstudiocz/ant-marketplace/blob/v13.10.0/plugins/ant/skills/implementation-orchestrator/SKILL.md\">ant:implementation-orchestrator</a>"
+                    "text": "Týká se: <a href=\"https://github.com/antstudiocz/ant-marketplace/blob/v13.10.0/plugins/ant/skills/implementation-orchestrator/SKILL.md\">implementation-orchestrator</a>, <a href=\"https://github.com/antstudiocz/ant-marketplace/blob/v13.10.0/plugins/ant/skills/merge-request/SKILL.md\">merge-request</a>"
                   }
                 }
               }
             ]
           },
           {
-            "header": "13.11.0 · Oznámení vydání",
+            "header": "13.11.0 · Vydání a oznámení",
             "widgets": [
               {
                 "decoratedText": {
-                  "startIcon": { "materialIcon": { "name": "campaign" } },
-                  "text": "<b>Nový skill pro vydání</b><br>Náhled vydání marketplace a české oznámení do Google Chatu.",
+                  "startIcon": { "materialIcon": { "name": "forum" } },
+                  "startIconVerticalAlignment": "TOP",
+                  "text": "<b>Nový skill pro vydávání</b><br>Ověří verzi a obsah releasu a připraví oznámení do Google Chatu.",
                   "wrapText": true,
                   "bottomLabelText": {
-                    "text": "Týká se: <a href=\"https://github.com/antstudiocz/ant-marketplace/blob/v13.11.0/plugins/ant/skills/ant-marketplace-release/SKILL.md\">ant:ant-marketplace-release</a>"
+                    "text": "Týká se: <a href=\"https://github.com/antstudiocz/ant-marketplace/blob/v13.11.0/plugins/ant/skills/ant-marketplace-release/SKILL.md\">ant-marketplace-release</a>"
                   }
                 }
               }
