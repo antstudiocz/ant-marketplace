@@ -42,3 +42,12 @@ Status: plan accepted for scoped source implementation.
 The source changes came from an isolated Claude Code Opus author run (canonical claude-opus-5-5, firstParty, requested High, Read/Grep/Glob/Edit, no MCP and no permission denials). Root compared the imported owner patch byte-for-byte. No separate test authorship was needed for these instruction changes. The candidate that contains this checkpoint is submitted as an immutable revision to the selected independent reviewer. The delivery record carries its actual review outcome and check status.
 
 Astra High reviewed 1f37e5e716cb1fd12f6474a718cb37ebc7b765e0 in a fresh native child. Its conduct was read-only, with no host-enforced read-only boundary on that route. Root confirmed four findings: require proven read-only isolation for Codex reviewers and scoped writes for both Claude author routes, assign plan changes to root, and avoid introducing a plan gate on final-review-only adoption. Opus 5.5 High resolved all four in its isolated checkout and clarified the coding-quality assessment. Root verified the imported owner patch against the source and submits this replacement candidate to the same requested Astra model and effort through the read-only Codex CLI route, preflighted successfully before any denial.
+
+
+## Approved follow-up: confirm material plan repairs
+
+Follow-up base: 8ad2684006607ae9fbb24a23c0a0325ed4a1a8b8. The user approved focused independent confirmation of repaired material plan findings. Final-review provider policy remains outside this follow-up.
+
+Fable 5.2, requested High with restricted read-only tools, independently found four issues: one gate, affected-only scope, no new triggers, and exact confirmation identity. The independently accepted confirmation input SHA-256 is c5fd20ae0697f95f16e512a22c40dd9080b85d451fc957a4460a9df7a0a38e23. Opus 5.5, requested High, made the source changes in a separate scoped checkout. Root verified the transferred patch byte for byte.
+
+This checkpoint accompanies the candidate submitted to Astra 6.2 High in the read-only Codex CLI. Verify the focused, editorial, stale, and unresolved decision cases, the package checks and unchanged provider policy. Deliver on the existing Draft.

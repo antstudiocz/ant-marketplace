@@ -8,6 +8,11 @@ This reference owns review selection, independence, assessment scope, findings, 
 - Assess architecture, viable alternatives, ownership, dependencies, operability, and whether targeted verification can show the outcome. Apply the same [assessment scope](#assessment-scope) where the plan determines it.
 - Record the actual plan author and reviewer providers and routes. Implementation authorship sets the opposite-provider rule; a same-provider plan review satisfies this phase when it was explicitly selected and independence is verified.
 - Root adjudicates each plan finding and alone makes any accepted plan revision before owner dispatch, under the lifecycle's root plan ownership. Record the plan input hash and base, each finding's disposition, the decision, and the accepted plan revision.
+- A confirmed material finding, including one about testing or rollout, is **resolved** when root records the plan revision that addresses it and an independent focused confirmation that the revision closes it. Root still adjudicates disputes on evidence.
+- An editorial adjustment changes wording only, with no change to a decision, scope, ownership, contract, or check; it needs no confirmation. Record that classification when useful.
+- For confirmation, a fresh, isolated, read-only reviewer on the recorded independent route receives the original findings, the changed plan parts, and any necessary related context, without root's assurances. If that route cannot be verified, confirmation is unavailable; do not substitute another model or route.
+- Bind the confirmation to the revised plan input hash, base, findings, affected scope, and reviewer route. A later bookkeeping-only update, such as status or checkpoint, keeps it valid; a material change within the affected scope invalidates it. Missing or stale confirmation leaves the affected work pending.
+- Run one focused confirmation pass per revision under the existing [evidence and repeat-round rules](#findings-and-repair). A material unresolved or new issue keeps the affected scope pending for root adjudication.
 
 ## Select reviewers
 
