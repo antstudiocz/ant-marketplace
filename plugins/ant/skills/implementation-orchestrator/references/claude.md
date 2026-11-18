@@ -34,7 +34,7 @@ A [selected review workflow](lifecycle.md#selected-review-workflow) names exact 
 
 - Plan review or another Anthropic read-only role uses the read-only `claude -p` route above with the requested model and effort.
 - An explicit OpenAI read-only role uses the verified `codex exec --sandbox read-only` route above.
-- A requested authorship or test role uses an agent profile whose model and effort match exactly, or a write route whose exact scoped write tools the host approves. It runs in a separate checkout or scoped root, with the plan supplied as read-only text or kept outside the writable root. Without such a route, the role is blocked; do not substitute.
+- A requested authorship or test role uses either an agent profile whose model and effort match exactly or an explicit CLI write route whose exact scoped write tools the host approves. Either route must enforce the assignment's tool and path scope and isolate the plan, supplied as read-only text or kept outside the writable root. A separate checkout or scoped root alone is not a tool boundary. Without such a route, the role is blocked; do not substitute.
 - Report the actual model, provider, and effort evidence that host output exposes. Implementation that a selected plan review covers waits under the lifecycle's [dispatch rule](lifecycle.md#dispatch-capsule).
 
 ## Smoke

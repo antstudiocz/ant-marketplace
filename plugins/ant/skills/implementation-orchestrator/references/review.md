@@ -7,7 +7,7 @@ This reference owns review selection, independence, assessment scope, findings, 
 - Use this phase only when the [selected review workflow](lifecycle.md#selected-review-workflow) includes it. A fresh, isolated, read-only reviewer receives the proposed plan, base, relevant source, and contracts, without author assurances.
 - Assess architecture, viable alternatives, ownership, dependencies, operability, and whether targeted verification can show the outcome. Apply the same [assessment scope](#assessment-scope) where the plan determines it.
 - Record the actual plan author and reviewer providers and routes. Implementation authorship sets the opposite-provider rule; a same-provider plan review satisfies this phase when it was explicitly selected and independence is verified.
-- Record the plan input hash and base, each finding's disposition, the decision, and the accepted plan revision.
+- Root adjudicates each plan finding and alone makes any accepted plan revision before owner dispatch, under the lifecycle's root plan ownership. Record the plan input hash and base, each finding's disposition, the decision, and the accepted plan revision.
 
 ## Select reviewers
 
@@ -20,12 +20,13 @@ This reference owns review selection, independence, assessment scope, findings, 
 ## Assessment scope
 
 - Evaluate, where relevant to the change: repository standards; security, tenant isolation, and contracts; concurrency and failure handling; tests; maintainability with the [simplicity and architecture review](lifecycle.md#simplicity-and-architecture) and proportionate SOLID/DRY; and, for UI or product help and guidance, the project's design system, accessibility, and responsive behavior.
+- Rule compliance and functional correctness alone do not establish code quality. Through that same architecture and SOLID/DRY guidance, also assess general coding quality, including for AI-generated code: for example, unnecessary abstractions or layers, unverified assumptions about APIs, data, or existing behavior, and unnecessarily duplicated logic where an existing mechanism fits.
 - General principles alone do not justify unrelated refactoring. Reviewers stay independent and read-only.
 
 ## Findings and repair
 
 - A useful finding states the trigger, impact, affected source or contract with its revision, supporting evidence, and the smallest repair that resolves it. Assess severity from the evidenced trigger and plausible impact, not reviewer count or confidence scores. Give a bounded reproduction or measurement when direct evidence needs one; distinguish observation from inference.
-- The implementer verifies each finding and proposes or makes any in-scope repair. The independent reviewer verifies the repair. Root adjudicates evidence disputes and decides whether the acceptance criteria are met; reviewer agreement, votes, or confidence scores are not proof.
+- For candidate findings, the implementer verifies each finding and proposes or makes any in-scope repair. The independent reviewer verifies the repair. Root adjudicates evidence disputes and decides whether the acceptance criteria are met; reviewer agreement, votes, or confidence scores are not proof.
 - Disposition each finding as **confirmed**, **refuted**, or **unverified**, with the evidence and reason. Keep credible potentially material unverified findings visible for root adjudication. Do not mark the affected outcome achieved or merge-ready solely because a finding could not be reproduced or was raised by one reviewer. A draft may proceed under its existing authority with the material gap stated; the affected broader outcome remains pending until root resolves the evidence or the risk.
 - Bound review and repair to the evidence: do not repeat a round without a material new finding, changed candidate, or new evidence. Escalate unresolved evidence disputes to root. This does not waive a proven unmet outcome or broaden implementation authority.
 - A candidate change invalidates review and evidence only where its impact can reach. Re-review and rerun affected checks; preserve unrelated evidence with a concrete impact rationale. Review after a tracked mutation must identify the candidate it covers.

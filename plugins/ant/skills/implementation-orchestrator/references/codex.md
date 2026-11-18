@@ -52,7 +52,8 @@ Inspect initialization for model, tools, permission mode, and MCP servers. Inspe
 
 A [selected review workflow](lifecycle.md#selected-review-workflow) names exact routes for that run only; the table above stays the default. Not every host or account exposes every route, so verify each one before dispatch:
 
-- An OpenAI role uses a fresh `fork_turns="none"` child with the requested model and effort, capped at High, after confirming the host offers that model.
+- An OpenAI role uses the requested model and effort, capped at High, after confirming the host offers that model. A non-review role uses a fresh `fork_turns="none"` child; a write role also meets the scoped-write rule below.
+- An OpenAI read-only review role uses that native child only when the host enforces its read-only boundary. Otherwise, before any denial, preflight the same selected model and effort through a permitted fresh `codex exec --sandbox read-only` invocation, or report the role pending. Verify the boundary explicitly; an assignment alone is not sandbox proof. Never route around a host or tool denial.
 - Plan review or another Anthropic read-only role uses the Claude Code CLI route above with the requested model and effort in place of `opus` and `high`, using the same initialization and result checks.
 - A requested authorship or test role needs host-enforced scoped writes in a separate checkout or scoped root, with the plan supplied as read-only text or kept outside the writable root. Without such a route, the role is blocked; do not substitute.
 - Report the actual model, provider, and effort evidence that host output exposes. Implementation that a selected plan review covers waits under the lifecycle's [dispatch rule](lifecycle.md#dispatch-capsule).
